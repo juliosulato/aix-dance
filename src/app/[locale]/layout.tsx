@@ -7,6 +7,8 @@ import { notFound } from "next/navigation";
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import theme from "@/utils/theme";
+import { Notifications } from '@mantine/notifications';
+import '@mantine/notifications/styles.css';
 
 const inter = Inter({
   variable: "--font-inter",
@@ -42,6 +44,7 @@ export default async function RootLayout({
       >
         <NextIntlClientProvider>
           <MantineProvider defaultColorScheme="light" theme={theme}>
+              <Notifications />
             {children}
           </MantineProvider>
         </NextIntlClientProvider>

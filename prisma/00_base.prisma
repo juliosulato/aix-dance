@@ -1,0 +1,30 @@
+model Address {
+    id           String  @id @default(cuid())
+    zipCode      String?
+    publicPlace  String
+    number       String
+    complement   String?
+    neighborhood String?
+    city         String?
+    state        String?
+    country      String?
+
+    studentId String?  @unique
+    student   Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+    userId String?  @unique
+    user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+
+    @@schema("base")
+}
+
+enum Gender {
+    MALE
+    FEMALE
+    NON_BINARY
+    Other
+
+    @@schema("base")
+}
+

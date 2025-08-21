@@ -1,27 +1,27 @@
 model SecurityLog {
-    id        String   @id @default(cuid())
-    eventType String
-    ipAddress String
-    userAgent String
-    pathname  String
-    method    String
-    timestamp DateTime @default(now())
-    blocked   Boolean  @default(true)
-    reason    String
-    sessionId String?
-    headers   Json?
+  id        String   @id @default(cuid())
+  eventType String
+  ipAddress String
+  userAgent String
+  pathname  String
+  method    String
+  timestamp DateTime @default(now())
+  blocked   Boolean  @default(true)
+  reason    String
+  sessionId String?
+  headers   Json?
 
-    @@index([ipAddress, timestamp])
-    @@schema("utils")
+  @@index([ipAddress, timestamp])
+  @@schema("utils")
 }
 
 model BlockedIP {
-    id        String    @id @default(cuid())
-    ipAddress String    @unique
-    reason    String
-    blockedAt DateTime  @default(now())
-    expiresAt DateTime?
-    isActive  Boolean   @default(true)
+  id        String    @id @default(cuid())
+  ipAddress String    @unique
+  reason    String
+  blockedAt DateTime  @default(now())
+  expiresAt DateTime?
+  isActive  Boolean   @default(true)
 
-    @@schema("utils")
+  @@schema("utils")
 }

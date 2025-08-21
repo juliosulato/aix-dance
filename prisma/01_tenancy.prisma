@@ -1,167 +1,149 @@
 model Tenancy {
-    id String @id @default(cuid())
+  id String @id @default(cuid())
 
-    @@schema("tenancy")
+  @@schema("tenancy")
 }
 
 model Student {
-    id                   String          @id @default(cuid())
-    firstName            String
-    lastName             String
-    cellPhoneNumber      String
-    phoneNumber          String?
-    email                String?
-    dateOfBirth          String
-    documentOfIdentity   String
-    gender               Gender
-    pronoun              String?
-    howDidYouMeetUs      String?
-    instagramUrl         String?
-    healthProblems       String?
-    medicalAdvice        String?
-    painOrDiscomfort     String?
+  id                 String             @id @default(cuid())
+  firstName          String
+  lastName           String
+  cellPhoneNumber    String
+  phoneNumber        String?
+  email              String?
+  dateOfBirth        String
+  documentOfIdentity String
+  gender             Gender
+  pronoun            String?
+  howDidYouMeetUs    String?
+  instagramUrl       String?
+  healthProblems     String?
+  medicalAdvice      String?
+  painOrDiscomfort   String?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  address            Address?
+  attendanceRecords  AttendanceRecord[]
+  studentClasses     StudentClass[]
+  guardian           StudentGuardian?
 
-    studentClasses    StudentClass[]
-    attendanceRecords AttendanceRecord[]
-
-    address           Address?
-    guardian          StudentGuardian[]
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@schema("tenancy")
+  @@schema("tenancy")
 }
 
 model StudentGuardian {
-    id              String  @id @default(cuid())
-    firstName       String
-    lastName        String
-    cellPhoneNumber String
-    phoneNumber     String?
-    email           String?
+  id              String  @id @default(cuid())
+  firstName       String
+  lastName        String
+  cellPhoneNumber String
+  phoneNumber     String?
+  email           String?
+  studentId       String  @unique
+  student         Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
-    studentId String  @unique
-    student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
-
-    @@schema("tenancy")
+  @@schema("tenancy")
 }
 
 model Class {
-    id                 String            @id @default(cuid())
-    name               String
-    modality           String
-    private            Boolean           @default(false)
-    freePass           Boolean           @default(false)
-    online             Boolean           @default(false)
+  id               String            @id @default(cuid())
+  name             String
+  modality         String
+  private          Boolean           @default(false)
+  freePass         Boolean           @default(false)
+  online           Boolean           @default(false)
+  teacherId        String
+  assistantId      String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  assistant        User?             @relation("ClassToAssistant", fields: [assistantId], references: [id])
+  teacher          User              @relation("ClassToTeacher", fields: [teacherId], references: [id], onDelete: Cascade)
+  classAttendances ClassAttendance[]
+  days             ClassDay[]
+  studentClasses   StudentClass[]
 
-    days ClassDay[]
-
-    studentClasses   StudentClass[]
-    classAttendances ClassAttendance[]
-
-    teacherId String
-    teacher   User   @relation("ClassToTeacher", fields: [teacherId], references: [id], onDelete: Cascade)
-
-    assistantId String?
-    assistant   User?  @relation("ClassToAssistant", fields: [assistantId], references: [id])
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@schema("tenancy")
+  @@schema("tenancy")
 }
 
 model StudentClass {
-    id String @id @default(cuid())
+  id        String  @id @default(cuid())
+  studentId String
+  classId   String
+  class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
-    studentId String
-    classId   String
-
-    student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
-    class   Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
-
-    @@unique([studentId, classId])
-    @@schema("tenancy")
+  @@unique([studentId, classId])
+  @@schema("tenancy")
 }
 
 model ClassDay {
-    id          String    @id @default(cuid())
-    dayOfWeek   DayOfWeek
-    initialHour String
-    endHour     String
+  id          String    @id @default(cuid())
+  dayOfWeek   DayOfWeek
+  initialHour String
+  endHour     String
+  classId     String
+  class       Class     @relation(fields: [classId], references: [id], onDelete: Cascade)
 
-    classId String
-    class   Class @relation(fields: [classId], references: [id], onDelete: Cascade)
-
-    @@unique([id, classId])
-    @@schema("tenancy")
+  @@unique([id, classId])
+  @@schema("tenancy")
 }
 
 model ClassAttendance {
-    id            String             @id @default(cuid())
-    date          DateTime           @default(now())
-    isSubstitute  Boolean            @default(false)
+  id                String             @id @default(cuid())
+  date              DateTime           @default(now())
+  isSubstitute      Boolean            @default(false)
+  classId           String
+  teacherId         String
+  attendanceRecords AttendanceRecord[]
+  class             Class              @relation(fields: [classId], references: [id], onDelete: Cascade)
+  teacher           User               @relation(fields: [teacherId], references: [id])
 
-    classId String
-    class   Class @relation(fields: [classId], references: [id], onDelete: Cascade)
-
-    teacherId String
-    teacher   User @relation(fields: [teacherId], references: [id])
-
-    attendanceRecords AttendanceRecord[]
-
-    @@schema("tenancy")
+  @@schema("tenancy")
 }
 
 model AttendanceRecord {
-    id                String  @id @default(cuid())
-    present           Boolean @default(false)
+  id                String          @id @default(cuid())
+  present           Boolean         @default(false)
+  classAttendanceId String
+  studentId         String
+  classAttendance   ClassAttendance @relation(fields: [classAttendanceId], references: [id], onDelete: Cascade)
+  student           Student         @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
-    classAttendanceId String
-    classAttendance   ClassAttendance @relation(fields: [classAttendanceId], references: [id], onDelete: Cascade)
-
-    studentId String
-    student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
-
-    @@schema("tenancy")
+  @@schema("tenancy")
 }
 
 model Plan {
-    id                    String  @id @default(cuid())
-    frequency             Int     @default(1)
-    type                  PlanType
-    price                 Decimal
+  id                    String   @id @default(cuid())
+  frequency             Int      @default(1)
+  type                  PlanType
+  price                 Decimal
+  monthlyInterest       Float
+  finePercentage        Float
+  discountPercentage    Float
+  maximumDiscountPeriod Int
+  maximumPaymentTerm    Int
 
-    monthlyInterest       Float
-    finePercentage        Float
-    discountPercentage    Float
-    maximumDiscountPeriod Int
-    maximumPaymentTerm    Int
-
-    @@schema("tenancy")
+  @@schema("tenancy")
 }
 
 enum DayOfWeek {
-    SUNDAY
-    MONDAY
-    TUESDAY
-    WEDNESDAY
-    THURSDAY
-    FRIDAY
-    SATURDAY
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
 
-    @@schema("tenancy")
+  @@schema("tenancy")
 }
 
 enum PlanType {
-    BI_WEEKLY
-    MONTHLY
-    BI_MONTHLY
-    QUARTERLY
-    SEMMONTLY
-    ANNUAL
-    BI_ANNUAL
+  BI_WEEKLY
+  MONTHLY
+  BI_MONTHLY
+  QUARTERLY
+  SEMMONTLY
+  ANNUAL
+  BI_ANNUAL
 
-    @@schema("tenancy")
+  @@schema("tenancy")
 }

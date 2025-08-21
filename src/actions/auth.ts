@@ -13,13 +13,13 @@ export async function loginWithCredentials(formData: FormData) {
         let user = null;
 
         if (userInput.includes("@")) {
-            user = await prisma.user.findUnique({
+            user = await prisma.user.findFirst({
                 where: {
                     email: userInput
                 }
             });
         } else {
-            user = await prisma.user.findUnique({
+            user = await prisma.user.findFirst({
                 where: {
                     user: userInput
                 }

@@ -17,11 +17,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         let user = null;
 
         if ((credentials.user as string).includes("@")) {
-          user = await prisma.user.findUnique({
+          user = await prisma.user.findFirst({
             where: { email: credentials.user as string }
           });
         } else {
-          user = await prisma.user.findUnique({
+          user = await prisma.user.findFirst({
             where: { user: credentials.user as string }
           });
         }
@@ -38,7 +38,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return {
           id: user.id,
           role: user.role,
-          name: user.name,
+          name: user.firstName,
           email: user.email,
           remember: credentials.remember === "true" || credentials.remember === "on"
         }

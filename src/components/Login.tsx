@@ -21,7 +21,15 @@ export default function Login() {
 
     const handleLoginWithCredentials = async (ev: FormEvent) => {
         ev.preventDefault();
-        notifications.show({ title: "Não saia da página!", message: "Estamos realizando o seu login...", color: "yellow", withBorder: true, radius: "lg", position: "bottom-center"})
+        notifications.show({ 
+            title: "Não saia da página!", 
+            message: "Estamos realizando o seu login...", 
+            color: "yellow", 
+            withBorder: true, 
+            radius: "lg", 
+            position: "bottom-center",
+            autoClose: 500
+        })
         setError("");
 
         const formData = new FormData(ev.currentTarget as HTMLFormElement);
@@ -30,6 +38,7 @@ export default function Login() {
             const result = await loginWithCredentials(formData);
 
             if (result.success) {
+                notifications.show({ message: "Login realizado com sucesso!", color: "green", withBorder: true, radius: "lg", position: "bottom-center", autoClose: 500 })
                 router.push("/sistema");
             } else {
                 setError((result as any).error);
@@ -53,7 +62,7 @@ export default function Login() {
     useEffect(() => {
 
         if (error) {
-            notifications.show({ title: "Erro ao realizar login.", message: error, color: "red", withBorder: true, radius: "lg", position: "bottom-center"})
+            notifications.show({ title: "Erro ao realizar login.", message: error, color: "red", withBorder: true, radius: "lg", position: "bottom-center", autoClose: 500 })
         }
     }, [error]);
 

@@ -3,11 +3,11 @@
 import { signIn } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { compareHashedPasswords } from "@/utils/passwords";
-import { redirect } from "next/navigation";
 
 export async function loginWithCredentials(formData: FormData) {
     const userInput = formData.get("user") as string;
     const password = formData.get("password") as string;
+    const remember = formData.get("remember") === "on";
 
     try {
         let user = null;
@@ -45,6 +45,7 @@ export async function loginWithCredentials(formData: FormData) {
         await signIn("credentials", {
             user: userInput,
             password: password,
+            remember,
             redirect: false,
         });
 

@@ -7,45 +7,40 @@ import { compareHashedPasswords } from "./utils/passwords";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
-       Credentials({
+    Credentials({
       credentials: {
         user: { type: "text", name: "user" },
-        password: { type: "password", name: "password" }
+        password: { type: "password", name: "password" },
+        remember: { type: "boolean" }
       },
       authorize: async (credentials) => {
-        // Aqui você só precisa buscar o usuário e retornar
-        // A validação já foi feita na server action
         let user = null;
 
         if ((credentials.user as string).includes("@")) {
           user = await prisma.user.findUnique({
-            where: {
-              email: credentials.user as string
-            }
+            where: { email: credentials.user as string }
           });
         } else {
           user = await prisma.user.findUnique({
-            where: {
-              user: credentials.user as string
-            }
+            where: { user: credentials.user as string }
           });
         }
 
-        if (!user) {
-          return null;
-        }
+        if (!user) return null;
 
-        const isPasswordIsValid = await compareHashedPasswords(String(credentials.password), user.password)
+        const isPasswordIsValid = await compareHashedPasswords(
+          String(credentials.password),
+          user.password
+        );
 
-        if (!isPasswordIsValid) {
-          return null;
-        }
+        if (!isPasswordIsValid) return null;
 
         return {
           id: user.id,
           role: user.role,
           name: user.name,
-          email: user.email
+          email: user.email,
+          remember: credentials.remember === "true" || credentials.remember === "on"
         }
       }
     }),
@@ -62,12 +57,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   session: {
     strategy: "jwt",
+    maxAge: 60 * 60 * 24, // default = 1 dia
   },
   callbacks: {
     async jwt({ token, user }: any) {
       if (user) {
         token.id = user.id;
-        token.role = (user).role;
+        token.role = user.role;
+        token.remember = user.remember;
+
+        // Define expiração conforme "lembrar-me"
+        token.exp = Math.floor(Date.now() / 1000) + (
+          user.remember ? 60 * 60 * 24 * 30 : 60 * 60 * 24
+        );
       }
       return token;
     },
@@ -78,7 +80,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.role = token.role;
       }
       return session;
-    },
+    }
   },
   secret: process.env.AUTH_SECRET,
 } satisfies NextAuthConfig)

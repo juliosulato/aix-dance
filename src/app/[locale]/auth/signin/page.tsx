@@ -1,6 +1,6 @@
 import Image from "next/image";
 import illustration from "@/assets/images/login.avif";
-import Login from "@/components/ui/Login";
+import Login from "@/components/Login";
 import { Metadata } from "next";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";

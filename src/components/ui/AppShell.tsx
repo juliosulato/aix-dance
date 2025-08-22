@@ -17,9 +17,10 @@ import { LuBrain, LuLogOut } from "react-icons/lu";
 import { MdGroups } from "react-icons/md";
 import { PiMoneyWavy } from "react-icons/pi";
 import { useTranslations } from "next-intl";
+import { LanguagePicker } from "./LanguagePicker";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
-    const [activeMain, setActiveMain] = useState<number | null>(null);
+    const [activeMain, setActiveMain] = useState<number | string | null>(null);
     const [mobileOpened, { toggle: toggleMobile }] = useDisclosure(false);
     const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(false);
     const pathname = usePathname();
@@ -28,7 +29,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     const session = useSession();
 
     const t = useTranslations("appShell");
-    
+
     return (
         <AppShellMantine
             padding="md"
@@ -41,10 +42,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
         >
             <AppShellMantine.Header className="flex items-center justify-between h-full">
-                    <div className="flex items-center justify-between gap-2  py-2 px-4 xl:px-6 xl:py-3 xl:!min-w-[300px] h-[80px] xl:border-r xl:border-neutral-300">
-                        <LogoSVG className={`h-full`}/>
-                        <Burger opened={desktopOpened} onClick={toggleDesktop} size="sm" className="hidden xl:block" />
-                    </div>
+                <div className="flex items-center justify-between gap-2  py-2 px-4 xl:px-6 xl:py-3 xl:!min-w-[300px] h-[80px] xl:border-r xl:border-neutral-300">
+                    <LogoSVG className={`h-full`} />
+                    <Burger opened={desktopOpened} onClick={toggleDesktop} size="sm" className="hidden xl:block" />
+                </div>
 
                 <div className="flex items-center justify-end gap-2 h-full px-4 md:px-6 w-full">
                     <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="xl" size="sm" />
@@ -86,15 +87,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                     <Menu>
                         <Menu.Target>
                             <Button className="flex items-center gap-2 !h-full !p-0" variant="transparent">
-                                <Avatar src={session.data?.user?.image ?? null} radius="lg" size="42px" color="violet" name={session.data?.user?.image ? undefined : `${session.data?.user?.name}`}/>
+                                <Avatar src={session.data?.user?.image ?? null} radius="lg" size="42px" color="violet" name={session.data?.user?.image ? undefined : `${session.data?.user?.name}`} />
                                 <HiOutlineChevronDown />
                             </Button>
                         </Menu.Target>
                         <Menu.Dropdown>
-                            <Menu.Item leftSection={<FaRegUser/>}>
+                            <Menu.Item leftSection={<FaRegUser />}>
                                 {t("header.user_menu.profile")}
                             </Menu.Item>
-                            <Menu.Item leftSection={<LuLogOut/>} onClick={() => signOut({ redirect: true, redirectTo: "/auth/signin" })}>
+                            <Menu.Item leftSection={<LuLogOut />} onClick={() => signOut({ redirect: true, redirectTo: "/auth/signin" })}>
                                 {t("header.user_menu.logout")}
                             </Menu.Item>
                         </Menu.Dropdown>
@@ -151,8 +152,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         leftSection={<TbSettings />}
                         label={t("navbar.settings")}
                         active={pathname === "/settings"}
+                        onClick={() => setActiveMain(activeMain === "/settings" ? null : "/settings")}
+                        opened={activeMain === "/settings"}
                         className={`rounded-full !py-3 transition-all duration-300 ease-in !px-5 !justify-start `}
-                    />
+                        rightSection={<HiOutlineChevronRight size={12} className="mantine-rotate-rtl" />}
+                    >
+                        <LanguagePicker />
+                    </NavLink>
                     <NavLink
                         color="violet"
                         leftSection={<BiSupport />}
@@ -162,6 +168,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         active={pathname === "/support"}
                         className={`rounded-full !py-3 transition-all duration-300 ease-in !px-5 !justify-start `}
                     />
+
                 </div>
             </AppShellMantine.Navbar>
 

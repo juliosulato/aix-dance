@@ -64,10 +64,10 @@ const useMenuData = () => {
       icon: <LuGraduationCap />,
       label: t("navbar.academic.label"),
       subitems: [
-        { icon: <FaRegUser />, label: t("navbar.academic.students"), href: "/system/academico/alunos" },
-        { icon: <MdGroups />, label: t("navbar.academic.classes"), href: "/system/academico/turmas" },
-        { icon: <FaChalkboardTeacher />, label: t("navbar.academic.teachers"), href: "/system/academico/professores" },
-        { icon: <LuChartSpline />, label: t("navbar.academic.academicReports"), href: "/system/academico/relatorios" },
+        { icon: <FaRegUser />, label: t("navbar.academic.students"), href: "/system/academic/students" },
+        { icon: <MdGroups />, label: t("navbar.academic.classes"), href: "/system/academic/classes" },
+        { icon: <FaChalkboardTeacher />, label: t("navbar.academic.teachers"), href: "/system/academic/professores" },
+        { icon: <LuChartSpline />, label: t("navbar.academic.academicReports"), href: "/system/academic/relatorios" },
       ],
     },
     {

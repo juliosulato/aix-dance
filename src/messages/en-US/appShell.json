@@ -1,0 +1,62 @@
+{
+    "navbar": {
+        "home": {
+            "label": "Home",
+            "dashboard": "Dashboard",
+            "classSchedule": "Class Schedule",
+            "calendar": "Calendar",
+            "integrations": "Integrations",
+            "help": "Help"
+        },
+        "crm": {
+            "label": "CRM",
+            "crmManagement": "Management",
+            "crmConversations": "Conversations",
+            "crmReports": "Reports"
+        },
+        "academic": {
+            "label": "Academic",
+            "students": "Students & Enrollments",
+            "classes": "Classes",
+            "teachers": "Teachers",
+            "academicReports": "Reports"
+        },
+        "events": "Events",
+        "financial": {
+            "label": "Financial",
+            "financialSummary": "Summary",
+            "financialManager": "Manager",
+            "financialCategories": "Categories",
+            "financialAccounts": "Bank Accounts",
+            "financialReports": "Reports"
+        },
+        "inventory": {
+            "label": "Inventory",
+            "inventoryControl": "Inventory Control",
+            "orders": "Orders",
+            "products": "Products",
+            "inventoryReports": "Reports"
+        },
+        "settings": "Settings",
+        "support": "Support"
+    },
+    "header": {
+        "quickAccess": {
+            "label": "Quick Access",
+            "newLead": "New Lead",
+            "newStudent": "New Enrollment",
+            "newClass": "New Class",
+            "newPayBill": "Create Payable",
+            "newEvent": "New Event"
+        },
+        "notifications": {
+            "label": "Notifications",
+            "noNotifications": "No notifications",
+            "viewAll": "View all"
+        },
+        "user_menu": {
+            "profile": "My Profile",
+            "logout": "Logout"
+        }
+    }
+}

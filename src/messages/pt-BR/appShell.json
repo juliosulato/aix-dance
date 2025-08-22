@@ -1,0 +1,62 @@
+{
+    "navbar": {
+        "home": {
+            "label": "Início",
+            "dashboard": "Dashboard",
+            "classSchedule": "Grade de Aulas",
+            "calendar": "Agenda",
+            "integrations": "Integrações",
+            "help": "Ajuda"
+        },
+        "crm": {
+            "label": "CRM",
+            "crmManagement": "Gerenciamento",
+            "crmConversations": "Conversas",
+            "crmReports": "Relatórios"
+        },
+        "academic": {
+            "label": "Acadêmico",
+            "students": "Alunos e Matrículas",
+            "classes": "Turmas",
+            "teachers": "Professores",
+            "academicReports": "Relatórios"
+        },
+        "events": "Eventos",
+        "financial": {
+            "label": "Financeiro",
+            "financialSummary": "Resumo",
+            "financialManager": "Gerenciador",
+            "financialCategories": "Categorias",
+            "financialAccounts": "Contas Bancárias",
+            "financialReports": "Relatórios"
+        },
+        "inventory": {
+            "label": "Estoque",
+            "inventoryControl": "Controle de Estoque",
+            "orders": "Encomendas",
+            "products": "Produtos",
+            "inventoryReports": "Relatórios"
+        },
+        "settings": "Configurações",
+        "support": "Suporte"
+    },
+    "header": {
+        "quickAccess": {
+            "label": "Acesso Rápido",
+            "newLead": "Novo Lead",
+            "newStudent": "Nova Matrícula",
+            "newClass": "Nova Turma",
+            "newPayBill": "Lançar Conta A Pagar",
+            "newEvent": "Novo Evento"
+        },
+        "notifications": {
+            "label": "Notificações",
+            "noNotifications": "Nenhuma notificação",
+            "viewAll": "Ver todas"
+        },
+        "user_menu": {
+            "profile": "Meus Dados",
+            "logout": "Sair"
+        }
+    }
+}

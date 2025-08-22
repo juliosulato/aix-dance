@@ -5,8 +5,6 @@ export default async function Sistema() {
 
     return (
         <main>
-            <h1>Sistema</h1>
-            {JSON.stringify(session)}
         </main>
     )
 }

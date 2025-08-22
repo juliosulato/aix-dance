@@ -1,6 +1,6 @@
 import Image from "next/image";
 import illustration from "@/assets/images/login.avif";
-import Login from "@/components/Login";
+import Login from "@/components/ui/Login";
 import { Metadata } from "next";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
@@ -13,7 +13,7 @@ export default async function LoginPage() {
     const session = await auth()
 
     if (session) {
-        redirect("/sistema")
+        redirect("/system")
     };
     
     return (

@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import AppShell from "@/components/ui/AppShell";
 import { redirect } from "next/navigation";
 
 export default async function SystemLayout({
@@ -10,7 +11,11 @@ export default async function SystemLayout({
 }>) {
     const session = await auth();
 
-    if (!session) redirect("/auth/login")
+    if (!session) redirect("/auth/signin")
     
-    return children;
+    return (
+      <AppShell>
+        {children}
+      </AppShell>
+    );
 }

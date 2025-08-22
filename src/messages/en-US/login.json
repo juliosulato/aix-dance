@@ -1,0 +1,30 @@
+{
+    "title": "Welcome to AIX Dance!",
+    "subtitle": "The ideal system for dance schools.\n Easy to use, tailor-made and with everything you need to grow.",
+    "form": {
+        "user": {
+            "label": "Enter your username or email:",
+            "placeholder": "yourusername"
+        },
+        "password": {
+            "label": "Enter your password:",
+            "placeholder": "********"
+        },
+        "remember": "Remember user",
+        "forgotPassword": "Forgot my password",
+        "submit": "Login"
+    },
+    "or": {
+        "text": "or",
+        "google": "Continue with Google",
+        "facebook": "Continue with Facebook",
+        "createAccount": "Don't have an account yet?",
+        "createAccountLink": "Create one."
+    },
+    "terms": {
+        "text": "By continuing, you agree to our ",
+        "link1": " and ",
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy"
+    }
+}

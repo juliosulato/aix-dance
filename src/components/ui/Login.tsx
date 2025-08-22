@@ -1,7 +1,7 @@
 "use client";
 
 import LogoSVG from "@/components/Logo";
-import { Button, Checkbox, PasswordInput, TextInput } from "@mantine/core";
+import { Box, Button, Checkbox, LoadingOverlay, PasswordInput, TextInput } from "@mantine/core";
 import { useTranslations } from "next-intl";
 import { FaRegUser } from "react-icons/fa";
 import { PiPasswordLight } from "react-icons/pi";
@@ -12,23 +12,26 @@ import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation";
 import { notifications } from '@mantine/notifications';
 import { loginWithCredentials } from "@/actions/auth";
+import { useDisclosure } from "@mantine/hooks";
 
 export default function Login() {
     const t = useTranslations("login");
+    const [visible, { toggle }] = useDisclosure(false);
 
     const [error, setError] = useState<string>("");
     const router = useRouter();
 
     const handleLoginWithCredentials = async (ev: FormEvent) => {
         ev.preventDefault();
-        notifications.show({ 
-            title: "Não saia da página!", 
-            message: "Estamos realizando o seu login...", 
-            color: "yellow", 
-            withBorder: true, 
-            radius: "lg", 
+        toggle();
+        notifications.show({
+            title: "Não saia da página!",
+            message: "Estamos realizando o seu login...",
+            color: "yellow",
+            withBorder: true,
+            radius: "lg",
             position: "bottom-center",
-            autoClose: 500
+            autoClose: 1000,
         })
         setError("");
 
@@ -38,21 +41,23 @@ export default function Login() {
             const result = await loginWithCredentials(formData);
 
             if (result.success) {
-                notifications.show({ message: "Login realizado com sucesso!", color: "green", withBorder: true, radius: "lg", position: "bottom-center", autoClose: 500 })
-                router.push("/sistema");
+                notifications.show({ title: "Login realizado com sucesso!", message: "Estamos te redirecionando para o sistema...", color: "green", withBorder: true, radius: "lg", position: "bottom-center", autoClose: 3000 })
+                router.push("/system/");
             } else {
                 setError((result as any).error);
             }
         } catch (err) {
             console.error("Erro no login:", err);
             setError("Erro inesperado. Tente novamente.");
+        } finally {
+            toggle();
         }
     };
 
     const handleSocialLogin = async (provider: "google" | "facebook") => {
         try {
             await signIn(provider, {
-                redirectTo: "/sistema/"
+                redirectTo: "/system/"
             });
         } catch (error) {
             console.error(`Erro no login com ${provider}:`, error);
@@ -68,7 +73,7 @@ export default function Login() {
 
 
     return (
-        <section className="flex flex-col items-center  gap-6 text-center p-5 lg:p-12 lg:overflow-auto lg:absolute lg:top-0 lg:right-0 lg:w-[50%] xl:w-[42%] md:bg-white xl:p-20 rounded-tl-4xl lg:rounded-bl-4xl lg:h-screen ">
+        <section className="flex flex-col items-center  gap-6 text-center p-5 lg:p-12 lg:overflow-auto lg:absolute lg:top-0 lg:right-0 lg:w-[50%] xl:w-[42%] md:bg-white xl:p-20 rounded-tl-4xl lg:rounded-bl-4xl lg:h-screen relative">
             <div className="flex items-center justify-center flex-col gap-4 w-full min-w-full">
                 <LogoSVG width={"100px"} height="fit-content" />
                 <h1 className="text-4xl font-bold text-primary">{t("title")}</h1>
@@ -92,16 +97,16 @@ export default function Login() {
 
                 <div className="flex flex-col gap-0">
                     <PasswordInput
-                    id="password"
-                    name="password"
-                    label={t("form.password.label")}
-                    placeholder={t("form.password.placeholder")}
-                    className="w-full mb-4"
-                    size="md"
-                    leftSection={<PiPasswordLight />}
-                    required
-                />
-                <a href="/forgot-password" className="text-sm text-right w-full hover:underline text-neutral-600">{t("form.forgotPassword")}</a>
+                        id="password"
+                        name="password"
+                        label={t("form.password.label")}
+                        placeholder={t("form.password.placeholder")}
+                        className="w-full mb-4"
+                        size="md"
+                        leftSection={<PiPasswordLight />}
+                        required
+                    />
+                    <a href="/forgot-password" className="text-sm text-right w-full hover:underline text-neutral-600">{t("form.forgotPassword")}</a>
                 </div>
 
                 <Checkbox
@@ -122,7 +127,6 @@ export default function Login() {
                     className="!text-base w-full md:!w-fit"
                 >{t("form.submit")}</Button>
             </form>
-
             <p className="text-sm">
                 {t("or.createAccount")} <a href="/auth/create-account" className="underline text-primary">{t("or.createAccountLink")}</a>
             </p>
@@ -134,14 +138,14 @@ export default function Login() {
             </div>
 
             <div className="flex flex-col gap-3 w-full">
-                <button 
+                <button
                     onClick={() => handleSocialLogin("google")}
                     className="flex items-center justify-center gap-2 w-full py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition hover:scale-105 font-medium"
                 >
                     <FcGoogle className="h-8 w-8" />
                     {t("or.google")}
                 </button>
-                <button 
+                <button
                     onClick={() => handleSocialLogin("facebook")}
                     className="flex items-center justify-center gap-2 w-full py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition hover:scale-105 font-medium"
                 >
@@ -161,6 +165,13 @@ export default function Login() {
                 </a>
                 .
             </p>
+            <LoadingOverlay
+                visible={visible}
+                zIndex={1000}
+                overlayProps={{ radius: 'sm', blur: 2 }}
+                loaderProps={{ color: 'violet', type: 'dots' }}
+                className="!fixed"
+            />
         </section>
     );
 }

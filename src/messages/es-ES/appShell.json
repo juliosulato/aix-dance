@@ -1,0 +1,62 @@
+{
+    "navbar": {
+        "home": {
+            "label": "Inicio",
+            "dashboard": "Panel de Control",
+            "classSchedule": "Horario de Clases",
+            "calendar": "Agenda",
+            "integrations": "Integraciones",
+            "help": "Ayuda"
+        },
+        "crm": {
+            "label": "CRM",
+            "crmManagement": "Gestión",
+            "crmConversations": "Conversaciones",
+            "crmReports": "Informes"
+        },
+        "academic": {
+            "label": "Académico",
+            "students": "Alumnos y Matrículas",
+            "classes": "Clases",
+            "teachers": "Profesores",
+            "academicReports": "Informes"
+        },
+        "events": "Eventos",
+        "financial": {
+            "label": "Financiero",
+            "financialSummary": "Resumen",
+            "financialManager": "Gestor",
+            "financialCategories": "Categorías",
+            "financialAccounts": "Cuentas Bancarias",
+            "financialReports": "Informes"
+        },
+        "inventory": {
+            "label": "Inventario",
+            "inventoryControl": "Control de Inventario",
+            "orders": "Pedidos",
+            "products": "Productos",
+            "inventoryReports": "Informes"
+        },
+        "settings": "Configuraciones",
+        "support": "Soporte"
+    },
+    "header": {
+        "quickAccess": {
+            "label": "Acceso Rápido",
+            "newLead": "Nuevo Prospecto",
+            "newStudent": "Nueva Matrícula",
+            "newClass": "Nueva Clase",
+            "newPayBill": "Registrar Cuenta por Pagar",
+            "newEvent": "Nuevo Evento"
+        },
+        "notifications": {
+            "label": "Notificaciones",
+            "noNotifications": "Sin notificaciones",
+            "viewAll": "Ver todas"
+        },
+        "user_menu": {
+            "profile": "Mi Perfil",
+            "logout": "Cerrar Sesión"
+        }
+    }
+}

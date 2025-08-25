@@ -49,9 +49,9 @@ export default function Login() {
         } catch (err) {
             console.error("Erro no login:", err);
             setError("Erro inesperado. Tente novamente.");
-        } finally {
-            toggle();
         }
+
+        toggle();
     };
 
     const handleSocialLogin = async (provider: "google" | "facebook") => {

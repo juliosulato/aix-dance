@@ -1,28 +1,45 @@
 model User {
-  id                 String            @id @default(cuid())
+  id String @id @default(cuid())
+  tenancyId          String
+  tenancy            Tenancy  @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+
+  firstName          String
+  lastName           String
   nickname           String?
   gender             Gender
   pronoun            String?
   dateOfBirth        String?
-  cellPhonenumber    String
+  cellPhoneNumber    String
   phoneNumber        String?
   documentOfIdentity String?
-  role               UserRole
-  classes            UserRole[]
-  user               String
-  email              String            @unique
-  password           String
-  image              String?
-  createdAt          DateTime          @default(now())
-  updatedAt          DateTime          @updatedAt
-  firstName          String
-  lastName           String
-  address            Address?
-  classesAsAssistant Class[]           @relation("ClassToAssistant")
+
+  role    UserRole
+  classes UserRole[]
+
+  address Address?
+
   classesAsTeacher   Class[]           @relation("ClassToTeacher")
+  classesAsAssistant Class[]           @relation("ClassToAssistant")
   classAttendances   ClassAttendance[]
-  accounts           Account[]
-  sessions           Session[]
+
+  user     String
+  email    String  @unique
+  password String
+  image    String?
+
+  accounts Account[]
+  sessions Session[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@schema("users")
+}
+
+enum UserRole {
+  GESTOR
+  PROFESSOR
+  SECRETARIA
 
   @@schema("users")
 }
@@ -39,9 +56,11 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
   @@schema("users")
@@ -51,9 +70,10 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@schema("users")
 }
@@ -64,13 +84,5 @@ model VerificationToken {
   expires    DateTime
 
   @@id([identifier, token])
-  @@schema("users")
-}
-
-enum UserRole {
-  GESTOR
-  PROFESSOR
-  SECRETARIA
-
   @@schema("users")
 }

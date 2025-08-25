@@ -1,0 +1,167 @@
+model Bill {
+    id          String     @id @default(cuid())
+    type        BillType
+    description String
+    amount      Decimal?
+    amountPaid  Decimal?
+    dueDate     DateTime
+    paymentDate DateTime?
+    status      BillStatus
+
+    installments Int             @default(1)
+    recurrence   RecurrenceType?
+    complement   String?
+
+    studentId String?
+    student   Student? @relation(fields: [studentId], references: [id])
+
+    supplierId String?
+    supplier   Supplier? @relation(fields: [supplierId], references: [id])
+
+    categoryId String?
+    category   CategoryBill? @relation(fields: [categoryId], references: [id])
+
+    paymentMethodId String?
+    paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+
+    bankId String?
+    bank   Bank?   @relation(fields: [bankId], references: [id])
+
+    attachments BillAttachment[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@schema("financial")
+}
+
+enum BillType {
+    PAYABLE
+    RECEIVABLE
+
+    @@schema("financial")
+}
+
+enum BillStatus {
+    PENDING
+    PAID
+    OVERDUE
+    CANCELLED
+
+    @@schema("financial")
+}
+
+enum RecurrenceType {
+    NONE
+    MONTHLY
+    BIMONTHLY
+    QUARTERLY
+    SEMIANNUAL
+    ANNUAL
+
+    @@schema("financial")
+}
+
+model BillAttachment {
+    id     String @id @default(cuid())
+    url    String
+    billId String
+    bill   Bill   @relation(fields: [billId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+
+    @@schema("financial")
+}
+
+model Bank {
+    id          String  @id @default(cuid())
+    name        String
+    code        String?
+    agency      String?
+    account     String?
+    description String?
+
+    maintenanceFeeAmount Decimal?
+    maintenanceFeeDue    DateTime?
+
+    bills Bill[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@schema("financial")
+}
+
+model CategoryBill {
+    id     String           @id @default(cuid())
+    name   String
+    nature BillNature
+    type   BillCategoryType
+
+    parentId String?
+    parent   CategoryBill?  @relation("CategoryParent", fields: [parentId], references: [id])
+    children CategoryBill[] @relation("CategoryParent")
+
+    groupId String?
+    group   CategoryGroup? @relation(fields: [groupId], references: [id])
+
+    bills Bill[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@schema("financial")
+}
+
+enum BillNature {
+    REVENUE
+    EXPENSE
+
+    @@schema("financial")
+}
+
+enum BillCategoryType {
+    FIXED
+    VARIABLE
+
+    @@schema("financial")
+}
+
+model CategoryGroup {
+    id   String @id @default(cuid())
+    name String
+
+    categories CategoryBill[]
+
+    @@schema("financial")
+}
+
+model PaymentMethod {
+    id       String  @id @default(cuid())
+    name     String
+    operator String?
+
+    fees  PaymentFee[]
+    bills Bill[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@schema("financial")
+}
+
+model PaymentFee {
+    id              String        @id @default(cuid())
+    paymentMethodId String
+    paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id], onDelete: Cascade)
+
+    minInstallments  Int     @default(1)
+    maxInstallments  Int     @default(1)
+    feePercentage    Float
+    customerInterest Boolean @default(false)
+    receiveInDays    Int?
+
+    createdAt DateTime @default(now())
+
+    @@schema("financial")
+}

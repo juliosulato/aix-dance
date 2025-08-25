@@ -1,26 +1,55 @@
 model Address {
-  id           String   @id @default(cuid())
-  zipCode      String?
-  publicPlace  String
-  number       String
-  complement   String?
-  neighborhood String?
-  city         String?
-  state        String?
-  country      String?
-  studentId    String?  @unique
-  userId       String?  @unique
-  student      Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id           String  @id @default(cuid())
+    zipCode      String?
+    publicPlace  String
+    number       String
+    complement   String?
+    neighborhood String?
+    city         String?
+    state        String?
+    country      String?
 
-  @@schema("base")
+    studentId String?  @unique
+    student   Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+
+    userId String? @unique
+    user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    supplierId String?   @unique
+    supplier   Supplier? @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+    @@schema("base")
 }
 
 enum Gender {
-  MALE
-  FEMALE
-  NON_BINARY
-  OTHER
+    MALE
+    FEMALE
+    NON_BINARY
+    OTHER
 
-  @@schema("base")
+    @@schema("base")
+}
+
+model Supplier {
+    id        String  @id @default(cuid())
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+
+    name            String
+    corporateReason String?
+    documentType    String?
+    document        String?
+    email           String?
+    phoneNumber     String?
+    cellPhoneNumber String?
+    address         Address?
+
+    bills     Bill[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@schema("base")
 }

@@ -1,0 +1,13 @@
+model ContractModel {
+    id          String  @id @default(cuid())
+    tenancyId   String
+    tenancy     Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+
+    title       String
+    htmlContent String
+
+    // Add this line to define the inverse relation
+    plans       Plan[]
+
+    @@schema("contracts")
+}

@@ -4,6 +4,7 @@
     },
     "formSteps": {
         "one": {
+            "step": "Dados da Turma",
             "title": "Informações Básicas",
             "fields": {
                 "modality": {
@@ -15,7 +16,7 @@
                     "label": "Nome da Turma",
                     "placeholder": "Digite aqui"
                 },
-                "teacher": {
+                "teachers": {
                     "label": "Professor e Auxiliares",
                     "placeholder": "Selecione um professor e seus auxiliares.",
                     "description": "O primeiro selecionado será marcado como professor e o restante como auxiliar."
@@ -28,6 +29,7 @@
                 }
             },
             "classDaysAndHours": {
+                    "title": "Dias das Aulas",
                     "days": {
                         "sunday": "Domingo",
                         "monday": "Segunda",
@@ -49,7 +51,7 @@
             "fields": {
                 "students": {
                     "label": "Alunos",
-                    "placeholder": "Digite aqui"
+                    "placeholder": "Busque e selecione um ou mais alunos"
                 },
                 "tableHeader": {
                     "name": "Nome",
@@ -62,7 +64,8 @@
         },
         "three": {
             "step": "Resumo",
-            "title": "Confira os dados"
+            "title": "Confira os dados",
+            "stepTwoTitle": "Alunos Atribuidos a Turma"
         }
     }
 }

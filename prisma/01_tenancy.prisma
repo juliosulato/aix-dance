@@ -105,10 +105,12 @@ model Class {
     tenancy   Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
 
     name     String
-    modality String
-    online   Boolean @default(false)
+    online   Boolean  @default(false)
 
     days ClassDay[]
+
+    modalityId String
+    modality Modality @relation(fields: [modalityId], references: [id], onDelete: Cascade)
 
     studentClasses   StudentClass[]
     classAttendances ClassAttendance[]
@@ -122,6 +124,29 @@ model Class {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    @@schema("tenancy")
+}
+
+model Modality {
+    id String @id @default(cuid())
+
+    name            String
+    description     String?
+    defaultDuration Int?
+    active          Boolean @default(true)
+    classes         Class[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@schema("tenancy")
+}
+
+enum ModalityType {
+    PRESENTIAL
+    ONLINE
+    HYBRID
+    
     @@schema("tenancy")
 }
 
@@ -189,7 +214,7 @@ model Plan {
     name      String
     frequency Int      @default(1)
     type      PlanType
-    amount     Decimal
+    amount    Decimal
 
     contractModelId String
     contractModel   ContractModel @relation(fields: [contractModelId], references: [id], onDelete: Cascade)

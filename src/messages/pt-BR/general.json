@@ -5,6 +5,8 @@
         "new": "Novo",
         "delete": "Excluir",
         "create": "Criar",
-        "update": "Atualizar"
-    }
+        "update": "Atualizar",
+        "add": "Adicionar"
+    },
+    "notFound": "Nada encontrado..."
 }

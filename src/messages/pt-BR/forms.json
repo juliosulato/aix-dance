@@ -60,5 +60,7 @@
             "text": "Selecione uma modalidade"
         }
     },
-    "submit": "Salvar"
+    "submit": "Salvar",
+    "next": "Próximo",
+    "prev": "Voltar"
 }

@@ -1,37 +1,154 @@
-import { ActionIcon, Checkbox, CloseIcon, MultiSelect, NumberInput, Select, TextInput, Tooltip } from "@mantine/core";
+"use client";
+
+import { ActionIcon, Checkbox, CloseIcon, Tooltip } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 import { IoAdd } from "react-icons/io5";
+import { useState } from "react";
 
-export default function DayOfClassesAndHours() {
-    const t = useTranslations("classes-modals.form.classDaysAndHours");
-    const g = useTranslations("");
+type TimeRange = { from: string; to: string };
+type DaySchedules = {
+  [day: string]: {
+    enabled: boolean;
+    ranges: TimeRange[];
+  };
+};
 
-    return (
-        <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
-            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{t("title")}</h2>
-            Dias das aulas:
-            <div className="flex flex-col gap-2">
-                <div className="grid grid-cols-[1fr__auto__1fr]">
-                    <Checkbox label={t("days.sunday")} id="sunday" name="sunday" />
-                    <div>
-                        <span>{t("hours.from")}</span>
-                        <TimeInput />
-                        <span>{t("hours.to")}</span>
-                    </div>
-                    <Tooltip label={g("general.actions.remove")}>
-                        <ActionIcon color="gray">
-                            <CloseIcon />
-                        </ActionIcon>
-                    </Tooltip>
-                    <Tooltip label={g("general.actions.add")}>
-                        <ActionIcon color="gray">
-                            <IoAdd />
-                        </ActionIcon>
-                    </Tooltip>
+export default function NewClass__DayOfClassesAndHours() {
+  const t = useTranslations("classes-modals.formSteps.one.classDaysAndHours");
+  const g = useTranslations("");
+
+  const days = [
+    { key: "sunday", label: t("days.sunday") },
+    { key: "monday", label: t("days.monday") },
+    { key: "tuesday", label: t("days.tuesday") },
+    { key: "wednesday", label: t("days.wednesday") },
+    { key: "thursday", label: t("days.thursday") },
+    { key: "friday", label: t("days.friday") },
+    { key: "saturday", label: t("days.saturday") },
+  ];
+
+  const [schedules, setSchedules] = useState<DaySchedules>(() =>
+    Object.fromEntries(
+      days.map((d) => [d.key, { enabled: false, ranges: [{ from: "", to: "" }] }])
+    )
+  );
+
+  const handleCheckbox = (dayKey: string, checked: boolean) => {
+    setSchedules((prev) => ({
+      ...prev,
+      [dayKey]: { ...prev[dayKey], enabled: checked },
+    }));
+  };
+
+  const handleChange = (
+    dayKey: string,
+    index: number,
+    field: "from" | "to",
+    value: string
+  ) => {
+    setSchedules((prev) => {
+      const newRanges = [...prev[dayKey].ranges];
+      newRanges[index] = { ...newRanges[index], [field]: value };
+      return { ...prev, [dayKey]: { ...prev[dayKey], ranges: newRanges } };
+    });
+  };
+
+  const handleAddRange = (dayKey: string) => {
+    setSchedules((prev) => ({
+      ...prev,
+      [dayKey]: {
+        ...prev[dayKey],
+        ranges: [...prev[dayKey].ranges, { from: "", to: "" }],
+      },
+    }));
+  };
+
+  const handleRemoveRange = (dayKey: string, index: number) => {
+    setSchedules((prev) => {
+      const newRanges = prev[dayKey].ranges.filter((_, i) => i !== index);
+      return {
+        ...prev,
+        [dayKey]: {
+          ...prev[dayKey],
+          ranges: newRanges.length ? newRanges : [{ from: "", to: "" }],
+        },
+      };
+    });
+  };
+
+  return (
+    <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col">
+      <h2 className="text-lg font-bold">{t("title")}</h2>
+      <br />
+      <div className="flex flex-col gap-4 w-full">
+        {days.map((day) => (
+          <div key={day.key} className="flex flex-col gap-2">
+            {schedules[day.key].ranges.map((range, index) => (
+              <div
+                key={index}
+                className="flex flex-row flex-wrap gap-4 md:grid md:grid-cols-[1fr__auto__1fr] justify-center items-center"
+              >
+                {index === 0 ? (
+                  <Checkbox
+                    label={day.label}
+                    id={day.key}
+                    name={day.key}
+                    checked={schedules[day.key].enabled}
+                    onChange={(e) =>
+                      handleCheckbox(day.key, e.currentTarget.checked)
+                    }
+                  />
+                ) : (
+                  <div /> 
+                )}
+
+                <div className="flex flex-row gap-3 justify-center items-center">
+                  <span>{t("hours.from")}</span>
+                  <TimeInput
+                    value={range.from}
+                    disabled={!schedules[day.key].enabled}
+                    onChange={(event) =>
+                      handleChange(day.key, index, "from", event.currentTarget.value)
+                    }
+                  />
+                  <span>{t("hours.to")}</span>
+                  <TimeInput
+                    value={range.to}
+                    disabled={!schedules[day.key].enabled}
+                    onChange={(event) =>
+                      handleChange(day.key, index, "to", event.currentTarget.value)
+                    }
+                  />
                 </div>
-            </div>
-        </div>
-    );
+
+                <div className="justify-self-end flex gap-2">
+                  {schedules[day.key].ranges.length > 1 && (
+                    <Tooltip color="#7439FA" label={g("general.actions.delete")}>
+                      <ActionIcon
+                        color="gray"
+                        onClick={() => handleRemoveRange(day.key, index)}
+                      >
+                        <CloseIcon />
+                      </ActionIcon>
+                    </Tooltip>
+                  )}
+                  {index === schedules[day.key].ranges.length - 1 && (
+                    <Tooltip color="#7439FA" label={g("general.actions.add")}>
+                      <ActionIcon
+                        color="gray"
+                        onClick={() => handleAddRange(day.key)}
+                      >
+                        <IoAdd />
+                      </ActionIcon>
+                    </Tooltip>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }

@@ -1,0 +1,68 @@
+{
+    "titles": {
+        "create": "Nova Turma"
+    },
+    "formSteps": {
+        "one": {
+            "title": "Informações Básicas",
+            "fields": {
+                "modality": {
+                    "label": "Modalidade",
+                    "placeholder": "Selecione uma modalidade",
+                    "description": "Você pode criar uma nova modalidade nas"
+                },
+                "class": {
+                    "label": "Nome da Turma",
+                    "placeholder": "Digite aqui"
+                },
+                "teacher": {
+                    "label": "Professor e Auxiliares",
+                    "placeholder": "Selecione um professor e seus auxiliares.",
+                    "description": "O primeiro selecionado será marcado como professor e o restante como auxiliar."
+                },
+                "quantityMaxOfStudents": {
+                    "label": "Quantidade Máxima de Matrículas"
+                },
+                "onlineClass": {
+                    "label": "Turma Online"
+                }
+            },
+            "classDaysAndHours": {
+                    "days": {
+                        "sunday": "Domingo",
+                        "monday": "Segunda",
+                        "tuesday": "Terça",
+                        "wednesday": "Quarta",
+                        "thursday": "Quinta",
+                        "friday": "Sexta",
+                        "saturday": "Sábado"
+                    },
+                    "hours": {
+                        "from": "das",
+                        "to": "até"
+                    }
+                }
+        },
+        "two": {
+            "step": "Alunos",
+            "title": "Atribuir alunos a turma",
+            "fields": {
+                "students": {
+                    "label": "Alunos",
+                    "placeholder": "Digite aqui"
+                },
+                "tableHeader": {
+                    "name": "Nome",
+                    "cellPhoneNumber": "Celular",
+                    "email": "E-mail",
+                    "generateBill": "Gerar Cobrança",
+                    "actions": "Ações"
+                }
+            }
+        },
+        "three": {
+            "step": "Resumo",
+            "title": "Confira os dados"
+        }
+    }
+}

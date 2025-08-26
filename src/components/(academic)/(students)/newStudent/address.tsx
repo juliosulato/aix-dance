@@ -1,5 +1,3 @@
-import { Gender } from "@prisma/client";
-import { useState } from "react";
 import {  TextInput } from "@mantine/core";
 import { useTranslations } from "next-intl";
 import 'dayjs/locale/BR';

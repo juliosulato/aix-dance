@@ -1,3 +1,10 @@
 {
-    "back": "Voltar"
+    "actions": {
+        "back": "Voltar",
+        "edit": "Editar",
+        "new": "Novo",
+        "delete": "Excluir",
+        "create": "Criar",
+        "update": "Atualizar"
+    }
 }

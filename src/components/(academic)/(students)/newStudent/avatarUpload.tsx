@@ -32,7 +32,7 @@ function AvatarUpload() {
       <div className="absolute -left-1 -bottom-2">
         <Menu position="right-start">
           <Menu.Target>
-            <ActionIcon radius="md" size="md" aria-label="Ver Menu">
+            <ActionIcon radius="md" size="md" aria-label="Menu">
               <BsThreeDots size={20} />
             </ActionIcon>
           </Menu.Target>

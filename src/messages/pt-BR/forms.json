@@ -54,6 +54,10 @@
         "pronoun": {
             "label": "Pronome",
             "placeholder": "Digite um pronome, ex.: ele/dele, ela/dela"
+        },
+        "modality": {
+            "label": "Modalidade",
+            "text": "Selecione uma modalidade"
         }
     },
     "submit": "Salvar"

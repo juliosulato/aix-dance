@@ -6,6 +6,7 @@ import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 import theme from "@/utils/theme";
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';

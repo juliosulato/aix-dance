@@ -1,0 +1,45 @@
+{
+    "titles": {
+        "create": "Nova Matrícula",
+        "update": "Atualizar Matrícula"
+    },
+    "forms": {
+        "personalData": {
+            "title": "Dados Pessoais",
+            "whyDidYouKnowUs": {
+                "label": "Como nos conheceu?",
+                "placeholder": "Digite Aqui"
+            },
+            "instagramUser": {
+                "label": "Usuário do Instagram",
+                "placeholder": "@nomedeusuario"
+            }
+        },
+        "health": {
+            "healthProblems": {
+                "label": "Possui algum problema de saúde?"
+            },
+            "medicalAdvice": {
+                "label": "Possui alguma recomendação médica?"
+            },
+            "painOrDiscomfort": {
+                "label": "Sente algum tipo de dor ou desconforto?"
+            },
+            "canLeaveAlone": {
+                "label": "É autorizado(a) a sair sozinho(a) da academia."
+            },
+            "haveGuardian": {
+                "label": "Possui responsável?"
+            },
+            "textarea": "Qual?"
+        },
+        "guardians": {
+            "title": "Dados dos responsáveis:",
+            "guardian": "Responsável",
+            "relationship": {
+                "label": "Grau de Parentesco",
+                "placeholder": "Digite Aqui"
+            }
+        }
+    }
+}

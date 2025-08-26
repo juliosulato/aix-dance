@@ -44,7 +44,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <AppShellMantine.Header className="flex items-center justify-between h-full">
                 <div className="flex items-center justify-between gap-2  py-2 px-4 xl:px-6 xl:py-3 xl:!min-w-[300px] h-[80px] xl:border-r xl:border-neutral-300">
                     <LogoSVG className={`h-full`} />
-                    <Burger opened={desktopOpened} onClick={toggleDesktop} size="sm" className="hidden xl:block" />
+                    <Burger opened={!desktopOpened} onClick={toggleDesktop} size="sm" className="hidden xl:block" />
                 </div>
 
                 <div className="flex items-center justify-end gap-2 h-full px-4 md:px-6 w-full">

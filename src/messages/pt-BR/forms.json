@@ -1,0 +1,60 @@
+{
+    "address": {
+        "title": "Endereço",
+        "zipCode": {
+            "label": "CEP"
+        },
+        "street": {
+            "label": "Logradouro"
+        },
+        "number": {
+            "label": "Número"
+        },
+        "complement": {
+            "label": "Complemento"
+        },
+        "neighborhood": {
+            "label": "Bairro"
+        },
+        "city": {
+            "label": "Cidade"
+        },
+        "state": {
+            "label": "Estado"
+        }
+    },
+    "general-fields": {
+        "cellPhoneNumber": {
+            "label": "Celular"
+        },
+        "phoneNumber": {
+            "label": "Telefone"
+        },
+        "email": {
+            "label": "E-mail",
+            "placeholder": "email@dominio.com"
+        },
+        "firstName": {
+            "label": "Primeiro Nome",
+            "placeholder": "Digite Aqui"
+        },
+        "lastName": {
+            "label": "Sobrenome",
+            "placeholder": "Digite Aqui"
+        },
+        "dateOfBirth": {
+            "label": "Data de Nascimento",
+            "placeholder": "Digite Aqui",
+            "valueFormat": "DD MMM YYYY"
+        },
+        "gender": {
+            "label": "Gênero",
+            "placeholder": "Selecione"
+        },
+        "pronoun": {
+            "label": "Pronome",
+            "placeholder": "Digite um pronome, ex.: ele/dele, ela/dela"
+        }
+    },
+    "submit": "Salvar"
+}

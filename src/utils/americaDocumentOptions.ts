@@ -1,0 +1,33 @@
+// Documento por país – América
+export const americaDocumentOptions = Object.entries({
+    US: { label: 'SSN', mask: '000-00-0000' },
+    CA: { label: 'SIN', mask: '000-000-000' },
+    MX: { label: 'CURP', mask: 'AAAA000000HDFXXX00' },
+    GT: { label: 'DPI', mask: '0000000000000' },
+    HN: { label: 'Identidad', mask: '00000000-0' },
+    SV: { label: 'DUI', mask: '00000000-0' },
+    NI: { label: 'Cédula', mask: '0000000000' },
+    CR: { label: 'Cédula', mask: '000000000' },
+    PA: { label: 'Cédula', mask: '00000000' },
+    CU: { label: 'Carné de identidad', mask: '00000000' },
+    DO: { label: 'Cédula', mask: '00000000000' },
+    PR: { label: 'SSN', mask: '000-00-0000' },
+    BR: { label: 'CPF', mask: '000.000.000-00' },
+    AR: { label: 'CUIT', mask: '00-00000000-0' },
+    CL: { label: 'RUT', mask: '00.000.000-0' },
+    CO: { label: 'CC', mask: '0000000000' },
+    VE: { label: 'Cédula', mask: '00000000' },
+    PE: { label: 'DNI', mask: '00000000' },
+    EC: { label: 'Cédula', mask: '0000000000' },
+    BO: { label: 'Cédula', mask: '0000000' },
+    PY: { label: 'Cédula', mask: '0000000' },
+    UY: { label: 'CI', mask: '00000000' },
+    GY: { label: 'NID', mask: '0000000' },
+    SR: { label: 'NIS', mask: '0000000' },
+    FK: { label: 'Passport', mask: '' },
+})?.map(([code, doc]) => ({
+    value: code,
+    label: `${doc.label}`,
+    mask: doc.mask,
+}));
+

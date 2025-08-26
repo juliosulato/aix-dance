@@ -13,7 +13,8 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
-      "@typescript-eslint/no-explicit-any": "disable"
+      "@typescript-eslint/no-explicit-any": "disable",
+      "semi": "error"
     },
     ignores: [
       "node_modules/**",

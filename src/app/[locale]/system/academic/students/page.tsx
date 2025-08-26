@@ -1,5 +1,4 @@
 import Breadcrumps from "@/components/ui/Breadcrumps";
-import { LanguagePicker } from "@/components/ui/LanguagePicker";
 import { getTranslations } from "next-intl/server";
 
 export default async function StudentsPage() {

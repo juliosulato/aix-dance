@@ -9,10 +9,6 @@
             "whyDidYouKnowUs": {
                 "label": "Como nos conheceu?",
                 "placeholder": "Digite Aqui"
-            },
-            "instagramUser": {
-                "label": "Usuário do Instagram",
-                "placeholder": "@nomedeusuario"
             }
         },
         "health": {

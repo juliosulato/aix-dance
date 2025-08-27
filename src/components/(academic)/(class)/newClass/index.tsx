@@ -11,7 +11,7 @@ import NewClass__Resume from "./resume";
 
 type Props = {
     opened: boolean;
-    onClose?: () => void;
+    onClose: () => void;
 }
 
 function NewClass({ opened, onClose }: Props) {

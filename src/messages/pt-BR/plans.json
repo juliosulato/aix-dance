@@ -1,0 +1,30 @@
+{
+    "modals": {
+        "create": {
+            "title": "Novo Plano",
+            "subtitle": "Informações Básicas",
+            "fields": {
+                "name": {
+                    "label": "Nome do Plano",
+                    "placeholder": "Digite aqui"
+                },
+                "frequency": {
+                    "label": "Frequência",
+                    "placeholder": "Digite quantas vezes por semana esse plano dá",
+                    "suffix": "x por semana"
+                },
+                "cicle": {
+                    "label": "Ciclo de Cobrança",
+                    "placeholder": "Selecione um ciclo de cobrança"
+                },
+                "amount": {
+                    "label": "Valor"
+                },
+                "contractModel": {
+                    "label": "Modelo de Contrato",
+                    "placeholder": "Selecione um modelo de contrato"
+                }
+            }
+        }
+    }
+}

@@ -1,9 +1,10 @@
-import NewClass from "@/components/(academic)/(class)/newClass";
+import NewPlan from "@/components/(academic)/(plans)/newPlan";
+import NewTeacher from "@/components/(academic)/newTeacher";
 
 export default async function Sistema() {
     return (
         <main>
-            <NewClass opened/>
+            <NewTeacher opened />
         </main>
     )
 }

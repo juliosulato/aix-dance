@@ -58,6 +58,10 @@
         "modality": {
             "label": "Modalidade",
             "text": "Selecione uma modalidade"
+        },
+        "instagramUser": {
+            "label": "Usuário do Instagram",
+            "placeholder": "@nomedeusuario"
         }
     },
     "submit": "Salvar",

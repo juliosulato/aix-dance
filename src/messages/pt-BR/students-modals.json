@@ -6,7 +6,7 @@
     "forms": {
         "personalData": {
             "title": "Dados Pessoais",
-            "whyDidYouKnowUs": {
+            "howDidYouMeetUs": {
                 "label": "Como nos conheceu?",
                 "placeholder": "Digite Aqui"
             }

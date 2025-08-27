@@ -4,12 +4,14 @@ import { PhoneInput } from "@/components/ui/cellPhoneInput";
 import { Select, TextInput } from "@mantine/core";
 import { useTranslations } from "next-intl";
 import { DateInput } from "@mantine/dates"
-import 'dayjs/locale/br';
 import DocumentInput from "@/components/ui/documentInput";
+dayjs.locale("pt-br");
+import 'dayjs/locale/pt-br';
+import dayjs from "dayjs";
 
 export default function NewTeacher__PersonalData() {
     const [gender, setGender] = useState<Gender | null>(null);
-    const t = useTranslations("students-modals.forms.personalData");
+    const t = useTranslations("teachers.modals.create");
     const g = useTranslations("forms.general-fields");
 
     return (
@@ -59,10 +61,11 @@ export default function NewTeacher__PersonalData() {
                 label={g("dateOfBirth.label")}
                 id="dateOfBirth"
                 name="dateOfBirth"
+                locale="pt-br"
                 withAsterisk
+                maxDate={new Date()}
                 placeholder={g("dateOfBirth.placeholder")}
                 valueFormat={g("dateOfBirth.valueFormat")}
-                lang="pt-br"
             />
             <DocumentInput />
             <Select
@@ -98,12 +101,10 @@ export default function NewTeacher__PersonalData() {
             />
 
             <TextInput
-                label={g("professionalRegister.label")}
+                label={t("basicInformations.fields.professionalRegister.label")}
                 id="professionalRegister"
                 name="professionalRegister"
-                withAsterisk
-                placeholder={g("professionalRegister.placeholder")}
-                required
+                placeholder={t("basicInformations.fields.professionalRegister.placeholder")}
                 className="md:col-span-2 lg:col-span-3 3xl:col-span-4"
             />
         </div>

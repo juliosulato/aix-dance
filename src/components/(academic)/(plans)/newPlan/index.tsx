@@ -4,6 +4,7 @@ import { Button, Modal, NumberInput, Select, TextInput } from "@mantine/core";
 import { PlanType } from "@prisma/client";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { RiMoneyDollarCircleFill } from "react-icons/ri";
 
 
 type Props = {
@@ -50,6 +51,7 @@ export default function NewPlan({ opened, onClose }: Props) {
                         allowDecimal
                         decimalSeparator=","
                         required
+                        leftSection={<RiMoneyDollarCircleFill />}
                         withAsterisk
                     />
                     <Select

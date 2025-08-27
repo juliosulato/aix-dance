@@ -18,11 +18,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         if ((credentials.user as string).includes("@")) {
           user = await prisma.user.findFirst({
-            where: { email: credentials.user as string }
+            where: { email: credentials.user as string },
+            include: {
+              tenancy: true
+            }
           });
         } else {
           user = await prisma.user.findFirst({
-            where: { user: credentials.user as string }
+            where: { user: credentials.user as string },
+            include: {
+              tenancy: true
+            }
           });
         }
 
@@ -40,7 +46,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           role: user.role,
           name: user.firstName,
           email: user.email,
-          remember: credentials.remember === "true" || credentials.remember === "on"
+          remember: credentials.remember === "true" || credentials.remember === "on",
+          tenancyId: user.tenancyId,
+          country: user.tenancy.country
         }
       }
     }),
@@ -65,8 +73,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.id = user.id;
         token.role = user.role;
         token.remember = user.remember;
+        token.tenancyId = user.tenancyId;
+        token.country = user.country;
 
-        // Define expiração conforme "lembrar-me"
+
         token.exp = Math.floor(Date.now() / 1000) + (
           user.remember ? 60 * 60 * 24 * 30 : 60 * 60 * 24
         );
@@ -78,6 +88,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (token) {
         session.user.id = token.id;
         session.user.role = token.role;
+        session.user.tenancyId = token.tenancyId;
+        session.user.country = token.country;
+        session.user.remember = token.remember;
+
       }
       return session;
     }

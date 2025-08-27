@@ -9,10 +9,9 @@ export default function NewTeacher__Address() {
             <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{f("title")}</h2>
 
             <TextInput
-                label={f("street.label")}
-                id="street"
-                name="street"
-                withAsterisk
+                label={f("publicPlace.label")}
+                id="publicPlace"
+                name="publicPlace"
             />
 
             <TextInput
@@ -20,7 +19,6 @@ export default function NewTeacher__Address() {
                 id="number"
                 name="number"
             />
-
             <TextInput
                 label={f("complement.label")}
                 id="complement"
@@ -37,6 +35,7 @@ export default function NewTeacher__Address() {
                 id="zipCode"
                 name="zipCode"
             />
+            <br />
             <TextInput
                 label={f("city.label")}
                 id="city"
@@ -48,8 +47,6 @@ export default function NewTeacher__Address() {
                 id="state"
                 name="state"
             />
-
-
         </div>
     )
 }

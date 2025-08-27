@@ -1,10 +1,11 @@
-import NewPlan from "@/components/(academic)/(plans)/newPlan";
-import NewTeacher from "@/components/(academic)/newTeacher";
+"use client";
+
+import NewStudent from "@/components/(academic)/(students)/newStudent";
 
 export default async function Sistema() {
     return (
         <main>
-            <NewTeacher opened />
+            <NewStudent opened onClose={() => null} />
         </main>
     )
 }

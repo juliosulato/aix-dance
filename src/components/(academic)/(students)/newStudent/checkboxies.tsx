@@ -1,8 +1,9 @@
+import { GuardianFormData } from "@/types/studentForm";
 import { Checkbox, Textarea } from "@mantine/core";
 import { useTranslations } from "next-intl";
 import { Dispatch, SetStateAction, useState } from "react";
 
-export default function NewStudent__Checkboxies({ setGuardian }: { setGuardian: Dispatch<SetStateAction<boolean>> }) {
+export default function NewStudent__Checkboxies({ setGuardian }: { setGuardian: Dispatch<SetStateAction<GuardianFormData[] | null>> }) {
     const t = useTranslations("students-modals.forms.health");
     const [health, setHealth] = useState<{
         healthProblems: boolean;
@@ -46,7 +47,13 @@ export default function NewStudent__Checkboxies({ setGuardian }: { setGuardian: 
                 />
             )}
             <Checkbox label={t("canLeaveAlone.label")} id="canLeaveAlone" name="canLeaveAlone" />
-            <Checkbox label={t("haveGuardian.label")} id="guardian" name="guardian" onChange={(ev) => setGuardian(ev.target.checked)} />
+            <Checkbox label={t("haveGuardian.label")} id="guardian" name="guardian" onChange={(ev) => {
+                if (ev.target.checked) {
+                    setGuardian([]);
+                } else {
+                    setGuardian(null);
+                }
+            }} />
         </div>
     )
 }

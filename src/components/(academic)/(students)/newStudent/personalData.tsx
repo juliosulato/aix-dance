@@ -4,7 +4,7 @@ import { PhoneInput } from "@/components/ui/cellPhoneInput";
 import { Select, TextInput } from "@mantine/core";
 import { useTranslations } from "next-intl";
 import { DateInput } from "@mantine/dates"
-import 'dayjs/locale/BR';
+import 'dayjs/locale/pt-br';
 import DocumentInput from "@/components/ui/documentInput";
 
 export default function NewStudent__PersonalData() {
@@ -62,7 +62,7 @@ export default function NewStudent__PersonalData() {
                 withAsterisk
                 placeholder={g("dateOfBirth.placeholder")}
                 valueFormat={g("dateOfBirth.valueFormat")}
-                lang="pt-br"
+                locale="pt-br"
             />
             <DocumentInput />
             <Select
@@ -90,10 +90,10 @@ export default function NewStudent__PersonalData() {
                 />
             )}
             <Select
-                label={t("whyDidYouKnowUs.label")}
-                id="whyDidYouKnowUs"
-                name="whyDidYouKnowUs"
-                placeholder={t("whyDidYouKnowUs.placeholder")}
+                label={t("howDidYouMeetUs.label")}
+                id="howDidYouMeetUs"
+                name="howDidYouMeetUs"
+                placeholder={t("howDidYouMeetUs.placeholder")}
                 data={[
                     { label: "Instagram", value: "instagram" },
                     { label: "Facebook", value: "facebook" },
@@ -104,10 +104,10 @@ export default function NewStudent__PersonalData() {
                 ]}
             />
             <TextInput
-                label={t("instagramUser.label")}
+                label={g("instagramUser.label")}
                 id="instagramUser"
                 name="instagramUser"
-                placeholder={t("instagramUser.placeholder")}
+                placeholder={g("instagramUser.placeholder")}
             />
         </div>
     )

@@ -14,15 +14,6 @@ europeDocumentOptions.forEach(doc => {
     documentOptions[doc.value] = { label: doc.label, mask: doc.mask };
 });
 
-declare module "next-auth" {
-    interface Session {
-        user: User
-    }
-    
-    interface User {
-        country?: string
-    }
-}
 
 export default function DocumentInput() {
     const { data: session } = useSession();
@@ -49,6 +40,8 @@ export default function DocumentInput() {
                 value={value}
                 onAccept={(val: string) => setValue(val)}
                 style={{ width: '100%' }}
+                id='documentOfIdentity'
+                name='documentOfIdentity'
             />
         </Flex>
     );

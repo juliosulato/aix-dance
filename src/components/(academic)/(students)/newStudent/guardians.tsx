@@ -1,7 +1,7 @@
 import { PhoneInput } from "@/components/ui/cellPhoneInput";
 import { TextInput } from "@mantine/core";
 import { useTranslations } from "next-intl";
-import 'dayjs/locale/BR';
+import 'dayjs/locale/pt-br';
 import DocumentInput from "@/components/ui/documentInput";
 
 export default function NewStudent__Guardians() {

@@ -1,0 +1,87 @@
+{
+    "modals": {
+        "create": {
+            "title": "Novo Professor",
+            "basicInformations": {
+                "title": "Informações Básicas",
+                "fields": {
+                    "professionalRegister": {
+                        "label": "Registro Profissional",
+                        "placeholder": "Digite aqui o nº do documento"
+                    }
+                }
+            },
+            "accessData": {
+                "title": "Dados de Acesso",
+                "fields": {
+                    "user": {
+                        "label": "Usuário",
+                        "placeholder": "nomedeusuario"
+                    },
+                    "password": {
+                        "label": "Senha"
+                    },
+                    "confirmPassword": {
+                        "label": "Confirmação da Senha"
+                    }
+                }
+            },
+            "remuneration": {
+                "title": "Remuneração",
+                "contractType": {
+                    "label": "Tipo de contrato",
+                    "placeholder": "Selecione",
+                    "options": {
+                        "HOURLY": "Por hora-aula",
+                        "FIXED": "Salário fixo",
+                        "PER_CLASS": "Por aula dada",
+                        "PERCENTAGE": "Por porcentagem da turma"
+                    }
+                },
+                "hourly": {
+                    "label": "Valor hora-aula"
+                },
+                "fixed": {
+                    "label": "Salário fixo mensal"
+                },
+                "perClass": {
+                    "label": "Valor por aula"
+                },
+                "percentage": {
+                    "label": "% sobre receita da turma"
+                },
+                "paymentDay": {
+                    "label": "Dia do pagamento"
+                },
+                "paymentMethod": {
+                    "label": "Forma de Pagamento"
+                },
+                "paymentDetails": {
+                    "label": "Dados do Pagamento"
+                },
+                "notes": {
+                    "label": "Observações"
+                },
+                "presenceBonus": {
+                    "checkbox": "Bônus por presença?",
+                    "tooltip": "Se marcado, será possível definir um valor extra para cada presença confirmada do professor para alunos antigos e novos que começaram até o dia 10 do mês referente.",
+                    "title": "Bônus por Presença",
+                    "label": "Bônus por Presença",
+                    "loseBonusCheckbox": "Perde o bônus ao faltar?",
+                    "loseBonusTooltip": "Ao faltar em uma aula de uma turma ele perde o bônus total acumulado daquela turma. Por exemplo, ele foi em 15 de 16 aulas, ele vai perde o bônus de todas as 16 aulas por conta dessa falta."
+                },
+                "commission": {
+                    "checkbox": "Comissão Por Faixa de Alunos?",
+                    "tooltip": "Se marcado, será possível definir uma comissão de acordo com o nº de alunos por turma.",
+                    "title": "Comissão Por Faixa de Alunos",
+                    "addRange": "Adicionar Faixa",
+                    "tableHeaders": {
+                        "from": "De (alunos)",
+                        "to": "Até (alunos)",
+                        "value": "Valor da comissão"
+                    }
+                }
+            }
+        }
+    }
+}

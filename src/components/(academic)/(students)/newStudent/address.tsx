@@ -1,6 +1,6 @@
 import {  TextInput } from "@mantine/core";
 import { useTranslations } from "next-intl";
-import 'dayjs/locale/BR';
+import 'dayjs/locale/pt-br';
 
 export default function NewStudent__Address() {
     const f = useTranslations("forms.address");
@@ -11,9 +11,9 @@ export default function NewStudent__Address() {
             <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{f("title")}</h2>
 
             <TextInput
-                label={f("street.label")}
-                id="street"
-                name="street"
+                label={f("publicPlace.label")}
+                id="publicPlace"
+                name="publicPlace"
                 withAsterisk
             />
 

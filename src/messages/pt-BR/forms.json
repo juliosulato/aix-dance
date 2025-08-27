@@ -4,7 +4,7 @@
         "zipCode": {
             "label": "CEP"
         },
-        "street": {
+        "publicPlace": {
             "label": "Logradouro"
         },
         "number": {
@@ -45,7 +45,7 @@
         "dateOfBirth": {
             "label": "Data de Nascimento",
             "placeholder": "Digite Aqui",
-            "valueFormat": "DD MMM YYYY"
+            "valueFormat": "DD/MM/YYYY"
         },
         "gender": {
             "label": "Gênero",

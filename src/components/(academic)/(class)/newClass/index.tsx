@@ -2,7 +2,7 @@
 
 import { Button, Modal, Stepper } from "@mantine/core";
 import { useTranslations } from "next-intl";
-import 'dayjs/locale/br';
+import 'dayjs/locale/pt-br';
 import { useState } from "react";
 import AboutOfClass from "./aboutOfClass";
 import DayOfClassesAndHours from "./dayOfClassAndHours";

@@ -29,10 +29,43 @@ model User {
 
   accounts Account[]
   sessions Session[]
+  teacherContract TeacherContract?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@schema("users")
+}
+
+model TeacherContract {
+  id String @id @default(cuid())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type ContractType
+
+  hourlyRate Decimal?     // por hora-aula
+  fixedSalary Decimal?    // fixo mensal
+  perClassRate Decimal?   // por aula dada
+  percentage  Float?      // % da receita da turma
+
+  paymentDay Int?         // dia fixo do pagamento
+  defaultPaymentMethod String?
+  bonusPresence Decimal?  // bônus por presença
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@schema("users")
+}
+
+enum ContractType {
+  HOURLY
+  FIXED
+  PER_CLASS
+  PERCENTAGE
   @@schema("users")
 }
 

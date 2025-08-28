@@ -30,24 +30,23 @@ type Props = {
 
 function NewStudent({ opened, onClose }: Props) {
   const t = useTranslations("");
-  const { data: sessionData, status } = useSession();
-
-
+  
+  
   const [avatar, setAvatar] = useState<File | null>(null);
   const [visible, setVisible] = useState(false);
-
+  
   const { control, register, handleSubmit, watch, formState: { errors } } = useForm<CreateStudentFormData>({
     resolver: zodResolver(studentSchema),
     defaultValues: {
       guardian: [], // importante para iniciar o array vazio,
-          healthProblems: "",
-    medicalAdvice: "",
-    painOrDiscomfort: "",
-
+      healthProblems: "",
+      medicalAdvice: "",
+      painOrDiscomfort: "",
     },
   });
-
+  
   const guardians = watch("guardian");
+  const { data: sessionData, status } = useSession();
   if (status === "loading") {
     return <LoadingOverlay visible />;
   }
@@ -63,7 +62,6 @@ function NewStudent({ opened, onClose }: Props) {
     }
 
     const parsedDate = dayjs(data.dateOfBirth, "DD/MM/YYYY", true); // o `true` ativa parsing estrito
-    console.log(data.dateOfBirth, parsedDate)
     if (!parsedDate.isValid()) {
       notifications.show({ color: "red", message: "Data de nascimento inválida" });
       setVisible(false);

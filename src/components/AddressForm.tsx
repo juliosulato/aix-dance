@@ -1,3 +1,4 @@
+"use client";
 import {  TextInput } from "@mantine/core";
 import { useTranslations } from "next-intl";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
@@ -17,7 +18,6 @@ export default function Address({  errors, register }: Props) {
 
       <TextInput
         label={f("publicPlace.label")}
-        withAsterisk
         {...register("address.publicPlace")}
         error={errors.address?.publicPlace?.message}
       />

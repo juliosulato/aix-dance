@@ -3,11 +3,11 @@ import { z } from "zod";
 const guardianSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
-  relationship: z.string().optional(),
-  cellPhoneNumber: z.string(),
-  phoneNumber: z.string().optional(),
   email: z.email(),
-  documentOfIdentity: z.string()
+  cellPhoneNumber: z.string(),
+  relationship: z.string().optional(),
+  phoneNumber: z.string().optional(),
+  documentOfIdentity: z.string().optional(),
 });
 
 const addressSchema = z.object({
@@ -26,11 +26,11 @@ const studentSchema = z.object({
   gender: z.enum(["MALE", "FEMALE", "NON_BINARY", "OTHER"]),
   cellPhoneNumber: z.string(),
   pronoun: z.string().optional(),
-  dateOfBirth: z.date(),
+  dateOfBirth: z.string(),
   phoneNumber: z.string().optional(),
-  image: z.string().url().optional(),
+  image: z.url().optional(),
   documentOfIdentity: z.string().optional(),
-  email: z.string().email(),
+  email: z.email(),
   howDidYouMeetUs: z.string().optional(),
   instagramUser: z.string().optional(),
   healthProblems: z.string().optional(),

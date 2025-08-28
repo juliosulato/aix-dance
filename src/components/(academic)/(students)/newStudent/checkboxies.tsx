@@ -1,3 +1,4 @@
+"use client";
 import { Checkbox, Textarea } from "@mantine/core";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -22,67 +23,78 @@ export default function NewStudent__Checkboxies({ control, errors }: Props) {
 
             <Checkbox
                 label={t("healthProblems.label")}
+                name="healthProblemsCheckbox"
+                id="healthProblemsCheckbox"
                 onChange={(ev) => {
-                    setShowFields((prev) => ({ ...prev, healthProblems: ev.currentTarget.checked }));
+                    const checked = Boolean(ev.target.checked); // mais seguro que currentTarget
+                    setShowFields((prev) => ({ ...prev, healthProblems: checked }));
                 }}
             />
-            {showFields.healthProblems && (
-                <Controller
-                    name="healthProblems"
-                    control={control}
-                    render={({ field }) => (
-                        <Textarea
-                            label={t("textarea")}
-                            {...field}
-                            error={errors.healthProblems?.message}
-                            className="md:col-span-2 lg:col-span-3 3xl:col-span-4"
-                        />
-                    )}
-                />
-            )}
+
+            <Controller
+                name="healthProblems"
+                control={control}
+                render={({ field }) => (
+                    <Textarea
+                        label={t("textarea")}
+                        {...field}
+                        defaultValue={""}
+                        error={errors.healthProblems?.message}
+                        className="md:col-span-2 lg:col-span-3 3xl:col-span-4"
+                        style={{ display: showFields.healthProblems ? 'block' : 'none' }}
+                    />
+                )}
+            />
+
 
             <Checkbox
                 label={t("medicalAdvice.label")}
+                name="medicalAdviceCheckbox"
+                id="medicalAdviceCheckbox"
                 onChange={(ev) => {
-                    setShowFields((prev) => ({ ...prev, medicalAdvice: ev.currentTarget.checked }));
+                    const checked = Boolean(ev.target.checked); // mais seguro que currentTarget
+                    setShowFields((prev) => ({ ...prev, medicalAdvice: checked }));
                 }}
             />
-            {showFields.medicalAdvice && (
-                <Controller
-                    name="medicalAdvice"
-                    control={control}
-                    render={({ field }) => (
-                        <Textarea
-                            label={t("textarea")}
-                            {...field}
-                            error={errors.medicalAdvice?.message}
-                            className="md:col-span-2 lg:col-span-3 3xl:col-span-4"
-                        />
-                    )}
-                />
-            )}
 
+
+            <Controller
+                name="medicalAdvice"
+                control={control}
+                render={({ field }) => (
+                    <Textarea
+                        label={t("textarea")}
+                        {...field}
+                        defaultValue={""}
+                        error={errors.medicalAdvice?.message}
+                        className="md:col-span-2 lg:col-span-3 3xl:col-span-4"
+                        style={{ display: showFields.medicalAdvice ? 'block' : 'none' }}
+                    />
+                )}
+            />
             <Checkbox
                 label={t("painOrDiscomfort.label")}
+                name="painOrDiscomfortCheckbox"
+                id="painOrDiscomfortCheckbox"
                 onChange={(ev) => {
-                    setShowFields((prev) => ({ ...prev, painOrDiscomfort: ev.currentTarget.checked }));
+                    const checked = Boolean(ev.target.checked); // mais seguro que currentTarget
+                    setShowFields((prev) => ({ ...prev, painOrDiscomfort: checked }));
                 }}
             />
 
-            {showFields.painOrDiscomfort && (
-                <Controller
-                    name="painOrDiscomfort"
-                    control={control}
-                    render={({ field }) => (
-                        <Textarea
-                            label={t("textarea")}
-                            {...field}
-                            error={errors.painOrDiscomfort?.message}
-                            className="md:col-span-2 lg:col-span-3 3xl:col-span-4"
-                        />
-                    )}
-                />
-            )}
+            <Controller
+                name="painOrDiscomfort"
+                control={control}
+                render={({ field }) => (
+                    <Textarea
+                        label={t("textarea")}
+                        {...field}
+                        error={errors.painOrDiscomfort?.message}
+                        className="md:col-span-2 lg:col-span-3 3xl:col-span-4"
+                        style={{ display: showFields.painOrDiscomfort ? 'block' : 'none' }}
+                    />
+                )}
+            />
 
             <Controller
                 name="canLeaveAlone"
@@ -91,7 +103,7 @@ export default function NewStudent__Checkboxies({ control, errors }: Props) {
                     <Checkbox
                         label={t("canLeaveAlone.label")}
                         checked={field.value || false}
-                        onChange={(ev) => field.onChange(ev.currentTarget.checked)}
+                        onChange={(ev) => field.onChange(ev?.currentTarget?.checked ?? false)}
                     />
                 )}
             />
@@ -104,7 +116,7 @@ export default function NewStudent__Checkboxies({ control, errors }: Props) {
                         label={t("haveGuardian.label")}
                         checked={Array.isArray(field.value) && field.value.length > 0}
                         onChange={(ev) => {
-                            if (ev.currentTarget.checked) {
+                            if (ev?.currentTarget?.checked ?? false) {
                                 field.onChange([{ firstName: "", lastName: "", relationship: "", cellPhoneNumber: "", phoneNumber: "", email: "", documentOfIdentity: "" }]);
                             } else {
                                 field.onChange([]);

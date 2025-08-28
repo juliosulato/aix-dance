@@ -256,8 +256,6 @@ useEffect(() => {
   const { readOnly, disabled } = props;
   const leftSectionWidth = 54;
 
-  // Debug: verificar se country existe
-  console.log('Country atual:', country);
 
   return (
     <InputBase

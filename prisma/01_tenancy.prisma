@@ -92,6 +92,7 @@ model StudentGuardian {
     cellPhoneNumber String
     phoneNumber     String?
     email           String?
+    relationShip    String
 
     studentId String
     student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)

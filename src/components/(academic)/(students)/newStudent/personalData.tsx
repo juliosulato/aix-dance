@@ -1,13 +1,14 @@
 import { Gender } from "@prisma/client";
 import { useState } from "react";
 import { PhoneInput } from "@/components/ui/cellPhoneInput";
-import { Select, TextInput } from "@mantine/core";
+import { InputBase, Select, TextInput } from "@mantine/core";
 import { useTranslations } from "next-intl";
 import { DateInput } from "@mantine/dates";
 import 'dayjs/locale/pt-br';
 import DocumentInput from "@/components/ui/documentInput";
 import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form";
 import { CreateStudentFormData } from "@/schemas/studentSchema";
+import { IMaskInput } from "react-imask";
 
 type Props = {
     control: Control<CreateStudentFormData>;
@@ -28,7 +29,7 @@ export default function NewStudent__PersonalData({ control, register, errors }: 
                 label={g("firstName.label")}
                 placeholder={g("firstName.placeholder")}
                 required
-                withAsterisk
+
                 error={errors.firstName?.message}
                 {...register("firstName")}
             />
@@ -36,7 +37,7 @@ export default function NewStudent__PersonalData({ control, register, errors }: 
                 label={g("lastName.label")}
                 placeholder={g("lastName.placeholder")}
                 required
-                withAsterisk
+
                 error={errors.lastName?.message}
                 {...register("lastName")}
             />
@@ -48,7 +49,7 @@ export default function NewStudent__PersonalData({ control, register, errors }: 
                     <PhoneInput
                         label={g("cellPhoneNumber.label")}
                         required
-                        withAsterisk
+
                         error={errors.cellPhoneNumber?.message}
                         value={field.value}
                         onChange={field.onChange}
@@ -75,23 +76,27 @@ export default function NewStudent__PersonalData({ control, register, errors }: 
                 label={g("email.label")}
                 placeholder={g("email.placeholder")}
                 required
-                withAsterisk
+
                 type="email"
                 {...register("email")}
                 error={errors.email?.message}
             />
 
+
+
+
             <Controller
                 name="dateOfBirth"
                 control={control}
                 render={({ field }) => (
-                    <DateInput
+                    <InputBase
+                        component={IMaskInput}
+                        mask={g("dateOfBirth.mask")}
+                        required
+                        value={field.value || ""}
                         label={g("dateOfBirth.label")}
-                        placeholder={g("dateOfBirth.placeholder")}
-                        withAsterisk
-                        value={field.value}
-                        onChange={field.onChange}
-                        locale="pt-br"
+                        error={errors.dateOfBirth?.message}
+                        onAccept={(val: string) => field.onChange(val)}
                     />
                 )}
             />
@@ -103,22 +108,34 @@ export default function NewStudent__PersonalData({ control, register, errors }: 
                     <DocumentInput
                         value={field.value}
                         onChange={field.onChange}
+                        required
                     />
                 )}
             />
+            <Controller
+                name="gender"
+                control={control}
+                render={({ field }) => (
 
-            <Select
-                label={g("gender.label")}
-                placeholder={g("gender.placeholder")}
-                data={[
-                    { label: "Mulher", value: Gender.FEMALE },
-                    { label: "Homem", value: Gender.MALE },
-                    { label: "Não binário", value: Gender.NON_BINARY },
-                    { label: "Outro", value: Gender.OTHER },
-                ]}
-                {...register("gender")}
-                onChange={(val) => setGender(val as Gender)}
-                error={errors.gender?.message}
+                    <Select
+                        label={g("gender.label")}
+                        placeholder={g("gender.placeholder")}
+                        data={[
+                            { label: "Mulher", value: Gender.FEMALE },
+                            { label: "Homem", value: Gender.MALE },
+                            { label: "Não binário", value: Gender.NON_BINARY },
+                            { label: "Outro", value: Gender.OTHER },
+                        ]}
+                        value={field.value ?? null}
+                        onChange={(val) => {
+                            field.onChange(val);
+                            setGender(val as Gender);
+                        }}
+                        error={errors.gender?.message}
+                        required
+
+                    />
+                )}
             />
 
             {gender && (gender === Gender.NON_BINARY || gender === Gender.OTHER) && (

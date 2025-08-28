@@ -45,7 +45,8 @@
         "dateOfBirth": {
             "label": "Data de Nascimento",
             "placeholder": "Digite Aqui",
-            "valueFormat": "DD/MM/YYYY"
+            "valueFormat": "DD/MM/YYYY",
+            "mask": "00/00/0000"
         },
         "gender": {
             "label": "Gênero",

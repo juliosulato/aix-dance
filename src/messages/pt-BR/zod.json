@@ -1,0 +1,9 @@
+{
+    "invalid_type": "O campo {path} está com tipo inválido.",
+    "invalid_string": "O campo {path} está inválido.",
+    "invalid_enum_value": "O valor do campo {path} não é permitido.",
+    "too_small": "O campo {path} está menor do que deveria.",
+    "too_big": "O campo {path} está maior do que deveria.",
+    "invalid_date": "Data inválida em {path}.",
+    "custom": "O campo {path} não é válido."
+}

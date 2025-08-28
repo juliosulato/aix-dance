@@ -3,73 +3,112 @@ import { useState } from "react";
 import { PhoneInput } from "@/components/ui/cellPhoneInput";
 import { Select, TextInput } from "@mantine/core";
 import { useTranslations } from "next-intl";
-import { DateInput } from "@mantine/dates"
+import { DateInput } from "@mantine/dates";
 import 'dayjs/locale/pt-br';
 import DocumentInput from "@/components/ui/documentInput";
+import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form";
+import { CreateStudentFormData } from "@/schemas/studentSchema";
 
-export default function NewStudent__PersonalData() {
+type Props = {
+    control: Control<CreateStudentFormData>;
+    register: UseFormRegister<CreateStudentFormData>;
+    errors: FieldErrors<CreateStudentFormData>;
+}
+
+export default function NewStudent__PersonalData({ control, register, errors }: Props) {
     const [gender, setGender] = useState<Gender | null>(null);
     const t = useTranslations("students-modals.forms.personalData");
     const g = useTranslations("forms.general-fields");
 
     return (
-
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
             <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{t("title")}</h2>
+
             <TextInput
                 label={g("firstName.label")}
-                id="firstName"
-                name="firstName"
+                placeholder={g("firstName.placeholder")}
                 required
                 withAsterisk
-                placeholder={g("firstName.placeholder")}
+                error={errors.firstName?.message}
+                {...register("firstName")}
             />
             <TextInput
                 label={g("lastName.label")}
-                id="lastName"
-                name="lastName"
-                required
-                withAsterisk
                 placeholder={g("lastName.placeholder")}
-            />
-            <PhoneInput
-                label={g("cellPhoneNumber.label")}
-                id="cellPhoneNumber"
-                name="cellPhoneNumber"
                 required
                 withAsterisk
-                onChange={() => null}
+                error={errors.lastName?.message}
+                {...register("lastName")}
             />
-            <PhoneInput
-                label={g("phoneNumber.label")}
-                id="phoneNumber"
+
+            <Controller
+                name="cellPhoneNumber"
+                control={control}
+                render={({ field }) => (
+                    <PhoneInput
+                        label={g("cellPhoneNumber.label")}
+                        required
+                        withAsterisk
+                        error={errors.cellPhoneNumber?.message}
+                        value={field.value}
+                        onChange={field.onChange}
+                        initialCountryCode="BR"
+                    />
+                )}
+            />
+
+            <Controller
                 name="phoneNumber"
-                onChange={() => null}
+                control={control}
+                render={({ field }) => (
+                    <PhoneInput
+                        label={g("phoneNumber.label")}
+                        error={errors.phoneNumber?.message}
+                        value={field.value}
+                        onChange={field.onChange}
+                        initialCountryCode="BR"
+                    />
+                )}
             />
+
             <TextInput
                 label={g("email.label")}
-                id="email"
-                name="email"
+                placeholder={g("email.placeholder")}
                 required
                 withAsterisk
                 type="email"
-                placeholder={g("email.placeholder")}
+                {...register("email")}
+                error={errors.email?.message}
             />
-            <DateInput
-                label={g("dateOfBirth.label")}
-                id="dateOfBirth"
+
+            <Controller
                 name="dateOfBirth"
-                withAsterisk
-                placeholder={g("dateOfBirth.placeholder")}
-                valueFormat={g("dateOfBirth.valueFormat")}
-                locale="pt-br"
+                control={control}
+                render={({ field }) => (
+                    <DateInput
+                        label={g("dateOfBirth.label")}
+                        placeholder={g("dateOfBirth.placeholder")}
+                        withAsterisk
+                        value={field.value}
+                        onChange={field.onChange}
+                        locale="pt-br"
+                    />
+                )}
             />
-            <DocumentInput />
+
+            <Controller
+                name="documentOfIdentity"
+                control={control}
+                render={({ field }) => (
+                    <DocumentInput
+                        value={field.value}
+                        onChange={field.onChange}
+                    />
+                )}
+            />
+
             <Select
                 label={g("gender.label")}
-                id="gender"
-                name="gender"
-                withAsterisk
                 placeholder={g("gender.placeholder")}
                 data={[
                     { label: "Mulher", value: Gender.FEMALE },
@@ -77,38 +116,49 @@ export default function NewStudent__PersonalData() {
                     { label: "Não binário", value: Gender.NON_BINARY },
                     { label: "Outro", value: Gender.OTHER },
                 ]}
-                onChange={(val: any) => setGender(val)}
+                {...register("gender")}
+                onChange={(val) => setGender(val as Gender)}
+                error={errors.gender?.message}
             />
-            {gender && (gender == "NON_BINARY" || gender == 'OTHER') && (
+
+            {gender && (gender === Gender.NON_BINARY || gender === Gender.OTHER) && (
                 <TextInput
                     label={g("pronoun.label")}
-                    id="pronoun"
-                    name="pronoun"
-                    withAsterisk
                     placeholder={g("pronoun.placeholder")}
-                    required
+                    {...register("pronoun")}
+                    error={errors.pronoun?.message}
                 />
             )}
-            <Select
-                label={t("howDidYouMeetUs.label")}
-                id="howDidYouMeetUs"
+
+            <Controller
                 name="howDidYouMeetUs"
-                placeholder={t("howDidYouMeetUs.placeholder")}
-                data={[
-                    { label: "Instagram", value: "instagram" },
-                    { label: "Facebook", value: "facebook" },
-                    { label: "Tiktok", value: "tiktok" },
-                    { label: "Google", value: "google" },
-                    { label: "Indicação", value: "indicacao" },
-                    { label: "Outro", value: "outro" },
-                ]}
+                control={control}
+                render={({ field }) => (
+                    <Select
+                        label={t("howDidYouMeetUs.label")}
+                        placeholder={t("howDidYouMeetUs.placeholder")}
+                        data={[
+                            { label: "Instagram", value: "instagram" },
+                            { label: "Facebook", value: "facebook" },
+                            { label: "Tiktok", value: "tiktok" },
+                            { label: "Google", value: "google" },
+                            { label: "Indicação", value: "indicacao" },
+                            { label: "Outro", value: "outro" },
+                        ]}
+                        value={field.value ?? null}
+                        onChange={(val) => field.onChange(val)}
+                        error={errors.howDidYouMeetUs?.message}
+                    />
+                )}
             />
+
+
             <TextInput
                 label={g("instagramUser.label")}
-                id="instagramUser"
-                name="instagramUser"
                 placeholder={g("instagramUser.placeholder")}
+                {...register("instagramUser")}
+                error={errors.instagramUser?.message}
             />
         </div>
-    )
+    );
 }

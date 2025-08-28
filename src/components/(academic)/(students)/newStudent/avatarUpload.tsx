@@ -1,9 +1,13 @@
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { ActionIcon, Avatar, Menu } from "@mantine/core";
 import { BsThreeDots } from "react-icons/bs";
 import { BiUpload } from "react-icons/bi";
 
-function AvatarUpload() {
+type Props = {
+  setFile: Dispatch<SetStateAction<File | null>>
+}
+
+function AvatarUpload({ setFile }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
@@ -15,12 +19,13 @@ function AvatarUpload() {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    setFile(file);
+
     const reader = new FileReader();
     reader.onload = () => {
       setAvatarUrl(reader.result as string);
     };
     reader.readAsDataURL(file);
-
   };
 
   return (

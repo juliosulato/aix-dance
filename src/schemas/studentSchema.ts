@@ -4,9 +4,10 @@ const guardianSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   relationship: z.string().optional(),
-  cellPhoneNumber: z.string().min(11, "Número de celular inválido"),
+  cellPhoneNumber: z.string(),
   phoneNumber: z.string().optional(),
-  email: z.email("Formato de email inválido"),
+  email: z.email(),
+  documentOfIdentity: z.string()
 });
 
 const addressSchema = z.object({
@@ -22,22 +23,25 @@ const addressSchema = z.object({
 const studentSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
-  gender: z.enum(['MALE', 'FEMALE', 'NON_BINARY', 'OTHER']),
-  cellPhoneNumber: z.string().min(11, "Número de celular inválido"),
+  gender: z.enum(["MALE", "FEMALE", "NON_BINARY", "OTHER"]),
+  cellPhoneNumber: z.string(),
   pronoun: z.string().optional(),
   dateOfBirth: z.date(),
   phoneNumber: z.string().optional(),
-  image: z.url().optional(),
+  image: z.string().url().optional(),
   documentOfIdentity: z.string().optional(),
-  email: z.email("Formato de email inválido"),
+  email: z.string().email(),
   howDidYouMeetUs: z.string().optional(),
   instagramUser: z.string().optional(),
   healthProblems: z.string().optional(),
   medicalAdvice: z.string().optional(),
   painOrDiscomfort: z.string().optional(),
-  canLeaveAlone: z.boolean().default(true),
+  canLeaveAlone: z.boolean().default(true).optional(),
   address: addressSchema,
   guardian: z.array(guardianSchema).optional(),
 });
 
-export default studentSchema;
+
+export { studentSchema };
+export type CreateStudentFormData = z.infer<typeof studentSchema>;
+export type UpdateStudentFormData = z.infer<typeof studentSchema.partial>;

@@ -34,8 +34,9 @@
             "guardian": "Responsável",
             "relationship": {
                 "label": "Grau de Parentesco",
-                "placeholder": "Digite Aqui"
-            }
+                "placeholder": "Pai, mãe, tutor legal, etc."
+            },
+            "addGuardian": "Adicionar"
         }
     }
 }

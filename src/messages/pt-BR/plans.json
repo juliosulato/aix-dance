@@ -2,27 +2,95 @@
     "modals": {
         "create": {
             "title": "Novo Plano",
-            "subtitle": "Informações Básicas",
-            "fields": {
-                "name": {
-                    "label": "Nome do Plano",
-                    "placeholder": "Digite aqui"
+            "basicInformations": {
+                "title": "Informações Básicas",
+                "fields": {
+                    "name": {
+                        "label": "Nome do Plano",
+                        "placeholder": "Digite aqui"
+                    },
+                    "frequency": {
+                        "label": "Frequência",
+                        "placeholder": "Digite quantas vezes por semana esse plano dá",
+                        "suffix": "x por semana"
+                    },
+                    "cicle": {
+                        "label": "Ciclo de Cobrança",
+                        "placeholder": "Selecione um ciclo de cobrança",
+                        "planTypes": {
+                            "SEMMONTLY": "Semanal",
+                            "MONTHLY": "Mensal",
+                            "BI_MONTHLY": "Bimestral",
+                            "QUARTERLY": "Trimestral",
+                            "BI_ANNUAL": "Semestral",
+                            "ANNUAL": "Anual"
+                        }
+                    },
+                    "amount": {
+                        "label": "Valor"
+                    },
+                    "contractModel": {
+                        "label": "Modelo de Contrato",
+                        "placeholder": "Selecione um modelo de contrato"
+                    }
+                }
+            },
+            "payments": {
+                "title": "Informações dos Pagamentos",
+                "fees": {
+                    "title": "Juros",
+                    "description": "Aplique juros para quando o pagamento não ocorrer até a data de vencimento. Os juros acumulativos serão somados diariamente ao valor da parcela até o pagamento.",
+                    "fields": {
+                        "interestPerMonth": {
+                            "label": "Juros ao mês"
+                        },
+                        "interestPerMonthAmount": {
+                            "label": "Valor de juros ao mês"
+                        },
+                        "interestGracePeriod": {
+                            "label": "Carência (dias)",
+                            "tooltip": "Número de dias de tolerância após o vencimento antes da cobrança automática de juros."
+                        }
+                    }
                 },
-                "frequency": {
-                    "label": "Frequência",
-                    "placeholder": "Digite quantas vezes por semana esse plano dá",
-                    "suffix": "x por semana"
-                },
-                "cicle": {
-                    "label": "Ciclo de Cobrança",
-                    "placeholder": "Selecione um ciclo de cobrança"
-                },
-                "amount": {
-                    "label": "Valor"
-                },
-                "contractModel": {
-                    "label": "Modelo de Contrato",
-                    "placeholder": "Selecione um modelo de contrato"
+                "fine": {
+                    "title": "Multa",
+                    "description": "A multa será somada ao valor da parcela caso o pagamento seja feito após a data do vencimento.",
+                    "fields": {
+                        "finePercentage": {
+                            "label": "Valor percentual de multa"
+                        },
+                        "fineAmount": {
+                            "label": "Valor total da multa"
+                        },
+                        "fineGracePeriod": {
+                            "label": "Carência (dias)",
+                            "tooltip": "Número de dias de tolerância após o vencimento antes da cobrança automática de multa."
+                        }
+                }
+            },
+            "discount": {
+                    "title": "Desconto",
+                    "fields": {
+                        "discountPercentage": {
+                            "label": "Valor percentual do desconto"
+                        },
+                        "discountAmount": {
+                            "label": "Valor do desconto"
+                        },
+                        "maximumDiscountPeriod": {
+                            "label": "Prazo Máximo",
+                            "term": {
+                                "untilTheDueDate": "Até o dia do vencimento",
+                                "oneDayBefore": "1 dia antes",
+                                "twoDaysBefore": "2 dias antes",
+                                "threeDaysBefore": "3 dias antes",
+                                "fiveDaysBefore": "5 dias antes",
+                                "tenDaysBefore": "10 dias antes",
+                                "fifteenDaysBefore": "15 dias antes"
+                            }
+                        }
+                    }
                 }
             }
         }

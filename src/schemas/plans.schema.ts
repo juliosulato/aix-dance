@@ -2,8 +2,8 @@ import { PlanType } from "@prisma/client";
 import z from "zod";
 
 const planSchema = z.object({
-    name: z.string(),
-    frequency: z.number(),
+  name: z.string(),
+  frequency: z.number(),
   type: z.enum([
     PlanType.BI_WEEKLY,
     PlanType.MONTHLY,
@@ -13,13 +13,16 @@ const planSchema = z.object({
     PlanType.ANNUAL,
     PlanType.BI_ANNUAL
   ]),
-    amount: z.number(),
-    contractModelId: z.string(),
-    monthlyInterest: z.number(),
-    finePercentage: z.number(),
-    discountPercentage: z.number(),
-    maximumDiscountPeriod: z.number(),
-    maximumPaymentTerm: z.number()
+  amount: z.number(),
+  contractModelId: z.string().optional(),
+
+  monthlyInterest: z.number(),
+  finePercentage: z.number(),
+  discountPercentage: z.number(),
+
+  maximumDiscountPeriod: z.number().optional(),
+  interestGracePeriod: z.number().optional(),
+  fineGracePeriod: z.number().optional()
 });
 
 export const createPlanSchema = planSchema;

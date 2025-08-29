@@ -105,13 +105,13 @@ model Class {
     tenancyId String
     tenancy   Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
 
-    name     String
-    online   Boolean  @default(false)
+    name   String
+    online Boolean @default(false)
 
     days ClassDay[]
 
     modalityId String
-    modality Modality @relation(fields: [modalityId], references: [id], onDelete: Cascade)
+    modality   Modality @relation(fields: [modalityId], references: [id], onDelete: Cascade)
 
     studentClasses   StudentClass[]
     classAttendances ClassAttendance[]
@@ -147,7 +147,7 @@ enum ModalityType {
     PRESENTIAL
     ONLINE
     HYBRID
-    
+
     @@schema("tenancy")
 }
 
@@ -220,11 +220,13 @@ model Plan {
     contractModelId String
     contractModel   ContractModel @relation(fields: [contractModelId], references: [id], onDelete: Cascade)
 
-    monthlyInterest       Float
-    finePercentage        Float
-    discountPercentage    Float
+    monthlyInterest    Float
+    finePercentage     Float
+    discountPercentage Float
+
     maximumDiscountPeriod Int
-    maximumPaymentTerm    Int
+    interestGracePeriod   Int
+    fineGracePeriod       Int
 
     @@schema("tenancy")
 }

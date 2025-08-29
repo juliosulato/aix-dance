@@ -8,5 +8,9 @@
         "update": "Atualizar",
         "add": "Adicionar"
     },
-    "notFound": "Nada encontrado..."
+    "notFound": "Nada encontrado...",
+    "errors": {
+        "title": "Oops... Algo deu errado!",
+        "contract-models": "Houve um erro ao buscar os modelos de contratos, tente novamente mais tarde."
+    }
 }

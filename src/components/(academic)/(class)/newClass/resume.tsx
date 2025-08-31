@@ -1,5 +1,14 @@
 import InfoTerm from "@/components/ui/Infoterm";
 import { useTranslations } from "next-intl";
+import { CreateClassInput } from "@/schemas/class.schema";
+import { Control, FieldErrors, UseFormRegister } from "react-hook-form";
+
+type Props = {
+    control: Control<CreateClassInput>;
+    errors: FieldErrors<CreateClassInput>;
+    register: UseFormRegister<CreateClassInput>;
+    tenancyId: string;
+};
 
 export default function NewClass__Resume() {
     const t = useTranslations("classes-modals.formSteps");

@@ -1,8 +1,17 @@
 import { Checkbox, MultiSelect, NumberInput, Select, TextInput } from "@mantine/core";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { CreateClassInput } from "@/schemas/class.schema";
+import { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 
-export default function NewClass__AboutOfClass() {
+type Props = {
+    control: Control<CreateClassInput>;
+    errors: FieldErrors<CreateClassInput>;
+    register: UseFormRegister<CreateClassInput>;
+    tenancyId: string;
+};
+
+export default function NewClass__AboutOfClass({ control, errors, register, tenancyId }: Props) {
     const t = useTranslations("classes-modals.formSteps.one");
     const g = useTranslations("");
 
@@ -16,7 +25,6 @@ export default function NewClass__AboutOfClass() {
                         id="modality"
                         name="modality"
                         required
-                        withAsterisk
                         placeholder={t("fields.modality.placeholder")}
                     />
                     <p className="text-xs text-neutral-500">{t("fields.modality.description")} <Link href={"/settings/modalities?newModal=true"}>{g("appShell.navbar.settings")}</Link></p>
@@ -27,21 +35,21 @@ export default function NewClass__AboutOfClass() {
                     name="class"
                     placeholder={t("fields.class.placeholder")}
                     required
-                    withAsterisk
+
                 />
-                <div className="flex flex-col gap-1">
-                    <MultiSelect
-                        label={t("fields.teachers.label")}
-                        id="teachers"
-                        name="teachers"
-                        required
-                        withAsterisk
-                        placeholder={t("fields.teachers.placeholder")}
-                    />
-                    <p className="text-xs text-neutral-500">
-                        {t("fields.teachers.description")} 
-                    </p>
-                </div>
+                <Select
+                    label={t("fields.teacher.label")}
+                    id="teacher"
+                    name="teacher"
+                    required
+                    placeholder={t("fields.teacher.placeholder")}
+                />
+                <Select
+                    label={t("fields.assistant.label")}
+                    id="assistant"
+                    name="assistant"
+                    placeholder={t("fields.assistant.placeholder")}
+                />
                 <NumberInput
                     label={t("fields.quantityMaxOfStudents.label")}
                     id="quantityMaxOfStudents"

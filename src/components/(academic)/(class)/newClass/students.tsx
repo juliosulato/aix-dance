@@ -6,8 +6,17 @@ import { useState } from "react";
 import Image from "next/image";
 
 import notFound from "@/assets/images/not-found.avif";
+import { CreateClassInput } from "@/schemas/class.schema";
+import { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 
-export default function NewClass__Students() {
+type Props = {
+    control: Control<CreateClassInput>;
+    errors: FieldErrors<CreateClassInput>;
+    register: UseFormRegister<CreateClassInput>;
+    tenancyId: string;
+};
+
+export default function NewClass__Students({ control, errors, register, tenancyId }: Props) {
     const t = useTranslations("classes-modals.formSteps.two");
     const g = useTranslations("");
 

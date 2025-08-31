@@ -16,10 +16,13 @@
                     "label": "Nome da Turma",
                     "placeholder": "Digite aqui"
                 },
-                "teachers": {
-                    "label": "Professor e Auxiliares",
-                    "placeholder": "Selecione um professor e seus auxiliares.",
-                    "description": "O primeiro selecionado será marcado como professor e o restante como auxiliar."
+                "teacher": {
+                    "label": "Professor",
+                    "placeholder": "Selecione um professor."
+                },
+                 "assistant": {
+                    "label": "Auxiliar",
+                    "placeholder": "Selecione um auxiliar."
                 },
                 "quantityMaxOfStudents": {
                     "label": "Quantidade Máxima de Matrículas"

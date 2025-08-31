@@ -14,7 +14,7 @@ const planSchema = z.object({
     PlanType.BI_ANNUAL
   ]),
   amount: z.number(),
-  contractModelId: z.string().optional(),
+  contractModelId: z.string().nullable().optional(),
 
   monthlyInterest: z.number(),
   finePercentage: z.number(),

@@ -120,6 +120,7 @@ export default function NewPlan__BasicInformations({ control, errors, register, 
                         className="md:col-span-2 lg:col-span-3 3xl:col-span-4"
                         value={field.value}
                         onChange={field.onChange}
+                        clearable
                     />
                 )}
             />
@@ -142,6 +143,8 @@ export default function NewPlan__BasicInformations({ control, errors, register, 
                         }))}
                         nothingFoundMessage={g("general.notFound")}
                         onChange={field.onChange}
+                        clearable
+                        key={field.value || 'empty'} // <--- Adicione esta linha!
                         className="md:col-span-2 lg:col-span-3 3xl:col-span-4"
                     />
                 )}

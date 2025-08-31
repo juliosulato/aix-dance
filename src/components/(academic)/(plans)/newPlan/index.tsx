@@ -21,7 +21,7 @@ export default function NewPlan({ opened, onClose }: Props) {
     const g = useTranslations("");
     const [visible, setVisible] = useState(false);
 
-    const { control, handleSubmit, formState: { errors }, register, watch } = useForm<CreatePlanInput>({
+    const { control, handleSubmit, formState: { errors }, register, watch, reset } = useForm<CreatePlanInput>({
         resolver: zodResolver(createPlanSchema),
         defaultValues: {
             monthlyInterest: 0,
@@ -30,9 +30,14 @@ export default function NewPlan({ opened, onClose }: Props) {
             finePercentage: 0,
             interestGracePeriod: 0,
             maximumDiscountPeriod: 0,
-            amount: 0.00
+            amount: 0.00,
+            frequency: 1,
+            type: "MONTHLY",
+            contractModelId: null
         }
     });
+
+    const amount = watch("amount");
 
     const { data: sessionData, status } = useSession();
     if (status === "loading") return <LoadingOverlay visible />;
@@ -41,6 +46,11 @@ export default function NewPlan({ opened, onClose }: Props) {
     async function createPlan(data: CreatePlanInput) {
         if (!sessionData?.user.tenancyId) {
             notifications.show({ color: "red", message: "Sessão inválida" });
+            return;
+        }
+
+        if (data.amount === 0) {
+            notifications.show({ color: "yellow", message: "O valor do plano deve ser maior que zero."});
             return;
         }
 
@@ -54,6 +64,7 @@ export default function NewPlan({ opened, onClose }: Props) {
 
             if (!resp.ok) throw new Error("Erro ao criar plano");
             notifications.show({ message: "Plano criado com sucesso!", color: "green" });
+            reset();
             onClose();
         } catch (err) {
             notifications.show({ color: "red", message: "Erro inesperado ao criar plano" });
@@ -64,34 +75,43 @@ export default function NewPlan({ opened, onClose }: Props) {
 
     const onError = (errors: any) => console.log("Erros de validação:", errors);
 
-    const amount = watch("amount");
+
 
     return (
         <>
-        <Modal
-            opened={opened}
-            onClose={onClose}
-            title={t("title")}
-            size="auto"
-            radius="lg"
-            centered
-            classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}
-        >
-            <form onSubmit={handleSubmit(createPlan, onError)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw]">
-                <BasicInformations control={control} errors={errors} register={register} tenancyId={sessionData.user.tenancyId} />
-                <NewPlan__Fees amount={amount} control={control} errors={errors} register={register} />
-                <Button
-                    type="submit"
-                    color="#7439FA"
-                    radius="lg"
-                    size="lg"
-                    fullWidth={false}
-                    className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
-                >
-                    {g("forms.submit")}
-                </Button>
-            </form>
-        </Modal>
+            <Modal
+                opened={opened}
+                onClose={onClose}
+                title={t("title")}
+                size="auto"
+                radius="lg"
+                centered
+                classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}
+            >
+                <form onSubmit={handleSubmit(createPlan, onError)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw]">
+                    <BasicInformations control={control} errors={errors} register={register} tenancyId={sessionData.user.tenancyId} />
+                    <NewPlan__Fees amount={amount} control={control} errors={errors} register={register} />
+                    <Button
+                        type="submit"
+                        color="#7439FA"
+                        radius="lg"
+                        size="lg"
+                        fullWidth={false}
+                        className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+                    >
+                        {g("forms.submit")}
+                    </Button>
+                </form>
+            </Modal>
+            <LoadingOverlay
+                visible={visible}
+                zIndex={9999}
+                overlayProps={{ radius: 'sm', blur: 2 }}
+                loaderProps={{ color: 'violet', type: 'dots' }}
+                pos="fixed"
+                h="100vh"
+                w="100vw"
+            />
         </>
     );
 }

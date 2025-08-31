@@ -5,7 +5,7 @@ import { CreatePlanInput } from "@/schemas/plans.schema";
 import { PlanType } from "@prisma/client";
 import { useTranslations } from "next-intl";
 import { FaPercentage } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
     control: Control<CreatePlanInput>;
@@ -53,13 +53,13 @@ export default function NewPlan__Fees({ control, errors, register, amount }: Pro
 
                 <TextInput
                     label={t("fees.fields.interestPerMonthAmount.label")}
-                    {...register("name")}
                     error={errors.name?.message}
                     required
                     withAsterisk
-                    value={amount * (feeAmount / 100)}
+                    value={(amount * (feeAmount / 100)).toFixed(2).replace(/\./g, ",")}
                     leftSection={<RiMoneyDollarCircleFill />}
                     disabled
+                    classNames={{ input: "!text-neutral-900" }}
                 />
                 <Controller
                     name="interestGracePeriod"
@@ -102,18 +102,20 @@ export default function NewPlan__Fees({ control, errors, register, amount }: Pro
                                 field.onChange(val);
                                 setFineAmount(Number(val))
                             }}
-                             leftSection={<FaPercentage />}
+                            leftSection={<FaPercentage />}
                         />
                     )}
                 />
                 <TextInput
                     label={t("fine.fields.fineAmount.label")}
-                    {...register("name")}
                     error={errors.name?.message}
                     required
                     withAsterisk
                     disabled
                     leftSection={<RiMoneyDollarCircleFill />}
+                    classNames={{ input: "!text-neutral-900" }}
+                    value={(amount * (fineAmount / 100)).toFixed(2).replace(/\./g, ",")}
+
                 />
                 <Controller
                     name="fineGracePeriod"
@@ -162,13 +164,13 @@ export default function NewPlan__Fees({ control, errors, register, amount }: Pro
 
                 <TextInput
                     label={t("discount.fields.discountAmount.label")}
-                    {...register("name")}
                     error={errors.name?.message}
                     required
                     withAsterisk
                     leftSection={<RiMoneyDollarCircleFill />}
                     disabled
-                    value={discountAmount}
+                    classNames={{ input: "!text-neutral-900" }}
+                    value={(amount * (discountAmount / 100)).toFixed(2).replace(/\./g, ",")}
                 />
                 <Controller
                     name="maximumDiscountPeriod"

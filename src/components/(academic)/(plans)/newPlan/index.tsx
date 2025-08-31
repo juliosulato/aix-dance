@@ -2,12 +2,11 @@
 
 import { CreatePlanInput, createPlanSchema } from "@/schemas/plans.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, LoadingOverlay, Modal, NumberInput, Select, TextInput } from "@mantine/core";
+import { Button, LoadingOverlay, Modal } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { PlanType } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useState } from "react";
 import BasicInformations from "./basicInformations";
 import NewPlan__Fees from "./fees";
@@ -22,7 +21,7 @@ export default function NewPlan({ opened, onClose }: Props) {
     const g = useTranslations("");
     const [visible, setVisible] = useState(false);
 
-    const { control, handleSubmit, formState: { errors }, register, setValue, watch } = useForm<CreatePlanInput>({
+    const { control, handleSubmit, formState: { errors }, register, watch } = useForm<CreatePlanInput>({
         resolver: zodResolver(createPlanSchema),
         defaultValues: {
             monthlyInterest: 0,

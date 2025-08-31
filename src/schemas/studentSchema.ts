@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { addressSchema } from "./address.schema";
 
 const guardianSchema = z.object({
   firstName: z.string().min(1),
@@ -10,15 +11,7 @@ const guardianSchema = z.object({
   documentOfIdentity: z.string().optional(),
 });
 
-const addressSchema = z.object({
-  publicPlace: z.string(),
-  number: z.string(),
-  complement: z.string().optional(),
-  neighborhood: z.string(),
-  city: z.string(),
-  state: z.string(),
-  zipCode: z.string(),
-});
+
 
 const studentSchema = z.object({
   firstName: z.string().min(1),

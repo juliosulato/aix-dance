@@ -4,9 +4,8 @@ import { Button, LoadingOverlay, Modal } from "@mantine/core";
 import { useTranslations } from "next-intl";
 import 'dayjs/locale/pt-br';
 import { useState } from "react";
-import AvatarUpload from "./avatarUpload";
+import AvatarUpload from "@/components/avatarUpload";
 import NewStudent__PersonalData from "./personalData";
-import NewStudent__Address from "../../../AddressForm";
 import NewStudent__Checkboxies from "./checkboxies";
 import NewStudent__Guardians from "./guardians";
 import dayjs from "dayjs";
@@ -19,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 dayjs.locale("pt-br");
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import Address from "../../../AddressForm";
 
 dayjs.extend(customParseFormat);
 
@@ -110,7 +110,7 @@ function NewStudent({ opened, onClose }: Props) {
         <form onSubmit={handleSubmit(createStudent, onError)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw] lg:p-6">
           <AvatarUpload setFile={setAvatar} />
           <NewStudent__PersonalData control={control} register={register} errors={errors} />
-          <NewStudent__Address register={register} errors={errors} />
+          <Address register={register} errors={errors} />
           <NewStudent__Checkboxies control={control} errors={errors} />
           {guardians && guardians.length > 0 && (
             <NewStudent__Guardians control={control} errors={errors} />

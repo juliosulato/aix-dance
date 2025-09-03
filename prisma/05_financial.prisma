@@ -144,6 +144,8 @@ model PaymentMethod {
     fees  PaymentFee[]
     bills Bill[]
 
+    teachers Teacher[]
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 

@@ -29,7 +29,10 @@ CREATE TYPE "tenancy"."DayOfWeek" AS ENUM ('SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNE
 CREATE TYPE "tenancy"."PlanType" AS ENUM ('BI_WEEKLY', 'MONTHLY', 'BI_MONTHLY', 'QUARTERLY', 'SEMMONTLY', 'ANNUAL', 'BI_ANNUAL');
 
 -- CreateEnum
-CREATE TYPE "users"."UserRole" AS ENUM ('GESTOR', 'PROFESSOR', 'SECRETARIA');
+CREATE TYPE "users"."RemunerationType" AS ENUM ('HOURLY', 'FIXED');
+
+-- CreateEnum
+CREATE TYPE "users"."UserRole" AS ENUM ('ADMIN', 'TEACHER', 'STAFF');
 
 -- CreateEnum
 CREATE TYPE "financial"."BillType" AS ENUM ('PAYABLE', 'RECEIVABLE');
@@ -146,6 +149,8 @@ CREATE TABLE "tenancy"."StudentGuardian" (
     "cellPhoneNumber" TEXT NOT NULL,
     "phoneNumber" TEXT,
     "email" TEXT,
+    "relationShip" TEXT NOT NULL,
+    "documentOfIdentity" TEXT,
     "studentId" TEXT NOT NULL,
 
     CONSTRAINT "StudentGuardian_pkey" PRIMARY KEY ("id")
@@ -215,12 +220,13 @@ CREATE TABLE "tenancy"."Plan" (
     "frequency" INTEGER NOT NULL DEFAULT 1,
     "type" "tenancy"."PlanType" NOT NULL,
     "amount" DECIMAL(65,30) NOT NULL,
-    "contractModelId" TEXT NOT NULL,
+    "contractModelId" TEXT,
     "monthlyInterest" DOUBLE PRECISION NOT NULL,
     "finePercentage" DOUBLE PRECISION NOT NULL,
     "discountPercentage" DOUBLE PRECISION NOT NULL,
     "maximumDiscountPeriod" INTEGER NOT NULL,
-    "maximumPaymentTerm" INTEGER NOT NULL,
+    "interestGracePeriod" INTEGER NOT NULL,
+    "fineGracePeriod" INTEGER NOT NULL,
 
     CONSTRAINT "Plan_pkey" PRIMARY KEY ("id")
 );
@@ -231,23 +237,28 @@ CREATE TABLE "users"."User" (
     "tenancyId" TEXT NOT NULL,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
-    "nickname" TEXT,
-    "gender" "base"."Gender" NOT NULL,
-    "pronoun" TEXT,
-    "dateOfBirth" TEXT,
-    "cellPhoneNumber" TEXT NOT NULL,
-    "phoneNumber" TEXT,
-    "documentOfIdentity" TEXT,
-    "role" "users"."UserRole" NOT NULL,
-    "classes" "users"."UserRole"[],
-    "user" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "image" TEXT,
+    "role" "users"."UserRole" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "users"."Teacher" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "professionalRegister" TEXT,
+    "remunerationType" "users"."RemunerationType" NOT NULL,
+    "remunerationValue" DECIMAL(65,30) NOT NULL,
+    "paymentDay" INTEGER,
+    "bonusPerAttendance" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Teacher_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -264,7 +275,7 @@ CREATE TABLE "users"."Account" (
     "id_token" TEXT,
     "session_state" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Account_pkey" PRIMARY KEY ("provider","providerAccountId")
 );
@@ -275,7 +286,7 @@ CREATE TABLE "users"."Session" (
     "userId" TEXT NOT NULL,
     "expires" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- CreateTable
@@ -451,6 +462,9 @@ CREATE UNIQUE INDEX "AttendanceRecord_classAttendanceId_studentId_key" ON "tenan
 CREATE UNIQUE INDEX "User_email_key" ON "users"."User"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Teacher_userId_key" ON "users"."Teacher"("userId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Session_sessionToken_key" ON "users"."Session"("sessionToken");
 
 -- CreateIndex
@@ -521,6 +535,9 @@ ALTER TABLE "tenancy"."Plan" ADD CONSTRAINT "Plan_contractModelId_fkey" FOREIGN 
 
 -- AddForeignKey
 ALTER TABLE "users"."User" ADD CONSTRAINT "User_tenancyId_fkey" FOREIGN KEY ("tenancyId") REFERENCES "tenancy"."Tenancy"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "users"."Teacher" ADD CONSTRAINT "Teacher_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"."User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "users"."Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"."User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

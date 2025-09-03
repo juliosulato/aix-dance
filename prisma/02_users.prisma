@@ -1,35 +1,25 @@
 model User {
-  id String @id @default(cuid())
-  tenancyId          String
-  tenancy            Tenancy  @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+  id        String @id @default(cuid())
+  tenancyId String
+  tenancy   Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
 
-  firstName          String
-  lastName           String
-  nickname           String?
-  gender             Gender
-  pronoun            String?
-  dateOfBirth        String?
-  cellPhoneNumber    String
-  phoneNumber        String?
-  documentOfIdentity String?
+  firstName String
+  lastName  String
+  email     String  @unique
+  user      String  @unique
+  password  String
+  permissions  Permission[]
+  image     String?
 
-  role    UserRole
-  classes UserRole[]
+  teacher   Teacher?
 
-  address Address?
 
   classesAsTeacher   Class[]           @relation("ClassToTeacher")
   classesAsAssistant Class[]           @relation("ClassToAssistant")
   classAttendances   ClassAttendance[]
 
-  user     String
-  email    String  @unique
-  password String
-  image    String?
-
   accounts Account[]
   sessions Session[]
-  teacherContract TeacherContract?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -37,23 +27,60 @@ model User {
   @@schema("users")
 }
 
-model TeacherContract {
-  id String @id @default(cuid())
+model Permission {
+  id       String   @id @default(cuid())
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
 
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resource ResourceType
+  action   ActionType
+  @@schema("users")
+}
 
-  type ContractType
+enum ResourceType {
+  FINANCE
+  USER
+  COURSE
+  TEACHER
+  @@schema("users")
+}
 
-  hourlyRate Decimal?     // por hora-aula
-  fixedSalary Decimal?    // fixo mensal
-  perClassRate Decimal?   // por aula dada
-  percentage  Float?      // % da receita da turma
+enum ActionType {
+  VIEW
+  CREATE
+  EDIT
+  DELETE
+  @@schema("users")
+}
 
-  paymentDay Int?         // dia fixo do pagamento
-  defaultPaymentMethod String?
-  bonusPresence Decimal?  // bônus por presença
-  notes String?
+
+model Teacher {
+  id        String @id @default(cuid())
+  userId    String @unique
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  cellPhoneNumber String?
+  phoneNumber String?
+  birthOfDate String?
+  document    String
+  gender      Gender
+  pronoun    String?
+  instagramUser   String?
+  professionalRegister String?
+  address   Address?
+
+  remunerationType RemunerationType
+  baseAmount Decimal
+  paymentDay Int @default(5)
+  paymentMethodId String?
+  paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id], onDelete: Cascade)
+  paymentData String
+  observations String
+  
+  bonusForPresenceAmount Int @default(0)
+  loseBonusWhenAbsent Boolean @default(true)
+  
+  comissionTiers CommissionTier[] 
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -61,18 +88,35 @@ model TeacherContract {
   @@schema("users")
 }
 
-enum ContractType {
+
+model CommissionTier {
+  id        String  @id @default(cuid())
+  
+  teacherId String
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  minStudents Int
+  maxStudents Int
+  comission   Decimal
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@schema("users")
+}
+
+
+enum RemunerationType {
   HOURLY
   FIXED
-  PER_CLASS
-  PERCENTAGE
+
   @@schema("users")
 }
 
 enum UserRole {
-  GESTOR
-  PROFESSOR
-  SECRETARIA
+  ADMIN
+  TEACHER
+  STAFF
 
   @@schema("users")
 }
@@ -91,7 +135,7 @@ model Account {
   session_state     String?
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -106,7 +150,7 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now())
 
   @@schema("users")
 }

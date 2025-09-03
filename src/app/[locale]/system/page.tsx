@@ -1,11 +1,11 @@
 "use client";
 
-import NewTeacher from "@/components/(academic)/(teachers)/newTeacher";
+import NewBill from "@/components/(financial)/(bills)/newBill";
 
 export default async function Sistema() {
     return (
         <main>
-            <NewTeacher opened onClose={() => null} />
+            <NewBill opened onClose={() => null} onSuccess={() => null}/>
         </main>
     )
 }

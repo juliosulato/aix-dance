@@ -10,7 +10,11 @@
     },
     "notFound": "Nada encontrado...",
     "errors": {
-        "title": "Oops... Algo deu errado!",
-        "contract-models": "Houve um erro ao buscar os modelos de contratos, tente novamente mais tarde."
+      "title": "Ocorreu um Erro",
+      "unexpected": "Ocorreu um erro inesperado. Por favor, tente novamente.",
+      "invalidSession": "Sessão inválida. Por favor, faça login novamente.",
+      "validationTitle": "Atenção",
+      "validationMessage": "Por favor, verifique os campos destacados e tente novamente."
+
     }
 }

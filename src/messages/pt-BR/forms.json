@@ -42,7 +42,7 @@
             "label": "Sobrenome",
             "placeholder": "Digite Aqui"
         },
-        "dateOfBirth": {
+        "birthOfDate": {
             "label": "Data de Nascimento",
             "placeholder": "Digite Aqui",
             "valueFormat": "DD/MM/YYYY",

@@ -1,13 +1,13 @@
 import { z } from "zod";
 
 const addressSchema = z.object({
-  publicPlace: z.string(),
-  number: z.string(),
+  publicPlace: z.string().optional(),
+  number: z.string().optional(),
   complement: z.string().optional(),
-  neighborhood: z.string(),
-  city: z.string(),
-  state: z.string(),
-  zipCode: z.string(),
+  neighborhood: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  zipCode: z.string().optional(),
 });
 
 export { addressSchema };

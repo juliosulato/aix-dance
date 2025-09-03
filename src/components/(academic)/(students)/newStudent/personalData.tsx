@@ -49,7 +49,6 @@ export default function NewStudent__PersonalData({ control, register, errors }: 
                     <PhoneInput
                         label={g("cellPhoneNumber.label")}
                         required
-
                         error={errors.cellPhoneNumber?.message}
                         value={field.value}
                         onChange={field.onChange}
@@ -86,16 +85,16 @@ export default function NewStudent__PersonalData({ control, register, errors }: 
 
 
             <Controller
-                name="dateOfBirth"
+                name="birthOfDate"
                 control={control}
                 render={({ field }) => (
                     <InputBase
                         component={IMaskInput}
-                        mask={g("dateOfBirth.mask")}
+                        mask={g("birthOfDate.mask")}
                         required
                         value={field.value || ""}
-                        label={g("dateOfBirth.label")}
-                        error={errors.dateOfBirth?.message}
+                        label={g("birthOfDate.label")}
+                        error={errors.birthOfDate?.message}
                         onAccept={(val: string) => field.onChange(val)}
                     />
                 )}

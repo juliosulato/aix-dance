@@ -46,7 +46,7 @@ model Student {
     cellPhoneNumber    String
     phoneNumber        String?
     email              String?
-    dateOfBirth        String
+    birthOfDate        String
     documentOfIdentity String
     gender             Gender
     pronoun            String?

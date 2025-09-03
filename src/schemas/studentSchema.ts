@@ -1,29 +1,28 @@
 import { z } from "zod";
 import { addressSchema } from "./address.schema";
+import { Gender } from "@prisma/client";
 
 const guardianSchema = z.object({
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  email: z.email(),
-  cellPhoneNumber: z.string(),
+  firstName: z.string().min(1, { message: "O nome do responsável é obrigatório" }),
+  lastName: z.string().min(1, { message: "O sobrenome do responsável é obrigatório" }),
+  email: z.string().email({ message: "E-mail do responsável inválido" }),
+  cellPhoneNumber: z.string().min(1, { message: "Celular do responsável é obrigatório" }),
   relationship: z.string().optional(),
   phoneNumber: z.string().optional(),
   documentOfIdentity: z.string().optional(),
 });
 
-
-
 const studentSchema = z.object({
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  gender: z.enum(["MALE", "FEMALE", "NON_BINARY", "OTHER"]),
-  cellPhoneNumber: z.string(),
+  firstName: z.string().min(1, { message: "O nome do aluno é obrigatório" }),
+  lastName: z.string().min(1, { message: "O sobrenome do aluno é obrigatório" }),
+  gender: z.enum(Gender, { error: "Gênero inválido" }),
+  cellPhoneNumber: z.string().min(1, { message: "Celular do aluno é obrigatório" }),
   pronoun: z.string().optional(),
-  dateOfBirth: z.string(),
+  birthOfDate: z.string().min(1, { message: "Data de nascimento é obrigatória" }),
   phoneNumber: z.string().optional(),
-  image: z.url().optional(),
+  image: z.string().url({ message: "URL da imagem inválida" }).optional(),
   documentOfIdentity: z.string().optional(),
-  email: z.email(),
+  email: z.string().email({ message: "E-mail do aluno inválido" }),
   howDidYouMeetUs: z.string().optional(),
   instagramUser: z.string().optional(),
   healthProblems: z.string().optional(),
@@ -33,7 +32,6 @@ const studentSchema = z.object({
   address: addressSchema,
   guardian: z.array(guardianSchema).optional(),
 });
-
 
 export { studentSchema };
 export type CreateStudentFormData = z.infer<typeof studentSchema>;

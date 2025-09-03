@@ -5,11 +5,19 @@ import { Select, TextInput } from "@mantine/core";
 import { useTranslations } from "next-intl";
 import { DateInput } from "@mantine/dates"
 import DocumentInput from "@/components/ui/documentInput";
-dayjs.locale("pt-br");
-import 'dayjs/locale/pt-br';
 import dayjs from "dayjs";
+import 'dayjs/locale/pt-br';
+dayjs.locale("pt-br");
+import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form";
+import { CreateUserInput } from "@/schemas/user.schema";
 
-export default function NewTeacher__PersonalData() {
+type Props = {
+    control: Control<CreateUserInput>;
+    errors: FieldErrors<CreateUserInput>;
+    register: UseFormRegister<CreateUserInput>;
+};
+
+export default function NewTeacher__PersonalData({ control, errors, register }: Props) {
     const [gender, setGender] = useState<Gender | null>(null);
     const t = useTranslations("teachers.modals.create");
     const g = useTranslations("forms.general-fields");
@@ -20,92 +28,129 @@ export default function NewTeacher__PersonalData() {
             <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{t("title")}</h2>
             <TextInput
                 label={g("firstName.label")}
-                id="firstName"
-                name="firstName"
                 required
-                withAsterisk
+                {...register("firstName")}
+                error={errors.firstName?.message}
                 placeholder={g("firstName.placeholder")}
             />
             <TextInput
                 label={g("lastName.label")}
-                id="lastName"
-                name="lastName"
+                error={errors.lastName?.message}
+                {...register("lastName")}
                 required
-                withAsterisk
                 placeholder={g("lastName.placeholder")}
             />
-            <PhoneInput
-                label={g("cellPhoneNumber.label")}
-                id="cellPhoneNumber"
-                name="cellPhoneNumber"
-                required
-                withAsterisk
-                onChange={() => null}
+
+            <Controller
+                name="teacher.cellPhoneNumber"
+                control={control}
+                render={({ field }) => (
+                    <PhoneInput
+                        label={g("cellPhoneNumber.label")}
+                        onChange={field.onChange}
+                        value={field.value}
+                        error={errors.teacher?.cellPhoneNumber?.message}
+                    />
+                )}
             />
-            <PhoneInput
-                label={g("phoneNumber.label")}
-                id="phoneNumber"
-                name="phoneNumber"
-                onChange={() => null}
+            <Controller
+                name="teacher.phoneNumber"
+                control={control}
+                render={({ field }) => (
+                    <PhoneInput
+                        label={g("phoneNumber.label")}
+                        onChange={field.onChange}
+                        value={field.value}
+                        error={errors.teacher?.phoneNumber?.message}
+                    />
+                )}
             />
             <TextInput
                 label={g("email.label")}
-                id="email"
-                name="email"
+                {...register("email")}
                 required
-                withAsterisk
+                        error={errors.email?.message}
                 type="email"
                 placeholder={g("email.placeholder")}
             />
-            <DateInput
-                label={g("dateOfBirth.label")}
-                id="dateOfBirth"
-                name="dateOfBirth"
-                locale="pt-br"
-                withAsterisk
-                maxDate={new Date()}
-                placeholder={g("dateOfBirth.placeholder")}
-                valueFormat={g("dateOfBirth.valueFormat")}
+            <Controller
+                control={control}
+                name="teacher.birthOfDate"
+                render={({ field }) => (
+                    <DateInput
+                        label={g("birthOfDate.label")}
+                        locale="pt-br"
+                        onChange={field.onChange}
+                        value={field.value}
+                        maxDate={new Date()}
+                        placeholder={g("birthOfDate.placeholder")}
+                        error={errors?.teacher?.birthOfDate?.message}
+                        valueFormat={g("birthOfDate.valueFormat")}
+                    />
+                )}
             />
-            <DocumentInput />
-            <Select
-                label={g("gender.label")}
-                id="gender"
-                name="gender"
-                withAsterisk
-                placeholder={g("gender.placeholder")}
-                data={[
-                    { label: "Mulher", value: Gender.FEMALE },
-                    { label: "Homem", value: Gender.MALE },
-                    { label: "Não binário", value: Gender.NON_BINARY },
-                    { label: "Outro", value: Gender.OTHER },
-                ]}
-                onChange={(val: any) => setGender(val)}
+            <Controller
+                control={control}
+                name="teacher.document"
+                render={({ field }) => (
+                    <DocumentInput
+                        value={field.value}
+                        onChange={(ev) => {
+                            console.log(ev);
+                            field.onChange(ev);
+                        }}
+                        required
+                        error={errors?.teacher?.document?.message}
+                    />
+                )}
             />
-            {gender && (gender == "NON_BINARY" || gender == 'OTHER') && (
+
+            <Controller
+                control={control}
+                name="teacher.gender"
+                render={({ field }) => (
+                    <Select
+                        value={field.value}
+                        onChange={(ev: any) => {
+                            field.onChange(ev);
+                            setGender(ev);
+                        }}
+                        label={g("gender.label")}
+                        placeholder={g("gender.placeholder")}
+                        required
+                        data={[
+                            { label: "Mulher", value: Gender.FEMALE },
+                            { label: "Homem", value: Gender.MALE },
+                            { label: "Não binário", value: Gender.NON_BINARY },
+                            { label: "Outro", value: Gender.OTHER },
+                        ]}
+                        error={errors?.teacher?.gender?.message}
+                    />
+                )}
+            />
+             {gender && (gender === Gender.NON_BINARY || gender === Gender.OTHER) && (
                 <TextInput
                     label={g("pronoun.label")}
-                    id="pronoun"
-                    name="pronoun"
-                    withAsterisk
                     placeholder={g("pronoun.placeholder")}
+                    {...register("teacher.pronoun")}
                     required
+                    error={errors.teacher?.pronoun?.message}
                 />
             )}
-            
-            <TextInput
+
+
+             <TextInput
                 label={g("instagramUser.label")}
-                id="instagramUser"
-                name="instagramUser"
                 placeholder={g("instagramUser.placeholder")}
+                {...register("teacher.instagramUser")}
+                error={errors?.teacher?.instagramUser?.message}
             />
 
             <TextInput
                 label={t("basicInformations.fields.professionalRegister.label")}
-                id="professionalRegister"
-                name="professionalRegister"
                 placeholder={t("basicInformations.fields.professionalRegister.placeholder")}
                 className="md:col-span-2 lg:col-span-3 3xl:col-span-4"
+                {...register("teacher.professionalRegister")}
             />
         </div>
     )

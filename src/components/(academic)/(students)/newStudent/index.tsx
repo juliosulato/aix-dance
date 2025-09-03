@@ -61,7 +61,7 @@ function NewStudent({ opened, onClose }: Props) {
       return;
     }
 
-    const parsedDate = dayjs(data.dateOfBirth, "DD/MM/YYYY", true); // o `true` ativa parsing estrito
+    const parsedDate = dayjs(data.birthOfDate, "DD/MM/YYYY", true); // o `true` ativa parsing estrito
     if (!parsedDate.isValid()) {
       notifications.show({ color: "red", message: "Data de nascimento inválida" });
       setVisible(false);
@@ -70,7 +70,7 @@ function NewStudent({ opened, onClose }: Props) {
 
     const body = {
       ...data,
-      dateOfBirth: parsedDate.toISOString(),
+      birthOfDate: parsedDate.toISOString(),
     };
 
 

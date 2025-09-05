@@ -32,42 +32,6 @@ interface MenuItemsProps {
     onBulkDeleteClick: (ids: string[]) => void;
 }
 
-const MenuItem = ({ paymentMethod, onUpdateClick, onDeleteClick }: MenuItemProps) => (
-    <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-        <Menu shadow="md" width={200} withinPortal>
-            <Menu.Target>
-                <ActionIcon variant="light" color="gray" radius={"md"}>
-                    <BiDotsVerticalRounded />
-                </ActionIcon>
-            </Menu.Target>
-            <Menu.Dropdown>
-                <Menu.Label>Ações</Menu.Label>
-                <Menu.Item leftSection={<GrUpdate size={14} />} onClick={() => onUpdateClick(paymentMethod)}>
-                    Editar
-                </Menu.Item>
-                <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(paymentMethod)}>
-                    Excluir
-                </Menu.Item>
-            </Menu.Dropdown>
-        </Menu>
-    </div>
-);
-
-const MenuItems = ({ selectedIds, onBulkDeleteClick }: MenuItemsProps) => (
-    <Menu shadow="md" width={200} withinPortal>
-        <Menu.Target>
-            <ActionIcon variant="light" color="gray" radius={"md"}>
-                <BiDotsVerticalRounded />
-            </ActionIcon>
-        </Menu.Target>
-        <Menu.Dropdown>
-            <Menu.Label>Ações em Massa</Menu.Label>
-            <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
-                Excluir {selectedIds.length} Itens
-            </Menu.Item>
-        </Menu.Dropdown>
-    </Menu>
-);
 
 export default function PaymentMethodsView() {
     const t = useTranslations("");
@@ -87,13 +51,6 @@ export default function PaymentMethodsView() {
             : null,
         fetcher
     );
-
-    // REMOVIDO: Este useEffect era a causa do problema.
-    // useEffect(() => {
-    //     if (selectedPaymentMethod) {
-    //         setOpenUpdate(true);
-    //     }
-    // }, [selectedPaymentMethod]);
 
     const handleUpdateClick = (pm: PaymentMethod) => {
         setSelectedPaymentMethod(pm);
@@ -138,9 +95,49 @@ export default function PaymentMethodsView() {
         }
     };
 
+    const MenuItem = ({ paymentMethod, onUpdateClick, onDeleteClick }: MenuItemProps) => (
+        <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+            <Menu shadow="md" width={200} withinPortal>
+                <Menu.Target>
+                    <ActionIcon variant="light" color="gray" radius={"md"}>
+                        <BiDotsVerticalRounded />
+                    </ActionIcon>
+                </Menu.Target>
+                <Menu.Dropdown>
+                    <Menu.Label>{t("general.actions.title")}</Menu.Label>
+                    <Menu.Item leftSection={<GrUpdate size={14} />} onClick={() => onUpdateClick(paymentMethod)}>
+                        {t("general.actions.edit")}
+                    </Menu.Item>
+                    <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(paymentMethod)}>
+                         {t("general.actions.delete")}
+                    </Menu.Item>
+                </Menu.Dropdown>
+            </Menu>
+        </div>
+    );
+
+    const MenuItems = ({ selectedIds, onBulkDeleteClick }: MenuItemsProps) => (
+        <Menu shadow="md" width={200} withinPortal>
+            <Menu.Target>
+                <ActionIcon variant="light" color="gray" radius={"md"}>
+                    <BiDotsVerticalRounded />
+                </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+                <Menu.Label>{t("general.actions.manyActions")}</Menu.Label>
+                <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
+                     {t("general.actions.deleteMany", {
+                        items: selectedIds.length
+                     })}
+                </Menu.Item>
+            </Menu.Dropdown>
+        </Menu>
+    );
+
+
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>Você precisa estar logado para ver esta página.</div>;
-    if (error) return <p>Erro ao carregar os dados.</p>;
+    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
+    if (error) return <p>{t("general.errors.loadingData")}</p>;
 
     return (
         <>
@@ -148,15 +145,15 @@ export default function PaymentMethodsView() {
                 data={paymentMethods || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: "Nova Forma de Pagamento"
+                    label: t("financial.payment-methods.modals.create.title")
                 }}
                 baseUrl="/system/financial/payment-methods/"
                 mutate={mutate}
-                pageTitle="Formas de Pagamento"
-                searchbarPlaceholder="Pesquise por nome ou operador..."
+                pageTitle={t("financial.payment-methods.title")}
+                searchbarPlaceholder={t("financial.payment-methods.searchbarPlaceholder")}
                 columns={[
-                    { key: "name", label: "Nome" },
-                    { key: "operator", label: "Operador" },
+                    { key: "name", label: t("financial.payment-methods.modals.fields.name.label") },
+                    { key: "operator", label: t("financial.payment-methods.modals.fields.operator.label") },
                 ]}
                 RenderRowMenu={(item) => <MenuItem paymentMethod={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
                 RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
@@ -167,9 +164,9 @@ export default function PaymentMethodsView() {
                             <MenuItem paymentMethod={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />
                         </div>
                         <div className="flex flex-col mt-4">
-                            {item.operator && <Text size="sm" c="dimmed">Operador: {item.operator}</Text>}
+                            {item.operator && <Text size="sm" c="dimmed">{t("financial.payment-methods.modals.fields.operator.label")} {item.operator}</Text>}
                             <Text size="xs" c="dimmed" mt="sm">
-                                Criado em {dayjs(item.createdAt).format("DD/MM/YYYY")}
+                                {t("forms.general-fields.createdAt")} {dayjs(item.createdAt).format("DD/MM/YYYY")}
                             </Text>
                         </div>
                     </>
@@ -177,7 +174,7 @@ export default function PaymentMethodsView() {
             />
 
             <NewPaymentMethod opened={openNew} onClose={() => setOpenNew(false)} mutate={mutate as any} />
-            
+
             {selectedPaymentMethod && (
                 <UpdatePaymentMethod
                     opened={openUpdate}
@@ -194,20 +191,22 @@ export default function PaymentMethodsView() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title="Confirmar Exclusão"
-                confirmLabel="Sim, Excluir"
+                title={t("financial.payment-method.modals.confirmModal.title")}
+                confirmLabel={t("financial.payment-method.modals.confirmModal.confirmLabel")}
+                cancelLabel={t("financial.payment-method.modals.confirmModal.cancelLabel")}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
-                    `Você tem certeza que deseja excluir as ${idsToDelete.length} formas de pagamento selecionadas?`
+                    t("financial.payment-method.modals.confirmModal.textArray",
+                        { paymentMethods: idsToDelete.length }
+                    )
                 ) : (
-                    <>
-                        Você tem certeza que deseja excluir a forma de pagamento
-                        <strong className="mx-1">{selectedPaymentMethod?.name}</strong>?
-                    </>
+                    t("financial.payment-method.modals.confirmModal.text", {
+                        paymentMethods: selectedPaymentMethod?.name || ""
+                    })
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">Esta ação não poderá ser desfeita.</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{t("financial.payment-method.modals.confirmModal.warn")}</Text>
             </ConfirmationModal>
         </>
     );

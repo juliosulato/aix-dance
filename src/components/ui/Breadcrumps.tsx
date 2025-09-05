@@ -23,7 +23,7 @@ export default function Breadcrumps({ menu, items }: Props) {
 
 
     return (
-        <nav className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+        <nav className="flex flex-wrap justify-center md:justify-start items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
             <button onClick={() => window.history.back()} className="px-2 py-1 text-neutral-800 border border-neutral-200 hover:bg-primary transition cursor-pointer hover:text-white flex flex-row gap-1 items-center justify-center rounded-full">
                 <div className="flex items-center justify-center w-4 h-4 bg-primary text-white rounded-full">
                     <HiOutlineChevronLeft />
@@ -45,7 +45,7 @@ export default function Breadcrumps({ menu, items }: Props) {
                 </Menu.Dropdown>
             </Menu>
             {items.map((item, index) => (
-                <span key={index} className="flex items-center text-neutral-800">
+                <span key={index} className="flex flex-wrap w-fit justify-center md:justify-start items-center text-neutral-800 text-wrap">
                     {item}
                     {index < items.length - 1 && <span className="mx-2 text-primary">/</span>}
                 </span>

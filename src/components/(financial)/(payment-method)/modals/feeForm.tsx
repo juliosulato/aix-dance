@@ -18,17 +18,18 @@ export default function PaymentMethod__Fees({
   register: UseFormRegister<CreatePaymentMethodInput | UpdatePaymentMethodInput>;
   errors: FieldErrors<CreatePaymentMethodInput | UpdatePaymentMethodInput>;
 }) {
-  const t = useTranslations("financial.paymentMethods.modals");
+  const t = useTranslations("financial.payment-methods.modals");
   const { fields, append, remove } = useFieldArray({ control, name: "fees" });
 
   return (
     <div className="p-4 border border-neutral-300 rounded-xl flex flex-col gap-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg font-bold">{t("content.feesSubtitle")}</h2>
+      <div className="flex flex-col gap-2 md:gap-4 md:flex-row justify-between items-center">
+        <h2 className="text-lg font-bold">{t("feesSubtitle")}</h2>
         <Button
           size="xs"
           variant="light"
           color="violet"
+          className="!w-full md:!w-fit"
           onClick={() =>
             append({
               minInstallments: 1,
@@ -39,13 +40,13 @@ export default function PaymentMethod__Fees({
             })
           }
         >
-          {t("content.addFeeButton")}
+          {t("addFeeButton")}
         </Button>
       </div>
       {fields.map((field, index) => (
         <div
           key={field.id}
-          className="p-3 border border-neutral-200 rounded-lg grid grid-cols-2 md:grid-cols-3 gap-4 relative"
+          className="p-3 border border-neutral-200 rounded-lg flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 relative"
         >
           <ActionIcon
             color="red"
@@ -56,14 +57,13 @@ export default function PaymentMethod__Fees({
             <RiDeleteBinLine size={18} />
           </ActionIcon>
 
-          {/* minInstallments */}
           <Controller
             control={control}
             name={`fees.${index}.minInstallments`}
             render={({ field }) => (
               <NumberInput
                 {...field}
-                label={t("content.fields.fees.minInstallments")}
+                label={t("fields.fees.minInstallments")}
                 placeholder="1"
                 error={errors.fees?.[index]?.minInstallments?.message}
               />
@@ -77,7 +77,7 @@ export default function PaymentMethod__Fees({
             render={({ field }) => (
               <NumberInput
                 {...field}
-                label={t("content.fields.fees.maxInstallments")}
+                label={t("fields.fees.maxInstallments")}
                 placeholder="12"
                 error={errors.fees?.[index]?.maxInstallments?.message}
               />
@@ -91,7 +91,7 @@ export default function PaymentMethod__Fees({
             render={({ field }) => (
               <NumberInput
                 {...field}
-                label={t("content.fields.fees.feePercentage")}
+                label={t("fields.fees.feePercentage")}
                 placeholder="2.99"
                 decimalScale={2}
                 fixedDecimalScale
@@ -108,7 +108,7 @@ export default function PaymentMethod__Fees({
             render={({ field }) => (
               <NumberInput
                 {...field}
-                label={t("content.fields.fees.receiveInDays")}
+                label={t("fields.fees.receiveInDays")}
                 placeholder="30"
                 error={errors.fees?.[index]?.receiveInDays?.message}
               />
@@ -117,7 +117,7 @@ export default function PaymentMethod__Fees({
 
           {/* customerInterest pode usar register */}
           <Checkbox
-            label={t("content.fields.fees.customerInterest")}
+            label={t("fields.fees.customerInterest")}
             {...register(`fees.${index}.customerInterest`)}
             className="col-span-2 md:col-span-3 self-center mt-2"
           />

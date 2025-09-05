@@ -19,7 +19,7 @@ type Props = { opened: boolean; onClose: () => void; onSuccess?: () => void;
  };
 
 export default function NewPaymentMethod({ opened, onClose, onSuccess, mutate }: Props) {
-    const t = useTranslations("financial.paymentMethods.modals");
+    const t = useTranslations("financial.payment-methods.modals");
     const g = useTranslations("");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -45,13 +45,13 @@ export default function NewPaymentMethod({ opened, onClose, onSuccess, mutate }:
                 body: JSON.stringify(data),
             });
             if (!response.ok) throw new Error("Failed to create payment method");
-            notifications.show({ message: t("content.notifications.success"), color: "green" });
+            notifications.show({ message: t("create.notifications.success"), color: "green" });
             reset();
             if (onSuccess) onSuccess();
             onClose();
         } catch (error) {
             console.error(error);
-            notifications.show({ message: t("content.notifications.error"), color: "red" });
+            notifications.show({ message: t("create.notifications.error"), color: "red" });
         } finally {
             setIsLoading(false);
             mutate();
@@ -61,8 +61,8 @@ export default function NewPaymentMethod({ opened, onClose, onSuccess, mutate }:
     const handleFormErrors = (err: any) => {
         console.warn("Validation errors:", err)
         notifications.show({
-            title: g("errors.validationTitle"),
-            message: g("errors.validationMessage"),
+            title: g("general.errors.validationTitle"),
+            message: g("general.errors.validationMessage"),
             color: 'yellow'
         });
     };

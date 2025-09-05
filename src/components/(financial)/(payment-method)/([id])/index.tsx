@@ -8,6 +8,7 @@ import deletePaymentMethod from "../deletePaymentMethod";
 import UpdatePaymentMethod from "../modals/updatePaymentMethod";
 import { useState } from "react";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
+import { useTranslations } from "next-intl";
 
 export default function PaymentMethodView({ paymentMethod, tenancyId }: { paymentMethod: PaymentMethod, tenancyId: string }) {
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
@@ -25,35 +26,38 @@ export default function PaymentMethodView({ paymentMethod, tenancyId }: { paymen
         }
     };
 
+    const t = useTranslations();
+
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
-            <div className="flex flex-col md:justify-between md:items-center md:flex-row md:flex-wrap">
-                <h1 className="text-2xl font-bold">Dados da Forma de Pagamento</h1>
+            <div className="flex flex-col items-center justify-center md:justify-between gap-4 md:flex-row md:flex-wrap mb-4">
+                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{t("financial.payment-methods.view.title")}</h1>
                 <div className="flex gap-4 md:gap-6">
                     <button className="text-red-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setConfirmModalOpen(true)}>
                         <FaTrash />
-                        <span>Excluir</span>
+                        <span>{t("general.actions.delete")}</span>
                     </button>
                     <button className="text-primary flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setOpenUpdate(true)}>
                         <FaEdit />
-                        <span>Editar</span>
+                        <span>{t("general.actions.update")}</span>
                     </button>
                 </div>
             </div>
 
-            <SimpleGrid cols={{ base: 1, md: 3 }} spacing="xl">
-                <InfoTerm label={"Nome"} value={paymentMethod.name} />
-                <InfoTerm label={"Operador"} value={paymentMethod.operator} />
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <InfoTerm label={t("financial.payment-methods.modals.fields.name.label")} value={paymentMethod.name} />
+                <InfoTerm label={t("financial.payment-methods.modals.fields.operator.label")} value={paymentMethod.operator} />
+                <h2 className="md:col-span-2 lg:col-span-3 font-bold text-xl my-4">{t("financial.payment-methods.modals.feesSubtitle")}</h2>
                 {paymentMethod.fees.map((fee) => (
-                    <SimpleGrid cols={{ base: 1, md: 3 }} key={fee.id} spacing="xl" className="w-full md:col-span-3 lg:col-span-4">
-                        <InfoTerm label="Mínimo de Parcelas" value={fee.minInstallments} />
-                        <InfoTerm label="Máximo de Parcelas" value={fee.maxInstallments} />
-                        <InfoTerm label="Juros" value={`${fee.feePercentage.toFixed(2).replace(/\./g, ",")}%`} />
-                        <InfoTerm label="Dias para Recebimento" value={`${fee.receiveInDays} dias`} />
-                        <InfoTerm label="Juros Repassado ao Cliente" value={fee.customerInterest ? "Sim" : "Não"} />
-                    </SimpleGrid>
+                     <div className="grid gap-4 md:grid-cols-2 md:col-span-2 lg:col-span-3" key={fee.id}>
+                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.minInstallments")} value={fee.minInstallments} />
+                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.maxInstallments")} value={fee.maxInstallments} />
+                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.feePercentage")} value={`${fee.feePercentage.toFixed(2).replace(/\./g, ",")}%`} />
+                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.receiveInDays")} value={`${fee.receiveInDays}`} />
+                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.customerInterest")} value={fee.customerInterest ? t("general.boolean.yes") : t("general.boolean.no")} />
+                    </div>
                 ))}
-            </SimpleGrid>
+            </div>
 
             <UpdatePaymentMethod paymentMethod={paymentMethod} onClose={() => setOpenUpdate(false)} opened={openUpdate} mutate={() => window.location.reload()} />
             <ConfirmationModal

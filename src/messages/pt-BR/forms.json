@@ -63,7 +63,8 @@
         "instagramUser": {
             "label": "Usuário do Instagram",
             "placeholder": "@nomedeusuario"
-        }
+        },
+        "createdAt": "Criado em"
     },
     "submit": "Salvar",
     "next": "Próximo",

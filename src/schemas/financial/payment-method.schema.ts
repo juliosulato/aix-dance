@@ -1,7 +1,8 @@
+import toTitleCase from "@/utils/toTitleCase";
 import z from "zod";
 
 export const getCreatePaymentMethodSchema = (t: (key: string) => string) => z.object({
-  name: z.string().min(1, { message: t('fields.name.errors.required') }),
+  name: z.string().min(1, { message: t('fields.name.errors.required') }).transform(toTitleCase),
   operator: z.string().optional(),
   fees: z.array(z.object({
     minInstallments: z.coerce.number({ error: t('fields.fees.errors.minInstallments_invalid') }).min(1, { message: t('fields.fees.errors.minInstallments_min') }),

@@ -1,19 +1,27 @@
 {
-    "actions": {
-        "back": "Voltar",
-        "edit": "Editar",
-        "new": "Novo",
-        "delete": "Excluir",
-        "create": "Criar",
-        "update": "Atualizar",
-        "add": "Adicionar"
-    },
-    "notFound": "Nada encontrado...",
-    "errors": {
-      "title": "Ocorreu um Erro",
-      "unexpected": "Ocorreu um erro inesperado. Por favor, tente novamente.",
-      "invalidSession": "Sessão inválida. Por favor, faça login novamente.",
-      "validationTitle": "Atenção",
-      "validationMessage": "Por favor, verifique os campos destacados e tente novamente."
-    }
+  "actions": {
+    "title": "Ações",
+    "manyActions": "Ações em Massa",
+    "back": "Voltar",
+    "edit": "Editar",
+    "new": "Novo",
+    "delete": "Excluir",
+    "deleteMany": "Excluir {items} itens",
+    "create": "Criar",
+    "update": "Atualizar",
+    "add": "Adicionar"
+  },
+  "boolean": {
+    "yes": "Sim",
+    "no": "Não"
+  },
+  "notFound": "Nada encontrado...",
+  "errors": {
+    "title": "Ocorreu um Erro",
+    "unexpected": "Ocorreu um erro inesperado. Por favor, tente novamente.",
+    "invalidSession": "Sessão inválida. Por favor, faça login novamente.",
+    "validationTitle": "Atenção",
+    "validationMessage": "Por favor, verifique os campos destacados e tente novamente.",
+    "loadingData": "Erro ao carregar os dados."
+  }
 }

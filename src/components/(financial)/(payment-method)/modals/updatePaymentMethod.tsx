@@ -21,7 +21,7 @@ type Props = {
 };
 
 export default function UpdatePaymentMethod({ mutate, paymentMethod, opened, onClose, onSuccess }: Props) {
-  const t = useTranslations("financial.paymentMethods.modals");
+  const t = useTranslations("financial.payment-methods.modals");
   const g = useTranslations("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -72,13 +72,13 @@ export default function UpdatePaymentMethod({ mutate, paymentMethod, opened, onC
         }
       );
       if (!response.ok) throw new Error("Failed to update payment method");
-      notifications.show({ message: t("content.notifications.success"), color: "green" });
+      notifications.show({ message: t("update.notifications.success"), color: "green" });
       if (onSuccess) onSuccess();
       onClose();
       mutate()
     } catch (error) {
       console.error(error);
-      notifications.show({ message: t("content.notifications.error"), color: "red" });
+      notifications.show({ message: t("update.notifications.error"), color: "red" });
     } finally {
       setIsLoading(false);
     }

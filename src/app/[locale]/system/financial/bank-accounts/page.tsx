@@ -1,3 +1,4 @@
+import AllBanksData from "@/components/(financial)/(banks)";
 import PaymentMethodsView from "@/components/(financial)/(payment-method)";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 import { getTranslations } from "next-intl/server";
@@ -18,7 +19,7 @@ export default async function PaymentMethodsPage() {
                     { label: t("appShell.navbar.financial.financialReports"), href: "/system/financial/reports" },
                 ]} />
             <br />
-            <PaymentMethodsView/>
+            <AllBanksData />
         </main>
     );
 }

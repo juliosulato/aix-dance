@@ -33,7 +33,7 @@ export default async function PaymentMethodPage({ params }: { params: Promise<{ 
                     { label: t("appShell.navbar.financial.financialManager"), href: "/system/financial/manager" },
                     { label: t("appShell.navbar.financial.financialPaymentMethods"), href: "/system/financial/payment-methods" },
                     { label: t("appShell.navbar.financial.financialCategories"), href: "/system/financial/categories" },
-                    { label: t("appShell.navbar.financial.financialAccounts"), href: "/system/financial/accounts" },
+                    { label: t("appShell.navbar.financial.financialAccounts"), href: "/system/financial/bank-accounts" },
                     { label: t("appShell.navbar.financial.financialReports"), href: "/system/financial/reports" },
                 ]} />
             <br />

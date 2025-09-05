@@ -1,24 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Control, FieldError, FieldErrors, useForm, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
 
-import { CreateBankInput, getCreateBankSchema } from "@/schemas/financial/bank.schema";
+import { CreateBankInput, getCreateBankSchema, UpdateBankInput } from "@/schemas/financial/bank.schema";
 import NewBank__BasicInformations from "./basic-informations";
+import { KeyedMutator } from "swr";
+import { Bank } from "@prisma/client";
 
 type Props = {
     opened: boolean;
     onClose: () => void;
-    onSuccess: () => void; // Para recarregar os dados na página principal
+    mutate: () => void | KeyedMutator<Bank[]>;
 };
 
-export default function NewBank({ opened, onClose, onSuccess }: Props) {
-    const t = useTranslations("financial.banks.modals.create");
+export default function NewBankAccount({ opened, onClose }: Props) {
+    const t = useTranslations("financial.banks");
     const g = useTranslations("");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -33,7 +35,7 @@ export default function NewBank({ opened, onClose, onSuccess }: Props) {
             code: "",
             description: "",
             maintenanceFeeAmount: undefined,
-            maintenanceFeeDue: null,
+            maintenanceFeeDue: undefined,
         }
     });
 
@@ -45,7 +47,7 @@ export default function NewBank({ opened, onClose, onSuccess }: Props) {
 
     async function createBank(data: CreateBankInput) {
         if (!sessionData?.user.tenancyId) {
-            notifications.show({ color: "red", message: g("errors.invalidSession") });
+            notifications.show({ color: "red", message: g("general.errors.invalidSession") });
             return;
         }
 
@@ -63,19 +65,17 @@ export default function NewBank({ opened, onClose, onSuccess }: Props) {
             }
 
             notifications.show({
-                title: t("notifications.success.title"),
-                message: t("notifications.success.message"),
+                message: t("modals.create.notifications.success"),
                 color: "green"
             });
 
             reset();
-            onSuccess();
             onClose();
         } catch (error) {
             console.error(error);
             notifications.show({
-                title: g("errors.title"),
-                message: g("errors.unexpected"),
+                title: g("general.errors.title"),
+                message: g("general.errors.unexpected"),
                 color: "red"
             });
         } finally {
@@ -86,8 +86,8 @@ export default function NewBank({ opened, onClose, onSuccess }: Props) {
     const handleFormErrors = (errors: any) => {
         console.warn("Validation errors:", errors);
         notifications.show({
-            title: g("errors.validationTitle"),
-            message: g("errors.validationMessage"),
+            title: g("general.errors.validationTitle"),
+            message: g("general.errors.validationMessage"),
             color: 'yellow'
         });
     };
@@ -104,7 +104,7 @@ export default function NewBank({ opened, onClose, onSuccess }: Props) {
                 classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 !mb-4 border-b border-b-neutral-300" }}
             >
                 <form onSubmit={handleSubmit(createBank, handleFormErrors)} className="flex flex-col gap-4">
-                    <NewBank__BasicInformations control={control} errors={errors} register={register} />
+                    <NewBank__BasicInformations control={control as Control<UpdateBankInput>} errors={errors as FieldErrors<UpdateBankInput>} register={register as UseFormRegister<UpdateBankInput>} />
                     <Button
                         type="submit"
                         color="#7439FA"

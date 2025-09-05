@@ -82,7 +82,7 @@ model Bank {
     description String?
 
     maintenanceFeeAmount Decimal?
-    maintenanceFeeDue    DateTime?
+    maintenanceFeeDue    Int?
 
     bills Bill[]
 

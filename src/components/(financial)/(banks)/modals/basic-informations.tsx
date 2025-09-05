@@ -3,19 +3,22 @@ import { useTranslations } from "next-intl";
 import { NumberInput, TextInput } from "@mantine/core";
 import { DatePickerInput } from '@mantine/dates';
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
-import { CreateBankInput } from "@/schemas/financial/bank.schema";
+import { CreateBankInput, UpdateBankInput } from "@/schemas/financial/bank.schema";
+import dayjs from "dayjs";
+import 'dayjs/locale/pt-br';
+dayjs.locale("pt-br")
 
 type Props = {
-    control: Control<CreateBankInput>;
-    errors: FieldErrors<CreateBankInput>;
-    register: UseFormRegister<CreateBankInput>;
+    control: Control<CreateBankInput | UpdateBankInput>;
+    errors: FieldErrors<CreateBankInput | UpdateBankInput>;
+    register: UseFormRegister<CreateBankInput | UpdateBankInput>;
 };
 
-export default function NewBank__BasicInformations({ control, errors, register }: Props) {
-    const t = useTranslations("financial.banks.modals.create");
+export default function BankAccount__BasicInformations({ control, errors, register }: Props) {
+    const t = useTranslations("financial.banks.modals");
 
     return (
-        <div className="p-4 md:p-6 border border-neutral-300 rounded-xl grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <h2 className="text-lg font-bold md:col-span-2">{t("subtitle")}</h2>
 
             <TextInput
@@ -26,6 +29,7 @@ export default function NewBank__BasicInformations({ control, errors, register }
                 required
                 withAsterisk
                 className="md:col-span-2"
+                classNames={{ input: "!border-transparent !rounded-none !border-b !border-b-neutral-300" }}
             />
 
             <TextInput
@@ -33,6 +37,7 @@ export default function NewBank__BasicInformations({ control, errors, register }
                 placeholder={t("fields.code.placeholder")}
                 {...register("code")}
                 error={errors.code?.message}
+                classNames={{ input: "!border-transparent !rounded-none !border-b !border-b-neutral-300" }}
             />
 
             <TextInput
@@ -40,6 +45,7 @@ export default function NewBank__BasicInformations({ control, errors, register }
                 placeholder={t("fields.agency.placeholder")}
                 {...register("agency")}
                 error={errors.agency?.message}
+                classNames={{ input: "!border-transparent !rounded-none !border-b !border-b-neutral-300" }}
             />
 
             <TextInput
@@ -48,6 +54,7 @@ export default function NewBank__BasicInformations({ control, errors, register }
                 {...register("account")}
                 error={errors.account?.message}
                 className="md:col-span-2"
+                classNames={{ input: "!border-transparent !rounded-none !border-b !border-b-neutral-300" }}
             />
 
             <Controller
@@ -61,9 +68,10 @@ export default function NewBank__BasicInformations({ control, errors, register }
                         allowDecimal
                         decimalSeparator=","
                         thousandSeparator="."
-                        min={0}
+                        min={1}
                         leftSection={<RiMoneyDollarCircleFill />}
                         error={errors.maintenanceFeeAmount?.message}
+                        classNames={{ input: "!border-transparent !rounded-none !border-b !border-b-neutral-300" }}
                     />
                 )}
             />
@@ -72,13 +80,15 @@ export default function NewBank__BasicInformations({ control, errors, register }
                 name="maintenanceFeeDue"
                 control={control}
                 render={({ field }) => (
-                    <DatePickerInput
+                    <NumberInput
+                        min={1}
+                        max={31}
+                        allowDecimal={false}
+                        placeholder="5"
                         {...field}
                         label={t("fields.maintenanceFeeDue.label")}
-                        placeholder={t("fields.maintenanceFeeDue.placeholder")}
-                        valueFormat="DD/MM/YYYY"
-                        clearable
                         error={errors.maintenanceFeeDue?.message}
+                        classNames={{ input: "!border-transparent !rounded-none !border-b !border-b-neutral-300" }}
                     />
                 )}
             />
@@ -89,6 +99,7 @@ export default function NewBank__BasicInformations({ control, errors, register }
                 {...register("description")}
                 error={errors.description?.message}
                 className="md:col-span-2"
+                classNames={{ input: "!border-transparent !rounded-none !border-b !border-b-neutral-300" }}
             />
         </div>
     );

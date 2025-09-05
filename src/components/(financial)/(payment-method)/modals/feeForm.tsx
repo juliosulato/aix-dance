@@ -1,24 +1,30 @@
-import { Controller, useFieldArray } from "react-hook-form";
-import { NumberInput, Checkbox, ActionIcon, Button } from "@mantine/core";
+"use client";
+
+import { useFieldArray, Control, FieldErrors, UseFormRegister, Controller } from "react-hook-form";
+import { useTranslations } from "next-intl";
+
+import { Button, ActionIcon, NumberInput, Checkbox } from "@mantine/core";
 import { FaPercentage } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { useTranslations } from "next-intl";
-import { CreatePaymentMethodInput } from "@/schemas/financial/payment-method.schema";
+import { CreatePaymentMethodInput, UpdatePaymentMethodInput } from "@/schemas/financial/payment-method.schema";
 
-export default function NewPaymentMethod__Fees({
+
+export default function PaymentMethod__Fees({
   control,
+  register,
   errors,
 }: {
-  control: any; // ou Control<CreatePaymentMethodInput>
-  errors: any;  // ou FieldErrors<CreatePaymentMethodInput>
+  control: Control<CreatePaymentMethodInput | UpdatePaymentMethodInput>;
+  register: UseFormRegister<CreatePaymentMethodInput | UpdatePaymentMethodInput>;
+  errors: FieldErrors<CreatePaymentMethodInput | UpdatePaymentMethodInput>;
 }) {
-  const t = useTranslations("financial.paymentMethods.modals.create");
+  const t = useTranslations("financial.paymentMethods.modals");
   const { fields, append, remove } = useFieldArray({ control, name: "fees" });
 
   return (
     <div className="p-4 border border-neutral-300 rounded-xl flex flex-col gap-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-bold">{t("feesSubtitle")}</h2>
+        <h2 className="text-lg font-bold">{t("content.feesSubtitle")}</h2>
         <Button
           size="xs"
           variant="light"
@@ -33,10 +39,9 @@ export default function NewPaymentMethod__Fees({
             })
           }
         >
-          {t("addFeeButton")}
+          {t("content.addFeeButton")}
         </Button>
       </div>
-
       {fields.map((field, index) => (
         <div
           key={field.id}
@@ -46,7 +51,7 @@ export default function NewPaymentMethod__Fees({
             color="red"
             variant="subtle"
             onClick={() => remove(index)}
-            className="absolute top-2 right-2 z-10"
+            className="absolute top-2 right-2 z-10 col-span-2 md:col-span-3 ml-auto"
           >
             <RiDeleteBinLine size={18} />
           </ActionIcon>
@@ -58,7 +63,7 @@ export default function NewPaymentMethod__Fees({
             render={({ field }) => (
               <NumberInput
                 {...field}
-                label={t("fields.fees.minInstallments")}
+                label={t("content.fields.fees.minInstallments")}
                 placeholder="1"
                 error={errors.fees?.[index]?.minInstallments?.message}
               />
@@ -72,7 +77,7 @@ export default function NewPaymentMethod__Fees({
             render={({ field }) => (
               <NumberInput
                 {...field}
-                label={t("fields.fees.maxInstallments")}
+                label={t("content.fields.fees.maxInstallments")}
                 placeholder="12"
                 error={errors.fees?.[index]?.maxInstallments?.message}
               />
@@ -86,7 +91,7 @@ export default function NewPaymentMethod__Fees({
             render={({ field }) => (
               <NumberInput
                 {...field}
-                label={t("fields.fees.feePercentage")}
+                label={t("content.fields.fees.feePercentage")}
                 placeholder="2.99"
                 decimalScale={2}
                 fixedDecimalScale
@@ -103,29 +108,21 @@ export default function NewPaymentMethod__Fees({
             render={({ field }) => (
               <NumberInput
                 {...field}
-                label={t("fields.fees.receiveInDays")}
+                label={t("content.fields.fees.receiveInDays")}
                 placeholder="30"
                 error={errors.fees?.[index]?.receiveInDays?.message}
               />
             )}
           />
 
-          {/* customerInterest */}
-          <Controller
-            control={control}
-            name={`fees.${index}.customerInterest`}
-            render={({ field }) => (
-              <Checkbox
-                {...field}
-                checked={field.value}
-                label={t("fields.fees.customerInterest")}
-                className="col-span-2 md:col-span-3 self-center mt-2"
-              />
-            )}
+          {/* customerInterest pode usar register */}
+          <Checkbox
+            label={t("content.fields.fees.customerInterest")}
+            {...register(`fees.${index}.customerInterest`)}
+            className="col-span-2 md:col-span-3 self-center mt-2"
           />
         </div>
       ))}
-
       {errors.fees?.message && (
         <p className="text-red-500 text-xs mt-1">{errors.fees.message}</p>
       )}

@@ -4,8 +4,8 @@ import { notifications } from "@mantine/notifications";
 
 async function deletePaymentMethod(
     items: PaymentMethod | string[],
-    mutate: KeyedMutator<PaymentMethod[]>,
-    tenancyId: string
+    tenancyId: string,
+    mutate?: KeyedMutator<PaymentMethod[]>,
 ) {
     const isArray = Array.isArray(items);
     const idsToDelete = isArray ? items : [items.id];
@@ -17,7 +17,7 @@ async function deletePaymentMethod(
 
     const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/payment-methods`;
 
-    await mutate(
+    mutate && await mutate(
         (currentData) => currentData?.filter(pm => !idsToDelete.includes(pm.id)) || [],
         {
             revalidate: false,
@@ -40,11 +40,16 @@ async function deletePaymentMethod(
         }
 
         notifications.clean();
-        notifications.show({ message: "Formas de pagamento deletadas com sucesso!", color: "green" });
+        
+        if (isArray) {
+            notifications.show({ message: "Formas de pagamento deletadas com sucesso!", color: "green" });
+        } else {
+            notifications.show({ message: "Forma de pagamento deletada com sucesso!", color: "green" });
+        }
 
     } catch (error) {
         notifications.show({ message: "Ocorreu um erro ao deletar. Suas alterações foram desfeitas.", color: "red" });
-        mutate();
+        mutate && mutate();
     }
 }
 

@@ -6,22 +6,22 @@ import { useTranslations } from "next-intl";
 
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
-import UpdatePaymentMethod__Fees from "./feeForm";
-import UpdatePaymentMethod__BasicInformations from "./basic-informations";
 import { UpdatePaymentMethodInput, getUpdatePaymentMethodSchema } from "@/schemas/financial/payment-method.schema";
 import { PaymentMethod } from "..";
 import { KeyedMutator } from "swr";
+import PaymentMethod__BasicInformations from "./basic-informations";
+import PaymentMethod__Fees from "./feeForm";
 
 type Props = {
   paymentMethod: PaymentMethod | null;
   opened: boolean;
   onClose: () => void;
   onSuccess?: () => void;
-  mutate: KeyedMutator<PaymentMethod[]>;
+  mutate: () => void | KeyedMutator<PaymentMethod[]>;
 };
 
 export default function UpdatePaymentMethod({ mutate, paymentMethod, opened, onClose, onSuccess }: Props) {
-  const t = useTranslations("financial.paymentMethods.modals.create");
+  const t = useTranslations("financial.paymentMethods.modals");
   const g = useTranslations("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -72,13 +72,13 @@ export default function UpdatePaymentMethod({ mutate, paymentMethod, opened, onC
         }
       );
       if (!response.ok) throw new Error("Failed to update payment method");
-      notifications.show({ message: t("notifications.success"), color: "green" });
+      notifications.show({ message: t("content.notifications.success"), color: "green" });
       if (onSuccess) onSuccess();
       onClose();
       mutate()
     } catch (error) {
       console.error(error);
-      notifications.show({ message: t("notifications.error"), color: "red" });
+      notifications.show({ message: t("content.notifications.error"), color: "red" });
     } finally {
       setIsLoading(false);
     }
@@ -88,7 +88,7 @@ export default function UpdatePaymentMethod({ mutate, paymentMethod, opened, onC
     <Modal
       opened={opened}
       onClose={onClose}
-      title={t("title")}
+      title={t("update.title")}
       size="xl"
       radius="lg"
       centered
@@ -102,14 +102,14 @@ export default function UpdatePaymentMethod({ mutate, paymentMethod, opened, onC
         className="flex flex-col gap-4"
       >
         <LoadingOverlay visible={isLoading} />
-        <UpdatePaymentMethod__BasicInformations register={register} errors={errors} />
-        <UpdatePaymentMethod__Fees control={control} register={register} errors={errors} />
+        <PaymentMethod__BasicInformations register={register} errors={errors} />
+        <PaymentMethod__Fees control={control} register={register} errors={errors} />
         <Button
           type="submit"
+          loading={isLoading}
           color="#7439FA"
           radius="lg"
           size="md"
-          loading={isLoading}
           className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
         >
           {g("forms.submit")}

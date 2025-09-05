@@ -21,9 +21,6 @@ export default function Breadcrumps({ menu, items }: Props) {
         throw new Error("Each item must have a label, href, and icon");
     }
 
-    if (menu.length > 5) {
-        throw new Error("Items array cannot have more than 5 items");
-    }
 
     return (
         <nav className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
@@ -31,7 +28,7 @@ export default function Breadcrumps({ menu, items }: Props) {
                 <div className="flex items-center justify-center w-4 h-4 bg-primary text-white rounded-full">
                     <HiOutlineChevronLeft />
                 </div>
-                <span>{t("back")}</span>
+                <span>{t("actions.back")}</span>
             </button>
             <Menu position="bottom-end" shadow="md" withArrow>
                 <Menu.Target>

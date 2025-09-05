@@ -12,11 +12,11 @@ import NewPaymentMethod__Fees from "./feeForm";
 import NewPaymentMethod__BasicInformations from "./basic-informations";
 import { CreatePaymentMethodInput, getCreatePaymentMethodSchema } from "@/schemas/financial/payment-method.schema";
 
-type Props = { opened: boolean; onClose: () => void; onSuccess: () => void; };
+type Props = { opened: boolean; onClose: () => void; onSuccess?: () => void; };
 
 export default function NewPaymentMethod({ opened, onClose, onSuccess }: Props) {
     const t = useTranslations("financial.paymentMethods.modals.create");
-    const g = useTranslations("general");
+    const g = useTranslations("");
     const [isLoading, setIsLoading] = useState(false);
 
     const createPaymentMethodSchema = getCreatePaymentMethodSchema((key: string) => t(key as any));
@@ -43,7 +43,7 @@ export default function NewPaymentMethod({ opened, onClose, onSuccess }: Props) 
             if (!response.ok) throw new Error("Failed to create payment method");
             notifications.show({ message: t("notifications.success"), color: "green" });
             reset();
-            onSuccess();
+            if (onSuccess) onSuccess();
             onClose();
         } catch (error) {
             console.error(error);

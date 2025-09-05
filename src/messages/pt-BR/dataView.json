@@ -1,0 +1,9 @@
+{
+    "itemsPerPage": "Itens Por Página",
+    "table": {
+        "label": "VIsualização Por Tabela"
+    },
+    "grade": {
+        "label": "Visualização em Grade"
+    }
+}

@@ -22,4 +22,10 @@ export const getCreatePaymentMethodSchema = (t: (key: string) => string) => z.ob
     path: ['fees']
 });
 
+export const getUpdatePaymentMethodSchema = (t: (key: string) => string) =>
+  getCreatePaymentMethodSchema(t).partial();
+
+
+// Tipos inferidos
 export type CreatePaymentMethodInput = z.infer<ReturnType<typeof getCreatePaymentMethodSchema>>;
+export type UpdatePaymentMethodInput = z.infer<ReturnType<typeof getUpdatePaymentMethodSchema>>;

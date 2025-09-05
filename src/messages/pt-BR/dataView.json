@@ -1,5 +1,8 @@
 {
     "itemsPerPage": "Itens Por Página",
+    "head": {
+        "refresh": "Atualizar"
+    },
     "table": {
         "label": "VIsualização Por Tabela"
     },

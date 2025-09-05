@@ -1,5 +1,7 @@
-import { Table, Checkbox } from "@mantine/core";
+import { Table, Checkbox, Group, Flex } from "@mantine/core";
 import { Column } from ".";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface DataViewTableProps<T> {
     data: T[];
@@ -7,6 +9,9 @@ interface DataViewTableProps<T> {
     selectedRows?: string[];
     onSelectRow?: (id: string, selected: boolean) => void;
     idKey?: keyof T;
+    RenderRowMenu?: (item: T) => React.ReactNode;
+    RenderAllRowsMenu?: (selectedRows: string[]) => React.ReactNode;
+    baseUrl?: string;
 }
 
 export default function DataViewTable<T>({
@@ -14,12 +19,30 @@ export default function DataViewTable<T>({
     columns,
     selectedRows = [],
     onSelectRow,
-    idKey = "id" as keyof T
+    idKey = "id" as keyof T,
+    RenderAllRowsMenu,
+    RenderRowMenu,
+    baseUrl
 }: DataViewTableProps<T>) {
     const handleSelect = (item: T, checked: boolean) => {
         if (!onSelectRow) return;
         const id = String(item[idKey]);
         onSelectRow(id, checked);
+    };
+
+    const router = useRouter();
+
+    const [hoverRow, setHoverRow] = useState<string>("");
+
+    const handleRowClick = (item: T) => {
+        if (!baseUrl) return;
+        const selection = window.getSelection();
+        if (selection && selection.toString().length > 0) {
+            return;
+        }
+
+        const id = String(item[idKey]);
+        router.push(`${baseUrl}/${id}`);
     };
 
     return (
@@ -28,13 +51,19 @@ export default function DataViewTable<T>({
                 <Table.Thead>
                     <Table.Tr>
                         <Table.Th className="w-16 rounded-tl-3xl rounded-bl-3xl bg-white">
-                            <Checkbox
-                                checked={data.every(item => selectedRows.includes(String(item[idKey]))) && data.length > 0}
-                                onChange={e => {
-                                    const checked = e.currentTarget.checked;
-                                    data.forEach(item => handleSelect(item, checked));
-                                }}
-                            />
+                            <Group gap="xs">
+                                <Checkbox
+                                    checked={data.length > 0 && data.every(item => selectedRows.includes(String(item[idKey])))}
+                                    indeterminate={
+                                        selectedRows.length > 0 && selectedRows.length < data.length
+                                    }
+                                    onChange={e => {
+                                        const checked = e.currentTarget.checked;
+                                        data.forEach(item => handleSelect(item, checked));
+                                    }}
+                                />
+                                {selectedRows.length > 1 && RenderAllRowsMenu && RenderAllRowsMenu(selectedRows)}
+                            </Group>
                         </Table.Th>
 
                         {columns.map((col, idx) => {
@@ -57,25 +86,34 @@ export default function DataViewTable<T>({
                     </tr>
                     {data.map((item, rowIdx) => {
                         const isSelected = selectedRows.includes(String(item[idKey]));
+
                         const bgColor = rowIdx % 2 === 0 ? "white" : "#fafafa";
 
                         const isFirstRow = rowIdx === 0;
                         const isLastRow = rowIdx === data.length - 1;
 
                         return (
-                            <Table.Tr key={rowIdx} style={{ backgroundColor: bgColor }} className="transition-colors duration-200 hover:bg-[rgb(124, 58, 237, 0.1)]">
-                                <Table.Td
-                                    className={`
-                    ${isFirstRow ? "rounded-tl-3xl" : ""} 
-                    ${isLastRow ? "rounded-bl-3xl" : ""}
-                `}
-                                >
-                                    <Checkbox
-                                        checked={isSelected}
-                                        onChange={e => handleSelect(item, e.currentTarget.checked)}
-                                    />
-                                </Table.Td>
+                            <Table.Tr
+                                onClick={() => handleRowClick(item)}
+                                key={rowIdx} style={{ backgroundColor: bgColor }}
 
+                                className={`
+                                    transition-colors duration-200 
+                                    ${baseUrl ? 'cursor-pointer hover:!bg-purple-50' : 'hover:bg-[rgb(124,58,237,0.1)]'}
+                                `}
+                            >
+                                <Table.Td
+                                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                                    className={`${isFirstRow ? "rounded-tl-3xl" : ""} ${isLastRow ? "rounded-bl-3xl" : ""}`}
+                                >
+                                    <Flex gap="sm" align="center">
+                                        <Checkbox
+                                            checked={isSelected}
+                                            onChange={e => handleSelect(item, e.currentTarget.checked)}
+                                        />
+                                        {isSelected && RenderRowMenu && RenderRowMenu(item)}
+                                    </Flex>
+                                </Table.Td>
                                 {columns.map((col, colIdx) => {
                                     const value = item[col.key];
                                     const isLastColumn = colIdx === columns.length - 1;
@@ -83,10 +121,7 @@ export default function DataViewTable<T>({
                                     return (
                                         <Table.Td
                                             key={colIdx}
-                                            className={`
-                            ${isFirstRow && isLastColumn ? "rounded-tr-3xl" : ""} 
-                            ${isLastRow && isLastColumn ? "rounded-br-3xl" : ""}
-                        `}
+                                            className={`${isFirstRow && isLastColumn ? "rounded-tr-3xl" : ""} ${isLastRow && isLastColumn ? "rounded-br-3xl" : ""}`}
                                         >
                                             {col.render
                                                 ? col.render(value, item)

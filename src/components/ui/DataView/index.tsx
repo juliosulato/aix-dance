@@ -2,10 +2,23 @@
 
 import { useTranslations } from "next-intl";
 import DataViewHead from "./DataViewHead";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import DataViewTable from "./DataViewTable";
 import { Grid, Pagination, Select, Text } from "@mantine/core";
-import DataViewGrid from "./DataViewGrid"; // NOVO: Importa o componente de grade
+import DataViewGrid from "./DataViewGrid";
+import { KeyedMutator } from "swr";
+
+export type FilterOption = {
+    label: string;
+    value: string;
+};
+
+export type Filter<T> = {
+    key: keyof T;
+    label: string;
+    options: FilterOption[];
+    type: 'select'; 
+};
 
 export type Column<T> = {
     key: keyof T;
@@ -22,7 +35,12 @@ interface DataViewProps<T> {
     openNewModal: {
         label: string;
         func: () => void;
-    }
+    };
+    RenderRowMenu?: (item: T) => React.ReactNode; 
+    RenderAllRowsMenu?: (selectedRows: string[]) => React.ReactNode; 
+    filters?: Filter<T>[];
+    mutate?: KeyedMutator<T[]>;
+    baseUrl: string;
 };
 
 
@@ -32,18 +50,29 @@ export default function DataView<T>({
     renderCard,
     searchbarPlaceholder,
     openNewModal,
-    columns
+    columns,
+    RenderAllRowsMenu,
+    RenderRowMenu,
+    filters,
+    mutate,
+    baseUrl
 }: DataViewProps<T>) {
     const t = useTranslations("");
     const [activeView, setActiveView] = useState<"table" | "grade">("grade"); 
     const [searchValue, setSearchValue] = useState<string>("");
+    const [activePage, setPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState('12');
+    const [selectedRows, setSelectedRows] = useState<string[]>([]);
+    const [activeFilters, setActiveFilters] = useState<{ [key: string]: string | null }>({});
 
     useEffect(() => {
         const verifyPageSize = () => {
             if (window.innerWidth < 768) {
                 setActiveView("grade");
+                setRowsPerPage("12")
             } else {
                 setActiveView("table")
+                setRowsPerPage("10")
             }
         }
 
@@ -55,9 +84,6 @@ export default function DataView<T>({
         }
     }, [])
 
-    const [activePage, setPage] = useState(1);
-    const [rowsPerPage, setRowsPerPage] = useState('12');
-    const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
     const handleSelectRow = (id: string, selected: boolean) => {
         setSelectedRows(prev =>
@@ -65,11 +91,32 @@ export default function DataView<T>({
         );
     };
 
-    const filteredData = data.filter(item => 
-        Object.values(item as any).some(value => 
-            String(value).toLowerCase().includes(searchValue.toLowerCase())
+ const handleFilterChange = (filterKey: string, value: string | null) => {
+        setActiveFilters(prev => ({
+            ...prev,
+            [filterKey]: value
+        }));
+        setPage(1); // Reseta para a primeira página ao aplicar um filtro
+    };
+
+    // ALTERADO: Lógica de filtragem atualizada
+    const filteredData = data
+        // 1. Filtro de busca (como já existia)
+        .filter(item => 
+            Object.values(item as any).some(value => 
+                String(value).toLowerCase().includes(searchValue.toLowerCase())
+            )
         )
-    );
+        // 2. Filtros de Select (lógica nova)
+        .filter(item => {
+            // Object.entries transforma { status: 'active' } em [['status', 'active']]
+            return Object.entries(activeFilters).every(([key, value]) => {
+                // Se o filtro não tiver valor (for null ou undefined), ignora ele
+                if (!value) return true;
+                // Compara o valor do item com o valor do filtro
+                return String((item as any)[key]) === value;
+            });
+        });
 
     const itemsPerPage = parseInt(rowsPerPage, 10);
     const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -86,7 +133,11 @@ export default function DataView<T>({
                 activeView={activeView}
                 setActiveView={setActiveView}
                 openNewModal={openNewModal}
+                filters={filters} // NOVO: Passa as definições de filtro
+                activeFilters={activeFilters} // NOVO: Passa os filtros ativos
+                onFilterChange={handleFilterChange} // NOVO: Passa a função de callback
                 setSearchValue={setSearchValue}
+                mutate={mutate}
             />
 
             {activeView === "table" && (
@@ -95,6 +146,9 @@ export default function DataView<T>({
                     data={paginatedData}
                     selectedRows={selectedRows}
                     onSelectRow={handleSelectRow}
+                    RenderAllRowsMenu={RenderAllRowsMenu}
+                    RenderRowMenu={RenderRowMenu}
+                    baseUrl={baseUrl}
                 />
             )}
             
@@ -102,12 +156,13 @@ export default function DataView<T>({
                 <DataViewGrid 
                     data={paginatedData}
                     renderCard={renderCard}
+                    baseUrl={baseUrl}
                 />
             )}
 
 
-            {filteredData.length > parseInt(rowsPerPage) && (
-                <Grid align="center" className="mt-2 md:mt-4 p-4 md:px-6 rounded-3xl bg-white">
+            {data.length >= 10 && (
+                <Grid align="center" className="mt-2 md:mt-4 p-4 py-6 md:p-6 lg:py-3 lg:px-6 rounded-3xl bg-white">
                     <Grid.Col span={{ base: 12, md: 4}}>
                         <Text size="sm" c="dimmed" ta={{ base: 'center', md: 'left' }}>
                             Mostrando {startIndex + 1}–{Math.min(endIndex, filteredData.length)} de {filteredData.length}
@@ -119,15 +174,30 @@ export default function DataView<T>({
                             value={activePage}
                             onChange={setPage}
                             radius="md"
-                            size="lg"
-                            className="justify-center"
+                            size="md"
+                            className="justify-center justify-self-center"
                         />
                     </Grid.Col>
 
-                    <Grid.Col span={{ base: 12, md: 4}}>
+                    {activeView == "table" ? (
+                        <Grid.Col span={{ base: 12, md: 4}}>
                         <Select
                             value={rowsPerPage}
-                            label={t("table.itemsPerPage")}
+                            label={t("dataView.itemsPerPage")}
+                            onChange={value => {
+                                setRowsPerPage(value || '12');
+                                setPage(1);
+                            }}
+                            data={['10', '20', '50', '100']} 
+                            className="ml-auto"
+                            w={{ base: '100%', sm: 250 }}
+                        />
+                    </Grid.Col>
+                    ) : (
+                        <Grid.Col span={{ base: 12, md: 4}}>
+                        <Select
+                            value={rowsPerPage}
+                            label={t("dataView.itemsPerPage")}
                             onChange={value => {
                                 setRowsPerPage(value || '12');
                                 setPage(1);
@@ -137,6 +207,7 @@ export default function DataView<T>({
                             w={{ base: '100%', sm: 250 }}
                         />
                     </Grid.Col>
+                    )}
                 </Grid>
             )}
         </div>

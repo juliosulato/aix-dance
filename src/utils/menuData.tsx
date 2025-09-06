@@ -1,7 +1,7 @@
 // Início
 import { GrHomeRounded } from "react-icons/gr";
 import { AiOutlineDashboard } from "react-icons/ai";
-import { MdOutlineViewAgenda } from "react-icons/md";
+import { MdOutlineViewAgenda, MdPayment } from "react-icons/md";
 import { FiCalendar } from "react-icons/fi";
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { IoExtensionPuzzleOutline } from "react-icons/io5";
@@ -14,7 +14,7 @@ import { FaRegUser, FaChalkboardTeacher } from "react-icons/fa";
 import { MdGroups } from "react-icons/md";
 
 // Eventos
-import { TbCalendarEvent, TbReportMoney, TbBuildingBank } from "react-icons/tb";
+import { TbCalendarEvent, TbReportMoney, TbBuildingBank, TbCategory2 } from "react-icons/tb";
 
 // Financeiro
 import { MdOutlineSpaceDashboard, MdOutlineCategory } from "react-icons/md";
@@ -45,21 +45,21 @@ const useMenuData = () => {
       label: t("navbar.home.label"),
       subitems: [
         { icon: <AiOutlineDashboard />, label: t("navbar.home.dashboard"), href: "/system/dashboard" },
-        { icon: <FiCalendar />, label: t("navbar.home.classSchedule"), href: "/system/grade-de-aulas" },
-        { icon: <MdOutlineViewAgenda />, label: t("navbar.home.calendar"), href: "/system/agenda" },
-        { icon: <IoExtensionPuzzleOutline />, label: t("navbar.home.integrations"), href: "/system/integracoes" },
-        { icon: <IoMdHelpCircleOutline />, label: t("navbar.home.help"), href: "/system/ajuda" },
+        { icon: <FiCalendar />, label: t("navbar.home.classSchedule"), href: "/system/class-schedule" },
+        { icon: <MdOutlineViewAgenda />, label: t("navbar.home.calendar"), href: "/system/calendar" },
+        // { icon: <IoExtensionPuzzleOutline />, label: t("navbar.home.integrations"), href: "/system/integracoes" },
+        // { icon: <IoMdHelpCircleOutline />, label: t("navbar.home.help"), href: "/system/help" },
       ],
     },
-    {
-      icon: <LuBrain />,
-      label: t("navbar.crm.label"),
-      subitems: [
-        { icon: <LuMap />, label: t("navbar.crm.crmManagement"), href: "/system/crm/gerenciamento" },
-        { icon: <LuMessageCircleMore />, label: t("navbar.crm.crmConversations"), href: "/system/crm/conversas" },
-        { icon: <LuChartSpline />, label: t("navbar.crm.crmReports"), href: "/system/crm/relatorios" },
-      ],
-    },
+    // {
+    //   icon: <LuBrain />,
+    //   label: t("navbar.crm.label"),
+    //   subitems: [
+    //     { icon: <LuMap />, label: t("navbar.crm.crmManagement"), href: "/system/crm/gerenciamento" },
+    //     { icon: <LuMessageCircleMore />, label: t("navbar.crm.crmConversations"), href: "/system/crm/conversas" },
+    //     { icon: <LuChartSpline />, label: t("navbar.crm.crmReports"), href: "/system/crm/reports" },
+    //   ],
+    // },
     {
       icon: <LuGraduationCap />,
       label: t("navbar.academic.label"),
@@ -67,34 +67,36 @@ const useMenuData = () => {
         { icon: <FaRegUser />, label: t("navbar.academic.students"), href: "/system/academic/students" },
         { icon: <MdGroups />, label: t("navbar.academic.classes"), href: "/system/academic/classes" },
         { icon: <FaChalkboardTeacher />, label: t("navbar.academic.teachers"), href: "/system/academic/professores" },
-        { icon: <LuChartSpline />, label: t("navbar.academic.academicReports"), href: "/system/academic/relatorios" },
+        { icon: <LuChartSpline />, label: t("navbar.academic.academicReports"), href: "/system/academic/reports" },
       ],
     },
-    {
-      icon: <TbCalendarEvent />,
-      label: t("navbar.events"),
-    },
+    // {
+    //   icon: <TbCalendarEvent />,
+    //   label: t("navbar.events"),
+    // },
     {
       icon: <TbReportMoney />,
       label: t("navbar.financial.label"),
       subitems: [
-        { icon: <MdOutlineSpaceDashboard />, label: t("navbar.financial.financialSummary"), href: "/system/financial/resumo" },
-        { icon: <PiMoneyWavy />, label: t("navbar.financial.financialManager"), href: "/system/financial/gerenciador" },
+        { icon: <MdOutlineSpaceDashboard />, label: t("navbar.financial.financialSummary"), href: "/system/financial/resume" },
+        { icon: <PiMoneyWavy />, label: t("navbar.financial.financialManager"), href: "/system/financial/manager" },
+        { icon: <TbBuildingBank />, label: t("navbar.financial.financialAccounts"), href: "/system/financial/bank-accounts" },
+        { icon: <MdPayment />, label: t("navbar.financial.financialPaymentMethods"), href: "/system/financial/payment-methods" },
         { icon: <MdOutlineCategory />, label: t("navbar.financial.financialCategories"), href: "/system/financial/categories" },
-        { icon: <TbBuildingBank />, label: t("navbar.financial.financialAccounts"), href: "/system/financial/contas-bancarias" },
-        { icon: <LuChartSpline />, label: t("navbar.financial.financialReports"), href: "/system/financial/relatorios" },
+        { icon: <BsBox />, label: t("navbar.financial.financialGroups"), href: "/system/financial/groups" },
+        { icon: <LuChartSpline />, label: t("navbar.financial.financialReports"), href: "/system/financial/reports" },
       ],
     },
-    {
-      icon: <BsBox />,
-      label: t("navbar.inventory.label"),
-      subitems: [
-        { icon: <BsBox />, label: t("navbar.inventory.inventoryControl"), href: "/system/estoque/controle" },
-        { icon: <FiInbox />, label: t("navbar.inventory.orders"), href: "/system/estoque/encomendas" },
-        { icon: <MdBookmarkBorder />, label: t("navbar.inventory.products"), href: "/system/estoque/produtos" },
-        { icon: <LuChartSpline />, label: t("navbar.inventory.inventoryReports"), href: "/system/estoque/relatorios" },
-      ],
-    },
+    // {
+    //   icon: <BsBox />,
+    //   label: t("navbar.inventory.label"),
+    //   subitems: [
+    //     { icon: <BsBox />, label: t("navbar.inventory.inventoryControl"), href: "/system/estoque/controle" },
+    //     { icon: <FiInbox />, label: t("navbar.inventory.orders"), href: "/system/estoque/encomendas" },
+    //     { icon: <MdBookmarkBorder />, label: t("navbar.inventory.products"), href: "/system/estoque/produtos" },
+    //     { icon: <LuChartSpline />, label: t("navbar.inventory.inventoryReports"), href: "/system/estoque/reports" },
+    //   ],
+    // },
   ];
 
   return menuData;

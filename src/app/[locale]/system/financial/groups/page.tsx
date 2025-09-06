@@ -1,31 +1,14 @@
-import { auth } from "@/auth";
+import AllCategoryGroupsData from "@/components/(financial)/(groups)";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 import { getTranslations } from "next-intl/server";
-import BanksView from "@/components/(financial)/(banks)/([id])";
-import { Bank } from "@prisma/client";
 
-export default async function PaymentMethodPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function CategoryGroupsPage() {
     const t = await getTranslations("");
-    const { id } = await params;
 
-    const session = await auth();
-
-    const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session?.user.tenancyId}/banks/${id}`,
-        { headers: { "Accept": "application/json" } }
-    );
-
-    if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`Backend returned ${res.status}: ${text}`);
-    }
-
-    const bank: Bank = await res.json();
-
-    return session?.user.tenancyId && (
+    return (
         <main>
             <Breadcrumps
-                items={[t("appShell.navbar.home.label"), t("appShell.navbar.financial.label"), t("appShell.navbar.financial.financialAccounts")]}
+                items={[t("appShell.navbar.home.label"), t("appShell.navbar.financial.label")]}
                 menu={[
                     { label: t("appShell.navbar.financial.financialSummary"), href: "/system/summary" },
                     { label: t("appShell.navbar.financial.financialManager"), href: "/system/financial/manager" },
@@ -36,7 +19,7 @@ export default async function PaymentMethodPage({ params }: { params: Promise<{ 
                     { label: t("appShell.navbar.financial.financialReports"), href: "/system/financial/reports" },
                 ]} />
             <br />
-            <BanksView bank={bank} tenancyId={session?.user.tenancyId} />
+            <AllCategoryGroupsData/>
         </main>
     );
 }

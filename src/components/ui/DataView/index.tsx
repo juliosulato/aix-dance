@@ -41,6 +41,7 @@ interface DataViewProps<T> {
     filters?: Filter<T>[];
     mutate?: KeyedMutator<T[]>;
     baseUrl: string;
+    disableTable?: boolean;
 };
 
 
@@ -55,7 +56,8 @@ export default function DataView<T>({
     RenderRowMenu,
     filters,
     mutate,
-    baseUrl
+    baseUrl,
+    disableTable
 }: DataViewProps<T>) {
     const t = useTranslations("");
     const [activeView, setActiveView] = useState<"table" | "grade">("grade"); 
@@ -70,7 +72,7 @@ export default function DataView<T>({
             if (window.innerWidth < 768) {
                 setActiveView("grade");
                 setRowsPerPage("12")
-            } else {
+            } else if (!disableTable) {
                 setActiveView("table")
                 setRowsPerPage("10")
             }
@@ -138,9 +140,10 @@ export default function DataView<T>({
                 onFilterChange={handleFilterChange} // NOVO: Passa a função de callback
                 setSearchValue={setSearchValue}
                 mutate={mutate}
+                disableTable={disableTable}
             />
 
-            {activeView === "table" && (
+            {!disableTable && activeView === "table" && (
                 <DataViewTable
                     columns={columns}
                     data={paginatedData}

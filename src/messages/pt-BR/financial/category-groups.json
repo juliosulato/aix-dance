@@ -1,0 +1,53 @@
+{
+    "title": "Grupos das Categorias",
+    "searchbarPlaceholder": "Procure pelo nome do grupo. ",
+    "modals": {
+        "create": {
+            "title": "Adicionar Novo Grupo",
+            "notifications": {
+                "success": "O novo grupo foi adicionado com sucesso.",
+                "error": "Ocorreu um erro ao criar o grupo."
+            }
+        },
+        "update": {
+            "title": "Atualizar Grupo",
+            "notifications": {
+                "success": "O grupo foi atualizado com sucesso.",
+                "error": "Ocorreu um erro ao atualizar grupo."
+            }
+        },
+        "confirmModal": {
+            "title": "Confirmar Exclusão",
+            "confirmLabel": "Sim, Excluir",
+            "cancelLabel": "Cancelar",
+            "textArray": "Você tem certeza que deseja excluir os {groups} grupos selecionadas?",
+            "text": "Você tem certeza que deseja excluir o grupo {group}?",
+            "warn": "Esta ação não poderá ser desfeita."
+        },
+        "fields": {
+            "name": {
+                "label": "Nome",
+                "placeholder": "Ex.: Infraestrutura, loja, academia, etc...",
+                "errors": {
+                    "required": "O nome do grupo é obrigatório."
+                }
+            },
+            "id": {
+                "label": "Identificador"
+            }
+        }
+    },
+    "delete": {
+        "notifications": {
+            "wait": {
+                "title": "Aguarde!",
+                "message": "Deletando itens..."
+            },
+            "success": "Grupo(s) deletados com sucesso!",
+            "internalError": "Ocorreu um erro ao deletar. Suas alterações foram desfeitas."
+        },
+        "errors": {
+            "noLength": "Nenhum grupo selecionado."
+        }
+    }
+}

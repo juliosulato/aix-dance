@@ -47,7 +47,7 @@ export default function PaymentMethodView({ paymentMethod, tenancyId }: { paymen
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <InfoTerm label={t("financial.payment-methods.modals.fields.name.label")} value={paymentMethod.name} />
                 <InfoTerm label={t("financial.payment-methods.modals.fields.operator.label")} value={paymentMethod.operator} />
-                <h2 className="md:col-span-2 lg:col-span-3 font-bold text-xl my-4">{t("financial.payment-methods.modals.feesSubtitle")}</h2>
+                {paymentMethod.fees.length > 0 && <h2 className="md:col-span-2 lg:col-span-3 font-bold text-xl my-4">{t("financial.payment-methods.modals.feesSubtitle")}</h2>}
                 {paymentMethod.fees.map((fee) => (
                      <div className="grid gap-4 md:grid-cols-2 md:col-span-2 lg:col-span-3" key={fee.id}>
                         <InfoTerm label={t("financial.payment-methods.modals.fields.fees.minInstallments")} value={fee.minInstallments} />

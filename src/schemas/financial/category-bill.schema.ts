@@ -1,8 +1,9 @@
+import toTitleCase from "@/utils/toTitleCase";
 import { BillCategoryType, BillNature } from "@prisma/client";
 import z from "zod";
 
 export const getCreateCategoryBillSchema = (t: (key: string) => string) => z.object({
-  name: z.string().min(1, { message: t('fields.name.errors.required') }),
+  name: z.string().min(1, { message: t('fields.name.errors.required') }).transform(toTitleCase),
   nature: z.enum([BillNature.REVENUE, BillNature.EXPENSE], {
     error: t('fields.nature.errors.required'),
   }),

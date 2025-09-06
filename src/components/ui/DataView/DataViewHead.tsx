@@ -22,9 +22,10 @@ interface DataViewProps<T> {
     activeFilters?: { [key: string]: string | null };
     onFilterChange?: (filterKey: string, value: string | null) => void;
     mutate?: KeyedMutator<T[]>;
+    disableTable?: boolean;
 };
 
-export default function DataViewHead<T>({ pageTitle, searchbarPlaceholder, t, activeView, setActiveView, openNewModal, setSearchValue, activeFilters, filters, onFilterChange, mutate }: DataViewProps<T>) {
+export default function DataViewHead<T>({ pageTitle, searchbarPlaceholder, t, activeView, setActiveView, openNewModal, setSearchValue, activeFilters, filters, onFilterChange, mutate, disableTable }: DataViewProps<T>) {
     return (
         <div className="flex flex-col gap-4 md:gap-6">
             <div className="flex flex-col  md:flex-row gap-4 justify-between items-center">
@@ -84,7 +85,8 @@ export default function DataViewHead<T>({ pageTitle, searchbarPlaceholder, t, ac
                     )}
                 </div>
                 <div className="hidden md:flex flex-row flex-wrap gap-2 md:flex-nowrap justify-between items-center">
-                    <Tooltip color="rgba(116, 57, 250, 1)" label={t("dataView.table.label")}>
+                    {!disableTable && (
+                        <Tooltip color="rgba(116, 57, 250, 1)" label={t("dataView.table.label")}>
                         <ActionIcon
                             variant="filled"
                             color={activeView == "table" ? "rgba(116, 57, 250, 1)" : "#F5F5F5"}
@@ -96,6 +98,7 @@ export default function DataViewHead<T>({ pageTitle, searchbarPlaceholder, t, ac
                             <MdOutlineTableChart className="text-2xl" />
                         </ActionIcon>
                     </Tooltip>
+                    )}
                     <Tooltip color="rgba(116, 57, 250, 1)" label={t("dataView.grade.label")}>
                         <ActionIcon
                             variant="filled"

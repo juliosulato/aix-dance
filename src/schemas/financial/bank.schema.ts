@@ -1,7 +1,8 @@
+import toTitleCase from '@/utils/toTitleCase';
 import { z } from 'zod';
 
 export const getCreateBankSchema = (t: (key: string) => string) => z.object({
-  name: z.string().min(1, { message: t('modals.fields.name.errors.required') }),
+  name: z.string().min(1, { message: t('modals.fields.name.errors.required') }).transform(toTitleCase),
   code: z.string().optional(),
   agency: z.string().optional(),
   account: z.string().optional(),

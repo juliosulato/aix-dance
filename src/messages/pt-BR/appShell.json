@@ -28,6 +28,7 @@
             "financialManager": "Gerenciador",
             "financialCategories": "Categorias",
             "financialAccounts": "Contas Bancárias",
+            "financialGroups": "Grupos",
             "financialPaymentMethods": "Formas de Pagamento",
             "financialReports": "Relatórios"
         },

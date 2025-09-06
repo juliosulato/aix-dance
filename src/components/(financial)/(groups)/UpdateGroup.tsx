@@ -1,37 +1,46 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useForm, FieldErrors, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal, TextInput } from "@mantine/core";
-import { CreateCategoryGroupInput, getCreateCategoryGroupSchema } from "@/schemas/financial/category-group.schema";
+import { UpdateCategoryGroupInput, getUpdateCategoryGroupSchema } from "@/schemas/financial/category-group.schema";
 import { KeyedMutator } from "swr";
 import { CategoryGroup } from "@prisma/client";
 
 type Props = {
     opened: boolean;
     onClose: () => void;
-    mutate: KeyedMutator<CategoryGroup[]>;
+    mutate: () => void | KeyedMutator<CategoryGroup[]>;
+    categoryGroups: CategoryGroup | null;
 };
 
-export default function NewCategoryGroup({ opened, onClose, mutate }: Props) {
+export default function UpdateCategoryGroup({ opened, onClose, categoryGroups, mutate }: Props) {
     const t = useTranslations("financial.category-groups");
     const g = useTranslations("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const createCategoryGroupSchema = getCreateCategoryGroupSchema((key: string) => t(key as any));
+    const updateCategoryGroupSchema = getUpdateCategoryGroupSchema((key: string) => t(key as any));
 
-    const { handleSubmit, formState: { errors }, register, reset } = useForm<CreateCategoryGroupInput>({
-        resolver: zodResolver(createCategoryGroupSchema),
+    const { handleSubmit, formState: { errors }, register, reset } = useForm<UpdateCategoryGroupInput>({
+        resolver: zodResolver(updateCategoryGroupSchema),
         defaultValues: { name: "" }
     });
 
+    useEffect(() => {
+        if (categoryGroups) {
+            reset({
+                name: categoryGroups.name,
+            });
+        }
+    }, [categoryGroups, reset]);
+
     const { data: sessionData } = useSession();
 
-    async function createCategoryGroup(data: CreateCategoryGroupInput) {
+    async function updateCategoryGroup(data: UpdateCategoryGroupInput) {
         if (!sessionData?.user.tenancyId) {
             notifications.show({ color: "red", message: g("errors.invalidSession") });
             return;
@@ -39,8 +48,8 @@ export default function NewCategoryGroup({ opened, onClose, mutate }: Props) {
 
         setIsLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/category-groups`, {
-                method: "POST",
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/category-groups/${categoryGroups?.id}`, {
+                method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
             });
@@ -84,7 +93,7 @@ export default function NewCategoryGroup({ opened, onClose, mutate }: Props) {
             centered
             classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 !mb-4 border-b border-b-neutral-300" }}
         >
-            <form onSubmit={handleSubmit(createCategoryGroup, handleFormErrors)} className="flex flex-col gap-4">
+            <form onSubmit={handleSubmit(updateCategoryGroup, handleFormErrors)} className="flex flex-col gap-4">
                 <LoadingOverlay visible={isLoading} />
                 <TextInput
                     label={t("modals.fields.name.label")}

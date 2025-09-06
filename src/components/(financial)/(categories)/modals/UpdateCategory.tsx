@@ -1,35 +1,51 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
-import { CreateCategoryBillInput, getCreateCategoryBillSchema } from "@/schemas/financial/category-bill.schema";
-import NewCategoryBill__BasicInformations from "./basic-informations";
+import { UpdateCategoryBillInput, getUpdateCategorySchema } from "@/schemas/financial/category-bill.schema";
+import CategoryBill__BasicInformations from "./basic-informations";
+import { KeyedMutator } from "swr";
+import { CategoryBill } from "@prisma/client";
 
 type Props = {
     opened: boolean;
+    mutate: KeyedMutator<CategoryBill[]>;
     onClose: () => void;
-    onSuccess: () => void;
+    category: CategoryBill | null;
 };
 
-export default function NewCategoryBill({ opened, onClose, onSuccess }: Props) {
-    const t = useTranslations("financial.categoryBills.modals.create");
+export default function UpdateCategoryBill({ opened, onClose, mutate, category }: Props) {
+    const t = useTranslations("financial.categories.modals");
     const g = useTranslations("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const createCategoryBillSchema = getCreateCategoryBillSchema((key: string) => t(key as any));
+    const updateCategoryBillSchema = getUpdateCategorySchema((key: string) => t(key as any));
 
-    const { control, handleSubmit, formState: { errors }, register, reset } = useForm<CreateCategoryBillInput>({
-        resolver: zodResolver(createCategoryBillSchema),
+    const { control, handleSubmit, formState: { errors }, register, reset } = useForm<UpdateCategoryBillInput>({
+        resolver: zodResolver(updateCategoryBillSchema),
     });
+
+    useEffect(() => {
+        if (category) {
+            reset({
+                name: category.name,
+                groupId: category.groupId,
+                nature: category.nature,
+                parentId: category.parentId,
+                type: category.type
+            })
+        }
+    }, [category, reset]);
+
 
     const { data: sessionData } = useSession();
 
-    async function createCategoryBill(data: CreateCategoryBillInput) {
+    async function createCategoryBill(data: UpdateCategoryBillInput) {
         if (!sessionData?.user.tenancyId) {
             notifications.show({ color: "red", message: g("general.errors.invalidSession") });
             return;
@@ -37,29 +53,37 @@ export default function NewCategoryBill({ opened, onClose, onSuccess }: Props) {
 
         setIsLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/category-bills`, {
-                method: "POST",
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/category-bills/${category?.id}`, {
+                method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
             });
 
+            const responseData = await response.json()
+
+            if (responseData.code) {
+                notifications.show({
+                    message: t("errors.CATEGORY_ALREADY_EXISTS"),
+                    color: "yellow"
+                });
+            }
+
             if (!response.ok) throw new Error("Failed to create category bill");
 
             notifications.show({
-                title: t("notifications.success.title"),
-                message: t("notifications.success.message"),
+                message: t("update.notifications.success"),
                 color: "green"
             });
             reset();
-            onSuccess();
+            mutate();
             onClose();
-        } catch (error) {
-            console.error(error);
-            notifications.show({
-                title: g("general.errors.title"),
-                message: g("general.errors.unexpected"),
-                color: "red"
-            });
+        } catch (error: any) {
+            console.error("ERROR", error);
+                notifications.show({
+                    title: g("general.errors.title"),
+                    message: g("general.errors.unexpected"),
+                    color: "red"
+                });
         } finally {
             setIsLoading(false);
         }
@@ -77,7 +101,7 @@ export default function NewCategoryBill({ opened, onClose, onSuccess }: Props) {
         <Modal
             opened={opened}
             onClose={onClose}
-            title={t("title")}
+            title={t("update.title")}
             size="lg"
             radius="lg"
             centered
@@ -86,9 +110,9 @@ export default function NewCategoryBill({ opened, onClose, onSuccess }: Props) {
             <form onSubmit={handleSubmit(createCategoryBill, handleFormErrors)} className="flex flex-col gap-4">
                 <LoadingOverlay visible={isLoading} />
                 {sessionData?.user.tenancyId && (
-                     <NewCategoryBill__BasicInformations
-                        control={control} 
-                        errors={errors} 
+                    <CategoryBill__BasicInformations
+                        control={control}
+                        errors={errors}
                         register={register}
                         tenancyId={sessionData.user.tenancyId}
                     />

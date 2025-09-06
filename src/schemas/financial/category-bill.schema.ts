@@ -14,4 +14,8 @@ export const getCreateCategoryBillSchema = (t: (key: string) => string) => z.obj
   parentId: z.cuid2({ message: t('fields.parent.errors.invalid') }).optional().nullable(),
 });
 
+export const getUpdateCategorySchema = (t: (key: string) => string) => getCreateCategoryBillSchema(t).partial();
+
+
 export type CreateCategoryBillInput = z.infer<ReturnType<typeof getCreateCategoryBillSchema>>;
+export type UpdateCategoryBillInput = z.infer<ReturnType<typeof getUpdateCategorySchema>>;

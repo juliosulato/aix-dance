@@ -1,0 +1,83 @@
+{
+    "title": "Categoria",
+    "searchbarPlaceholder": "Procure pelo nome da categoria. ",
+    "modals": {
+        "create": {
+            "title": "Adicionar Nova Categoria",
+            "notifications": {
+                "success": "A nova categoria foi adicionado com sucesso.",
+                "error": "Ocorreu um erro ao criar o grupo."
+            }
+        },
+        "update": {
+            "title": "Atualizar Categoria",
+            "notifications": {
+                "success": "A categoria foi atualizado com sucesso.",
+                "error": "Ocorreu um erro ao atualizar categoria."
+            }
+        },
+        "confirmModal": {
+            "title": "Confirmar Exclusão",
+            "confirmLabel": "Sim, Excluir",
+            "cancelLabel": "Cancelar",
+            "textArray": "Você tem certeza que deseja excluir os {categories} categorias selecionadas?",
+            "text": "Você tem certeza que deseja excluir a categoria {category}?",
+            "warn": "Esta ação não poderá ser desfeita."
+        },
+        "fields": {
+            "name": {
+                "label": "Nome",
+                "placeholder": "Ex.: aluguel, figurinos, água, etc...",
+                "errors": {
+                    "required": "O nome da categoria é obrigatória."
+                }
+            },
+            "nature": {
+                "label": "Natureza",
+                "placeholder": "Selecione se é receita ou despesa",
+                "enums": {
+                    "revenue": "Receita",
+                    "expense": "Despesa"
+                },
+                "errors": {
+                    "required": "A natureza da operação é obrigatória."
+                }
+            },
+            "type": {
+                "label": "Tipo",
+                "placeholder": "Selecione uma opção.",
+                "enums": {
+                    "fixed": "Fixo",
+                    "variable": "Variável"
+                },
+                "errors": {
+                    "required": "O tipo é obrigatório"
+                }
+            },
+            "parent": {
+                "label": "Categoria Ascendente",
+                "placeholder": "Selecione uma opção"
+            },
+            "group": {
+                "label": "Grupo",
+                "placeholder": "Selecione uma opção"
+            }
+        },
+        "errors": {
+            "CATEGORY_ALREADY_EXISTS": "Já existe uma categoria com este nome."
+        }
+    },
+    "delete": {
+        "notifications": {
+            "wait": {
+                "title": "Aguarde!",
+                "message": "Deletando itens..."
+            },
+            "success": "Categoria(s) deletadas com sucesso!"
+        },
+        "errors": {
+            "noLength": "Nenhum categoria selecionado.",
+            "internalError": "Ocorreu um erro ao deletar. Suas alterações foram desfeitas."
+        }
+    }
+}

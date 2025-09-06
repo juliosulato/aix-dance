@@ -78,11 +78,11 @@ const useMenuData = () => {
       icon: <TbReportMoney />,
       label: t("navbar.financial.label"),
       subitems: [
-        { icon: <MdOutlineSpaceDashboard />, label: t("navbar.financial.financialSummary"), href: "/system/financeiro/resumo" },
-        { icon: <PiMoneyWavy />, label: t("navbar.financial.financialManager"), href: "/system/financeiro/gerenciador" },
-        { icon: <MdOutlineCategory />, label: t("navbar.financial.financialCategories"), href: "/system/financeiro/categorias" },
-        { icon: <TbBuildingBank />, label: t("navbar.financial.financialAccounts"), href: "/system/financeiro/contas-bancarias" },
-        { icon: <LuChartSpline />, label: t("navbar.financial.financialReports"), href: "/system/financeiro/relatorios" },
+        { icon: <MdOutlineSpaceDashboard />, label: t("navbar.financial.financialSummary"), href: "/system/financial/resumo" },
+        { icon: <PiMoneyWavy />, label: t("navbar.financial.financialManager"), href: "/system/financial/gerenciador" },
+        { icon: <MdOutlineCategory />, label: t("navbar.financial.financialCategories"), href: "/system/financial/categories" },
+        { icon: <TbBuildingBank />, label: t("navbar.financial.financialAccounts"), href: "/system/financial/contas-bancarias" },
+        { icon: <LuChartSpline />, label: t("navbar.financial.financialReports"), href: "/system/financial/relatorios" },
       ],
     },
     {

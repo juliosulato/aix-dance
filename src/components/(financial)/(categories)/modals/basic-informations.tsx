@@ -1,36 +1,34 @@
 import { useTranslations } from "next-intl";
 import { Select, TextInput } from "@mantine/core";
 import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form";
-import { CreateCategoryBillInput } from "@/schemas/financial/category-bill.schema";
+import { CreateCategoryBillInput, UpdateCategoryBillInput } from "@/schemas/financial/category-bill.schema";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 import { BillCategoryType, BillNature, CategoryBill, CategoryGroup } from "@prisma/client";
 
 type Props = {
-    control: Control<CreateCategoryBillInput>;
-    errors: FieldErrors<CreateCategoryBillInput>;
-    register: UseFormRegister<CreateCategoryBillInput>;
+    control: Control<CreateCategoryBillInput | UpdateCategoryBillInput>;
+    errors: FieldErrors<CreateCategoryBillInput | UpdateCategoryBillInput>;
+    register: UseFormRegister<CreateCategoryBillInput | UpdateCategoryBillInput>;
     tenancyId: string;
 };
 
-export default function NewCategoryBill__BasicInformations({ control, errors, register, tenancyId }: Props) {
-    const t = useTranslations("financial.categoryBills.modals.create");
+export default function Category__BasicInformations({ control, errors, register, tenancyId }: Props) {
+    const t = useTranslations("financial.categories.modals");
     const g = useTranslations("general");
 
-    // Busca os grupos de categoria para o seletor
     const { data: groups, isLoading: isLoadingGroups } = useSWR<CategoryGroup[]>(
         tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/category-groups` : null,
         fetcher
     );
 
-    // Busca as categorias existentes para o seletor de "categoria pai"
     const { data: parentCategories, isLoading: isLoadingParents } = useSWR<CategoryBill[]>(
         tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/category-bills` : null,
         fetcher
     );
 
     return (
-        <div className="p-4 border border-neutral-300 rounded-xl grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="rounded-xl grid grid-cols-1 md:grid-cols-2 gap-4">
             <TextInput
                 label={t("fields.name.label")}
                 placeholder={t("fields.name.placeholder")}
@@ -49,8 +47,8 @@ export default function NewCategoryBill__BasicInformations({ control, errors, re
                         label={t("fields.nature.label")}
                         placeholder={t("fields.nature.placeholder")}
                         data={[
-                            { label: t('fields.nature.options.REVENUE'), value: BillNature.REVENUE },
-                            { label: t('fields.nature.options.EXPENSE'), value: BillNature.EXPENSE },
+                            { label: t('fields.nature.enums.revenue'), value: BillNature.REVENUE },
+                            { label: t('fields.nature.enums.expense'), value: BillNature.EXPENSE },
                         ]}
                         {...field}
                         error={errors.nature?.message}
@@ -67,8 +65,8 @@ export default function NewCategoryBill__BasicInformations({ control, errors, re
                         label={t("fields.type.label")}
                         placeholder={t("fields.type.placeholder")}
                         data={[
-                            { label: t('fields.type.options.FIXED'), value: BillCategoryType.FIXED },
-                            { label: t('fields.type.options.VARIABLE'), value: BillCategoryType.VARIABLE },
+                            { label: t('fields.type.enums.fixed'), value: BillCategoryType.FIXED },
+                            { label: t('fields.type.enums.variable'), value: BillCategoryType.VARIABLE },
                         ]}
                         {...field}
                         error={errors.type?.message}

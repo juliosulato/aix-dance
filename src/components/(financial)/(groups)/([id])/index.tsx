@@ -47,7 +47,7 @@ export default function CategoryGroupView({ categoryGroup, tenancyId }: { catego
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={t("financial.category-groups.modals.fields.name.label")} value={categoryGroup.name} />
+                <InfoTerm label={t("financial.category-groups.modals.fields.name.label")} children={categoryGroup.name} />
 
                 <UpdateCategoryGroup categoryGroups={categoryGroup} onClose={() => setOpenUpdate(false)} opened={openUpdate} mutate={() => window.location.reload()} />
                 <ConfirmationModal

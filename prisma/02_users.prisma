@@ -6,7 +6,7 @@ model User {
   firstName String
   lastName  String
   email     String  @unique
-  user      String  @unique
+  user      String?  @unique
   password  String
   permissions  Permission[]
   image     String?
@@ -61,7 +61,7 @@ model Teacher {
 
   cellPhoneNumber String?
   phoneNumber String?
-  birthOfDate String?
+  dateOfBirth String?
   document    String
   gender      Gender
   pronoun    String?
@@ -74,8 +74,8 @@ model Teacher {
   paymentDay Int @default(5)
   paymentMethodId String?
   paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id], onDelete: Cascade)
-  paymentData String
-  observations String
+  paymentData String?
+  observations String?
   
   bonusForPresenceAmount Int @default(0)
   loseBonusWhenAbsent Boolean @default(true)

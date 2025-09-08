@@ -8,9 +8,9 @@ import { HiChevronDown } from "react-icons/hi2";
 import { US, BR, ES } from "country-flag-icons/react/3x2";
 
 const data = [
-    { label: "English", image: US, value: "en-US" },
+    { label: "English", image: US, value: "en" },
     { label: "Português Brasil", image: BR, value: "pt-BR" },
-    { label: "Español", image: ES, value: "es-ES" },
+    { label: "Español", image: ES, value: "es" },
 ];
 
 export function LanguagePicker() {

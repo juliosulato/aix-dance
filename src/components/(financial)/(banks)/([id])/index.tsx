@@ -44,12 +44,12 @@ export default function BanksView({ bank, tenancyId }: { bank: Bank, tenancyId: 
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={t("financial.banks.modals.fields.name.label")} value={bank.name} />
-                <InfoTerm label={t("financial.banks.modals.fields.agency.label")} value={bank.agency} />
-                <InfoTerm label={t("financial.banks.modals.fields.account.label")} value={bank.account} />
-                <InfoTerm label={t("financial.banks.modals.fields.maintenanceFeeAmount.label")} value={Number(bank.maintenanceFeeAmount || 0)?.toFixed(2).replace(/\./g, ",")} />
-                <InfoTerm label={t("financial.banks.modals.fields.maintenanceFeeDue.label")} value={Number(bank.maintenanceFeeDue)} />
-                <InfoTerm label={t("financial.banks.modals.fields.description.label")} value={bank.description} className="md:col-span-2 lg:col-span-3 mt-5" />
+                <InfoTerm label={t("financial.banks.modals.fields.name.label")} children={bank.name} />
+                <InfoTerm label={t("financial.banks.modals.fields.agency.label")} children={bank.agency} />
+                <InfoTerm label={t("financial.banks.modals.fields.account.label")} children={bank.account} />
+                <InfoTerm label={t("financial.banks.modals.fields.maintenanceFeeAmount.label")} children={Number(bank.maintenanceFeeAmount || 0)?.toFixed(2).replace(/\./g, ",")} />
+                <InfoTerm label={t("financial.banks.modals.fields.maintenanceFeeDue.label")} children={Number(bank.maintenanceFeeDue)} />
+                <InfoTerm label={t("financial.banks.modals.fields.description.label")} children={bank.description} className="md:col-span-2 lg:col-span-3 mt-5" />
             </div>
 
             <UpdateBankAccount bankAccount={bank} onClose={() => setOpenUpdate(false)} opened={openUpdate} mutate={() => window.location.reload()} />

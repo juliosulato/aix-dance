@@ -45,16 +45,16 @@ export default function PaymentMethodView({ paymentMethod, tenancyId }: { paymen
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={t("financial.payment-methods.modals.fields.name.label")} value={paymentMethod.name} />
-                <InfoTerm label={t("financial.payment-methods.modals.fields.operator.label")} value={paymentMethod.operator} />
+                <InfoTerm label={t("financial.payment-methods.modals.fields.name.label")} children={paymentMethod.name} />
+                <InfoTerm label={t("financial.payment-methods.modals.fields.operator.label")} children={paymentMethod.operator} />
                 {paymentMethod.fees.length > 0 && <h2 className="md:col-span-2 lg:col-span-3 font-bold text-xl my-4">{t("financial.payment-methods.modals.feesSubtitle")}</h2>}
                 {paymentMethod.fees.map((fee) => (
                      <div className="grid gap-4 md:grid-cols-2 md:col-span-2 lg:col-span-3" key={fee.id}>
-                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.minInstallments")} value={fee.minInstallments} />
-                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.maxInstallments")} value={fee.maxInstallments} />
-                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.feePercentage")} value={`${fee.feePercentage.toFixed(2).replace(/\./g, ",")}%`} />
-                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.receiveInDays")} value={`${fee.receiveInDays}`} />
-                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.customerInterest")} value={fee.customerInterest ? t("general.boolean.yes") : t("general.boolean.no")} />
+                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.minInstallments")} children={fee.minInstallments} />
+                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.maxInstallments")} children={fee.maxInstallments} />
+                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.feePercentage")} children={`${fee.feePercentage.toFixed(2).replace(/\./g, ",")}%`} />
+                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.receiveInDays")} children={`${fee.receiveInDays}`} />
+                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.customerInterest")} children={fee.customerInterest ? t("general.boolean.yes") : t("general.boolean.no")} />
                     </div>
                 ))}
             </div>

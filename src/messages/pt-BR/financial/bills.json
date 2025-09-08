@@ -1,0 +1,181 @@
+{
+    "title": "Gerenciador Financeiro",
+    "payable": "A Pagar",
+    "receivable": "A Receber",
+    "searchbarPlaceholder": "Procure por alguma informação da cobrança... ",
+    "payBill": "Pagar Conta",
+    "modals": {
+        "create": {
+            "title": "Lançar Conta a Pagar",
+            "notifications": {
+                "success": "A nova conta foi lançada com sucesso.",
+                "error": "Ocorreu um erro ao lançar a conta a pagar."
+            }
+        },
+        "update": {
+            "title": "Atualizar Conta a Pagar",
+            "notifications": {
+                "success": "A conta foi atualizada com sucesso.",
+                "error": "Ocorreu um erro ao atualizar a conta."
+            }
+        },
+        "payBill": {
+            "title": "Marcar Conta como Paga",
+            "notifications": {
+                "success": "A conta foi marcada como paga com sucesso.",
+                "error": "Ocorreu um erro ao pagar a conta."
+            }
+        },
+        "confirmModal": {
+            "title": "Confirmar Exclusão",
+            "confirmLabel": "Sim, Excluir",
+            "cancelLabel": "Cancelar",
+            "textArray": "Você tem certeza que deseja excluir as {bills} contas selecionadas?",
+            "text": "Você tem certeza que deseja excluir a conta {bill}?",
+            "warn": "Esta ação não poderá ser desfeita."
+        },
+        "editSeriesDisabled": "A edição da série (parcelas/recorrência) está desabilitada para esta conta. Você pode alterar apenas os dados individuais.",
+        "applyTo": {
+            "label": "Aplicar alterações a:",
+            "one": "Apenas esta cobrança",
+            "allFuture": "Esta e as futuras"
+        },
+        "section1-title": "Informações Básicas",
+        "section2-title": "Como você vai pagar?",
+        "tabs": {
+            "cash-or-installments": "À vista ou Parcelado",
+            "subscription": "Assinatura (Recorrência)"
+        },
+        "status": {
+            "PAID": "Pago",
+            "PENDING": "Pendente",
+            "OVERDUE": "Atrasado",
+            "CANCELLED": "Cancelado"
+        },
+        "fields": {
+            "amount": {
+                "label": "Valor da Cobrança",
+                "placeholder": "0,00",
+                "errors": {
+                    "required": "O valor da cobrança é obrigatório.",
+                    "positive": "O valor deve ser maior que zero."
+                }
+            },
+            "paymentDate": {
+                "label": "Data de Pagamento"
+            },
+            "amountPaid": {
+                "label": "Valor Pago"
+            },
+            "supplier": {
+                "label": "Fornecedor"
+            },
+            "bank": {
+                "label": "Banco"
+            },
+            "payment-method": {
+                "label": "Forma de Pagamento"
+            },
+            "category": {
+                "label": "Categoria"
+            },
+            "description": {
+                "label": "Descrição da cobrança",
+                "errors": {
+                    "required": "A descrição é obrigatória."
+                }
+            },
+            "status": {
+                "label": "Status"
+            },
+            "installments": {
+                "label": "Parcelamento",
+                "suffix": "vezes",
+                "cashPayment": "À vista",
+                "errors": {
+                    "required": "O campo parcelamento é obrigatório."
+                }
+            },
+            "installmentNumber": {
+                "label": "Parcela"
+            },
+            "dueDate": {
+                "label": "Vencimento",
+                "valueFormat": "DD/MM/YYYY",
+                "locale": "pt-br",
+                "errors": {
+                    "required": "A data de vencimento é obrigatória."
+                }
+            },
+            "firstDueDate": {
+                "label": "Vencimento da 1ª Cobrança"
+            },
+            "attachments": {
+                "label": "Documentos e Arquivos",
+                "placeholder": "Procurar arquivos"
+            },
+            "complement": {
+                "label": "Complemento"
+            },
+            "subscription": {
+                "frequency": {
+                    "label": "Frequência da Cobrança",
+                    "placeholder": "Selecione a frequência",
+                    "recurrenceTypes": {
+                        "MONTHLY": "Mensal",
+                        "BIMONTHLY": "Bimestral",
+                        "QUARTERLY": "Trimestral",
+                        "SEMIANNUAL": "Semestral",
+                        "ANNUAL": "Anual"
+                    },
+                    "errors": {
+                        "required": "A frequência da cobrança é obrigatória."
+                    }
+                },
+                "dueDate": {
+                    "label": "Vencimento da Primeira Cobrança",
+                    "errors": {
+                        "required": "O vencimento da primeira cobrança é obrigatório."
+                    }
+                },
+                "endOfSubscription": {
+                    "label": "Fim da Assinatura"
+                },
+                "endCondition": {
+                    "noDateSet": "Sem data definida",
+                    "chooseData": "Escolher Data",
+                    "numberOfCharges": "Número de Cobranças"
+                },
+                "chooseData": {
+                    "label": "Data do Fim da Assinatura",
+                    "errors": {
+                        "required": "A data de fim é obrigatória."
+                    }
+                },
+                "numberOfCharges": {
+                    "lamodalbel": "Número de cobranças",
+                    "suffix": "cobranças",
+                    "errors": {
+                        "required": "O número de cobranças é obrigatório."
+                    }
+                }
+            }
+        }
+    },
+    "view": {
+        "title": "Dados da Cobrança"
+    },
+    "delete": {
+        "notifications": {
+            "wait": {
+                "title": "Aguarde!",
+                "message": "Deletando itens..."
+            },
+            "success": "Cobrança(s) deletada(s) com sucesso!",
+            "internalError": "Ocorreu um erro ao deletar. Suas alterações foram desfeitas."
+        },
+        "errors": {
+            "noLength": "Nenhuma cobrança selecionada."
+        }
+    }
+}

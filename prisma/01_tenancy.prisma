@@ -13,16 +13,22 @@ model Tenancy {
 
     address Address[]
 
-    students  Student[]
-    classes   Class[]
-    plans     Plan[]
-    users     User[]
-    suppliers Supplier[]
-    contracts ContractModel[]
-
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
-    lastAccess DateTime @updatedAt
+    students       Student[]
+    classes        Class[]
+    plans          Plan[]
+    users          User[]
+    suppliers      Supplier[]
+    contracts      ContractModel[]
+    modalities     Modality[]
+    bills          Bill[]
+    banks          Bank[]
+    categoryBills  CategoryBill[]
+    categoryGroups CategoryGroup[]
+    paymentMethods PaymentMethod[]
+    
+    createdAt      DateTime        @default(now())
+    updatedAt      DateTime        @updatedAt
+    lastAccess     DateTime        @updatedAt
 
     @@schema("tenancy")
 }
@@ -46,7 +52,7 @@ model Student {
     cellPhoneNumber    String
     phoneNumber        String?
     email              String?
-    birthOfDate        String
+    dateOfBirth        String
     documentOfIdentity String
     gender             Gender
     pronoun            String?
@@ -106,9 +112,10 @@ model Class {
     tenancyId String
     tenancy   Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
 
-    name     String
-    modality String
-    online   Boolean @default(false)
+    name       String
+    modalityId String
+    modality   Modality @relation(fields: [modalityId], references: [id])
+    online     Boolean  @default(false)
 
     days ClassDay[]
 
@@ -123,6 +130,17 @@ model Class {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@schema("tenancy")
+}
+
+model Modality {
+    id        String  @id @default(cuid())
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+
+    name    String  @unique
+    classes Class[]
 
     @@schema("tenancy")
 }

@@ -8,5 +8,13 @@
     },
     "grade": {
         "label": "Visualização em Grade"
+    },
+    "filters": {
+        "dateTitle": "Filtros",
+        "filterBy": "Filtrar Por",
+        "from": "De",
+        "to": "Até",
+        "clear": "Limpar Filtros",
+        "apply": "Aplicar"
     }
 }

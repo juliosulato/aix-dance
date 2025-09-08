@@ -47,7 +47,7 @@ export default function CategoryBillView({ category, tenancyId }: { category: Ca
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={t("financial.category-groups.modals.fields.name.label")} value={category.name} />
+                <InfoTerm label={t("financial.category-groups.modals.fields.name.label")} children={category.name} />
 
                 <UpdateCategoryBill category={category} onClose={() => setOpenUpdate(false)} opened={openUpdate} mutate={() => window.location.reload() as any} />
                 <ConfirmationModal

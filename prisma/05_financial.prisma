@@ -8,9 +8,19 @@ model Bill {
     paymentDate DateTime?
     status      BillStatus
 
-    installments Int             @default(1)
-    recurrence   RecurrenceType?
-    complement   String?
+    installments      Int            @default(1)
+    installmentNumber String?
+    
+    recurrence        RecurrenceType?
+    recurrenceEndDate DateTime?      // Para assinaturas com data final
+    recurrenceCount   Int?           // Para assinaturas com nº de cobranças
+    complement        String?
+
+    // --- RELACIONAMENTO PAI-FILHO ---
+    parentId String?
+    parent   Bill?    @relation("BillHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+    children Bill[]   @relation("BillHierarchy")
+    // --------------------------------
 
     studentId String?
     student   Student? @relation(fields: [studentId], references: [id])
@@ -29,6 +39,9 @@ model Bill {
 
     attachments BillAttachment[]
 
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id])
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -38,7 +51,6 @@ model Bill {
 enum BillType {
     PAYABLE
     RECEIVABLE
-
     @@schema("financial")
 }
 
@@ -47,7 +59,6 @@ enum BillStatus {
     PAID
     OVERDUE
     CANCELLED
-
     @@schema("financial")
 }
 
@@ -58,7 +69,6 @@ enum RecurrenceType {
     QUARTERLY
     SEMIANNUAL
     ANNUAL
-
     @@schema("financial")
 }
 
@@ -69,7 +79,6 @@ model BillAttachment {
     bill   Bill   @relation(fields: [billId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
-
     @@schema("financial")
 }
 
@@ -86,9 +95,11 @@ model Bank {
 
     bills Bill[]
 
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id])
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-
     @@schema("financial")
 }
 
@@ -107,23 +118,23 @@ model CategoryBill {
 
     bills Bill[]
 
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id])
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-
     @@schema("financial")
 }
 
 enum BillNature {
     REVENUE
     EXPENSE
-
     @@schema("financial")
 }
 
 enum BillCategoryType {
     FIXED
     VARIABLE
-
     @@schema("financial")
 }
 
@@ -133,6 +144,9 @@ model CategoryGroup {
 
     categories CategoryBill[]
 
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id])
+
     @@schema("financial")
 }
 
@@ -141,14 +155,15 @@ model PaymentMethod {
     name     String
     operator String?
 
-    fees  PaymentFee[]
-    bills Bill[]
-
+    fees     PaymentFee[]
+    bills    Bill[]
     teachers Teacher[]
+
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id])
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-
     @@schema("financial")
 }
 
@@ -156,14 +171,11 @@ model PaymentFee {
     id              String        @id @default(cuid())
     paymentMethodId String
     paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id], onDelete: Cascade)
-
     minInstallments  Int     @default(1)
     maxInstallments  Int     @default(1)
     feePercentage    Float
     customerInterest Boolean @default(false)
     receiveInDays    Int?
-
     createdAt DateTime @default(now())
-
     @@schema("financial")
 }

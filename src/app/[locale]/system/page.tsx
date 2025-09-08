@@ -1,6 +1,6 @@
 "use client";
 
-import NewBill from "@/components/(financial)/(bills)/newBill";
+import NewBill from "@/components/(financial)/(manager)/modals/NewBill";
 
 export default async function Sistema() {
     return (

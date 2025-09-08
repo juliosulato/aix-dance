@@ -14,8 +14,8 @@ type Props = {
     amount: number;
 };
 
-export default function NewPlan__Fees({ control, errors, register, amount }: Props) {
-    const t = useTranslations("plans.modals.create.payments");
+export default function Plan__Fees({ control, errors, register, amount }: Props) {
+    const t = useTranslations("academic.plans.modals");
 
     const [feeAmount, setFeeAmount] = useState<number>(0);
     const [fineAmount, setFineAmount] = useState<number>(0);
@@ -23,7 +23,7 @@ export default function NewPlan__Fees({ control, errors, register, amount }: Pro
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl ">
-            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{t("title")}</h2>
+            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{t("fees.title")}</h2>
             <br />
             <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{t("fees.title")}</h2>
             <p className="text-neutral-500">{t("fees.description")}</p>

@@ -6,6 +6,8 @@ model Tenancy {
     email        String @unique
     phoneNumber  String
 
+    enrollmentFee Decimal? @default(0)
+
     language Languages
     timezone String    @default("America/Sao_Paulo")
     country  String    @default("BR")
@@ -25,7 +27,10 @@ model Tenancy {
     categoryBills  CategoryBill[]
     categoryGroups CategoryGroup[]
     paymentMethods PaymentMethod[]
+    subscriptions  Subscription[]
     
+    sales          Sale[]
+
     createdAt      DateTime        @default(now())
     updatedAt      DateTime        @updatedAt
     lastAccess     DateTime        @updatedAt
@@ -68,8 +73,11 @@ model Student {
     history           StudentHistory[]
     bills             Bill[]
 
-    address  Address?
-    guardian StudentGuardian[]
+    address       Address?
+    guardian      StudentGuardian[]
+    subscriptions Subscription[]
+    
+    sales         Sale[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -139,7 +147,7 @@ model Modality {
     tenancyId String
     tenancy   Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
 
-    name    String  @unique
+    name    String
     classes Class[]
 
     @@schema("tenancy")
@@ -197,7 +205,7 @@ model AttendanceRecord {
     studentId String
     student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
-    @@unique([classAttendanceId, studentId]) // <— IMPORTANTE
+    @@unique([classAttendanceId, studentId]) 
     @@schema("tenancy")
 }
 
@@ -210,6 +218,7 @@ model Plan {
     frequency Int      @default(1)
     type      PlanType
     amount    Decimal
+    isActive  Boolean  @default(true)
 
     contractModelId String?
     contractModel   ContractModel? @relation(fields: [contractModelId], references: [id], onDelete: Cascade)
@@ -221,6 +230,10 @@ model Plan {
     maximumDiscountPeriod Int
     interestGracePeriod   Int
     fineGracePeriod       Int
+
+    subscriptions Subscription[]
+    
+    saleItems     SaleItem[] 
 
     @@schema("tenancy")
 }
@@ -248,3 +261,27 @@ enum PlanType {
 
     @@schema("tenancy")
 }
+
+model Subscription {
+    id        String   @id @default(cuid())
+    tenancyId String
+    studentId String
+    planId    String
+    status    SubscriptionStatus @default(ACTIVE)
+    startDate DateTime @default(now())
+    endDate   DateTime?
+    cancellationDate DateTime?
+    student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+    plan      Plan     @relation(fields: [planId], references: [id], onDelete: Restrict)
+    tenancy   Tenancy  @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+    bills     Bill[]
+    @@schema("tenancy")
+}
+
+enum SubscriptionStatus {
+    ACTIVE
+    CANCELED
+    FINISHED
+    @@schema("tenancy")
+}
+

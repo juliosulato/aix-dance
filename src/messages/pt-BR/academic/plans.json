@@ -1,0 +1,169 @@
+{
+  "title": "Planos",
+  "searchbarPlaceholder": "Procure por alguma informação ",
+  "modals": {
+    "create": {
+      "title": "Novo Plano",
+      "notifications": {
+        "success": "O novo plano foi adicionado com sucesso.",
+        "error": "Ocorreu um erro ao criar o plano."
+      }
+    },
+    "update": {
+      "title": "Atualizar Plano",
+      "notifications": {
+        "success": "O plano foi atualizado com sucesso.",
+        "error": "Ocorreu um erro ao atualizar o plano."
+      }
+    },
+    "confirmModal": {
+      "title": "Confirmar Exclusão",
+      "confirmLabel": "Sim, Excluir",
+      "cancelLabel": "Cancelar",
+      "textArray": "Você tem certeza que deseja excluir os {plans} planos selecionados?",
+      "text": "Você tem certeza que deseja excluir o plano {plan}?",
+      "warn": "Esta ação não poderá ser desfeita."
+    },
+    "basicInformations": {
+      "title": "Informações Básicas",
+      "fields": {
+        "name": {
+          "label": "Nome do Plano",
+          "placeholder": "Digite aqui",
+          "errors": {
+            "required": "O nome do plano é obrigatório."
+          }
+        },
+        "frequency": {
+          "label": "Frequência",
+          "placeholder": "Digite quantas vezes por semana esse plano dá",
+          "suffix": "x por semana",
+          "errors": {
+            "invalid": "A frequência informada é inválida.",
+            "min-one": "A frequência deve ser pelo menos 1 vez por semana."
+          }
+        },
+        "cicle": {
+          "label": "Ciclo de Cobrança",
+          "placeholder": "Selecione um ciclo de cobrança",
+          "planTypes": {
+            "SEMMONTLY": "Semanal",
+            "MONTHLY": "Mensal",
+            "BI_MONTHLY": "Bimestral",
+            "QUARTERLY": "Trimestral",
+            "BI_ANNUAL": "Semestral",
+            "ANNUAL": "Anual"
+          }
+        },
+        "type": {
+          "errors": {
+            "invalid": "O tipo de plano informado é inválido."
+          }
+        },
+        "amount": {
+          "label": "Valor",
+          "errors": {
+            "invalid": "O valor informado é inválido.",
+            "min-zero": "O valor deve ser maior ou igual a 0."
+          }
+        },
+        "contractModel": {
+          "label": "Modelo de Contrato",
+          "placeholder": "Selecione um modelo de contrato"
+        }
+      }
+    },
+    "fees": {
+      "title": "Juros",
+      "description": "Aplique juros para quando o pagamento não ocorrer até a data de vencimento. Os juros acumulativos serão somados diariamente ao valor da parcela até o pagamento.",
+      "fields": {
+        "interestPerMonth": {
+          "label": "Juros ao mês",
+          "errors": {
+            "invalid": "Os juros informados são inválidos.",
+            "min-zero": "Os juros devem ser maior ou igual a 0."
+          }
+        },
+        "interestPerMonthAmount": {
+          "label": "Valor de juros ao mês"
+        },
+        "interestGracePeriod": {
+          "label": "Carência (dias)",
+          "tooltip": "Número de dias de tolerância após o vencimento antes da cobrança automática de juros.",
+          "errors": {
+            "min-zero": "A carência para juros deve ser maior ou igual a 0."
+          }
+        }
+      }
+    },
+    "fine": {
+      "title": "Multa",
+      "description": "A multa será somada ao valor da parcela caso o pagamento seja feito após a data do vencimento.",
+      "fields": {
+        "finePercentage": {
+          "label": "Valor percentual de multa",
+          "errors": {
+            "invalid": "O valor percentual da multa é inválido.",
+            "min-zero": "A multa deve ser maior ou igual a 0."
+          }
+        },
+        "fineAmount": {
+          "label": "Valor total da multa"
+        },
+        "fineGracePeriod": {
+          "label": "Carência (dias)",
+          "tooltip": "Número de dias de tolerância após o vencimento antes da cobrança automática de multa.",
+          "errors": {
+            "min-zero": "A carência para multa deve ser maior ou igual a 0."
+          }
+        }
+      }
+    },
+    "discount": {
+      "title": "Desconto",
+      "fields": {
+        "discountPercentage": {
+          "label": "Valor percentual do desconto",
+          "errors": {
+            "invalid": "O valor percentual do desconto é inválido.",
+            "min-zero": "O desconto deve ser maior ou igual a 0."
+          }
+        },
+        "discountAmount": {
+          "label": "Valor do desconto"
+        },
+        "maximumDiscountPeriod": {
+          "label": "Prazo Máximo",
+          "errors": {
+            "min-zero": "O prazo máximo de desconto deve ser maior ou igual a 0."
+          },
+          "term": {
+            "untilTheDueDate": "Até o dia do vencimento",
+            "oneDayBefore": "1 dia antes",
+            "twoDaysBefore": "2 dias antes",
+            "threeDaysBefore": "3 dias antes",
+            "fiveDaysBefore": "5 dias antes",
+            "tenDaysBefore": "10 dias antes",
+            "fifteenDaysBefore": "15 dias antes"
+          }
+        }
+      }
+    }
+  },
+  "view": {
+    "title": "Detalhes do Plano"
+  },
+  "delete": {
+    "notifications": {
+      "wait": {
+        "title": "Aguarde!",
+        "message": "Deletando itens..."
+      },
+      "success": "Plano(s) deletados com sucesso!"
+    },
+    "errors": {
+      "noLength": "Nenhum plano selecionado.",
+      "internalError": "Ocorreu um erro ao deletar. Suas alterações foram desfeitas."
+    }
+  }
+}

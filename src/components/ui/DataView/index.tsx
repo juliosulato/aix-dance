@@ -93,7 +93,6 @@ export default function DataView<T>({
     const [selectedRows, setSelectedRows] = React.useState<string[]>([]);
     const [activeFilters, setActiveFilters] = React.useState<{ [key: string]: string | null }>({});
 
-    // --- NOVOS ESTADOS PARA ORDENAÇÃO E FILTRO DE DATA ---
     const [sortConfig, setSortConfig] = React.useState<SortConfig<T> | null>(null);
     const [dateFilter, setDateFilter] = useState<DateFilter<T> | null>(
         dateFilterOptions && dateFilterOptions.length > 0
@@ -231,8 +230,8 @@ export default function DataView<T>({
                     RenderAllRowsMenu={RenderAllRowsMenu}
                     RenderRowMenu={RenderRowMenu}
                     baseUrl={baseUrl}
-                    sortConfig={sortConfig} // NOVO
-                    onSort={setSortConfig} // NOVO
+                    sortConfig={sortConfig} 
+                    onSort={setSortConfig}
                 />
             )}
 

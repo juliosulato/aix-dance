@@ -1,6 +1,5 @@
 "use client";
 
-import { CreatePlanInput, createPlanSchema } from "@/schemas/plans.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
@@ -10,16 +9,23 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import BasicInformations from "./basicInformations";
 import NewPlan__Fees from "./fees";
+import { KeyedMutator } from "swr";
+import { Plan } from "@prisma/client";
+import { getCreatePlanSchema, CreatePlanInput } from "@/schemas/academic/plan";
 
 type Props = {
     opened: boolean;
     onClose: () => void;
+    mutate: KeyedMutator<Plan[]>;
 };
 
-export default function NewPlan({ opened, onClose }: Props) {
-    const t = useTranslations("plans.modals.create");
+export default function NewPlan({ opened, onClose, mutate }: Props) {
+    const t = useTranslations("");
     const g = useTranslations("");
+    
     const [visible, setVisible] = useState(false);
+
+    const createPlanSchema = getCreatePlanSchema((key: string) => t(key as any));
 
     const { control, handleSubmit, formState: { errors }, register, watch, reset } = useForm<CreatePlanInput>({
         resolver: zodResolver(createPlanSchema),
@@ -56,18 +62,28 @@ export default function NewPlan({ opened, onClose }: Props) {
 
         setVisible(true);
         try {
-            const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/plans`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/plans`, {
                 method: "POST",
                 body: JSON.stringify(data),
                 headers: { "Content-Type": "application/json" },
             });
 
-            if (!resp.ok) throw new Error("Erro ao criar plano");
-            notifications.show({ message: "Plano criado com sucesso!", color: "green" });
+            if (!response.ok) throw new Error("Failed to update plan.");
+
+            notifications.show({
+                message: t("update.notifications.success"),
+                color: "green"
+            });
             reset();
+            mutate();
             onClose();
-        } catch (err) {
-            notifications.show({ color: "red", message: "Erro inesperado ao criar plano" });
+        } catch (error) {
+            console.error(error);
+            notifications.show({
+                title: g("general.errors.title"),
+                message: g("general.errors.unexpected"),
+                color: "red"
+            });
         } finally {
             setVisible(false);
         }
@@ -75,22 +91,20 @@ export default function NewPlan({ opened, onClose }: Props) {
 
     const onError = (errors: any) => console.log("Erros de validação:", errors);
 
-
-
     return (
         <>
             <Modal
                 opened={opened}
                 onClose={onClose}
-                title={t("title")}
+                title={t("academic.plans.modals.create.title")}
                 size="auto"
                 radius="lg"
                 centered
                 classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}
             >
                 <form onSubmit={handleSubmit(createPlan, onError)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw]">
-                    <BasicInformations control={control} errors={errors} register={register} tenancyId={sessionData.user.tenancyId} />
-                    <NewPlan__Fees amount={amount} control={control} errors={errors} register={register} />
+                    <BasicInformations control={control as any} errors={errors} register={register as any} tenancyId={sessionData.user.tenancyId} />
+                    <NewPlan__Fees amount={Number(amount)} control={control as any} errors={errors} register={register as any} />
                     <Button
                         type="submit"
                         color="#7439FA"

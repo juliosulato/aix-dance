@@ -16,9 +16,10 @@
         },
         "academic": {
             "label": "Acadêmico",
-            "students": "Alunos e Matrículas",
+            "students": "Alunos",
             "classes": "Turmas",
             "teachers": "Professores",
+            "plans": "Planos",
             "academicReports": "Relatórios"
         },
         "events": "Eventos",

@@ -5,8 +5,8 @@
         "create": {
             "title": "Adicionar Nova Categoria",
             "notifications": {
-                "success": "A nova categoria foi adicionado com sucesso.",
-                "error": "Ocorreu um erro ao criar o grupo."
+                "success": "A nova categoria foi adicionada com sucesso.",
+                "error": "Ocorreu um erro ao criar a categoria."
             }
         },
         "update": {

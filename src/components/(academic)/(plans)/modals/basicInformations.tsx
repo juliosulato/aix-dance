@@ -1,22 +1,22 @@
 import { LoadingOverlay, NumberInput, Select, TextInput } from "@mantine/core";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form";
-import { CreatePlanInput } from "@/schemas/plans.schema";
 import { ContractModel, PlanType } from "@prisma/client";
 import { useTranslations } from "next-intl";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 import { notifications } from "@mantine/notifications";
+import { UpdatePlanInput, CreatePlanInput } from "@/schemas/academic/plan";
 
 type Props = {
-    control: Control<CreatePlanInput>;
-    errors: FieldErrors<CreatePlanInput>;
-    register: UseFormRegister<CreatePlanInput>;
+    control: Control<CreatePlanInput | UpdatePlanInput>;
+    errors: FieldErrors<CreatePlanInput | UpdatePlanInput>;
+    register: UseFormRegister<CreatePlanInput | UpdatePlanInput>;
     tenancyId: string;
 };
 
-export default function NewPlan__BasicInformations({ control, errors, register, tenancyId }: Props) {
-    const t = useTranslations("plans.modals.create.basicInformations");
+export default function Plan__BasicInformations({ control, errors, register, tenancyId }: Props) {
+    const t = useTranslations("academic.plans.modals.basicInformations");
     const g = useTranslations("");
 
     const { data: contracts, error, isLoading } = useSWR<ContractModel[]>(

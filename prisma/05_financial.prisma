@@ -8,19 +8,23 @@ model Bill {
     paymentDate DateTime?
     status      BillStatus
 
-    installments      Int            @default(1)
+    installments      Int     @default(1)
     installmentNumber String?
-    
+
     recurrence        RecurrenceType?
-    recurrenceEndDate DateTime?      // Para assinaturas com data final
-    recurrenceCount   Int?           // Para assinaturas com nº de cobranças
+    recurrenceEndDate DateTime? 
+    recurrenceCount   Int?
     complement        String?
 
-    // --- RELACIONAMENTO PAI-FILHO ---
     parentId String?
-    parent   Bill?    @relation("BillHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
-    children Bill[]   @relation("BillHierarchy")
-    // --------------------------------
+    parent   Bill?   @relation("BillHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+    children Bill[]  @relation("BillHierarchy")
+
+    subscriptionId    String?
+    subscription      Subscription?    @relation(fields: [subscriptionId], references: [id])
+
+    saleId String?
+    sale   Sale?   @relation(fields: [saleId], references: [id])
 
     studentId String?
     student   Student? @relation(fields: [studentId], references: [id])
@@ -48,9 +52,48 @@ model Bill {
     @@schema("financial")
 }
 
+model Sale {
+  id        String    @id @default(cuid())
+  tenancyId String
+  studentId String
+  
+  totalAmount Decimal
+  
+  items     SaleItem[]
+  bills     Bill[]
+
+  student   Student   @relation(fields: [studentId], references: [id])
+  tenancy   Tenancy   @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  @@schema("financial")
+}
+
+model SaleItem {
+  id          String   @id @default(cuid())
+  saleId      String
+  
+  description String
+  unitAmount  Decimal
+  quantity    Int      @default(1)
+  
+  planId      String?  
+  plan        Plan?    @relation(fields: [planId], references: [id])
+  
+  // Futuramente:
+  // productId   String?
+  // product     Product? @relation(fields: [productId], references: [id])
+  
+  sale        Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  
+  @@schema("financial")
+}
+
+
 enum BillType {
     PAYABLE
     RECEIVABLE
+
     @@schema("financial")
 }
 
@@ -59,6 +102,7 @@ enum BillStatus {
     PAID
     OVERDUE
     CANCELLED
+
     @@schema("financial")
 }
 
@@ -69,6 +113,7 @@ enum RecurrenceType {
     QUARTERLY
     SEMIANNUAL
     ANNUAL
+
     @@schema("financial")
 }
 
@@ -79,6 +124,7 @@ model BillAttachment {
     bill   Bill   @relation(fields: [billId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
+
     @@schema("financial")
 }
 
@@ -100,6 +146,7 @@ model Bank {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
     @@schema("financial")
 }
 
@@ -123,18 +170,21 @@ model CategoryBill {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
     @@schema("financial")
 }
 
 enum BillNature {
     REVENUE
     EXPENSE
+
     @@schema("financial")
 }
 
 enum BillCategoryType {
     FIXED
     VARIABLE
+
     @@schema("financial")
 }
 
@@ -164,18 +214,20 @@ model PaymentMethod {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
     @@schema("financial")
 }
 
 model PaymentFee {
-    id              String        @id @default(cuid())
-    paymentMethodId String
-    paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id], onDelete: Cascade)
-    minInstallments  Int     @default(1)
-    maxInstallments  Int     @default(1)
+    id               String        @id @default(cuid())
+    paymentMethodId  String
+    paymentMethod    PaymentMethod @relation(fields: [paymentMethodId], references: [id], onDelete: Cascade)
+    minInstallments  Int           @default(1)
+    maxInstallments  Int           @default(1)
     feePercentage    Float
-    customerInterest Boolean @default(false)
+    customerInterest Boolean       @default(false)
     receiveInDays    Int?
-    createdAt DateTime @default(now())
+    createdAt        DateTime      @default(now())
+
     @@schema("financial")
 }

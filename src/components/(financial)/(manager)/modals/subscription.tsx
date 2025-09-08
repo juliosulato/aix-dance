@@ -49,7 +49,7 @@ export default function Subscription({ control, errors, watch }: Props) {
                     />
                 )}
             />
-            
+
             <Controller
                 control={control}
                 name="dueDate"
@@ -57,8 +57,14 @@ export default function Subscription({ control, errors, watch }: Props) {
                     <DateInput
                         label={t("fields.subscription.dueDate.label")}
                         locale={locale}
-                        onChange={field.onChange}
-                        value={field.value ? new Date(field.value) : null}
+                        onChange={(date) => {
+                            if (!date) {
+                                field.onChange(null);
+                                return;
+                            }
+                            const newDate = dayjs(date).hour(12).minute(0).second(0).toDate();
+                            field.onChange(newDate);
+                        }} value={field.value ? new Date(field.value) : null}
                         error={errors?.dueDate?.message}
                         valueFormat={t("fields.dueDate.valueFormat")}
                         required
@@ -90,12 +96,17 @@ export default function Subscription({ control, errors, watch }: Props) {
                     control={control}
                     name="recurrenceEndDate"
                     render={({ field }) => (
-                         <DateInput
+                        <DateInput
                             label={t("fields.subscription.chooseData.label")}
                             locale={locale}
-                            onChange={field.onChange}
-                            value={field.value ? new Date(field.value as Date) : null}
-                            // Use a type assertion to bypass the strict union type check
+                            onChange={(date) => {
+                                if (!date) {
+                                    field.onChange(null);
+                                    return;
+                                }
+                                const newDate = dayjs(date).hour(12).minute(0).second(0).toDate();
+                                field.onChange(newDate);
+                            }} value={field.value ? new Date(field.value as Date) : null}
                             error={(errors as any)['recurrenceEndDate']?.message}
                             valueFormat={t("fields.dueDate.valueFormat")}
                             required

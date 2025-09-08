@@ -128,8 +128,14 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                                 <DateInput
                                     label={t("fields.paymentDate.label")}
                                     value={field.value}
-                                    onChange={field.onChange}
-                                    error={errors.paymentDate?.message}
+                                    onChange={(date) => {
+                                        if (!date) {
+                                            field.onChange(null);
+                                            return;
+                                        }
+                                        const newDate = dayjs(date).hour(12).minute(0).second(0).toDate();
+                                        field.onChange(newDate);
+                                    }} error={errors.paymentDate?.message}
                                     locale={locale}
                                     required
                                     className="w-full"

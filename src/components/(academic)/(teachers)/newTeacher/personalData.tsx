@@ -69,7 +69,7 @@ export default function NewTeacher__PersonalData({ control, errors, register }: 
                 label={g("email.label")}
                 {...register("email")}
                 required
-                        error={errors.email?.message}
+                error={errors.email?.message}
                 type="email"
                 placeholder={g("email.placeholder")}
             />
@@ -80,8 +80,14 @@ export default function NewTeacher__PersonalData({ control, errors, register }: 
                     <DateInput
                         label={g("birthOfDate.label")}
                         locale="pt-br"
-                        onChange={field.onChange}
-                        value={field.value}
+                        onChange={(date) => {
+                            if (!date) {
+                                field.onChange(null);
+                                return;
+                            }
+                            const newDate = dayjs(date).hour(12).minute(0).second(0).toDate();
+                            field.onChange(newDate);
+                        }} value={field.value}
                         maxDate={new Date()}
                         placeholder={g("birthOfDate.placeholder")}
                         error={errors?.teacher?.birthOfDate?.message}
@@ -128,7 +134,7 @@ export default function NewTeacher__PersonalData({ control, errors, register }: 
                     />
                 )}
             />
-             {gender && (gender === Gender.NON_BINARY || gender === Gender.OTHER) && (
+            {gender && (gender === Gender.NON_BINARY || gender === Gender.OTHER) && (
                 <TextInput
                     label={g("pronoun.label")}
                     placeholder={g("pronoun.placeholder")}
@@ -139,7 +145,7 @@ export default function NewTeacher__PersonalData({ control, errors, register }: 
             )}
 
 
-             <TextInput
+            <TextInput
                 label={g("instagramUser.label")}
                 placeholder={g("instagramUser.placeholder")}
                 {...register("teacher.instagramUser")}

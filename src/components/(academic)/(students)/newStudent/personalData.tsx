@@ -3,7 +3,6 @@ import { useState } from "react";
 import { PhoneInput } from "@/components/ui/cellPhoneInput";
 import { InputBase, Select, TextInput } from "@mantine/core";
 import { useTranslations } from "next-intl";
-import { DateInput } from "@mantine/dates";
 import 'dayjs/locale/pt-br';
 import DocumentInput from "@/components/ui/documentInput";
 import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form";

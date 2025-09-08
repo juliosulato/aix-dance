@@ -58,8 +58,16 @@ export default function CashOrInstallments({ control, errors, watch }: Props) {
                     <DateInput
                         label={dueDateLabel}
                         locale={localeKey}
-                        onChange={field.onChange}
-                        value={field.value ? new Date(field.value) : null}
+onChange={(date) => {
+                                        if (!date) {
+                                            field.onChange(null);
+                                            return;
+                                        }
+                                        const newDate = dayjs(date).hour(12).minute(0).second(0).toDate();
+                                        field.onChange(newDate);
+                                    }}
+                                    value={field.value ? new Date(field.value) : null}
+
                         error={errors?.dueDate?.message}
                         valueFormat={t("fields.dueDate.valueFormat")}
                         required

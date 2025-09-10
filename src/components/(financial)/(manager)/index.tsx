@@ -2,7 +2,7 @@
 
 import { fetcher } from "@/utils/fetcher";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
 import deleteBills from "./delete";
@@ -14,6 +14,8 @@ import DataView from "@/components/ui/DataView";
 
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
+import 'dayjs/locale/en';
+import 'dayjs/locale/es';
 import NewBill from "./modals/NewBill";
 import UpdateBill from "./modals/UpdateBill";
 import { Bank, Bill, CategoryBill, PaymentMethod, Supplier } from "@prisma/client";
@@ -22,8 +24,6 @@ import { FaCalendarAlt } from "react-icons/fa";
 import PayBill from "./modals/PayBill";
 import { IoAdd } from "react-icons/io5";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
-
-dayjs.locale("pt-br");
 
 export type BillFromApi = Omit<Bill, 'amount' | 'amountPaid' | 'dueDate' | 'paymentDate' | 'recurrenceEndDate' | 'createdAt' | 'updatedAt'> & {
     amount: number;
@@ -56,6 +56,8 @@ interface MenuItemsProps {
 export default function AllBillsData() {
     const t = useTranslations("");
     const { data: sessionData, status } = useSession();
+    const locale = useLocale();
+    dayjs.locale(locale);
 
     const [openNew, setOpenNew] = useState<boolean>(false);
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);

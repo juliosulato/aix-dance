@@ -23,5 +23,7 @@
     "validationTitle": "Atenção",
     "validationMessage": "Por favor, verifique os campos destacados e tente novamente.",
     "loadingData": "Erro ao carregar os dados."
-  }
+  },
+  "createdAt": "Criado Em",
+  "matriculedAt": "Aluno Desde"
 }

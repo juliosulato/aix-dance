@@ -6,7 +6,7 @@ export const createUserSchema = z.object({
   email: z.email({ message: "E-mail inválido" }),
   teacher: z.object({
     phoneNumber: z.string().min(1, { message: "Celular obrigatório" }),
-    birthOfDate: z.string().min(1, { message: "Data de nascimento obrigatória" }),
+    dateOfBirth: z.string().min(1, { message: "Data de nascimento obrigatória" }),
     document: z.string().min(1, { message: "CPF obrigatório" }),
     gender: z.enum(["MALE","FEMALE","NON_BINARY","OTHER"], { message: "Selecione um gênero válido" }),
     address: z.object({

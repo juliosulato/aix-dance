@@ -1,11 +1,12 @@
 "use client"
 
 import { Button, LoadingOverlay, Modal, Stepper } from "@mantine/core";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import NewTeacher__PersonalData from "./personalData";
 import dayjs from "dayjs";
-dayjs.locale("pt-BR");
 import 'dayjs/locale/pt-br';
+import 'dayjs/locale/es';
+import 'dayjs/locale/en';
 import NewTeacher__AccessData from "./accessData";
 import NewTeacher__RemunerationData from "./remuneration";
 import { useState } from "react";
@@ -26,7 +27,7 @@ function NewTeacher({ opened, onClose }: Props) {
     const t = useTranslations();
     const [active, setActive] = useState(0);
     const [visible, setVisible] = useState(false);
-    const [avatar, setAvatar] = useState<File | null>(null);
+    const [avatar, setAvatar] = useState<string | null>(null);
 
     const { control, handleSubmit, formState: { errors }, register, reset, trigger } = useForm<CreateUserInput>({
         resolver: zodResolver(createUserSchema) as any,
@@ -39,6 +40,9 @@ function NewTeacher({ opened, onClose }: Props) {
         
     });
 
+    const locale = useLocale();
+    dayjs.locale(locale);
+    
     const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
 
     const handleNextStep = async () => {
@@ -51,7 +55,7 @@ function NewTeacher({ opened, onClose }: Props) {
                 "email",
                 "teacher.cellPhoneNumber",
                 "teacher.phoneNumber",
-                "teacher.birthOfDate",
+                "teacher.dateOfBirth",
                 "teacher.document",
                 "teacher.gender",
                 "teacher.instagramUser",
@@ -68,7 +72,6 @@ function NewTeacher({ opened, onClose }: Props) {
             isValid = await trigger(firstStepFields);
         }
 
-        // Se for válido, avança para a próxima etapa
         if (isValid) {
             setActive((current) => current + 1);
         }
@@ -86,8 +89,6 @@ function NewTeacher({ opened, onClose }: Props) {
         }
 
         setVisible(true);
-
-
         try {
             const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/users`, {
                 method: "POST",
@@ -120,7 +121,7 @@ function NewTeacher({ opened, onClose }: Props) {
                     <Stepper active={active} onStepClick={setActive}>
                         <Stepper.Step>
                             <div className="flex flex-col gap-4">
-                                <AvatarUpload setFile={setAvatar} />
+                                <AvatarUpload onUploadComplete={(ev) => setAvatar(ev)} />
                                 <NewTeacher__PersonalData register={register} errors={errors} control={control} />
                                 <Address register={register} errors={errors} />
                                 <div className="flex flex-col md:flex-row items-end justify-end">

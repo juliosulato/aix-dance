@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback, memo } from 'react';
 import {
   useCombobox,
   Combobox,
@@ -26,14 +26,14 @@ import { BiChevronDown } from 'react-icons/bi';
 
 countries.registerLocale(es);
 
-// Componente para renderizar a bandeira SVG
-function FlagIcon({
+// Componente para renderizar a bandeira SVG - Memoizado
+const FlagIcon = memo(({
   countryCode,
   size = 20,
 }: {
   countryCode: string;
   size?: number;
-}) {
+}) => {
   const code = countryCode.toLowerCase();
   return (
     <img
@@ -60,9 +60,11 @@ function FlagIcon({
       }}
     />
   );
-}
+});
 
-function CountryFlag({ countryCode, size = 20 }: { countryCode: string; size?: number }) {
+FlagIcon.displayName = 'FlagIcon';
+
+const CountryFlag = memo(({ countryCode, size = 20 }: { countryCode: string; size?: number }) => {
   return (
     <span
       style={{
@@ -89,12 +91,24 @@ function CountryFlag({ countryCode, size = 20 }: { countryCode: string; size?: n
       </span>
     </span>
   );
-}
+});
 
-// Fallback para emoji (caso a imagem não carregue)
+CountryFlag.displayName = 'CountryFlag';
+
+// Cache do emoji para evitar recálculos
+const flagEmojiCache = new Map<string, string>();
+
+// Fallback para emoji (caso a imagem não carregue) - Com cache
 function getFlagEmoji(countryCode: string): string {
+  if (flagEmojiCache.has(countryCode)) {
+    return flagEmojiCache.get(countryCode)!;
+  }
+
   const code = countryCode.toUpperCase();
-  if (code.length !== 2) return countryCode;
+  if (code.length !== 2) {
+    flagEmojiCache.set(countryCode, countryCode);
+    return countryCode;
+  }
   
   try {
     const codePoints = code
@@ -109,15 +123,19 @@ function getFlagEmoji(countryCode: string): string {
       .filter((point): point is number => point !== null);
     
     if (codePoints.length === 2) {
-      return String.fromCodePoint(...codePoints);
+      const emoji = String.fromCodePoint(...codePoints);
+      flagEmojiCache.set(countryCode, emoji);
+      return emoji;
     }
   } catch (error) {
     console.warn(`Erro ao gerar emoji para país ${countryCode}:`, error);
   }
   
+  flagEmojiCache.set(countryCode, countryCode);
   return countryCode;
 }
 
+// Cachear os dados dos países para evitar recálculos
 const libIsoCountries = countries.getNames('es', { select: 'official' });
 const libPhoneNumberCountries = getCountries();
 
@@ -132,12 +150,15 @@ const countryOptionsDataMap = Object.fromEntries(
         {
           code,
           name,
+          // Pré-computar texto de busca para otimizar filtro
+          searchText: name.toLowerCase(),
         },
       ] as [
         CountryCode,
         {
           code: CountryCode;
           name: string;
+          searchText: string;
         },
       ];
     })
@@ -148,10 +169,20 @@ const countryOptionsData = Object.values(countryOptionsDataMap);
 
 type Country = (typeof countryOptionsData)[number];
 
+// Cache para formatos de países
+const formatCache: any = new Map<CountryCode, ReturnType<typeof getFormat>>();
+
 function getFormat(countryCode: CountryCode) {
+  if (formatCache.has(countryCode)) {
+    return formatCache.get(countryCode)!;
+  }
+
   const example = getExampleNumber(countryCode, examples)!.formatNational();
   const mask = example.replace(/\d/g, '0');
-  return { example, mask };
+  const format = { example, mask };
+  
+  formatCache.set(countryCode, format);
+  return format;
 }
 
 function getInitialDataFromValue(
@@ -195,67 +226,103 @@ export type PhoneInputProps = {
   'onChange' | 'defaultValue'
 > & { onChange: (value: string | null) => void };
 
-export function PhoneInput({
+export const PhoneInput = memo(({
   initialCountryCode = 'BR',
   value: _value,
   onChange: _onChange,
   defaultValue,
   ...props
-}: PhoneInputProps) {
+}: PhoneInputProps) => {
   const [value, onChange] = useUncontrolled({
     value: _value,
     defaultValue,
     onChange: _onChange,
   });
+  
   const initialData = useRef(
     getInitialDataFromValue(value, {
       initialCountryCode: initialCountryCode,
     }),
   );
+  
   const [country, setCountry] = useState(initialData.current.country);
   const [format, setFormat] = useState(initialData.current.format);
   const [localValue, setLocalValue] = useState(initialData.current.localValue);
   const inputRef = useRef<HTMLInputElement>(null);
-
   const lastNotifiedValue = useRef<string | null>(value ?? '');
-useEffect(() => {
-  let e164 = '';
-  if (localValue.trim().length > 0) {
-    const asYouType = new AsYouType(country.code);
-    asYouType.input(localValue);
-    e164 = asYouType.getNumber()?.number ?? '';
-  }
-  if (e164 !== lastNotifiedValue.current) {
-    lastNotifiedValue.current = e164;
-    onChange(e164); // <- envia null quando vazio
-  }
-}, [country.code, localValue, onChange]);
 
-useEffect(() => {
-  // Só reage quando o valor controlado externo muda
-  if (typeof _value === 'undefined') return;
-  if (_value === lastNotifiedValue.current) return;
+  // Otimizar o efeito de notificação de mudanças
+  const notifyChange = useCallback((newLocalValue: string, countryCode: CountryCode) => {
+    let e164 = '';
+    if (newLocalValue.trim().length > 0) {
+      const asYouType = new AsYouType(countryCode);
+      asYouType.input(newLocalValue);
+      e164 = asYouType.getNumber()?.number ?? '';
+    }
+    
+    if (e164 !== lastNotifiedValue.current) {
+      lastNotifiedValue.current = e164;
+      onChange(e164);
+    }
+  }, [onChange]);
 
-  const parsed = parsePhoneNumberFromString(_value || '');
-  // Se não dá pra inferir país com confiança, não mexe em nada
-  if (!parsed || !parsed.country) return;
+  useEffect(() => {
+    notifyChange(localValue, country.code);
+  }, [country.code, localValue, notifyChange]);
 
-  const data = countryOptionsDataMap[parsed.country];
-  if (!data) return;
+  useEffect(() => {
+    // Só reage quando o valor controlado externo muda
+    if (typeof _value === 'undefined') return;
+    if (_value === lastNotifiedValue.current) return;
 
-  lastNotifiedValue.current = _value;
+    const parsed = parsePhoneNumberFromString(_value || '');
+    // Se não dá pra inferir país com confiança, não mexe em nada
+    if (!parsed || !parsed.country) return;
 
-  if (parsed.country !== country.code) {
-    setCountry(data);
-    setFormat(getFormat(parsed.country));
-  }
-  setLocalValue(parsed.formatNational());
-}, [_value]); // <- só _value
+    const data = countryOptionsDataMap[parsed.country];
+    if (!data) return;
 
+    lastNotifiedValue.current = _value;
+
+    if (parsed.country !== country.code) {
+      setCountry(data);
+      setFormat(getFormat(parsed.country));
+    }
+    setLocalValue(parsed.formatNational());
+  }, [_value, country.code]);
 
   const { readOnly, disabled } = props;
   const leftSectionWidth = 54;
 
+  // Handler otimizado para mudança de país
+  const handleCountryChange = useCallback((newCountry: Country) => {
+    console.log('Mudando país para:', newCountry);
+    setCountry(newCountry);
+    setFormat(getFormat(newCountry.code));
+    setLocalValue('');
+    
+    // Focus otimizado
+    requestAnimationFrame(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    });
+  }, []);
+
+  // Handler otimizado para accept do mask
+  const handleAccept = useCallback((value: string) => {
+    setLocalValue(value);
+  }, []);
+
+  // Memoizar estilos para evitar re-renders desnecessários
+  const inputStyles = useMemo(() => ({
+    input: {
+      paddingLeft: `calc(${leftSectionWidth}px + var(--mantine-spacing-sm))`,
+    },
+    section: {
+      borderRight: '1px solid var(--mantine-color-default-border)',
+    },
+  }), [leftSectionWidth]);
 
   return (
     <InputBase
@@ -267,38 +334,26 @@ useEffect(() => {
           <CountrySelect
             disabled={disabled || readOnly}
             country={country}
-            setCountry={(newCountry) => {
-              console.log('Mudando país para:', newCountry);
-              setCountry(newCountry);
-              setFormat(getFormat(newCountry.code));
-              setLocalValue('');
-              if (inputRef.current) {
-                inputRef.current.focus();
-              }
-            }}
+            setCountry={handleCountryChange}
             leftSectionWidth={leftSectionWidth}
           />
         ) : null
       }
       leftSectionWidth={leftSectionWidth}
-      styles={{
-        input: {
-          paddingLeft: `calc(${leftSectionWidth}px + var(--mantine-spacing-sm))`,
-        },
-        section: {
-          borderRight: '1px solid var(--mantine-color-default-border)',
-        },
-      }}
+      styles={inputStyles}
       inputMode="numeric"
       mask={format.mask}
       unmask={true}
       value={localValue}
-      onAccept={(value) => setLocalValue(value)}
+      onAccept={handleAccept}
     />
   );
-}
+});
 
-function CountrySelect({
+PhoneInput.displayName = 'PhoneInput';
+
+// Componente CountrySelect otimizado
+const CountrySelect = memo(({
   country,
   setCountry,
   disabled,
@@ -308,9 +363,8 @@ function CountrySelect({
   setCountry: (country: Country) => void;
   disabled: boolean | undefined;
   leftSectionWidth: number;
-}) {
+}) => {
   const [search, setSearch] = useState('');
-
   const selectedRef = useRef<HTMLDivElement>(null);
 
   const combobox = useCombobox({
@@ -318,7 +372,6 @@ function CountrySelect({
       combobox.resetSelectedOption();
       setSearch('');
     },
-
     onDropdownOpen: () => {
       combobox.focusSearchInput();
       setTimeout(() => {
@@ -330,11 +383,19 @@ function CountrySelect({
     },
   });
 
-  const options = countryOptionsData
-    .filter((item) =>
-      item.name.toLowerCase().includes(search.toLowerCase().trim()),
-    )
-    .map((item) => (
+  // Otimizar filtro com useMemo e busca pré-computada
+  const filteredOptions = useMemo(() => {
+    if (!search.trim()) return countryOptionsData;
+    
+    const searchTerm = search.toLowerCase().trim();
+    return countryOptionsData.filter((item) =>
+      item.searchText.includes(searchTerm)
+    );
+  }, [search]);
+
+  // Memoizar as opções para evitar re-renders desnecessários
+  const options = useMemo(() => {
+    return filteredOptions.map((item) => (
       <Combobox.Option
         ref={item.code === country.code ? selectedRef : undefined}
         value={item.code}
@@ -349,17 +410,60 @@ function CountrySelect({
         </Group>
       </Combobox.Option>
     ));
+  }, [filteredOptions, country.code]);
+
+  // Handler otimizado para mudança de busca
+  const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.currentTarget.value);
+  }, []);
+
+  // Handler otimizado para submit de opção
+  const handleOptionSubmit = useCallback((val: string) => {
+    const selectedCountry = countryOptionsDataMap[val];
+    if (selectedCountry) {
+      setCountry(selectedCountry);
+      combobox.closeDropdown();
+    }
+  }, [setCountry, combobox]);
+
+  // Handler otimizado para toggle
+  const handleToggle = useCallback(() => {
+    combobox.toggleDropdown();
+  }, [combobox]);
 
   useEffect(() => {
     if (search) {
       combobox.selectFirstOption();
     }
-  }, [search]);
+  }, [search, combobox]);
 
   // Se não tem país, não renderiza nada
   if (!country) {
     return null;
   }
+
+  // Memoizar o ActionIcon para evitar re-renders
+  const actionIcon = useMemo(() => (
+    <ActionIcon
+      variant="transparent"
+      onClick={handleToggle}
+      size="lg"
+      tabIndex={-1}
+      disabled={disabled}
+      w={leftSectionWidth}
+      c="dimmed"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Group gap={4} style={{ alignItems: 'center' }}>
+        <CountryFlag countryCode={country.code} size={16} />
+        <BiChevronDown size={12} />
+      </Group>
+    </ActionIcon>
+  ), [handleToggle, disabled, leftSectionWidth, country.code]);
 
   return (
     <Combobox
@@ -367,40 +471,16 @@ function CountrySelect({
       width={250}
       position="bottom-start"
       withArrow
-      onOptionSubmit={(val) => {
-        const selectedCountry = countryOptionsDataMap[val];
-        if (selectedCountry) {
-          setCountry(selectedCountry);
-          combobox.closeDropdown();
-        }
-      }}
+      onOptionSubmit={handleOptionSubmit}
     >
       <Combobox.Target withAriaAttributes={false}>
-        <ActionIcon
-          variant="transparent"
-          onClick={() => combobox.toggleDropdown()}
-          size="lg"
-          tabIndex={-1}
-          disabled={disabled}
-          w={leftSectionWidth}
-          c="dimmed"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Group gap={4} style={{ alignItems: 'center' }}>
-            <CountryFlag countryCode={country.code} size={16} />
-            <BiChevronDown size={12} />
-          </Group>
-        </ActionIcon>
+        {actionIcon}
       </Combobox.Target>
 
       <Combobox.Dropdown>
         <Combobox.Search
           value={search}
-          onChange={(event) => setSearch(event.currentTarget.value)}
+          onChange={handleSearchChange}
           placeholder="Buscar país"
         />
         <Combobox.Options>
@@ -415,4 +495,6 @@ function CountrySelect({
       </Combobox.Dropdown>
     </Combobox>
   );
-}
+});
+
+CountrySelect.displayName = 'CountrySelect';

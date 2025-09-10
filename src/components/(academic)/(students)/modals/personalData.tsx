@@ -1,5 +1,5 @@
 import { Gender } from "@prisma/client";
-import { useState } from "react";
+import { useState, memo } from "react";
 import { PhoneInput } from "@/components/ui/cellPhoneInput";
 import { InputBase, Select, TextInput } from "@mantine/core";
 import { useTranslations } from "next-intl";
@@ -8,14 +8,16 @@ import DocumentInput from "@/components/ui/documentInput";
 import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form";
 import { CreateStudentFormData } from "@/schemas/studentSchema";
 import { IMaskInput } from "react-imask";
+import { UpdateStudentInput } from "@/schemas/academic/student.schema";
+import { FiAtSign } from "react-icons/fi";
 
 type Props = {
-    control: Control<CreateStudentFormData>;
-    register: UseFormRegister<CreateStudentFormData>;
-    errors: FieldErrors<CreateStudentFormData>;
+    control: Control<CreateStudentFormData | UpdateStudentInput>;
+    register: UseFormRegister<CreateStudentFormData | UpdateStudentInput>;
+    errors: FieldErrors<CreateStudentFormData | UpdateStudentInput>;
 }
 
-export default function NewStudent__PersonalData({ control, register, errors }: Props) {
+function NewStudent__PersonalData({ control, register, errors }: Props) {
     const [gender, setGender] = useState<Gender | null>(null);
     const t = useTranslations("students-modals.forms.personalData");
     const g = useTranslations("forms.general-fields");
@@ -80,20 +82,17 @@ export default function NewStudent__PersonalData({ control, register, errors }: 
                 error={errors.email?.message}
             />
 
-
-
-
             <Controller
-                name="birthOfDate"
+                name="dateOfBirth"
                 control={control}
                 render={({ field }) => (
                     <InputBase
                         component={IMaskInput}
-                        mask={g("birthOfDate.mask")}
+                        mask={g("dateOfBirth.mask")}
                         required
                         value={field.value || ""}
-                        label={g("birthOfDate.label")}
-                        error={errors.birthOfDate?.message}
+                        label={g("dateOfBirth.label")}
+                        error={errors.dateOfBirth?.message}
                         onAccept={(val: string) => field.onChange(val)}
                     />
                 )}
@@ -171,9 +170,11 @@ export default function NewStudent__PersonalData({ control, register, errors }: 
             <TextInput
                 label={g("instagramUser.label")}
                 placeholder={g("instagramUser.placeholder")}
+                leftSection={<FiAtSign/>}
                 {...register("instagramUser")}
                 error={errors.instagramUser?.message}
             />
         </div>
     );
 }
+export default memo(NewStudent__PersonalData);

@@ -43,7 +43,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         return {
           id: user.id,
-          role: user.role,
           name: user.firstName,
           email: user.email,
           remember: credentials.remember === "true" || credentials.remember === "on",

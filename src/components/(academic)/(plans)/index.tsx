@@ -19,7 +19,6 @@ import 'dayjs/locale/es';
 import 'dayjs/locale/en';
 import NewPlan from "./modals/NewPlan";
 import UpdatePlan from "./modals/UpdatePlan";
-dayjs.locale("pt-br");
 
 interface MenuItemProps {
     plans: Plan;

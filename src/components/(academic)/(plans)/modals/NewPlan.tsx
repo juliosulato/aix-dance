@@ -47,7 +47,7 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
 
     const { data: sessionData, status } = useSession();
     if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>Você precisa estar logado para criar estudantes.</div>;
+    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
 
     async function createPlan(data: CreatePlanInput) {
         if (!sessionData?.user.tenancyId) {

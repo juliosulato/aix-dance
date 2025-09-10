@@ -78,6 +78,7 @@ model Student {
     subscriptions Subscription[]
     
     sales         Sale[]
+    active        Boolean @default(true)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

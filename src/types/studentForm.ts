@@ -25,7 +25,7 @@ export type StudentFormState = {
   lastName: string;
   gender: Gender | null;
   pronoun?: string;
-  birthOfDate?: Date;
+  dateOfBirth?: Date;
   cellPhoneNumber: string;
   phoneNumber?: string;
   email: string;

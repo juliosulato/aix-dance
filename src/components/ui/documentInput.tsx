@@ -29,7 +29,7 @@ export default function DocumentInput({ value: controlledValue, onChange, ...pro
     const doc = documentOptions[country] || documentOptions['BR'];
     setLabel(doc.label);
     setMask(doc.mask || '');
-    setValue('');
+    setValue(controlledValue || '');
   }, [session]);
 
   return (

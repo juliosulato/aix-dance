@@ -1,0 +1,368 @@
+"use client";
+
+import { fetcher } from "@/utils/fetcher";
+import { useSession } from "next-auth/react";
+import { useLocale, useTranslations } from "next-intl";
+import { useState } from "react";
+import useSWR from "swr";
+import deletePlans from "./delete";
+import { ActionIcon, Avatar, LoadingOverlay, Menu, Text, Tooltip } from "@mantine/core";
+import { BiDotsVerticalRounded, BiTrash } from "react-icons/bi";
+import { GrUpdate } from "react-icons/gr";
+import ConfirmationModal from "@/components/ui/ConfirmationModal";
+import DataView from "@/components/ui/DataView";
+
+import dayjs from "dayjs";
+import 'dayjs/locale/pt-br';
+import 'dayjs/locale/es';
+import 'dayjs/locale/en';
+import NewStudent, { StudentFromApi } from "./modals/NewStudent";
+import UpdateStudent from "./modals/UpdateStudent";
+import { Class } from "@prisma/client";
+import toggleStudentActive from "./toggleStudentActive";
+
+interface MenuItemProps {
+    students: StudentFromApi;
+    onUpdateClick: (b: StudentFromApi) => void;
+    onDeleteClick: (b: StudentFromApi) => void;
+}
+
+interface MenuItemsProps {
+    selectedIds: string[];
+    onBulkDeleteClick: (ids: string[]) => void;
+}
+
+export default function AllStudentsData() {
+    const t = useTranslations("");
+    const locale = useLocale();
+    dayjs.locale(locale);
+
+    const { data: sessionData, status } = useSession();
+
+    const [openNew, setOpenNew] = useState<boolean>(false);
+    const [openUpdate, setOpenUpdate] = useState<boolean>(false);
+    const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
+    const [selectedStudent, setSelectedStudent] = useState<StudentFromApi | null>(null);
+    const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
+    const [isDeleting, setIsDeleting] = useState<boolean>(false);
+
+    const { data: categoryGroups, error, isLoading, mutate } = useSWR<StudentFromApi[]>(
+        () => sessionData?.user?.tenancyId
+            ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/students`
+            : null,
+        fetcher
+    );
+
+    const handleUpdateClick = (student: StudentFromApi) => {
+        setSelectedStudent(student);
+        setOpenUpdate(true);
+    };
+
+    const handleDeleteClick = (student: StudentFromApi) => {
+        setSelectedStudent(student);
+        setIdsToDelete([]);
+        setConfirmModalOpen(true);
+    };
+
+    const handleBulkDeleteClick = (ids: string[]) => {
+        setIdsToDelete(ids);
+        setSelectedStudent(null);
+        setConfirmModalOpen(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        setIsDeleting(true);
+        const tenancyId = sessionData?.user?.tenancyId;
+        if (!tenancyId) return;
+
+        const finalIdsToDelete = idsToDelete.length > 0 ? idsToDelete : (selectedStudent ? [selectedStudent.id] : []);
+
+        if (finalIdsToDelete.length === 0) {
+            setIsDeleting(false);
+            setConfirmModalOpen(false);
+            return;
+        }
+
+        try {
+            await deletePlans(finalIdsToDelete, tenancyId, t, mutate as any);
+            mutate();
+        } catch (error) {
+            console.error("Falha ao excluir alunos:", error);
+        } finally {
+            setIsDeleting(false);
+            setConfirmModalOpen(false);
+            setSelectedStudent(null);
+            setIdsToDelete([]);
+        }
+    };
+
+    const MenuItem = ({ students, onUpdateClick, onDeleteClick }: MenuItemProps) => (
+        <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+            <Menu shadow="md" width={200} withinPortal>
+                <Menu.Target>
+                    <ActionIcon variant="light" color="gray" radius={"md"}>
+                        <BiDotsVerticalRounded />
+                    </ActionIcon>
+                </Menu.Target>
+                <Menu.Dropdown>
+                    <Menu.Label>{t("general.actions.title")}</Menu.Label>
+                    <Menu.Item leftSection={<GrUpdate size={14} />} onClick={() => onUpdateClick(students)}>
+                        {t("general.actions.edit")}
+                    </Menu.Item>
+                    <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(students)}>
+                        {t("general.actions.delete")}
+                    </Menu.Item>
+                    <Menu.Item color="red" leftSection={<GrUpdate size={14} />} onClick={() => toggleStudentActive(students, sessionData?.user.tenancyId || "", t)}>
+                        {t("academic.students.status.update")}
+                    </Menu.Item>
+                </Menu.Dropdown>
+            </Menu>
+        </div>
+    );
+
+    const MenuItems = ({ selectedIds, onBulkDeleteClick }: MenuItemsProps) => (
+        <Menu shadow="md" width={200} withinPortal>
+            <Menu.Target>
+                <ActionIcon variant="light" color="gray" radius={"md"}>
+                    <BiDotsVerticalRounded />
+                </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+                <Menu.Label>{t("general.actions.manyActions")}</Menu.Label>
+                <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
+                    {t("general.actions.deleteMany", {
+                        items: selectedIds.length
+                    })}
+                </Menu.Item>
+            </Menu.Dropdown>
+        </Menu>
+    );
+
+
+    if (status === "loading" || isLoading) return <LoadingOverlay visible />;
+    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
+    if (error) return <p>{t("general.errors.loadingData")}</p>;
+
+
+    return (
+        <>
+            <DataView<StudentFromApi>
+                data={categoryGroups || []}
+                openNewModal={{
+                    func: () => setOpenNew(true),
+                    label: t("academic.students.modals.create.title")
+                }}
+                baseUrl="/system/academic/students/"
+                mutate={mutate}
+                pageTitle={t("academic.students.title")}
+                searchbarPlaceholder={t("academic.students.searchbarPlaceholder")}
+                columns={[
+                    {
+                        key: "image", label: "", sortable: false,
+                        render: (val, item) => {
+                            if (val) {
+                                return (<a href={val} target="_blank" onClick={(ev) => ev.stopPropagation()}><img src={val} alt={`Foto de ${item.firstName}`} className="object-cover w-16 h-16 rounded-2xl" /></a>)
+                            } else {
+                                return (
+                                    <Avatar name={item.firstName} color="#7439FA" size="64px" radius={"16px"} />
+                                )
+                            }
+                        }
+                    },
+                    {
+                        key: "firstName", label: t("academic.students.modals.personalData.fields.firstName.label"),
+                        sortable: true
+                    },
+                    {
+                        key: "lastName", label: t("academic.students.modals.personalData.fields.lastName.label"),
+                        sortable: true,
+                    },
+                    {
+                        key: "classes", label: t("academic.classes.title"),
+                        sortable: true,
+                        render: (value) => {
+                            if (value && Array.isArray(value)) {
+                                value.map((c: Class) => c.name).join(', ')
+                            } else {
+                                return value;
+                            }
+                        }
+                    },
+                    {
+                        key: "documentOfIdentity", label: t("academic.students.modals.personalData.fields.documentOfIdentity.label"),
+                        sortable: true,
+                    },
+                    {
+                        key: "canLeaveAlone", label: t("academic.students.modals.health.fields.canLeaveAlone.label"),
+                        sortable: true,
+                    },
+                    {
+                        key: "attendanceAverage",
+                        label: "Frequência",
+                        render: (value: number) => {
+                            if (value === 0) {
+                                return "-"
+                            } else if (value > 0 && value < 50) {
+                                return <span className="text-red-500">{value}</span>
+                            } else if (value > 0 && value < 50) {
+                                return <span className="text-yellow-500">{value}</span>
+                            } else {
+                                return <span className="text-green-500">{value}</span>
+                            }
+                        }
+                    },
+                    {
+                        key: "cellPhoneNumber", label: t("academic.students.modals.personalData.fields.cellPhoneNumber.label"),
+                        sortable: true,
+                        render: (value) => <a href={`https://wa.me/${value}`}>{value}</a>
+                    },
+                    {
+                        key: "active",
+                        label: t("academic.students.status.label"),
+                        render: (active) => {
+                            if (active) {
+                                return (
+                                    <Tooltip label={t("academic.students.status.ACTIVE")} color="green">
+                                        <div className={`w-4 h-4 rounded-full bg-green-500`}></div>
+                                    </Tooltip>
+                                );
+                            } else {
+                                return (
+                                    <Tooltip label={t("academic.students.status.INACTIVE")} color="red">
+                                        <div className={`w-4 h-4rounded-full bg-red-500`}></div>
+                                    </Tooltip>
+                                )
+                            }
+                        }
+                    }
+                ]}
+
+                RenderRowMenu={(item) => <MenuItem students={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
+                RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
+                renderCard={(item) => (
+                    <div className="flex flex-col gap-3">
+                        {/* --- Cabeçalho com Imagem, Nome e Menu --- */}
+                        <div className="flex flex-row justify-between items-start">
+                            <div className="flex items-center gap-4">
+                                {item.image ? <img
+                                    src={item.image || '/default-avatar.png'} // Adiciona um avatar padrão caso não haja imagem
+                                    alt={`Foto de ${item.firstName}`}
+                                    className="object-cover w-16 h-16 rounded-2xl"
+                                /> : (
+                                    <Avatar name={item.firstName} color="#7439FA" size="64px" radius={"16px"} />
+                                )}
+                                <div>
+                                    <Text fw={700} size="lg" className="leading-tight">
+                                        {`${item.firstName} ${item.lastName}`}
+                                    </Text>
+                                    <Text size="sm" c="dimmed">
+                                        Matrícula: {dayjs(item.createdAt).format("DD/MM/YYYY")}
+                                    </Text>
+                                </div>
+                            </div>
+                            <MenuItem students={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />
+                        </div>
+
+                        {/* --- Corpo com Informações Adicionais --- */}
+                        <div className="mt-2 pl-2 border-l-2 border-gray-200">
+                            {/* Seção de Turmas */}
+                            <div className="flex items-center gap-2 mb-2">
+                                <Text size="sm" fw={500} className="w-24">Turmas:</Text>
+                                <Text size="sm" c="dimmed">
+                                    {item.classes && Array.isArray(item.classes) && item.classes.length > 0
+                                        ? item.classes.map((c: Class) => c.name).join(', ')
+                                        : "Nenhuma turma"}
+                                </Text>
+                            </div>
+
+                            {/* Seção de Frequência */}
+                            <div className="flex items-center gap-2">
+                                <Text size="sm" fw={500} className="w-24">Frequência:</Text>
+
+                                {/* Reutilizando sua lógica de cores para a frequência */}
+                                {(item.attendanceAverage ?? 0) === 0 ? (
+                                    <Text size="sm" c="dimmed">-</Text>
+                                ) : (item.attendanceAverage ?? 0) < 50 ? (
+                                    <Text size="sm" fw={700} className="text-red-500">{item.attendanceAverage}%</Text>
+                                ) : (item.attendanceAverage ?? 0) < 75 ? (
+                                    <Text size="sm" fw={700} className="text-yellow-500">{item.attendanceAverage}%</Text>
+                                ) : (
+                                    <Text size="sm" fw={700} className="text-green-500">{item.attendanceAverage}%</Text>
+                                )}
+                            </div>
+
+                            {/* Seção de Contato */}
+                            <div className="flex items-center gap-2 mt-2">
+                                <Text size="sm" fw={500} className="w-24">WhatsApp:</Text>
+                                <a
+                                    href={`https://wa.me/${item.cellPhoneNumber}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="text-blue-500 hover:underline text-sm"
+                                >
+                                    {item.cellPhoneNumber}
+                                </a>
+                            </div>
+                            <div className="flex items-center gap-2 mt-2">
+                                <Text size="sm" fw={500} className="w-24">Status:</Text>
+                                {item.active}
+                                {(() => {
+                                    if (item.active) {
+                                        return (
+                                            <Tooltip label={t("academic.students.status.ACTIVE")} color="green">
+                                                <div className={`w-4 h-4 rounded-full bg-green-500`}></div>
+                                            </Tooltip>
+                                        );
+                                    } else {
+                                        return (
+                                            <Tooltip label={t("academic.students.status.INACTIVE")} color="red">
+                                                <div className={`w-4 h-4rounded-full bg-red-500`}></div>
+                                            </Tooltip>
+                                        )
+                                    }
+                                })()}
+                            </div>
+                        </div>
+                    </div>
+                )}
+            />
+
+            <NewStudent opened={openNew} onClose={() => setOpenNew(false)} mutate={mutate as any} />
+
+            {selectedStudent && (
+                <UpdateStudent
+                    opened={openUpdate}
+                    onClose={() => {
+                        setOpenUpdate(false);
+                        setSelectedStudent(null);
+                    }}
+                    student={selectedStudent}
+                    mutate={mutate as any}
+                />
+            )}
+
+            <ConfirmationModal
+                opened={isConfirmModalOpen}
+                onClose={() => setConfirmModalOpen(false)}
+                onConfirm={handleDeleteConfirm}
+                title={t("academic.students.modals.confirmModal.title")}
+                confirmLabel={t("academic.students.modals.confirmModal.confirmLabel")}
+                cancelLabel={t("academic.students.modals.confirmModal.cancelLabel")}
+                loading={isDeleting}
+            >
+                {idsToDelete.length > 0 ? (
+                    t("academic.students.modals.confirmModal.textArray",
+                        { count: idsToDelete.length }
+                    )
+                ) : (
+                    t("academic.students.modals.confirmModal.text", {
+                        student: selectedStudent?.firstName + " " + selectedStudent?.lastName || ""
+                    })
+                )}
+                <br />
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{t("academic.students.modals.confirmModal.warn")}</Text>
+            </ConfirmationModal>
+        </>
+    );
+}

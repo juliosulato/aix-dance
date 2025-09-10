@@ -53,10 +53,6 @@ export default function DataViewTable<T>({
             if (prev?.key === key && prev.direction === 'asc') {
                 return { key, direction: 'desc' };
             }
-            // Opcional: ciclo para remover a ordenação
-            // if (prev?.key === key && prev.direction === 'desc') {
-            //     return null;
-            // }
             return { key, direction: 'asc' };
         });
     };

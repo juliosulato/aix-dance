@@ -18,7 +18,7 @@ const studentSchema = z.object({
   gender: z.enum(Gender, { error: "Gênero inválido" }),
   cellPhoneNumber: z.string().min(1, { message: "Celular do aluno é obrigatório" }),
   pronoun: z.string().optional(),
-  birthOfDate: z.string().min(1, { message: "Data de nascimento é obrigatória" }),
+  dateOfBirth: z.string().min(1, { message: "Data de nascimento é obrigatória" }),
   phoneNumber: z.string().optional(),
   image: z.url({ message: "URL da imagem inválida" }).optional(),
   documentOfIdentity: z.string().optional(),

@@ -17,7 +17,8 @@ import DataView from "@/components/ui/DataView";
 
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
-dayjs.locale("pt-br");
+import 'dayjs/locale/en';
+import 'dayjs/locale/es';
 
 interface MenuItemProps {
     bankAccount: Bank;

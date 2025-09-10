@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { Button, Checkbox, NumberInput, Select, Table, Textarea, Tooltip, ActionIcon } from "@mantine/core";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
+import 'dayjs/locale/en';
+import 'dayjs/locale/es';
 import { BiHelpCircle } from "react-icons/bi";
 import { FaTrash } from "react-icons/fa";
 // Importações essenciais do react-hook-form
 import { Control, Controller, FieldErrors, UseFormRegister, useFieldArray, useWatch } from "react-hook-form";
 import { CreateUserInput } from "@/schemas/user.schema";
 import { RemunerationType } from "@prisma/client";
-
-dayjs.locale("pt-br");
 
 type Props = {
     // Trocamos register por control, que é mais poderoso para componentes customizados
@@ -23,6 +23,8 @@ type Props = {
 export default function NewTeacher__Remuneration({ control, errors }: Props) {
     const t = useTranslations("teachers.modals.create.remuneration");
     const g = useTranslations("general");
+    const locale = useLocale();
+    dayjs.locale(locale);
 
     // Hook para gerenciar o array dinâmico de comissões
     const { fields, append, remove } = useFieldArray({

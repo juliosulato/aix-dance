@@ -2,7 +2,7 @@
 import DataView from "@/components/ui/DataView";
 import { useEffect, useState } from "react";
 import NewPaymentMethod from "./modals/newPaymentMethod";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 import { ActionIcon, LoadingOverlay, Menu, Text } from "@mantine/core";
@@ -11,7 +11,8 @@ import { PaymentFee, PaymentMethod as PrismaPaymentMethod } from "@prisma/client
 import { BiDotsVerticalRounded, BiTrash } from "react-icons/bi";
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
-dayjs.locale("pt-br");
+import 'dayjs/locale/en';
+import 'dayjs/locale/es';
 import deletePaymentMethod from "./deletePaymentMethod";
 import UpdatePaymentMethod from "./modals/updatePaymentMethod";
 import { GrUpdate } from "react-icons/gr";
@@ -40,6 +41,8 @@ export default function PaymentMethodsView() {
     const [openNew, setOpenNew] = useState<boolean>(false);
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
     const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
+    const locale = useLocale();
+    dayjs.locale(locale);
 
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
     const [idsToDelete, setIdsToDelete] = useState<string[]>([]);

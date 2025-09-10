@@ -6,13 +6,15 @@ import { CreateStudentFormData } from "@/schemas/studentSchema";
 import { useTranslations } from "next-intl";
 import DocumentInput from "@/components/ui/documentInput";
 import { BiTrash } from "react-icons/bi";
+import { UpdateStudentInput } from "@/schemas/academic/student.schema";
+import { memo } from "react";
 
 type Props = {
-  control: Control<CreateStudentFormData>;
-  errors: FieldErrors<CreateStudentFormData>;
+    control: Control<CreateStudentFormData | UpdateStudentInput>;
+    errors: FieldErrors<CreateStudentFormData | UpdateStudentInput>;
 };
 
-export default function NewStudent__Guardians({ control, errors }: Props) {
+function NewStudent__Guardians({ control, errors }: Props) {
   const t = useTranslations("students-modals.forms.guardians");
   const g = useTranslations("forms.general-fields");
 
@@ -111,3 +113,5 @@ export default function NewStudent__Guardians({ control, errors }: Props) {
     </div>
   );
 }
+
+export default memo(NewStudent__Guardians);

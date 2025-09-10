@@ -3,12 +3,14 @@ import { Tooltip } from "@mantine/core";
 import { BillStatus } from "@prisma/client";
 
 export function StatusTextToBadge(
-    status: BillStatus | string,
+    status: BillStatus | string | boolean,
     tooltip: boolean = false,
     t: Translations,
     size?: string
 ) {
     const classes = `${size ? size : "w-4 h-4"} rounded-full`;
+
+    
 
     switch (status) {
         case "PENDING":

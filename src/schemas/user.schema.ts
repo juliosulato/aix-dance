@@ -20,7 +20,7 @@ const teacherSchema = z.object({
   instagramUser: z.string().optional(),
   professionalRegister: z.string().optional(),
   address: addressSchema.optional(),
-  birthOfDate: z.preprocess(
+  dateOfBirth: z.preprocess(
     val => val instanceof Date ? val.toISOString().split("T")[0] : val,
     z.string().optional()
   ),

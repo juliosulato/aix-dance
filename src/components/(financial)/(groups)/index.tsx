@@ -3,7 +3,7 @@
 import { fetcher } from "@/utils/fetcher";
 import { CategoryGroup } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import useSWR from "swr";
 import deleteCategoryGroups from "./delete";
@@ -15,9 +15,10 @@ import DataView from "@/components/ui/DataView";
 
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
+import 'dayjs/locale/en';
+import 'dayjs/locale/es';
 import NewCategoryGroup from "./NewGroup";
 import UpdateCategoryGroup from "./UpdateGroup";
-dayjs.locale("pt-br");
 
 
 interface MenuItemProps {
@@ -34,6 +35,8 @@ interface MenuItemsProps {
 export default function AllCategoryGroupsData() {
     const t = useTranslations("");
     const { data: sessionData, status } = useSession();
+    const locale = useLocale();
+    dayjs.locale(locale);
 
     const [openNew, setOpenNew] = useState<boolean>(false);
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);

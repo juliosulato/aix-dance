@@ -2,12 +2,13 @@ import { Gender } from "@prisma/client";
 import { useState } from "react";
 import { PhoneInput } from "@/components/ui/cellPhoneInput";
 import { Select, TextInput } from "@mantine/core";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { DateInput } from "@mantine/dates"
 import DocumentInput from "@/components/ui/documentInput";
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
-dayjs.locale("pt-br");
+import 'dayjs/locale/en';
+import 'dayjs/locale/es';
 import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form";
 import { CreateUserInput } from "@/schemas/user.schema";
 
@@ -21,7 +22,8 @@ export default function NewTeacher__PersonalData({ control, errors, register }: 
     const [gender, setGender] = useState<Gender | null>(null);
     const t = useTranslations("teachers.modals.create");
     const g = useTranslations("forms.general-fields");
-
+    const locale = useLocale();
+    dayjs.locale(locale);
     return (
 
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
@@ -75,10 +77,10 @@ export default function NewTeacher__PersonalData({ control, errors, register }: 
             />
             <Controller
                 control={control}
-                name="teacher.birthOfDate"
+                name="teacher.dateOfBirth"
                 render={({ field }) => (
                     <DateInput
-                        label={g("birthOfDate.label")}
+                        label={g("dateOfBirth.label")}
                         locale="pt-br"
                         onChange={(date) => {
                             if (!date) {
@@ -89,9 +91,9 @@ export default function NewTeacher__PersonalData({ control, errors, register }: 
                             field.onChange(newDate);
                         }} value={field.value}
                         maxDate={new Date()}
-                        placeholder={g("birthOfDate.placeholder")}
-                        error={errors?.teacher?.birthOfDate?.message}
-                        valueFormat={g("birthOfDate.valueFormat")}
+                        placeholder={g("dateOfBirth.placeholder")}
+                        error={errors?.teacher?.dateOfBirth?.message}
+                        valueFormat={g("dateOfBirth.valueFormat")}
                     />
                 )}
             />

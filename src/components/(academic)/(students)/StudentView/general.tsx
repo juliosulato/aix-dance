@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { StudentFromApi } from "../modals/NewStudent";
 import dayjs from "dayjs";
 import { Gender } from "@prisma/client";
+import { Avatar } from "@mantine/core";
 
 export default function GeneralStudentsView({ student }: { student: StudentFromApi }) {
     const t = useTranslations();
@@ -29,6 +30,8 @@ export default function GeneralStudentsView({ student }: { student: StudentFromA
 
     return (
         <div className="flex flex-col gap-4 md:gap-6 my-4 md:my-6">
+            <Avatar src={student.image} name={student.firstName} size={"xl"} radius="16px" className="!h-fit !w-full aspect-square md:w-inherit"/>
+
             <div className="grid gap-4 md:gap-y-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-4 md:p-6 lg:p-8 border border-gray-300 rounded-2xl">
                 <h2 className="font-semibold text-lg md:text-xl md:col-span-2 lg:col-span-3 xl:col-span-4  mb-4">{t("academic.students.modals.personalData.title")}</h2>
                 <InfoTerm label={t("academic.students.modals.personalData.fields.fullName.label")} children={`${student.firstName} ${student.lastName}`} />

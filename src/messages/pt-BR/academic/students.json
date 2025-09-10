@@ -27,6 +27,13 @@
     "personalData": {
       "title": "Informações Pessoais",
       "fields": {
+        "fullName": {
+          "label": "Nome Completo",
+          "placeholder": "Digite o nome do aluno",
+          "errors": {
+            "required": "O nome é obrigatório."
+          }
+        },
         "firstName": {
           "label": "Nome",
           "placeholder": "Digite o nome do aluno",
@@ -144,7 +151,7 @@
       }
     },
     "health": {
-      "title": "Informações de Saúde e Permissões",
+      "title": "Saúde e Outros",
       "textarea": "Descreva",
       "fields": {
         "healthProblems": {
@@ -184,11 +191,13 @@
           "placeholder": "Ex: Mãe, Pai, Tio..."
         },
         "cellPhoneNumber": {
+          "label": "Celular",
           "errors": {
             "required": "O celular do responsável é obrigatório."
           }
         },
         "email": {
+          "label": "E-mail",
           "errors": {
             "invalid": "E-mail do responsável inválido."
           }
@@ -212,10 +221,13 @@
       "internalError": "Ocorreu um erro ao deletar. Suas alterações foram desfeitas."
     }
   },
-  "status":{
+  "status": {
     "label": "Status",
     "ACTIVE": "Ativo",
     "INACTIVE": "Inativo",
-    "update": "Atualizar Status"
+    "update": {
+      "ACTIVE": "Desativar Aluno",
+      "INACTIVE": "Ativar Aluno"
+    }
   }
 }

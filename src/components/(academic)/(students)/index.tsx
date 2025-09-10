@@ -22,7 +22,7 @@ import { Class } from "@prisma/client";
 import toggleStudentActive from "./toggleStudentActive";
 
 interface MenuItemProps {
-    students: StudentFromApi;
+    student: StudentFromApi;
     onUpdateClick: (b: StudentFromApi) => void;
     onDeleteClick: (b: StudentFromApi) => void;
 }
@@ -96,7 +96,7 @@ export default function AllStudentsData() {
         }
     };
 
-    const MenuItem = ({ students, onUpdateClick, onDeleteClick }: MenuItemProps) => (
+    const MenuItem = ({ student, onUpdateClick, onDeleteClick }: MenuItemProps) => (
         <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
             <Menu shadow="md" width={200} withinPortal>
                 <Menu.Target>
@@ -106,14 +106,18 @@ export default function AllStudentsData() {
                 </Menu.Target>
                 <Menu.Dropdown>
                     <Menu.Label>{t("general.actions.title")}</Menu.Label>
-                    <Menu.Item leftSection={<GrUpdate size={14} />} onClick={() => onUpdateClick(students)}>
+                    <Menu.Item leftSection={<GrUpdate size={14} />} onClick={() => onUpdateClick(student)}>
                         {t("general.actions.edit")}
                     </Menu.Item>
-                    <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(students)}>
+                    <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(student)}>
                         {t("general.actions.delete")}
                     </Menu.Item>
-                    <Menu.Item color="red" leftSection={<GrUpdate size={14} />} onClick={() => toggleStudentActive(students, sessionData?.user.tenancyId || "", t)}>
-                        {t("academic.students.status.update")}
+                    <Menu.Item color={student.active ? "red" : "green"} leftSection={<GrUpdate size={14} />} onClick={() => toggleStudentActive(student, sessionData?.user.tenancyId || "", t)}>
+                        {student.active ? (
+                            t("academic.students.status.update.ACTIVE")
+                        ) : (
+                            t("academic.students.status.update.INACTIVE")
+                        )}
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
@@ -214,7 +218,7 @@ export default function AllStudentsData() {
                     {
                         key: "cellPhoneNumber", label: t("academic.students.modals.personalData.fields.cellPhoneNumber.label"),
                         sortable: true,
-                        render: (value) => <a href={`https://wa.me/${value}`}>{value}</a>
+                        render: (value) => <a href={`https://wa.me/${value.replace(/\D/g, "")}`}>{value}</a>
                     },
                     {
                         key: "active",
@@ -229,7 +233,7 @@ export default function AllStudentsData() {
                             } else {
                                 return (
                                     <Tooltip label={t("academic.students.status.INACTIVE")} color="red">
-                                        <div className={`w-4 h-4rounded-full bg-red-500`}></div>
+                                        <div className={`w-4 h-4 rounded-full bg-red-500`}></div>
                                     </Tooltip>
                                 )
                             }
@@ -237,7 +241,7 @@ export default function AllStudentsData() {
                     }
                 ]}
 
-                RenderRowMenu={(item) => <MenuItem students={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
+                RenderRowMenu={(item) => <MenuItem student={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
                 RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
                 renderCard={(item) => (
                     <div className="flex flex-col gap-3">
@@ -260,7 +264,7 @@ export default function AllStudentsData() {
                                     </Text>
                                 </div>
                             </div>
-                            <MenuItem students={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />
+                            <MenuItem student={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />
                         </div>
 
                         {/* --- Corpo com Informações Adicionais --- */}
@@ -317,7 +321,7 @@ export default function AllStudentsData() {
                                     } else {
                                         return (
                                             <Tooltip label={t("academic.students.status.INACTIVE")} color="red">
-                                                <div className={`w-4 h-4rounded-full bg-red-500`}></div>
+                                                <div className={`w-4 h-4 rounded-full bg-red-500`}></div>
                                             </Tooltip>
                                         )
                                     }

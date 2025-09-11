@@ -21,6 +21,8 @@ model User {
   accounts Account[]
   sessions Session[]
 
+  active    Boolean  @default(true)
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -61,7 +63,7 @@ model Teacher {
 
   cellPhoneNumber String?
   phoneNumber String?
-  dateOfBirth String?
+  dateOfBirth String
   document    String
   gender      Gender
   pronoun    String?

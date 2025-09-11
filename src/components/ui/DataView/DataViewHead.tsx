@@ -7,7 +7,7 @@ import { LuSearch } from "react-icons/lu";
 import { MdClose, MdOutlineTableChart, MdSpaceDashboard } from "react-icons/md";
 import { Filter, DateFilter, DateFilterOption } from ".";
 import { KeyedMutator } from "swr";
-import { FaFilter } from "react-icons/fa";
+import { FaFilter, FaPrint } from "react-icons/fa"; // Adicionado FaPrint
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 import "dayjs/locale/es";
@@ -34,6 +34,8 @@ interface DataViewProps<T> {
     mutate?: KeyedMutator<T[]>;
     disableTable?: boolean;
     renderHead?: () => React.ReactNode;
+    printable?: boolean; // ✨ NOVA PROPRIEDADE
+    onPrint?: () => void; // ✨ NOVA PROPRIEDADE
 };
 
 export default function DataViewHead<T>({
@@ -52,25 +54,22 @@ export default function DataViewHead<T>({
     onDateFilterChange,
     mutate,
     disableTable,
-    renderHead
+    renderHead,
+    printable, // ✨
+    onPrint,   // ✨
 }: DataViewProps<T>) {
     const [isDatePopoverOpened, setDatePopoverOpened] = useState(false);
-
-    // Estado local para o popover, para não aplicar o filtro a cada mudança
     const [localDateFilter, setLocalDateFilter] = useState(dateFilter);
 
     const handleApplyDateFilter = () => {
         onDateFilterChange(localDateFilter);
         setDatePopoverOpened(false);
     };
-
     const handleClearDateFilter = () => {
         setLocalDateFilter(null);
         onDateFilterChange(null);
         setDatePopoverOpened(false);
     };
-
-    // Sincroniza o estado local se o estado global mudar
     React.useEffect(() => {
         setLocalDateFilter(dateFilter);
     }, [dateFilter]);
@@ -85,6 +84,21 @@ export default function DataViewHead<T>({
                 <h1 className="text-2xl font-bold">{pageTitle}</h1>
                 <div className="flex flex-col gap-4 md:flex-row md:flex-wrap lg:flex-nowrap items-center justify-center">
                     {renderHead && renderHead()}
+                    
+                    {/* ✨ BOTÃO DE IMPRIMIR ✨ */}
+                    {printable && (
+                        <Button
+                            variant="default"
+                            leftSection={<FaPrint size={14} />}
+                            onClick={onPrint}
+                            size="lg"
+                            radius="lg"
+                            className="!text-sm !font-medium tracking-wider w-full md:w-fit"
+                        >
+                            {t("dataView.head.print")}
+                        </Button>
+                    )}
+
                     {openNewModal && openNewModal.label && openNewModal.func && (
                         <Button
                             type="submit"
@@ -197,8 +211,6 @@ export default function DataViewHead<T>({
                             </ActionIcon>
                         </Tooltip>
                     )}
-
-                    {/* NOVO: Badges para filtros de data ativos */}
                     {dateFilter?.from && <button onClick={() => onDateFilterChange(prev => ({ ...prev!, from: null }))} className="text-nowrap flex flex-nowrap gap-2 items-center justify-center hover:opacity-50 transition cursor-pointer text-primary bg-violet-100 !text-sm px-4 py-2 border border-primary rounded-full">{t("dataView.filters.from")} {dayjs(dateFilter.from).format("DD MMM YYYY")} <MdClose /></button>}
                     {dateFilter?.to && <button onClick={() => onDateFilterChange(prev => ({ ...prev!, to: null }))} className="text-nowrap flex flex-nowrap gap-2 items-center justify-center hover:opacity-50 transition cursor-pointer text-primary bg-violet-100 !text-sm px-4 py-2 border border-primary rounded-full">{t("dataView.filters.to")} {dayjs(dateFilter.to).format("DD MMM YYYY")} <MdClose /></button>}
                 </div>
@@ -236,4 +248,3 @@ export default function DataViewHead<T>({
         </div>
     )
 }
-

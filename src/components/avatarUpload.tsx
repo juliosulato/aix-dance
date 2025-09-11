@@ -3,16 +3,15 @@ import { ActionIcon, Avatar, Menu, Loader } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { BsThreeDots } from "react-icons/bs";
 import { BiUpload } from "react-icons/bi";
-import { useTranslations } from "next-intl";
 
 type Props = {
+  defaultUrl?: string | null;
   onUploadComplete: (url: string) => void;
 }
 
-function AvatarUpload({ onUploadComplete }: Props) {
-  const t = useTranslations("");
+function AvatarUpload({ defaultUrl, onUploadComplete }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(defaultUrl ?? null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleUploadClick = () => {

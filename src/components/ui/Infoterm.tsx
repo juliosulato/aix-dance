@@ -16,7 +16,7 @@ export default function InfoTerm({ label, icon, href, children, ...props }: Reac
                 <h3 className="text-black text-base font-medium">{label}</h3>
             </div>
             <div className="text-base text-neutral-500 font-normal">
-                {children || "-"}
+                {children ?? "-"}
             </div>
         </div>
     );

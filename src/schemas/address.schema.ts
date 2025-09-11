@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-const addressSchema = z.object({
+// A função de tradução 't' é incluída para consistência e futuras validações
+export const getAddressSchema = (t: (key: string) => string) => z.object({
   publicPlace: z.string().optional(),
   number: z.string().optional(),
   complement: z.string().optional(),
@@ -10,6 +11,8 @@ const addressSchema = z.object({
   zipCode: z.string().optional(),
 });
 
-export { addressSchema };
+// Mantemos uma exportação padrão para compatibilidade ou uso em locais não internacionalizados
+export const addressSchema = getAddressSchema((key: string) => key);
+
 export type CreateAddressInput = z.infer<typeof addressSchema>;
-export type UpdateAddressInput = z.infer<typeof addressSchema.partial>;
+export type UpdateAddressInput = z.infer<ReturnType<typeof getAddressSchema>['partial']>;

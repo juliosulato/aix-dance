@@ -4,49 +4,20 @@ import { useTranslations } from "next-intl";
 import DataViewHead from "./DataViewHead";
 import React, { useState } from "react";
 import DataViewTable from "./DataViewTable";
-import { Grid, Pagination, ScrollArea, Select, Text } from "@mantine/core";
+import { Grid, Pagination, Select, Text } from "@mantine/core";
 import DataViewGrid from "./DataViewGrid";
 import { KeyedMutator } from "swr";
 import dayjs from "dayjs";
+import { FaPrint } from "react-icons/fa";
 
-// --- TIPOS ATUALIZADOS E NOVOS ---
-
+// --- TIPOS (sem alterações) ---
 export type SortDirection = 'asc' | 'desc';
-
-export type SortConfig<T> = {
-    key: keyof T;
-    direction: SortDirection;
-};
-
-export type DateFilter<T> = {
-    key: keyof T | 'createdAt' | 'updatedAt'; // Chaves pré-definidas ou do tipo T
-    from: Date | null;
-    to: Date | null;
-};
-
-export type DateFilterOption<T> = {
-    key: keyof T | 'createdAt' | 'updatedAt';
-    label: string;
-};
-
-export type FilterOption = {
-    label: string;
-    value: string;
-};
-
-export type Filter<T> = {
-    key: keyof T;
-    label: string;
-    options: FilterOption[];
-    type: 'select';
-};
-
-export type Column<T> = {
-    key: keyof T;
-    label: string;
-    sortable?: boolean; // NOVO: Permite ordenação nesta coluna
-    render?: (value: any, item: T) => React.ReactNode;
-}
+export type SortConfig<T> = { key: keyof T; direction: SortDirection; };
+export type DateFilter<T> = { key: keyof T | 'createdAt' | 'updatedAt'; from: Date | null; to: Date | null; };
+export type DateFilterOption<T> = { key: keyof T | 'createdAt' | 'updatedAt'; label: string; };
+export type FilterOption = { label: string; value: string; };
+export type Filter<T> = { key: keyof T; label: string; options: FilterOption[]; type: 'select'; };
+export type Column<T> = { key: keyof T; label: string; sortable?: boolean; render?: (value: any, item: T) => React.ReactNode; }
 
 interface DataViewProps<T> {
     pageTitle: string;
@@ -54,18 +25,16 @@ interface DataViewProps<T> {
     data: T[];
     renderCard: (item: T) => React.ReactNode;
     columns: Column<T>[];
-    openNewModal?: {
-        label: string;
-        func: () => void;
-    };
+    openNewModal?: { label: string; func: () => void; };
     RenderRowMenu?: (item: T) => React.ReactNode;
     RenderAllRowsMenu?: (selectedRows: string[]) => React.ReactNode;
     filters?: Filter<T>[];
-    dateFilterOptions?: DateFilterOption<T>[]; // NOVO: Opções para filtro de data
+    dateFilterOptions?: DateFilterOption<T>[];
     mutate?: KeyedMutator<T[]>;
     baseUrl: string;
     disableTable?: boolean;
     renderHead?: () => React.ReactNode;
+    printable?: boolean;
 };
 
 
@@ -79,11 +48,12 @@ export default function DataView<T>({
     RenderAllRowsMenu,
     RenderRowMenu,
     filters,
-    dateFilterOptions, // NOVO
+    dateFilterOptions,
     mutate,
     baseUrl,
     disableTable,
-    renderHead
+    renderHead,
+    printable = true
 }: DataViewProps<T>) {
     const t = useTranslations("");
     const [activeView, setActiveView] = React.useState<"table" | "grade">("grade");
@@ -97,9 +67,9 @@ export default function DataView<T>({
     const [dateFilter, setDateFilter] = useState<DateFilter<T> | null>(
         dateFilterOptions && dateFilterOptions.length > 0
             ? {
-                key: dateFilterOptions[0].key, // Usa a primeira opção como chave padrão
-                from: dayjs().startOf('day').toDate(), // De: hoje
-                to: dayjs().add(30, 'day').endOf('day').toDate() // Até: 30 dias a partir de hoje
+                key: dateFilterOptions[0].key,
+                from: null,
+                to: null
             }
             : null
     );
@@ -113,10 +83,8 @@ export default function DataView<T>({
                 setRowsPerPage("10")
             }
         }
-
         verifyPageSize()
         window.addEventListener("resize", verifyPageSize)
-
         return () => {
             window.removeEventListener("resize", verifyPageSize)
         }
@@ -138,8 +106,6 @@ export default function DataView<T>({
 
     const processedData = React.useMemo(() => {
         let processed = [...data];
-
-        // 1. Filtro de busca
         if (searchValue) {
             processed = processed.filter(item =>
                 Object.values(item as any).some(value =>
@@ -147,50 +113,37 @@ export default function DataView<T>({
                 )
             );
         }
-
-        // 2. Filtros de Select
         const activeSelectFilters = Object.entries(activeFilters).filter(([, value]) => value);
         if (activeSelectFilters.length > 0) {
             processed = processed.filter(item =>
                 activeSelectFilters.every(([key, value]) => String((item as any)[key]) === value)
             );
         }
-
-        // 3. Filtro de Data (NOVO)
+        
         if (dateFilter && dateFilter.key && (dateFilter.from || dateFilter.to)) {
             processed = processed.filter(item => {
                 const itemDate = new Date((item as any)[dateFilter.key]);
                 if (isNaN(itemDate.getTime())) return false;
-
                 const fromDate = dateFilter.from ? new Date(dateFilter.from) : null;
                 const toDate = dateFilter.to ? new Date(dateFilter.to) : null;
-
                 if (fromDate) fromDate.setHours(0, 0, 0, 0);
                 if (toDate) toDate.setHours(23, 59, 59, 999);
-
                 if (fromDate && itemDate < fromDate) return false;
                 if (toDate && itemDate > toDate) return false;
-
                 return true;
             });
         }
-
-        // 4. Ordenação (NOVO)
         if (sortConfig) {
             processed.sort((a, b) => {
                 const aValue = (a as any)[sortConfig.key];
                 const bValue = (b as any)[sortConfig.key];
-
                 if (aValue === null || aValue === undefined) return 1;
                 if (bValue === null || bValue === undefined) return -1;
-
                 if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
                 if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
-
                 return 0;
             });
         }
-
         return processed;
     }, [data, searchValue, activeFilters, dateFilter, sortConfig]);
 
@@ -199,6 +152,83 @@ export default function DataView<T>({
     const startIndex = (activePage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const paginatedData = processedData.slice(startIndex, endIndex);
+
+    // ✨ LÓGICA DE IMPRESSÃO ATUALIZADA (SEM NOVA ABA) ✨
+    const handlePrint = () => {
+        if (!processedData || processedData.length === 0) return;
+
+        const tableHeaders = columns
+            .filter(col => col.label)
+            .map(col => `<th>${col.label}</th>`).join('');
+
+        const tableRows = processedData.map(item => {
+            const cells = columns
+                .filter(col => col.label)
+                .map(col => {
+                    const value = (item as any)[col.key];
+                    let cellContent = col.render ? col.render(value, item) : value;
+
+                    if (React.isValidElement(cellContent)) {
+                        const deepText = (el: React.ReactNode): string => {
+                            if (typeof el === 'string') return el;
+                            if (React.isValidElement(el) && (el.props as any).children) {
+                                return React.Children.toArray((el.props as any).children).map(deepText).join('');
+                            }
+                            return '';
+                        };
+                        cellContent = deepText(cellContent);
+                    }
+                    
+                    return `<td>${cellContent || '-'}</td>`;
+                }).join('');
+            return `<tr>${cells}</tr>`;
+        }).join('');
+
+        const printContent = `
+            <html>
+                <head>
+                    <title>${pageTitle}</title>
+                    <style>
+                        body { font-family: sans-serif; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+                        th { background-color: #f2f2f2; }
+                        @page { size: A4 landscape; margin: 20mm; }
+                    </style>
+                </head>
+                <body>
+                    <h1>${pageTitle}</h1>
+                    <p>Gerado em: ${dayjs().format("DD/MM/YYYY HH:mm")}</p>
+                    <table>
+                        <thead><tr>${tableHeaders}</tr></thead>
+                        <tbody>${tableRows}</tbody>
+                    </table>
+                </body>
+            </html>
+        `;
+        
+        // Cria um iframe invisível para a impressão
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'absolute';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+        iframe.style.border = '0';
+        document.body.appendChild(iframe);
+
+        const doc = iframe.contentWindow?.document;
+        if (doc) {
+            doc.open();
+            doc.write(printContent);
+            doc.close();
+            iframe.contentWindow?.focus();
+            iframe.contentWindow?.print();
+        }
+
+        // Remove o iframe após a impressão
+        setTimeout(() => {
+            document.body.removeChild(iframe);
+        }, 500);
+    };
 
     return (
         <div className="flex flex-col gap-4 md:gap-6">
@@ -212,13 +242,15 @@ export default function DataView<T>({
                 filters={filters}
                 activeFilters={activeFilters}
                 onFilterChange={handleFilterChange}
-                dateFilterOptions={dateFilterOptions} // NOVO
-                dateFilter={dateFilter} // NOVO
-                onDateFilterChange={setDateFilter} // NOVO
+                dateFilterOptions={dateFilterOptions}
+                dateFilter={dateFilter}
+                onDateFilterChange={setDateFilter}
                 setSearchValue={setSearchValue}
                 mutate={mutate}
                 disableTable={disableTable}
                 renderHead={renderHead}
+                printable={printable}
+                onPrint={handlePrint}
             />
 
             {!disableTable && activeView === "table" && (
@@ -230,7 +262,7 @@ export default function DataView<T>({
                     RenderAllRowsMenu={RenderAllRowsMenu}
                     RenderRowMenu={RenderRowMenu}
                     baseUrl={baseUrl}
-                    sortConfig={sortConfig} 
+                    sortConfig={sortConfig}
                     onSort={setSortConfig}
                 />
             )}
@@ -278,3 +310,4 @@ export default function DataView<T>({
         </div>
     );
 }
+

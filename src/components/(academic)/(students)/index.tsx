@@ -199,6 +199,7 @@ export default function AllStudentsData() {
                     {
                         key: "canLeaveAlone", label: t("academic.students.modals.health.fields.canLeaveAlone.label"),
                         sortable: true,
+                        render: (val) => val ? t("general.boolean.yes") : t("general.boolean.no")
                     },
                     {
                         key: "attendanceAverage",

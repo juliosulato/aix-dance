@@ -9,7 +9,9 @@
     "deleteMany": "Excluir {items} itens",
     "create": "Criar",
     "update": "Atualizar",
-    "add": "Adicionar"
+    "updateAccessData": "Redefinir Dados de Acesso",
+    "add": "Adicionar",
+    "cancel": "Cancelar"
   },
   "boolean": {
     "yes": "Sim",

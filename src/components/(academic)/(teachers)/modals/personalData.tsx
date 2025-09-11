@@ -1,7 +1,7 @@
 import { Gender } from "@prisma/client";
 import { useState } from "react";
 import { PhoneInput } from "@/components/ui/cellPhoneInput";
-import { Select, TextInput } from "@mantine/core";
+import { InputBase, Select, TextInput } from "@mantine/core";
 import { useLocale, useTranslations } from "next-intl";
 import { DateInput } from "@mantine/dates"
 import DocumentInput from "@/components/ui/documentInput";
@@ -10,24 +10,25 @@ import 'dayjs/locale/pt-br';
 import 'dayjs/locale/en';
 import 'dayjs/locale/es';
 import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form";
-import { CreateUserInput } from "@/schemas/user.schema";
+import { CreateUserInput, UpdateUserInput } from "@/schemas/user.schema";
+import { IMaskInput } from "react-imask";
 
 type Props = {
-    control: Control<CreateUserInput>;
-    errors: FieldErrors<CreateUserInput>;
-    register: UseFormRegister<CreateUserInput>;
+    control: Control<CreateUserInput | UpdateUserInput>;
+    errors: FieldErrors<CreateUserInput | UpdateUserInput>;
+    register: UseFormRegister<CreateUserInput | UpdateUserInput>;
 };
 
-export default function NewTeacher__PersonalData({ control, errors, register }: Props) {
+export default function Teacher__PersonalData({ control, errors, register }: Props) {
     const [gender, setGender] = useState<Gender | null>(null);
-    const t = useTranslations("teachers.modals.create");
+    const t = useTranslations("academic.teachers.modals.create.personalData");
     const g = useTranslations("forms.general-fields");
     const locale = useLocale();
     dayjs.locale(locale);
     return (
-
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
             <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{t("title")}</h2>
+            
             <TextInput
                 label={g("firstName.label")}
                 required
@@ -42,7 +43,8 @@ export default function NewTeacher__PersonalData({ control, errors, register }: 
                 required
                 placeholder={g("lastName.placeholder")}
             />
-
+            
+            {/* Campos de professor agora com o prefixo 'teacher.' */}
             <Controller
                 name="teacher.cellPhoneNumber"
                 control={control}
@@ -50,7 +52,7 @@ export default function NewTeacher__PersonalData({ control, errors, register }: 
                     <PhoneInput
                         label={g("cellPhoneNumber.label")}
                         onChange={field.onChange}
-                        value={field.value}
+                        value={field.value || ''}
                         error={errors.teacher?.cellPhoneNumber?.message}
                     />
                 )}
@@ -62,7 +64,7 @@ export default function NewTeacher__PersonalData({ control, errors, register }: 
                     <PhoneInput
                         label={g("phoneNumber.label")}
                         onChange={field.onChange}
-                        value={field.value}
+                        value={field.value || ''}
                         error={errors.teacher?.phoneNumber?.message}
                     />
                 )}
@@ -75,38 +77,30 @@ export default function NewTeacher__PersonalData({ control, errors, register }: 
                 type="email"
                 placeholder={g("email.placeholder")}
             />
-            <Controller
-                control={control}
+             <Controller
                 name="teacher.dateOfBirth"
+                control={control}
                 render={({ field }) => (
-                    <DateInput
+                    <InputBase
+                        component={IMaskInput}
+                        mask={g("dateOfBirth.mask")}
+                        required
+                        value={field.value || ""}
                         label={g("dateOfBirth.label")}
-                        locale="pt-br"
-                        onChange={(date) => {
-                            if (!date) {
-                                field.onChange(null);
-                                return;
-                            }
-                            const newDate = dayjs(date).hour(12).minute(0).second(0).toDate();
-                            field.onChange(newDate);
-                        }} value={field.value}
-                        maxDate={new Date()}
                         placeholder={g("dateOfBirth.placeholder")}
-                        error={errors?.teacher?.dateOfBirth?.message}
-                        valueFormat={g("dateOfBirth.valueFormat")}
+                        error={errors.teacher?.dateOfBirth?.message}
+                        onAccept={(val: string) => field.onChange(val)}
                     />
                 )}
             />
+
             <Controller
                 control={control}
                 name="teacher.document"
                 render={({ field }) => (
                     <DocumentInput
-                        value={field.value}
-                        onChange={(ev) => {
-                            console.log(ev);
-                            field.onChange(ev);
-                        }}
+                        value={field.value || ''}
+                        onChange={field.onChange}
                         required
                         error={errors?.teacher?.document?.message}
                     />
@@ -119,9 +113,9 @@ export default function NewTeacher__PersonalData({ control, errors, register }: 
                 render={({ field }) => (
                     <Select
                         value={field.value}
-                        onChange={(ev: any) => {
+                        onChange={(ev) => {
                             field.onChange(ev);
-                            setGender(ev);
+                            setGender(ev as Gender);
                         }}
                         label={g("gender.label")}
                         placeholder={g("gender.placeholder")}
@@ -141,11 +135,9 @@ export default function NewTeacher__PersonalData({ control, errors, register }: 
                     label={g("pronoun.label")}
                     placeholder={g("pronoun.placeholder")}
                     {...register("teacher.pronoun")}
-                    required
                     error={errors.teacher?.pronoun?.message}
                 />
             )}
-
 
             <TextInput
                 label={g("instagramUser.label")}
@@ -155,8 +147,8 @@ export default function NewTeacher__PersonalData({ control, errors, register }: 
             />
 
             <TextInput
-                label={t("basicInformations.fields.professionalRegister.label")}
-                placeholder={t("basicInformations.fields.professionalRegister.placeholder")}
+                label={t("fields.professionalRegister.label")}
+                placeholder={t("fields.professionalRegister.placeholder")}
                 className="md:col-span-2 lg:col-span-3 3xl:col-span-4"
                 {...register("teacher.professionalRegister")}
             />

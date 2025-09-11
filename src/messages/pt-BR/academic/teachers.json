@@ -1,0 +1,171 @@
+{
+    "title": "Professores",
+    "searchbarPlaceholder": "Procure por nome, CPF ou e-mail do usuário...",
+    "modals": {
+        "create": {
+            "title": "Novo Usuário/Professor",
+            "notifications": {
+                "success": "O novo professor foi adicionado com sucesso.",
+                "error": "Ocorreu um erro ao criar o usuário."
+            },
+            "personalData": {
+                "title": "Informações Pessoais",
+                "fields": {
+                    "professionalRegister": {
+                        "label": "Registro Profissional",
+                        "placeholder": "Digite o número do registro profissional"
+                    }
+                }
+            },
+            "accessData": {
+                "title": "Dados de Acesso",
+                "fields": {
+                    "user": {
+                        "label": "Usuário",
+                        "placeholder": "crie um nome de usuário"
+                    },
+                    "password": {
+                        "label": "Senha",
+                        "errors": {
+                            "min": "A senha deve ter no mínimo 6 caracteres.",
+                            "uppercase": "A senha deve conter ao menos uma letra maiúscula.",
+                            "lowercase": "A senha deve conter ao menos uma letra minúscula.",
+                            "number": "A senha deve conter ao menos um número."
+                        }
+                    },
+                    "confirmPassword": {
+                        "label": "Confirme a Senha",
+                        "errors": {
+                            "noMatch": "As senhas não coincidem."
+                        }
+                    }
+                }
+            },
+            "remuneration": {
+                "title": "Informações de Remuneração",
+                "fields": {
+                    "contractType": {
+                        "label": "Tipo de Contrato",
+                        "placeholder": "Selecione o tipo de contrato",
+                        "options": {
+                            "HOURLY": "Por Hora/Aula",
+                            "FIXED": "Salário Fixo"
+                        },
+                        "errors": {
+                            "required": "O tipo de contrato é obrigatório."
+                        }
+                    },
+                    "baseAmount": {
+                        "hourly": "Valor da Hora/Aula",
+                        "fixed": "Salário Mensal",
+                        "label": "Valor",
+                        "errors": {
+                            "required": "O valor base é obrigatório.",
+                            "min": "O valor deve ser acima de R$ 1,00."
+                        }
+                    },
+                    "paymentDay": {
+                        "label": "Dia do Pagamento"
+                    },
+                    "paymentMethod": {
+                        "label": "Método de Pagamento Preferencial"
+                    },
+                    "paymentDetails": {
+                        "label": "Dados para Pagamento (PIX, Conta, etc.)"
+                    },
+                    "notes": {
+                        "label": "Observações"
+                    },
+                    "presenceBonus": {
+                        "checkbox": "Adicionar bônus por presença?",
+                        "tooltip": "Define um valor extra que o professor recebe por aula dada. Útil para comissionamento.",
+                        "title": "Bônus por Presença",
+                        "label": "Valor do Bônus por Presença",
+                        "loseBonusCheckbox": "Perde o bônus em caso de falta?",
+                        "loseBonusTooltip": "Se marcado, o bônus é descontado se o professor faltar a uma aula."
+                    },
+                    "commission": {
+                        "checkbox": "Adicionar comissão por aluno?",
+                        "tooltip": "Cria faixas de comissão baseadas no número de alunos presentes na aula.",
+                        "title": "Comissão por Aluno",
+                        "addRange": "Adicionar Faixa",
+                        "tableHeaders": {
+                            "from": "De (alunos)",
+                            "to": "Até (alunos)",
+                            "value": "Valor da Comissão"
+                        },
+                        "errors": {
+                            "minMax": "O valor 'De' não pode ser maior que o valor 'Até'."
+                        }
+                    }
+                }
+            }
+        },
+        "update": {
+            "title": "Atualizar Professor",
+            "notifications": {
+                "success": "O professor foi atualizado com sucesso.",
+                "error": "Ocorreu um erro ao atualizar o professor."
+            },
+            "accessData": {
+                "title": "Redefinir Dados de Acesso",
+                "fields": {
+                    "user": {
+                        "label": "Usuário",
+                        "placeholder": "crie um nome de usuário"
+                    },
+                    "password": {
+                        "label": "Redefinir Senha",
+                         "errors": {
+                            "min": "A senha deve ter no mínimo 6 caracteres.",
+                            "uppercase": "A senha deve conter ao menos uma letra maiúscula.",
+                            "lowercase": "A senha deve conter ao menos uma letra minúscula.",
+                            "number": "A senha deve conter ao menos um número."
+                        }
+                    },
+                    "confirmPassword": {
+                        "label": "Confirme a Nova Senha",
+                        "errors": {
+                            "noMatch": "As senhas não coincidem."
+                        }
+                    }
+                },
+                "warn": "Deixe em branco para não alterar a senha."
+            }
+        },
+        "confirmModal": {
+            "title": "Confirmar Exclusão",
+            "confirmLabel": "Sim, Excluir",
+            "cancelLabel": "Cancelar",
+            "textArray": "Você tem certeza que deseja excluir os {teachers} professores selecionados?",
+            "text": "Você tem certeza que deseja excluir o professor {teacher}?",
+            "warn": "Esta ação não poderá ser desfeita."
+        }
+    },
+    "view": {
+        "title": "Dados do Professor",
+        "registeredAt": "Matrículado em {date}"
+    },
+    "delete": {
+        "notifications": {
+            "wait": {
+                "title": "Aguarde!",
+                "message": "Deletando itens..."
+            },
+            "success": "Professor(es) deletados com sucesso!"
+        },
+        "errors": {
+            "noLength": "Nenhum professor selecionado.",
+            "internalError": "Ocorreu um erro ao deletar. Suas alterações foram desfeitas."
+        }
+    },
+    "status": {
+        "label": "Status",
+        "ACTIVE": "Ativo",
+        "INACTIVE": "Inativo",
+        "update": {
+            "ACTIVE": "Desativar Professor",
+            "INACTIVE": "Ativar Professor"
+        }
+    }
+}

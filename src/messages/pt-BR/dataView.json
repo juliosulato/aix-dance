@@ -1,7 +1,8 @@
 {
     "itemsPerPage": "Itens Por Página",
     "head": {
-        "refresh": "Atualizar"
+        "refresh": "Atualizar",
+        "print": "Imprimir"
     },
     "table": {
         "label": "VIsualização Por Tabela"

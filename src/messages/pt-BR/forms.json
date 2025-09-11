@@ -32,15 +32,31 @@
         },
         "email": {
             "label": "E-mail",
-            "placeholder": "email@dominio.com"
+            "placeholder": "email@dominio.com",
+            "errors": {
+                "required": "E-mail é obrigatório.",
+                "invalid": "E-mail inválido"
+            }
         },
         "firstName": {
             "label": "Primeiro Nome",
-            "placeholder": "Digite Aqui"
+            "placeholder": "Digite Aqui",
+            "errors": {
+                "required": "Primeiro nome é obrigatório."
+            }
         },
         "lastName": {
             "label": "Sobrenome",
-            "placeholder": "Digite Aqui"
+            "placeholder": "Digite Aqui",
+            "errors": {
+                "required": "Sobrenome é obrigatório."
+            }
+        },
+        "document": {
+            "label": "CPF"
+        },
+        "fullName": {
+            "label": "Nome Completo"
         },
         "dateOfBirth": {
             "label": "Data de Nascimento",
@@ -51,7 +67,16 @@
         },
         "gender": {
             "label": "Gênero",
-            "placeholder": "Selecione"
+            "placeholder": "Selecione",
+            "options": {
+                "FEMALE": "Mulher",
+                "MALE": "Homem",
+                "NON_BINARY": "Não Binário",
+                "OTHER": "Outro"
+            },
+            "errors": {
+                "required": "A seleção de gênero é obrigatória."
+            }
         },
         "pronoun": {
             "label": "Pronome",

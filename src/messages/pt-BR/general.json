@@ -11,7 +11,9 @@
     "update": "Atualizar",
     "updateAccessData": "Redefinir Dados de Acesso",
     "add": "Adicionar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "archive": "Arquivar",
+    "assign": "Atribuir"
   },
   "boolean": {
     "yes": "Sim",

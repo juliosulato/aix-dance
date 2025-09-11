@@ -4,30 +4,25 @@ import { ActionIcon, Checkbox, CloseIcon, Tooltip } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { useTranslations } from "next-intl";
 import { IoAdd } from "react-icons/io5";
-import { Control, FieldErrors, UseFormRegister, UseFormSetValue, WatchInternal } from "react-hook-form";
-import { CreateClassInput } from "@/schemas/class.schema";
-import { Key } from "react";
+import { Control, FieldErrors, UseFormSetValue, WatchInternal } from "react-hook-form";
+import { CreateClassInput, UpdateClassInput } from "@/schemas/academic/class.schema";
 
 type TimeRange = { from: string; to: string };
 type DaySchedules = CreateClassInput["schedules"];
 type DayKey = keyof DaySchedules;
 
 type Props = {
-  control: Control<CreateClassInput>;
-  errors: FieldErrors<CreateClassInput>;
-  register: UseFormRegister<CreateClassInput>;
-  setValue: UseFormSetValue<CreateClassInput>;
-  watch: WatchInternal<CreateClassInput>;
+  errors: FieldErrors<CreateClassInput | UpdateClassInput>;
+  setValue: UseFormSetValue<CreateClassInput | UpdateClassInput>;
+  watch: WatchInternal<CreateClassInput | UpdateClassInput>;
 };
 
-export default function NewClass__DayOfClassesAndHours({
-  control,
+export default function DayOfClassesAndHours({
   errors,
-  register,
   setValue,
   watch,
 }: Props) {
-  const t = useTranslations("classes-modals.formSteps.one.classDaysAndHours");
+  const t = useTranslations("academic.classes.modals.formSteps.one.classDaysAndHours");
   const g = useTranslations("");
 
   const days: { key: DayKey; label: string }[] = [
@@ -43,7 +38,7 @@ export default function NewClass__DayOfClassesAndHours({
   const schedules = watch("schedules");
 
   const handleCheckbox = (dayKey: DayKey, checked: boolean) => {
-    setValue(`schedules.${dayKey}.enabled`, checked, { shouldDirty: true });
+    setValue(`schedules.${dayKey}.enabled`, checked, { shouldValidate: true, shouldDirty: true });
   };
 
   const handleChange = (
@@ -52,37 +47,40 @@ export default function NewClass__DayOfClassesAndHours({
     field: "from" | "to",
     value: string
   ) => {
-    const newRanges = schedules[dayKey].ranges.map((r: any, i: number) =>
-      i === index ? { ...r, [field]: value } : r
-    );
-    setValue(`schedules.${dayKey}.ranges`, newRanges, { shouldDirty: true });
+    // Usando o caminho completo para a atualização
+    setValue(`schedules.${dayKey}.ranges.${index}.${field}`, value, { shouldValidate: true, shouldDirty: true });
   };
 
   const handleAddRange = (dayKey: DayKey) => {
+    const currentRanges = schedules?.[dayKey]?.ranges || [];
     setValue(
       `schedules.${dayKey}.ranges`,
-      [...schedules[dayKey].ranges, { from: "", to: "" }],
-      { shouldDirty: true }
+      [...currentRanges, { from: "", to: "" }],
+      { shouldValidate: true, shouldDirty: true }
     );
   };
 
   const handleRemoveRange = (dayKey: DayKey, index: number) => {
-    const newRanges = schedules[dayKey].ranges.filter((_: any, i: number) => i !== index);
+    const currentRanges = schedules?.[dayKey]?.ranges || [];
+    const newRanges = currentRanges.filter((_: any, i: number) => i !== index);
     setValue(
       `schedules.${dayKey}.ranges`,
-      newRanges.length ? newRanges : [{ from: "", to: "" }],
-      { shouldDirty: true }
+      newRanges.length ? newRanges : [{ from: "", to: "" }], // Mantém um item vazio se for o último
+      { shouldValidate: true, shouldDirty: true }
     );
   };
 
   return (
     <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col">
       <h2 className="text-lg font-bold">{t("title")}</h2>
+      {errors.schedules && !errors.schedules.root && (
+          <p className="text-sm text-red-500 mt-1">{errors.schedules.message}</p>
+      )}
       <br />
       <div className="flex flex-col gap-4 w-full">
         {days.map((day) => (
           <div key={day.key} className="flex flex-col gap-2">
-            {schedules[day.key].ranges.map((range: TimeRange, index: number) => (
+            {schedules?.[day.key]?.ranges.map((range: TimeRange, index: number) => (
               <div
                 key={index}
                 className="flex flex-row flex-wrap gap-4 md:grid md:grid-cols-[1fr__auto__1fr] justify-center items-center"
@@ -91,7 +89,7 @@ export default function NewClass__DayOfClassesAndHours({
                   <Checkbox
                     label={day.label}
                     id={day.key}
-                    checked={schedules[day.key].enabled}
+                    checked={schedules?.[day.key]?.enabled || false}
                     onChange={(e) =>
                       handleCheckbox(day.key, e.currentTarget.checked)
                     }
@@ -104,23 +102,27 @@ export default function NewClass__DayOfClassesAndHours({
                   <span>{t("hours.from")}</span>
                   <TimeInput
                     value={range.from}
-                    disabled={!schedules[day.key].enabled}
+                    disabled={!schedules?.[day.key]?.enabled}
                     onChange={(event) =>
                       handleChange(day.key, index, "from", event.currentTarget.value)
                     }
+                    // Exibe a mensagem de erro específica para este campo
+                    error={errors.schedules?.[day.key]?.ranges?.[index]?.from?.message}
                   />
                   <span>{t("hours.to")}</span>
                   <TimeInput
                     value={range.to}
-                    disabled={!schedules[day.key].enabled}
+                    disabled={!schedules?.[day.key]?.enabled}
                     onChange={(event) =>
                       handleChange(day.key, index, "to", event.currentTarget.value)
                     }
+                     // Exibe a mensagem de erro específica para este campo
+                    error={errors.schedules?.[day.key]?.ranges?.[index]?.to?.message}
                   />
                 </div>
 
                 <div className="justify-self-end flex gap-2">
-                  {schedules[day.key].ranges.length > 1 && (
+                  {schedules?.[day.key]?.ranges.length > 1 && (
                     <Tooltip color="#7439FA" label={g("general.actions.delete")}>
                       <ActionIcon
                         color="gray"
@@ -130,11 +132,12 @@ export default function NewClass__DayOfClassesAndHours({
                       </ActionIcon>
                     </Tooltip>
                   )}
-                  {index === schedules[day.key].ranges.length - 1 && (
+                  {index === schedules?.[day.key]?.ranges.length - 1 && (
                     <Tooltip color="#7439FA" label={g("general.actions.add")}>
                       <ActionIcon
                         color="gray"
                         onClick={() => handleAddRange(day.key)}
+                        disabled={!schedules?.[day.key]?.enabled}
                       >
                         <IoAdd />
                       </ActionIcon>

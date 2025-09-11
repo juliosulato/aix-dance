@@ -7,7 +7,7 @@ import { IoMdHelpCircleOutline } from "react-icons/io";
 import { IoExtensionPuzzleOutline } from "react-icons/io5";
 
 // CRM
-import { LuBrain, LuMap, LuMessageCircleMore, LuGraduationCap, LuChartSpline } from "react-icons/lu";
+import { LuBrain, LuMap, LuMessageCircleMore, LuGraduationCap, LuChartSpline, LuSchool } from "react-icons/lu";
 
 // Acadêmico
 import { FaRegUser, FaChalkboardTeacher } from "react-icons/fa";
@@ -67,6 +67,7 @@ const useMenuData = () => {
         { icon: <FaRegUser />, label: t("navbar.academic.students"), href: "/system/academic/students" },
         { icon: <MdGroups />, label: t("navbar.academic.classes"), href: "/system/academic/classes" },
         { icon: <FaChalkboardTeacher />, label: t("navbar.academic.teachers"), href: "/system/academic/teachers" },
+        { icon: <LuSchool />, label: t("navbar.academic.modalities"), href: "/system/academic/modalities" },
         { icon: <LuChartSpline />, label: t("navbar.academic.academicReports"), href: "/system/academic/reports" },
       ],
     },

@@ -1,3 +1,156 @@
 {
-    "title": "Turmas"
+    "title": "Turmas",
+    "searchbarPlaceholder": "Procure por nome, modalidade...",
+    "modals": {
+        "create": {
+            "title": "Nova Turma",
+            "notifications": {
+                "success": "A nova turma foi criada com sucesso.",
+                "error": "Ocorreu um erro ao criar a turma."
+            }
+        },
+        "update": {
+            "title": "Atualizar Turma",
+            "notifications": {
+                "success": "A turma foi atualizada com sucesso.",
+                "error": "Ocorreu um erro ao atualizar a turma."
+            }
+        },
+        "assignStudents": {
+            "title": "Gerenciar Estudantes",
+            "notifications": {
+                "success": "As matrículas foram atualizadas com sucesso.",
+                "error": "Ocorreu um erro ao atualizar as matrículas.",
+                "noChanges": "Nenhuma alteração foi feita nas matrículas."
+            },
+            "noStudents": {
+                "alt": "Nenhum aluno selecionado",
+                "title": "Nada por aqui… ainda!",
+                "description": "Você ainda não selecionou nenhum aluno. Assim que selecionar um ou mais, eles aparecerão aqui."
+            }
+        },
+        "archiveConfirm": {
+            "title": "Arquivar Turma(s)",
+            "text": "Tem a certeza que deseja arquivar a turma {class}?",
+            "textArray": "Tem a certeza que deseja arquivar as {count} turmas selecionadas?",
+            "warn": "Esta ação não pode ser desfeita diretamente. A turma ficará inativa."
+        },
+        "formSteps": {
+            "one": {
+                "step": "Sobre a Turma",
+                "title": "Sobre a Turma",
+                "fields": {
+                    "modality": {
+                        "label": "Modalidade",
+                        "placeholder": "Selecione a modalidade",
+                        "description": "Não encontrou? Cadastre uma nova em",
+                        "errors": {
+                            "required": "A modalidade é obrigatória."
+                        }
+                    },
+                    "name": {
+                        "label": "Nome da Turma",
+                        "placeholder": "Ex: Ballet Clássico - Adulto Iniciante",
+                        "errors": {
+                            "required": "O nome da turma é obrigatório."
+                        }
+                    },
+                    "teacher": {
+                        "label": "Professor(a)",
+                        "placeholder": "Selecione o professor(a) principal",
+                        "errors": {
+                            "required": "O professor é obrigatório."
+                        }
+                    },
+                    "assistant": {
+                        "label": "Professor(a) Assistente",
+                        "placeholder": "Selecione o professor(a) assistente (opcional)"
+                    },
+                    "online": {
+                        "label": "Esta é uma turma online"
+                    }
+                },
+                "classDaysAndHours": {
+                    "title": "Dias e Horários das Aulas",
+                    "days": {
+                        "sunday": "Domingo",
+                        "monday": "Segunda-feira",
+                        "tuesday": "Terça-feira",
+                        "wednesday": "Quarta-feira",
+                        "thursday": "Quinta-feira",
+                        "friday": "Sexta-feira",
+                        "saturday": "Sábado"
+                    },
+                    "hours": {
+                        "from": "Das",
+                        "to": "às",
+                        "errors": {
+                            "invalid_format": "Horário inválido (formato HH:mm)",
+                            "at_least_one_range": "É necessário informar pelo menos um intervalo de horário."
+                        }
+                    },
+                    "errors": {
+                        "at_least_one_day": "É necessário informar pelo menos um dia da semana."
+                    }
+                }
+            },
+            "two": {
+                "step": "Alunos",
+                "title": "Alunos da Turma",
+                "fields": {
+                    "students": {
+                        "label": "Alunos",
+                        "placeholder": "Busque e selecione os alunos para esta turma"
+                    }
+                },
+                 "noStudents": {
+                "alt": "Nenhum aluno selecionado",
+                "title": "Nada por aqui… ainda!",
+                "description": "Você ainda não selecionou nenhum aluno. Assim que selecionar um ou mais, eles aparecerão aqui."
+            }
+            },
+            "three": {
+                "step": "Resumo",
+                "title": "Resumo da Turma",
+                "stepTwoTitle": "Resumo dos Alunos"
+            }
+        }
+    },
+    "view": {
+        "title": "Dados da Turma",
+        "inactiveStudentsLabel": "ALUNOS INATIVOS",
+        "noStudents": "Nenhum aluno matriculado nesta turma."
+    },
+    "archive": {
+        "errors": {
+            "noLength": "Nenhuma turma selecionada para arquivar.",
+            "internalError": "Ocorreu um erro ao arquivar a(s) turma(s)."
+        },
+        "notifications": {
+            "wait": {
+                "title": "A arquivar...",
+                "message": "As turmas selecionadas estão a ser arquivadas."
+            },
+            "success": "Turma(s) arquivada(s) com sucesso."
+        }
+    },
+    "general": {
+        "actions": {
+            "assign": "Gerenciar Alunos",
+            "archive": "Arquivar",
+            "update": "Editar",
+            "delete": "Excluir",
+            "add": "Adicionar",
+            "cancel": "Cancelar"
+        },
+        "yes": "Sim",
+        "boolean": {
+            "no": "Não"
+        },
+        "notFound": "Nenhum resultado encontrado."
+    },
+    "forms": {
+        "submit": "Salvar Alterações",
+        "cancel": "Cancelar"
+    }
 }

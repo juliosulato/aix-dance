@@ -20,6 +20,7 @@
             "classes": "Turmas",
             "teachers": "Professores",
             "plans": "Planos",
+            "modalities": "Modalidades",
             "academicReports": "Relatórios"
         },
         "events": "Eventos",

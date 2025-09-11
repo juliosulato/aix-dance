@@ -147,7 +147,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    <NavLink
+                    {/* <NavLink
                         color="violet"
                         leftSection={<TbSettings />}
                         label={t("navbar.settings")}
@@ -158,7 +158,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         rightSection={<HiOutlineChevronRight size={12} className="mantine-rotate-rtl" />}
                     >
                         <LanguagePicker />
-                    </NavLink>
+                    </NavLink> */}
                     <NavLink
                         color="violet"
                         leftSection={<BiSupport />}

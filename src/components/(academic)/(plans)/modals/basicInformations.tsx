@@ -141,7 +141,7 @@ export default function Plan__BasicInformations({ control, errors, register, ten
                             label: c.title,
                             value: c.id
                         }))}
-                        nothingFoundMessage={g("general.notFound")}
+                        nothingFoundMessage={g("general.boolean.notFound")}
                         onChange={field.onChange}
                         clearable
                         key={field.value || 'empty'} // <--- Adicione esta linha!

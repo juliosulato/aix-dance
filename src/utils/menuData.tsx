@@ -1,7 +1,7 @@
 // Início
 import { GrHomeRounded } from "react-icons/gr";
 import { AiOutlineDashboard } from "react-icons/ai";
-import { MdOutlineViewAgenda, MdPayment } from "react-icons/md";
+import { MdOutlineBusinessCenter, MdOutlineViewAgenda, MdPayment } from "react-icons/md";
 import { FiCalendar } from "react-icons/fi";
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { IoExtensionPuzzleOutline } from "react-icons/io5";
@@ -85,6 +85,7 @@ const useMenuData = () => {
         { icon: <MdPayment />, label: t("navbar.financial.financialPaymentMethods"), href: "/system/financial/payment-methods" },
         { icon: <MdOutlineCategory />, label: t("navbar.financial.financialCategories"), href: "/system/financial/categories" },
         { icon: <BsBox />, label: t("navbar.financial.financialGroups"), href: "/system/financial/groups" },
+        { icon: <MdOutlineBusinessCenter />, label: t("navbar.suppliers"), href: "/system/suppliers" },
         { icon: <LuChartSpline />, label: t("navbar.financial.financialReports"), href: "/system/financial/reports" },
       ],
     },

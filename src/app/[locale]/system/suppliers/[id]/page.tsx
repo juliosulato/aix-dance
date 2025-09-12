@@ -1,0 +1,35 @@
+import { auth } from "@/auth";
+import Breadcrumps from "@/components/ui/Breadcrumps";
+import { getTranslations } from "next-intl/server";
+import SupplierView from "@/components/(financial)/(suppliers)/View";
+import { SupplierFromApi } from "@/components/(financial)/(suppliers)/SupplierFromApi";
+
+export default async function SuppliersPage({ params }: { params: Promise<{ id: string }> }) {
+    const t = await getTranslations("");
+    const { id } = await params;
+
+    const session = await auth();
+
+    const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session?.user.tenancyId}/suppliers/${id}`,
+        { headers: { "Accept": "application/json" } }
+    );
+
+    if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Backend returned ${res.status}: ${text}`);
+    }
+
+    const supplier: SupplierFromApi = await res.json();
+
+    return session?.user.tenancyId && (
+        <main>
+            <Breadcrumps
+                items={[t("appShell.navbar.home.label"), t("appShell.navbar.suppliers")]}
+                menu={[]}
+ />
+            <br />
+            <SupplierView supplier={supplier} tenancyId={session?.user.tenancyId} />
+        </main>
+    );
+}

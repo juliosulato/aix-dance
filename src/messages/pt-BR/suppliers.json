@@ -1,0 +1,60 @@
+{
+    "title": "Fornecedores",
+    "basicInformations": "Informações Básicas",
+    "searchbarPlaceholder": "Busque por algo",
+    "fields": {
+        "name": {
+            "label": "Nome",
+            "placeholder": "Ex.: AIX DANCE",
+            "errors": {
+                "required": "Nome é obrigatório."
+            }
+        },
+        "corporateReason": {
+            "label": "Razão Social",
+            "placeholder": "Ex.: AIX GROUP LTDA"
+        },
+        "documentType": {
+            "label": "Tipo de Documento",
+            "placeholder": "Ex.: CNPJ, CPF"
+        },
+        "document": {
+            "label": "Nº do Documento"
+        }
+    },
+    "create": {
+        "title": "Criar Fornecedor",
+        "notifications": {
+            "success": "Fornecedor criado com sucesso!",
+            "error": "Houve um erro ao criar o fornecedor."
+        }
+    },
+    "update": {
+        "title": "Atualizar Fornecedor",
+        "notifications": {
+            "success": "Fornecedor {name} atualizar com sucesso!",
+            "error": "Houve um erro ao atualizar o {name}, suas alterações foram desfeitas."
+        }
+    },
+    "confirmModal": {
+        "title": "Confirmar Exclusão",
+        "confirmLabel": "Sim, Excluir",
+        "cancelLabel": "Cancelar",
+        "textArray": "Você tem certeza que deseja excluir os {suppliers} fornecedores selecioandos?",
+        "text": "Você tem certeza que deseja excluir o fornecedor {supplier}?",
+        "warn": "Esta ação não poderá ser desfeita."
+    },
+    "delete": {
+        "notifications": {
+            "wait": {
+                "title": "Aguarde!",
+                "message": "Deletando fornecedores..."
+            },
+            "success": "Fornecedores(s) deletados com sucesso!",
+            "internalError": "Ocorreu um erro ao deletar. Suas alterações foram desfeitas."
+        },
+        "errors": {
+            "noLength": "Nenhum fornecedor selecionado."
+        }
+    }
+}

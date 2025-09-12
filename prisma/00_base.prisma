@@ -40,7 +40,6 @@ model Supplier {
 
     name            String
     corporateReason String?
-    documentType    String?
     document        String?
     email           String?
     phoneNumber     String?

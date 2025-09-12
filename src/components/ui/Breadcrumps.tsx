@@ -13,10 +13,6 @@ type Props = {
 export default function Breadcrumps({ menu, items }: Props) {
     const t = useTranslations("general");
 
-    if (!menu || menu.length === 0) {
-        throw new Error("Menu array is required and cannot be empty");
-    }
-
     if (!menu.every(item => item.label && item.href)) {
         throw new Error("Each item must have a label, href, and icon");
     }

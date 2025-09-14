@@ -43,7 +43,11 @@
         },
         "settings": "Configurações",
         "support": "Suporte",
-        "suppliers": "Fornecedores"
+        "others": {
+            "label": "Outros",
+            "contracts": "Contratos",
+            "suppliers": "Fornecedores"
+        }
     },
     "header": {
         "quickAccess": {

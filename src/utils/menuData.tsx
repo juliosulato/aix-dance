@@ -14,7 +14,7 @@ import { FaRegUser, FaChalkboardTeacher } from "react-icons/fa";
 import { MdGroups } from "react-icons/md";
 
 // Eventos
-import { TbCalendarEvent, TbReportMoney, TbBuildingBank, TbCategory2 } from "react-icons/tb";
+import { TbCalendarEvent, TbReportMoney, TbBuildingBank, TbCategory2, TbContract } from "react-icons/tb";
 
 // Financeiro
 import { MdOutlineSpaceDashboard, MdOutlineCategory } from "react-icons/md";
@@ -85,7 +85,6 @@ const useMenuData = () => {
         { icon: <MdPayment />, label: t("navbar.financial.financialPaymentMethods"), href: "/system/financial/payment-methods" },
         { icon: <MdOutlineCategory />, label: t("navbar.financial.financialCategories"), href: "/system/financial/categories" },
         { icon: <BsBox />, label: t("navbar.financial.financialGroups"), href: "/system/financial/groups" },
-        { icon: <MdOutlineBusinessCenter />, label: t("navbar.suppliers"), href: "/system/suppliers" },
         { icon: <LuChartSpline />, label: t("navbar.financial.financialReports"), href: "/system/financial/reports" },
       ],
     },
@@ -99,6 +98,14 @@ const useMenuData = () => {
     //     { icon: <LuChartSpline />, label: t("navbar.inventory.inventoryReports"), href: "/system/estoque/reports" },
     //   ],
     // },
+    {
+      icon: <IoExtensionPuzzleOutline />,
+      label: t("navbar.others.label"),
+      subitems: [
+        { icon: <TbContract />, label: t("navbar.others.contracts"), href: "/system/others/contracts" },
+        { icon: <MdOutlineBusinessCenter />, label: t("navbar.others.suppliers"), href: "/system/others/suppliers" },
+      ]
+    }
   ];
 
   return menuData;

@@ -1,7 +1,7 @@
 "use client";
 
 import InfoTerm from "@/components/ui/Infoterm";
-import { Divider, SimpleGrid } from "@mantine/core";
+import { Divider } from "@mantine/core";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
@@ -28,7 +28,6 @@ export default function SupplierView({ supplier, tenancyId }: { supplier: Suppli
             setConfirmModalOpen(false);
         }
     };
-
 
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">

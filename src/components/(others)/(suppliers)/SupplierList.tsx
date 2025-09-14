@@ -147,7 +147,7 @@ export default function AllSuppliersData() {
                     func: () => setOpenNew(true),
                     label: t("suppliers.create.title")
                 }}
-                baseUrl="/system/suppliers/"
+                baseUrl="/system/others/suppliers/"
                 mutate={mutate}
                 pageTitle={t("suppliers.title")}
                 searchbarPlaceholder={t("suppliers.searchbarPlaceholder")}

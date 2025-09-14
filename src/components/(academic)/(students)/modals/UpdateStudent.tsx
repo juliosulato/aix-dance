@@ -148,7 +148,7 @@ useEffect(() => {
       <Modal
         opened={opened}
         onClose={onClose}
-        title={t("students-modals.titles.create")}
+        title={t("students.modals.titles.create")}
         size="auto"
         radius="lg"
         centered

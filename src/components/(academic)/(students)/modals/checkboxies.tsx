@@ -102,7 +102,7 @@ ControlledCheckbox.displayName = 'ControlledCheckbox';
 
 // Componente principal otimizado
 function Checkboxies({ control, errors }: Props) {
-  const t = useTranslations("students-modals.forms.health");
+  const t = useTranslations("academic.students.modals.health");
   
   // Estado otimizado com objeto único
   const [showFields, setShowFields] = useState({
@@ -143,12 +143,12 @@ function Checkboxies({ control, errors }: Props) {
 
   // Memoizar labels para evitar re-renders
   const labels = useMemo(() => ({
-    healthProblems: t("healthProblems.label"),
-    medicalAdvice: t("medicalAdvice.label"),
-    painOrDiscomfort: t("painOrDiscomfort.label"),
+    healthProblems: t("fields.healthProblems.label"),
+    medicalAdvice: t("fields.medicalAdvice.label"),
+    painOrDiscomfort: t("fields.painOrDiscomfort.label"),
     textarea: t("textarea"),
-    canLeaveAlone: t("canLeaveAlone.label"),
-    haveGuardian: t("haveGuardian.label"),
+    canLeaveAlone: t("fields.canLeaveAlone.label"),
+    haveGuardian: t("fields.haveGuardian.label"),
   }), [t]);
 
   return (

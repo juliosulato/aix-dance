@@ -15,7 +15,7 @@ type Props = {
 };
 
 function NewStudent__Guardians({ control, errors }: Props) {
-  const t = useTranslations("students-modals.forms.guardians");
+  const t = useTranslations("academic.students.modals.guardians");
   const g = useTranslations("forms.general-fields");
 
   const { fields, append, remove } = useFieldArray({
@@ -82,7 +82,7 @@ function NewStudent__Guardians({ control, errors }: Props) {
           <Controller
             name={`guardian.${index}.relationship`}
             control={control}
-            render={({ field }) => <TextInput label={t("relationship.label")} {...field} placeholder={t("relationship.placeholder")} required/>}
+            render={({ field }) => <TextInput label={t("fields.relationship.label")} {...field} placeholder={t("relationship.placeholder")} required/>}
           />
 
           <Controller

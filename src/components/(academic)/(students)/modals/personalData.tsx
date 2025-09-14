@@ -19,7 +19,7 @@ type Props = {
 
 function NewStudent__PersonalData({ control, register, errors }: Props) {
     const [gender, setGender] = useState<Gender | null>(null);
-    const t = useTranslations("students-modals.forms.personalData");
+    const t = useTranslations("academic.students.modals.personalData");
     const g = useTranslations("forms.general-fields");
 
     return (
@@ -149,8 +149,8 @@ function NewStudent__PersonalData({ control, register, errors }: Props) {
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={t("howDidYouMeetUs.label")}
-                        placeholder={t("howDidYouMeetUs.placeholder")}
+                        label={t("fields.howDidYouMeetUs.label")}
+                        placeholder={t("fields.howDidYouMeetUs.placeholder")}
                         data={[
                             { label: "Instagram", value: "instagram" },
                             { label: "Facebook", value: "facebook" },

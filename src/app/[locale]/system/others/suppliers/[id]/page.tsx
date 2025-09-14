@@ -1,8 +1,8 @@
 import { auth } from "@/auth";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 import { getTranslations } from "next-intl/server";
-import SupplierView from "@/components/(financial)/(suppliers)/View";
-import { SupplierFromApi } from "@/components/(financial)/(suppliers)/SupplierFromApi";
+import SupplierView from "@/components/(others)/(suppliers)/View";
+import { SupplierFromApi } from "@/components/(others)/(suppliers)/SupplierFromApi";
 
 export default async function SuppliersPage({ params }: { params: Promise<{ id: string }> }) {
     const t = await getTranslations("");
@@ -27,7 +27,7 @@ export default async function SuppliersPage({ params }: { params: Promise<{ id: 
             <Breadcrumps
                 items={[t("appShell.navbar.home.label"), t("appShell.navbar.suppliers")]}
                 menu={[]}
- />
+            />
             <br />
             <SupplierView supplier={supplier} tenancyId={session?.user.tenancyId} />
         </main>

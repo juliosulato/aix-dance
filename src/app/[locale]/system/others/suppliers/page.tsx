@@ -1,4 +1,4 @@
-import AllSuppliersData from "@/components/(financial)/(suppliers)/SupplierList";
+import AllSuppliersData from "@/components/(others)/(suppliers)/SupplierList";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 import { getTranslations } from "next-intl/server";
 

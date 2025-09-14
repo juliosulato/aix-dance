@@ -117,7 +117,7 @@ function NewStudent({ opened, onClose, mutate }: Props) {
       <Modal
         opened={opened}
         onClose={onClose}
-        title={t("students-modals.titles.create")}
+        title={t("academi.students.modals.titles.create")}
         size="auto"
         radius="lg"
         centered

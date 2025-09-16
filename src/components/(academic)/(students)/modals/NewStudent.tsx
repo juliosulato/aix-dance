@@ -45,6 +45,7 @@ function NewStudent({ opened, onClose, mutate }: Props) {
   const locale = useLocale();
   dayjs.locale(locale);
 
+
   const { data: sessionData, status } = useSession();
 
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -62,6 +63,12 @@ function NewStudent({ opened, onClose, mutate }: Props) {
     },
   });
 
+
+  const handleClose = () => {
+    onClose();
+    reset()
+  };
+  
   const guardians = watch("guardian");
 
   async function createStudent(data: CreateStudentInput) {
@@ -94,7 +101,7 @@ function NewStudent({ opened, onClose, mutate }: Props) {
       setAvatarUrl(null);
       reset();
       mutate();
-      onClose();
+      handleClose();
     } catch (error) {
       console.error(error);
       notifications.show({
@@ -118,8 +125,8 @@ function NewStudent({ opened, onClose, mutate }: Props) {
     <>
       <Modal
         opened={opened}
-        onClose={onClose}
-        title={t("academi.students.modals.titles.create")}
+        onClose={handleClose}
+        title={t("academic.students.modals.create.title")}
         size="auto"
         radius="lg"
         centered

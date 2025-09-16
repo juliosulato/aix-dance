@@ -6,13 +6,11 @@ model User {
   firstName String
   lastName  String
   email     String  @unique
-  user      String?  @unique
   password  String
-  permissions  Permission[]
   image     String?
 
   teacher   Teacher?
-
+  role      UserRole @default(STAFF)
 
   classesAsTeacher   Class[]           @relation("ClassToTeacher")
   classesAsAssistant Class[]           @relation("ClassToAssistant")
@@ -28,33 +26,6 @@ model User {
 
   @@schema("users")
 }
-
-model Permission {
-  id       String   @id @default(cuid())
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId   String
-
-  resource ResourceType
-  action   ActionType
-  @@schema("users")
-}
-
-enum ResourceType {
-  FINANCE
-  USER
-  COURSE
-  TEACHER
-  @@schema("users")
-}
-
-enum ActionType {
-  VIEW
-  CREATE
-  EDIT
-  DELETE
-  @@schema("users")
-}
-
 
 model Teacher {
   id        String @id @default(cuid())

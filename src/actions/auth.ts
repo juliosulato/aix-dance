@@ -10,22 +10,11 @@ export async function loginWithCredentials(formData: FormData) {
     const remember = formData.get("remember") === "on";
 
     try {
-        let user = null;
-
-        if (userInput.includes("@")) {
-            user = await prisma.user.findFirst({
+        let user = await prisma.user.findFirst({
                 where: {
                     email: userInput
                 }
             });
-        } else {
-            user = await prisma.user.findFirst({
-                where: {
-                    user: userInput
-                }
-            });
-        }
-
         if (!user) {
             return {
                 success: false,
@@ -43,7 +32,7 @@ export async function loginWithCredentials(formData: FormData) {
         }
 
         await signIn("credentials", {
-            user: userInput,
+            emal: userInput,
             password: password,
             remember,
             redirect: false,

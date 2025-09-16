@@ -1,4 +1,4 @@
-import { ActionType, Gender, RemunerationType, ResourceType } from "@prisma/client";
+import { Gender, RemunerationType, UserRole } from "@prisma/client";
 import { z } from "zod";
 import { getAddressSchema } from "./address.schema";
 import dayjs from "dayjs";
@@ -48,10 +48,7 @@ export const getCreateUserSchema = (t: (key: string) => string) => {
     lastName: z.string().min(1, t("forms.general-fields.lastName.errors.required")),
     email: z.email(t("forms.general-fields.email.errors.invalid")),
     user: z.string().optional(),
-    permissions: z.array(z.object({
-      resource: z.enum(ResourceType),
-      action: z.enum(ActionType),
-    })).optional(),
+    role: z.enum(UserRole, { error: t("settings.users.modals.create.generalData.fields.role.errors.required") }).default("STAFF"),
     image: z.string().optional(),
     teacher: teacherSchema.optional(),
 
@@ -69,64 +66,70 @@ export const getCreateUserSchema = (t: (key: string) => string) => {
 export const getUpdateUserSchema = (t: (key: string) => string) =>
   getCreateUserSchema(t)
     .partial()
-    .extend({
-      password: z.string().optional(),
-      confirmPassword: z.string().optional(),
-    })
-    .superRefine((data, ctx) => {
-      // Se algum dos dois campos estiver preenchido
-      if (data.password || data.confirmPassword) {
-        // Ambos precisam existir
-        if (!data.password || !data.confirmPassword) {
-          ctx.addIssue({
-            path: ["confirmPassword"],
-            code: "custom",
-            message: t("academic.teachers.modals.create.accessData.fields.confirmPassword.errors.noMatch"),
-          });
-          return;
-        }
+.extend({
+  prevPassword: z.string().optional(),
+  password: z.string().optional(),
+  confirmPassword: z.string().optional(),
+})
+.superRefine((data, ctx) => {
+  if (data.password || data.confirmPassword) {
+    if (!data.password || !data.confirmPassword) {
+      ctx.addIssue({
+        path: ["confirmPassword"],
+        code: "custom",
+        message: t("academic.teachers.modals.create.accessData.fields.confirmPassword.errors.noMatch"),
+      });
+      return;
+    }
 
-        // Validação mínima e força da senha
-        if (data.password.length < 6) {
-          ctx.addIssue({
-            path: ["password"],
-            code: "custom",
-            message: t("academic.teachers.modals.create.accessData.fields.password.errors.min"),
-          });
-        }
-        if (!/[A-Z]/.test(data.password)) {
-          ctx.addIssue({
-            path: ["password"],
-            code: "custom",
-            message: t("academic.teachers.modals.create.accessData.fields.password.errors.uppercase"),
-          });
-        }
-        if (!/[a-z]/.test(data.password)) {
-          ctx.addIssue({
-            path: ["password"],
-            code: "custom",
-            message: t("academic.teachers.modals.create.accessData.fields.password.errors.lowercase"),
-          });
-        }
-        if (!/[0-9]/.test(data.password)) {
-          ctx.addIssue({
-            path: ["password"],
-            code: "custom",
-            message: t("academic.teachers.modals.create.accessData.fields.password.errors.number"),
-          });
-        }
+    // Força da senha
+    if (data.password.length < 6) {
+      ctx.addIssue({
+        path: ["password"],
+        code: "custom",
+        message: t("academic.teachers.modals.create.accessData.fields.password.errors.min"),
+      });
+    }
+    if (!/[A-Z]/.test(data.password)) {
+      ctx.addIssue({
+        path: ["password"],
+        code: "custom",
+        message: t("academic.teachers.modals.create.accessData.fields.password.errors.uppercase"),
+      });
+    }
+    if (!/[a-z]/.test(data.password)) {
+      ctx.addIssue({
+        path: ["password"],
+        code: "custom",
+        message: t("academic.teachers.modals.create.accessData.fields.password.errors.lowercase"),
+      });
+    }
+    if (!/[0-9]/.test(data.password)) {
+      ctx.addIssue({
+        path: ["password"],
+        code: "custom",
+        message: t("academic.teachers.modals.create.accessData.fields.password.errors.number"),
+      });
+    }
 
-        // Checagem de igualdade
-        if (data.password !== data.confirmPassword) {
-          ctx.addIssue({
-            path: ["confirmPassword"],
-            code: "custom",
-            message: t("academic.teachers.modals.create.accessData.fields.confirmPassword.errors.noMatch"),
-          });
-        }
-      }
-    });
+    if (data.password !== data.confirmPassword) {
+      ctx.addIssue({
+        path: ["confirmPassword"],
+        code: "custom",
+        message: t("academic.teachers.modals.create.accessData.fields.confirmPassword.errors.noMatch"),
+      });
+    }
 
+    // 🔒 Checar prevPassword
+    if (!data.prevPassword) {
+      ctx.addIssue({
+        path: ["prevPassword"],
+        code: "custom",
+        message: t("academic.teachers.modals.create.accessData.fields.password.errors.prevRequired"),
+      });
+    }
+  }
+});
 
 export type CreateUserInput = z.infer<ReturnType<typeof getCreateUserSchema>>;
 export type UpdateUserInput = z.infer<ReturnType<typeof getUpdateUserSchema>>;

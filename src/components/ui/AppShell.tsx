@@ -5,7 +5,7 @@ import { useDisclosure } from "@mantine/hooks";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import useMenuData from "@/utils/menuData";
-import { TbCalendarEvent, TbSettings } from "react-icons/tb";
+import { TbCalendarEvent, TbSettings, TbUser } from "react-icons/tb";
 import { BiSupport } from "react-icons/bi";
 import LogoSVG from "../Logo";
 import { HiOutlineChevronRight, HiOutlineChevronDown } from "react-icons/hi2";
@@ -147,18 +147,39 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    {/* <NavLink
+                    <NavLink
                         color="violet"
                         leftSection={<TbSettings />}
-                        label={t("navbar.settings")}
+                        label={t("navbar.settings.label")}
                         active={pathname === "/settings"}
                         onClick={() => setActiveMain(activeMain === "/settings" ? null : "/settings")}
                         opened={activeMain === "/settings"}
                         className={`rounded-full !py-3 transition-all duration-300 ease-in !px-5 !justify-start `}
                         rightSection={<HiOutlineChevronRight size={12} className="mantine-rotate-rtl" />}
                     >
+                        <NavLink
+                            color="violet"
+                            variant="subtle"
+                            leftSection={<LuBrain />}
+                            label={"Minha Academia"}
+                            href={"/system/settings/company"}
+                            className="rounded-full !px-5 !py-3 transition-all duration-300 ease-in"
+                            classNames={{ section: "text-xl" }}
+                            active={pathname === "/system/settings/company"}
+                        />
+                        <NavLink
+                            color="violet"
+                            variant="subtle"
+                            leftSection={<TbUser />}
+                            label={"Usuários"}
+                            href={"/system/settings/users"}
+                            className="rounded-full !px-5 !py-3 transition-all duration-300 ease-in"
+                            classNames={{ section: "text-xl" }}
+                            active={pathname === "/system/settings/users"}
+                        />
+
                         <LanguagePicker />
-                    </NavLink> */}
+                    </NavLink>
                     <NavLink
                         color="violet"
                         leftSection={<BiSupport />}

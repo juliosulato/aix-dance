@@ -42,7 +42,11 @@
             "products": "Produtos",
             "inventoryReports": "Relatórios"
         },
-        "settings": "Configurações",
+        "settings": {
+            "label": "Configurações",
+            "company": "Minha Academia",
+            "users": "Usuários"
+        },
         "support": "Suporte",
         "others": {
             "label": "Outros",

@@ -35,12 +35,8 @@ model Bill {
     categoryId String?
     category   CategoryBill? @relation(fields: [categoryId], references: [id])
 
-    // CAMPO ANTIGO RENOMEADO: Agora se chama 'receivingMethod'
-    receivingMethodId String?
-    receivingMethod   ReceivingMethod? @relation(fields: [receivingMethodId], references: [id])
-
-    // NOVO CAMPO: Para contas a pagar, usa o enum com opções fixas
-    payableMethod PayableMethod?
+    paymentMethodId String?
+    paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
 
     bankId String?
     bank   Bank?   @relation(fields: [bankId], references: [id])
@@ -52,18 +48,6 @@ model Bill {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-
-    @@schema("financial")
-}
-
-enum PayableMethod {
-    PIX
-    BANK_SLIP      // Boleto Bancário
-    CREDIT_CARD
-    DEBIT_CARD
-    BANK_TRANSFER  // Transferência Bancária
-    CASH           // Dinheiro
-    OTHER
 
     @@schema("financial")
 }
@@ -215,14 +199,14 @@ model CategoryGroup {
     @@schema("financial")
 }
 
-model ReceivingMethod {
+model PaymentMethod {
     id       String  @id @default(cuid())
     name     String
     operator String?
 
     fees     PaymentFee[]
-    bills    Bill[]       // A relação com Bill continua, mas agora representa recebimentos
-    // A relação com Teacher foi removida daqui
+    bills    Bill[]
+    teachers Teacher[]
 
     tenancyId String
     tenancy   Tenancy @relation(fields: [tenancyId], references: [id])
@@ -235,9 +219,8 @@ model ReceivingMethod {
 
 model PaymentFee {
     id               String        @id @default(cuid())
-    // Relação atualizada para 'ReceivingMethod'
-    receivingMethodId  String
-    receivingMethod    ReceivingMethod @relation(fields: [receivingMethodId], references: [id], onDelete: Cascade)
+    paymentMethodId  String
+    paymentMethod    PaymentMethod @relation(fields: [paymentMethodId], references: [id], onDelete: Cascade)
     minInstallments  Int           @default(1)
     maxInstallments  Int           @default(1)
     feePercentage    Float
@@ -247,3 +230,4 @@ model PaymentFee {
 
     @@schema("financial")
 }
+

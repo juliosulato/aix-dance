@@ -11,7 +11,7 @@ async function toggleUserActive(
 ) {
   if (!item) {
     notifications.show({
-      message: t("academic.teachers.toggle.errors.noStudent"),
+      message: t("academic.users.toggle.errors.noStudent"),
       color: "red",
     });
     return;
@@ -30,8 +30,8 @@ async function toggleUserActive(
     ));
 
   notifications.show({
-    title: t("academic.teachers.toggle.notifications.wait.title"),
-    message: t("academic.teachers.toggle.notifications.wait.message"),
+    title: t("academic.users.toggle.notifications.wait.title"),
+    message: t("academic.users.toggle.notifications.wait.message"),
     color: "yellow",
   });
 
@@ -50,12 +50,12 @@ async function toggleUserActive(
 
     notifications.clean();
     notifications.show({
-      message: t("academic.teachers.toggle.notifications.success"),
+      message: t("academic.users.toggle.notifications.success"),
       color: "green",
     });
   } catch (error) {
     notifications.show({
-      message: t("academic.teachers.toggle.errors.internalError"),
+      message: t("academic.users.toggle.errors.internalError"),
       color: "red",
     });
     // Reverte em caso de erro

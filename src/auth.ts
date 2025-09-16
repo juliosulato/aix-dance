@@ -9,29 +9,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        user: { type: "text", name: "user" },
+        email: { type: "text", name: "email" },
         password: { type: "password", name: "password" },
         remember: { type: "boolean" }
       },
       authorize: async (credentials) => {
-        let user = null;
 
-        if ((credentials.user as string).includes("@")) {
-          user = await prisma.user.findFirst({
-            where: { email: credentials.user as string },
+        const user = await prisma.user.findFirst({
+            where: { email: credentials.email as string },
             include: {
               tenancy: true
             }
           });
-        } else {
-          user = await prisma.user.findFirst({
-            where: { user: credentials.user as string },
-            include: {
-              tenancy: true
-            }
-          });
-        }
-
+        
         if (!user) return null;
 
         const isPasswordIsValid = await compareHashedPasswords(
@@ -47,7 +37,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           email: user.email,
           remember: credentials.remember === "true" || credentials.remember === "on",
           tenancyId: user.tenancyId,
-          country: user.tenancy.country
+          country: user.tenancy.country,
+          role: user.role
         }
       }
     }),
@@ -74,6 +65,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.remember = user.remember;
         token.tenancyId = user.tenancyId;
         token.country = user.country;
+        token.role = user.role;
 
 
         token.exp = Math.floor(Date.now() / 1000) + (
@@ -90,7 +82,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.tenancyId = token.tenancyId;
         session.user.country = token.country;
         session.user.remember = token.remember;
-
       }
       return session;
     }

@@ -1,7 +1,7 @@
 "use client";
 
 import LogoSVG from "@/components/Logo";
-import { Box, Button, Checkbox, LoadingOverlay, PasswordInput, TextInput } from "@mantine/core";
+import { Button, Checkbox, LoadingOverlay, PasswordInput, TextInput } from "@mantine/core";
 import { useTranslations } from "next-intl";
 import { FaRegUser } from "react-icons/fa";
 import { PiPasswordLight } from "react-icons/pi";
@@ -24,6 +24,7 @@ export default function Login() {
     const handleLoginWithCredentials = async (ev: FormEvent) => {
         ev.preventDefault();
         toggle();
+
         notifications.show({
             title: "Não saia da página!",
             message: "Estamos realizando o seu login...",
@@ -32,7 +33,8 @@ export default function Login() {
             radius: "lg",
             position: "bottom-center",
             autoClose: 1000,
-        })
+        });
+
         setError("");
 
         const formData = new FormData(ev.currentTarget as HTMLFormElement);
@@ -55,6 +57,7 @@ export default function Login() {
     };
 
     const handleSocialLogin = async (provider: "google" | "facebook") => {
+        return notifications.show({ message: "Função temporariamente desabilitada.", color: "yellow", withBorder: true, radius: "lg", position: "bottom-center", autoClose: 2000 });
         try {
             await signIn(provider, {
                 redirectTo: "/system/"
@@ -65,7 +68,6 @@ export default function Login() {
     };
 
     useEffect(() => {
-
         if (error) {
             notifications.show({ title: "Erro ao realizar login.", message: error, color: "red", withBorder: true, radius: "lg", position: "bottom-center", autoClose: 500 })
         }

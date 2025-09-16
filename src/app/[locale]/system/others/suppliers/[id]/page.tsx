@@ -25,7 +25,7 @@ export default async function SuppliersPage({ params }: { params: Promise<{ id: 
     return session?.user.tenancyId && (
         <main>
             <Breadcrumps
-                items={[t("appShell.navbar.home.label"), t("appShell.navbar.suppliers")]}
+                items={[t("appShell.navbar.home.label"), t("appShell.navbar.others.suppliers")]}
                 menu={[]}
             />
             <br />

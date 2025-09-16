@@ -1,8 +1,8 @@
 model Address {
     id           String  @id @default(cuid())
     zipCode      String?
-    publicPlace  String
-    number       String
+    publicPlace  String?
+    number       String?
     complement   String?
     neighborhood String?
     city         String?
@@ -40,6 +40,7 @@ model Supplier {
 
     name            String
     corporateReason String?
+    documentType    String?
     document        String?
     email           String?
     phoneNumber     String?

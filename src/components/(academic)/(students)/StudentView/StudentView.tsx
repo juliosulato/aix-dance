@@ -9,6 +9,10 @@ import UpdateStudent from "../modals/UpdateStudent";
 import { StudentFromApi } from "../modals/NewStudent";
 import { Tabs } from "@mantine/core";
 import GeneralStudentsView from "./general";
+import StudentHistoryView from "./history";
+import StudentClassView from "./StudentClasses";
+import StudentContractsView from "./StudentContracts";
+import { redirect, usePathname, useRouter } from "next/navigation";
 
 export default function StudentsView({ student, tenancyId }: { student: StudentFromApi, tenancyId: string }) {
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
@@ -27,7 +31,12 @@ export default function StudentsView({ student, tenancyId }: { student: StudentF
     };
 
     const t = useTranslations();
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = new URLSearchParams(window.location.search);
+    const currentTab = searchParams.get("tab") || "general";
 
+    const [tab, setTab] = useState(currentTab);
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
             <div className="flex flex-col items-center justify-center md:justify-between gap-4 md:flex-row md:flex-wrap mb-4">
@@ -46,16 +55,40 @@ export default function StudentsView({ student, tenancyId }: { student: StudentF
 
 
             <Tabs
+                value={tab}
+                onChange={(value) => {
+                    setTab(value || ""); // muda aba localmente
+                    router.replace(`/system/academic/students/${student.id}?tab=${value}`, { scroll: false });
+                }}
                 keepMounted={false}
-                defaultValue="general"
                 variant="pills"
                 classNames={{ tab: "!px-6 !py-4 !font-medium !rounded-2xl", root: "!p-1" }}
             >
                 <Tabs.List justify="center">
                     <Tabs.Tab value="general">Geral</Tabs.Tab>
+                    <Tabs.Tab value="payments">Pagamentos</Tabs.Tab>
+                    <Tabs.Tab value="sales">Vendas</Tabs.Tab>
+                    <Tabs.Tab value="classes">Turmas</Tabs.Tab>
+                    <Tabs.Tab value="contracts">Contratos</Tabs.Tab>
+                    <Tabs.Tab value="history">Histórico</Tabs.Tab>
                 </Tabs.List>
                 <Tabs.Panel value="general">
                     <GeneralStudentsView student={student} />
+                </Tabs.Panel>
+                <Tabs.Panel value="payments">
+                    PAGAMENTOS
+                </Tabs.Panel>
+                <Tabs.Panel value="sales">
+                    Vendas
+                </Tabs.Panel>
+                <Tabs.Panel value="classes">
+                    <StudentClassView student={student} />
+                </Tabs.Panel>
+                <Tabs.Panel value="contracts">
+                    <StudentContractsView student={student} />
+                </Tabs.Panel>
+                <Tabs.Panel value="history">
+                    <StudentHistoryView {...student} />
                 </Tabs.Panel>
             </Tabs>
 

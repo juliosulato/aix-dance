@@ -20,15 +20,16 @@ model Tenancy {
     plans          Plan[]
     users          User[]
     suppliers      Supplier[]
-    contracts      ContractModel[]
+    contractModels      ContractModel[]
     modalities     Modality[]
+    
+    // Relações com o schema financeiro
     bills          Bill[]
     banks          Bank[]
     categoryBills  CategoryBill[]
     categoryGroups CategoryGroup[]
     paymentMethods PaymentMethod[]
     subscriptions  Subscription[]
-    
     sales          Sale[]
 
     createdAt      DateTime        @default(now())
@@ -53,7 +54,7 @@ model Student {
 
     firstName          String
     lastName           String
-    image              String
+    image              String?
     cellPhoneNumber    String
     phoneNumber        String?
     email              String?
@@ -67,19 +68,21 @@ model Student {
     medicalAdvice      String?
     painOrDiscomfort   String?
     canLeaveAlone      Boolean @default(false)
+    active             Boolean @default(true)
 
     classes           StudentClass[]
     attendanceRecords AttendanceRecord[]
     history           StudentHistory[]
+    
+    // Relações com o schema financeiro
     bills             Bill[]
+    subscriptions     Subscription[]
+    sales             Sale[]
+    contracts  StudentContract[] // Relação inversa adicionada
 
     address       Address?
     guardian      StudentGuardian[]
-    subscriptions Subscription[]
     
-    sales         Sale[]
-    active        Boolean @default(true)
-
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -89,8 +92,7 @@ model Student {
 model StudentHistory {
     id String @id @default(cuid())
 
-    title   String
-    content String
+    description String
 
     studentId String
     student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
@@ -139,6 +141,7 @@ model Class {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
 
     @@schema("tenancy")
 }
@@ -162,8 +165,19 @@ model StudentClass {
 
     student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
     class   Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+    status StudentClassStatus @default(ACTIVE)
+
+    enrolledAt DateTime  @default(now()) 
+    leftAt     DateTime?
 
     @@unique([studentId, classId])
+    @@schema("tenancy")
+}
+enum StudentClassStatus {
+    ACTIVE   // Aluno está a frequentar a turma
+    INACTIVE // Aluno saiu da turma mas pode voltar
+    CANCELED // A matrícula foi cancelada (diferente de apenas inativo)
+
     @@schema("tenancy")
 }
 
@@ -234,6 +248,7 @@ model Plan {
 
     subscriptions Subscription[]
     
+    // Relação com o schema financeiro
     saleItems     SaleItem[] 
 
     @@schema("tenancy")
@@ -275,7 +290,9 @@ model Subscription {
     student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
     plan      Plan     @relation(fields: [planId], references: [id], onDelete: Restrict)
     tenancy   Tenancy  @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+    studentContract StudentContract?
     bills     Bill[]
+
     @@schema("tenancy")
 }
 

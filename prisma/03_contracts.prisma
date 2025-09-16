@@ -1,13 +1,67 @@
 model ContractModel {
-    id          String  @id @default(cuid())
-    tenancyId   String
-    tenancy     Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+  id        String  @id @default(cuid())
+  tenancyId String
+  tenancy   Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
 
-    title       String
-    htmlContent String
+  title       String
+  htmlContent String
+  
+  variablePresets Json?
 
-    // Add this line to define the inverse relation
-    plans       Plan[]
+  plans     Plan[]
 
-    @@schema("contracts")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@schema("contracts")
 }
+
+model StudentContract {
+  id          String         @id @default(cuid())
+  htmlContent String
+  status      ContractStatus @default(PENDING)
+  sentAt      DateTime?
+  signedAt    DateTime?
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  subscriptionId String?       @unique
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  archive Boolean  @default(false)
+
+  // RELAÇÃO ADICIONADA: Um contrato pode ter vários registos de assinatura (embora o normal seja ter um)
+  signatureLogs ContractSignatureLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@schema("contracts")
+}
+
+// NOVA TABELA: Para guardar as informações de auditoria da assinatura
+model ContractSignatureLog {
+  id                String   @id @default(cuid())
+  studentContractId String
+  studentContract   StudentContract @relation(fields: [studentContractId], references: [id], onDelete: Cascade)
+
+  fullName          String    // Nome completo que a pessoa digitou
+  document          String    // Documento que a pessoa digitou
+  signedAt          DateTime  @default(now()) // Data e hora exatas da assinatura
+  ipAddress         String    // Endereço IP capturado
+  location          String?   // Localização (Cidade, País) capturada
+  userAgent         String    // Informações do navegador/dispositivo
+
+  @@schema("contracts")
+}
+
+enum ContractStatus {
+  PENDING
+  SENT
+  SIGNED
+  CANCELED
+
+  @@schema("contracts")
+}
+

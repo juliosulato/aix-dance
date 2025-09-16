@@ -1,6 +1,7 @@
 {
     "title": "Turmas",
     "searchbarPlaceholder": "Procure por nome, modalidade...",
+    "manageAssignments": "Gerenciar Turmas",
     "modals": {
         "create": {
             "title": "Nova Turma",

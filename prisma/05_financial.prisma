@@ -35,8 +35,12 @@ model Bill {
     categoryId String?
     category   CategoryBill? @relation(fields: [categoryId], references: [id])
 
-    paymentMethodId String?
-    paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+    // CAMPO ANTIGO RENOMEADO: Agora se chama 'receivingMethod'
+    receivingMethodId String?
+    receivingMethod   ReceivingMethod? @relation(fields: [receivingMethodId], references: [id])
+
+    // NOVO CAMPO: Para contas a pagar, usa o enum com opções fixas
+    payableMethod PayableMethod?
 
     bankId String?
     bank   Bank?   @relation(fields: [bankId], references: [id])
@@ -48,6 +52,18 @@ model Bill {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@schema("financial")
+}
+
+enum PayableMethod {
+    PIX
+    BANK_SLIP      // Boleto Bancário
+    CREDIT_CARD
+    DEBIT_CARD
+    BANK_TRANSFER  // Transferência Bancária
+    CASH           // Dinheiro
+    OTHER
 
     @@schema("financial")
 }
@@ -88,7 +104,6 @@ model SaleItem {
   
   @@schema("financial")
 }
-
 
 enum BillType {
     PAYABLE
@@ -200,14 +215,14 @@ model CategoryGroup {
     @@schema("financial")
 }
 
-model PaymentMethod {
+model ReceivingMethod {
     id       String  @id @default(cuid())
     name     String
     operator String?
 
     fees     PaymentFee[]
-    bills    Bill[]
-    teachers Teacher[]
+    bills    Bill[]       // A relação com Bill continua, mas agora representa recebimentos
+    // A relação com Teacher foi removida daqui
 
     tenancyId String
     tenancy   Tenancy @relation(fields: [tenancyId], references: [id])
@@ -220,8 +235,9 @@ model PaymentMethod {
 
 model PaymentFee {
     id               String        @id @default(cuid())
-    paymentMethodId  String
-    paymentMethod    PaymentMethod @relation(fields: [paymentMethodId], references: [id], onDelete: Cascade)
+    // Relação atualizada para 'ReceivingMethod'
+    receivingMethodId  String
+    receivingMethod    ReceivingMethod @relation(fields: [receivingMethodId], references: [id], onDelete: Cascade)
     minInstallments  Int           @default(1)
     maxInstallments  Int           @default(1)
     feePercentage    Float

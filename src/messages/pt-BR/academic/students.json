@@ -24,6 +24,15 @@
       "text": "Você tem certeza que deseja excluir o aluno {student}?",
       "warn": "Esta ação não poderá ser desfeita."
     },
+    "assignClasses": {
+      "title": "Turmas de {name}",
+      "fields": {
+        "classes": {
+          "label": "Turmas"
+        }
+      },
+      "noClasses": "Nenhuma turma selecionada."
+    },
     "personalData": {
       "title": "Informações Pessoais",
       "fields": {

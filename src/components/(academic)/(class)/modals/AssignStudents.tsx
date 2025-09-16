@@ -124,58 +124,94 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
 
 
     // 5. Lógica para enviar apenas as diferenças para o backend
-    async function handleAssignStudents(data: EnrollStudentsInput) {
-        if (status !== "authenticated" || !classData?.id) return;
-        setVisible(true);
+async function handleAssignStudents(data: EnrollStudentsInput) {
+  if (status !== "authenticated" || !classData?.id) return;
+  setVisible(true);
 
-        // CORREÇÃO: Usa a lista filtrada como base para a comparação.
-        const initialStudentIds = activeEnrollments.map((enrollment: any) => enrollment.student.id);
-        const finalStudentIds = data.studentIds || [];
+  const initialStudentIds = activeEnrollments.map((e: any) => e?.student?.id);
+  const finalStudentIds = data.studentIds || [];
 
-        const studentsToEnroll = finalStudentIds.filter(id => !initialStudentIds.includes(id));
-        const studentsToArchive = initialStudentIds.filter(id => !finalStudentIds.includes(id));
+  const studentsToEnroll = finalStudentIds.filter(id => !initialStudentIds.includes(id));
+  const studentsToArchive = initialStudentIds.filter(id => !finalStudentIds.includes(id));
 
-        const promises = [];
-        const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData!.user.tenancyId}/classes/${classData.id}/enrollments`;
+  const promises: Promise<Response>[] = [];
+  const tenancyId = sessionData!.user.tenancyId;
+  const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/classes/${classData.id}/enrollments`;
+  const className = classData?.name || "Turma desconhecida";
 
-        if (studentsToEnroll.length > 0) {
-            promises.push(fetch(baseUrl, {
-                method: "POST",
-                body: JSON.stringify({ studentIds: studentsToEnroll }),
-                headers: { "Content-Type": "application/json" },
-            }));
-        }
+  if (studentsToEnroll.length > 0) {
+    // Matrícula
+    promises.push(fetch(baseUrl, {
+      method: "POST",
+      body: JSON.stringify({ studentIds: studentsToEnroll }),
+      headers: { "Content-Type": "application/json" },
+    }));
 
-        if (studentsToArchive.length > 0) {
-            promises.push(fetch(`${baseUrl}/archive`, {
-                method: "PATCH",
-                body: JSON.stringify({ studentIds: studentsToArchive }),
-                headers: { "Content-Type": "application/json" },
-            }));
-        }
+    // Histórico de cada aluno matriculado
+    studentsToEnroll.forEach((studentId) => {
+      promises.push(
+        fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              description: `Aluno matriculado na turma ${className}`,
+            }),
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+      );
+    });
+  }
 
-        if (promises.length === 0) {
-            notifications.show({ message: t("notifications.noChanges") });
-            onClose();
-            setVisible(false);
-            return;
-        }
+  if (studentsToArchive.length > 0) {
+    // Arquivar
+    promises.push(fetch(`${baseUrl}/archive`, {
+      method: "PATCH",
+      body: JSON.stringify({ studentIds: studentsToArchive }),
+      headers: { "Content-Type": "application/json" },
+    }));
 
-        try {
-            const responses = await Promise.all(promises);
-            const hasError = responses.some(res => !res.ok);
-            if (hasError) throw new Error("Uma ou mais operações falharam.");
+    // Histórico de cada aluno removido
+    studentsToArchive.forEach((studentId) => {
+      promises.push(
+        fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              description: `Aluno removido da turma ${className}`,
+            }),
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+      );
+    });
+  }
 
-            notifications.show({ message: t("notifications.success"), color: "green" });
-            await mutate();
-            handleClose();
-        } catch (err) {
-            console.error(err);
-            notifications.show({ color: "red", message: t("notifications.error") });
-        } finally {
-            setVisible(false);
-        }
-    }
+  if (promises.length === 0) {
+    notifications.show({ message: t("notifications.noChanges") });
+    onClose();
+    setVisible(false);
+    return;
+  }
+
+  try {
+    const responses = await Promise.all(promises);
+    const hasError = responses.some((res) => !res.ok);
+    if (hasError) throw new Error("Uma ou mais operações falharam.");
+
+    notifications.show({ message: t("notifications.success"), color: "green" });
+    await mutate();
+    handleClose();
+  } catch (err) {
+    console.error(err);
+    notifications.show({ color: "red", message: t("notifications.error") });
+  } finally {
+    setVisible(false);
+  }
+}
+
 
     if (status === "loading") return <LoadingOverlay visible />;
 

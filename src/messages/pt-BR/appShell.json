@@ -21,6 +21,7 @@
             "teachers": "Professores",
             "plans": "Planos",
             "modalities": "Modalidades",
+            "contracts": "Contratos",
             "academicReports": "Relatórios"
         },
         "events": "Eventos",
@@ -45,7 +46,6 @@
         "support": "Suporte",
         "others": {
             "label": "Outros",
-            "contracts": "Contratos",
             "suppliers": "Fornecedores"
         }
     },

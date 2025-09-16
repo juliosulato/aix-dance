@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import DataViewHead from "./DataViewHead";
 import React, { useState } from "react";
 import DataViewTable from "./DataViewTable";
-import { Grid, Pagination, Select, Text } from "@mantine/core";
+import { Button, Grid, Pagination, Select, Text } from "@mantine/core";
 import DataViewGrid from "./DataViewGrid";
 import { KeyedMutator } from "swr";
 import dayjs from "dayjs";
@@ -37,6 +37,9 @@ interface DataViewProps<T> {
     printable?: boolean;
 };
 
+import notFound from "@/assets/images/not-found.avif";
+import Image from "next/image";
+import { IoAdd } from "react-icons/io5";
 
 export default function DataView<T>({
     data,
@@ -119,7 +122,7 @@ export default function DataView<T>({
                 activeSelectFilters.every(([key, value]) => String((item as any)[key]) === value)
             );
         }
-        
+
         if (dateFilter && dateFilter.key && (dateFilter.from || dateFilter.to)) {
             processed = processed.filter(item => {
                 const itemDate = new Date((item as any)[dateFilter.key]);
@@ -178,7 +181,7 @@ export default function DataView<T>({
                         };
                         cellContent = deepText(cellContent);
                     }
-                    
+
                     return `<td>${cellContent || '-'}</td>`;
                 }).join('');
             return `<tr>${cells}</tr>`;
@@ -206,7 +209,7 @@ export default function DataView<T>({
                 </body>
             </html>
         `;
-        
+
         // Cria um iframe invisível para a impressão
         const iframe = document.createElement('iframe');
         iframe.style.position = 'absolute';
@@ -229,6 +232,7 @@ export default function DataView<T>({
             document.body.removeChild(iframe);
         }, 500);
     };
+
 
     return (
         <div className="flex flex-col gap-4 md:gap-6">
@@ -253,7 +257,27 @@ export default function DataView<T>({
                 onPrint={handlePrint}
             />
 
-            {!disableTable && activeView === "table" && (
+            {data.length === 0 && (
+                <div className="flex flex-col items-center justify-center h-full text-center bg-white gap-4 rounded-2xl shadow-sm p-3 md:p-6">
+                    <Image src={notFound} alt="Nada encontrado" className="max-w-[250px]" />
+                    <h2 className="font-semibold text-xl md:text-3xl">Ooops... não encontramos nada aqui.</h2>
+                    {openNewModal && (
+                        <Button
+                            type="submit"
+                            color="#7439FA"
+                            radius="lg"
+                            size="lg"
+                            className="!text-sm !font-medium tracking-wider ml-auto min-w-full w-full md:min-w-fit md:w-fit"
+                            rightSection={<IoAdd />}
+                            onClick={openNewModal.func}
+                        >
+                            {openNewModal.label}
+                        </Button>
+                    )}
+                </div>
+            )}
+
+            {data.length > 0 && !disableTable && activeView === "table" && (
                 <DataViewTable
                     columns={columns}
                     data={paginatedData}

@@ -68,7 +68,7 @@ const useMenuData = () => {
         { icon: <MdGroups />, label: t("navbar.academic.classes"), href: "/system/academic/classes" },
         { icon: <FaChalkboardTeacher />, label: t("navbar.academic.teachers"), href: "/system/academic/teachers" },
         { icon: <MdOutlineCategory />, label: t("navbar.academic.modalities"), href: "/system/academic/modalities" },
-        { icon: <LuChartSpline />, label: t("navbar.academic.academicReports"), href: "/system/academic/reports" },
+        // { icon: <LuChartSpline />, label: t("navbar.academic.academicReports"), href: "/system/academic/reports" },
       ],
     },
     // {
@@ -79,13 +79,13 @@ const useMenuData = () => {
       icon: <TbReportMoney />,
       label: t("navbar.financial.label"),
       subitems: [
-        { icon: <MdOutlineSpaceDashboard />, label: t("navbar.financial.financialSummary"), href: "/system/financial/resume" },
+        // { icon: <MdOutlineSpaceDashboard />, label: t("navbar.financial.financialSummary"), href: "/system/financial/resume" },
         { icon: <PiMoneyWavy />, label: t("navbar.financial.financialManager"), href: "/system/financial/manager/" },
         { icon: <TbBuildingBank />, label: t("navbar.financial.financialAccounts"), href: "/system/financial/bank-accounts" },
         { icon: <MdPayment />, label: t("navbar.financial.financialPaymentMethods"), href: "/system/financial/payment-methods" },
         { icon: <MdOutlineCategory />, label: t("navbar.financial.financialCategories"), href: "/system/financial/categories" },
         { icon: <BsBox />, label: t("navbar.financial.financialGroups"), href: "/system/financial/groups" },
-        { icon: <LuChartSpline />, label: t("navbar.financial.financialReports"), href: "/system/financial/reports" },
+        // { icon: <LuChartSpline />, label: t("navbar.financial.financialReports"), href: "/system/financial/reports" },
       ],
     },
     // {
@@ -102,7 +102,7 @@ const useMenuData = () => {
       icon: <IoExtensionPuzzleOutline />,
       label: t("navbar.others.label"),
       subitems: [
-        { icon: <TbContract />, label: t("navbar.others.contracts"), href: "/system/others/contracts" },
+        { icon: <TbContract />, label: "Modelos de Contratos", href: "/system/others/contract-models" },
         { icon: <MdOutlineBusinessCenter />, label: t("navbar.others.suppliers"), href: "/system/others/suppliers" },
       ]
     }

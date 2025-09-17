@@ -107,27 +107,43 @@ export default function BillView({ bill, tenancyId }: { bill: BillFromApi, tenan
                         Ver transação original
                     </InfoTerm>
                 )}
+            {bill.parentId && (
+                <InfoTerm label="Conta Principal" icon={<FaLink />} href={`/system/financial/manager/${bill.parentId}`}>
+                    Ver transação original
+                </InfoTerm>
+            )}
+
+            {/* ADICIONADO: Link para a venda associada */}
+            {bill.saleId && (
+                <InfoTerm label="Venda de Origem" icon={<FaLink />} href={`/system/sales/${bill.saleId}`}>
+                    Ver venda #{bill.saleId.substring(0, 8)}
+                </InfoTerm>
+            )}
             </div>
 
-            {isInstallmentParent && (
-                <div>
-                    <Divider my="lg" label="Parcelas Associadas" labelPosition="center" />
-                    <div className="flex flex-col gap-3 mt-4">
-                        {bill.children.map(child => (
-                            <Link href={`/system/financial/manager/${child.id}`} key={child.id} className="p-3 bg-gray-50 hover:bg-violet-50 rounded-lg transition-colors flex justify-between items-center">
-                                <div>
-                                    <Text size="sm" fw={500}>{child.installmentNumber}</Text>
-                                    <Text size="xs" c="dimmed">Vencimento: {dayjs(child.dueDate).format("DD/MM/YYYY")}</Text>
-                                </div>
-                                <Flex align="center" gap="lg">
-                                    <Text size="sm" fw={500}>{formatCurrency(child.amount)}</Text>
-                                    {StatusTextToBadge(child.status, true, t)}
-                                </Flex>
-                            </Link>
-                        ))}
+
+
+            {
+                isInstallmentParent && (
+                    <div>
+                        <Divider my="lg" label="Parcelas Associadas" labelPosition="center" />
+                        <div className="flex flex-col gap-3 mt-4">
+                            {bill.children.map(child => (
+                                <Link href={`/system/financial/manager/${child.id}`} key={child.id} className="p-3 bg-gray-50 hover:bg-violet-50 rounded-lg transition-colors flex justify-between items-center">
+                                    <div>
+                                        <Text size="sm" fw={500}>{child.installmentNumber}</Text>
+                                        <Text size="xs" c="dimmed">Vencimento: {dayjs(child.dueDate).format("DD/MM/YYYY")}</Text>
+                                    </div>
+                                    <Flex align="center" gap="lg">
+                                        <Text size="sm" fw={500}>{formatCurrency(child.amount)}</Text>
+                                        {StatusTextToBadge(child.status, true, t)}
+                                    </Flex>
+                                </Link>
+                            ))}
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
 
             <UpdateBill bill={bill as any} onClose={() => setOpenUpdate(false)} opened={openUpdate} mutate={() => window.location.reload() as any} />
@@ -145,6 +161,6 @@ export default function BillView({ bill, tenancyId }: { bill: BillFromApi, tenan
                     bill: dayjs(bill?.dueDate).format("DD MMMM YYYY") || ""
                 })}
             </ConfirmationModal>
-        </div>
+        </div >
     );
 }

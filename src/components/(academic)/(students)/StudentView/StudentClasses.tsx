@@ -10,9 +10,9 @@ import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 import "dayjs/locale/es";
 import "dayjs/locale/en";
-import { StudentFromApi } from "../modals/NewStudent";
 import { adaptStudentClasses, StudentClassFromApi } from "./adapteStudentClasses";
 import AssignClassesToStudent from "./AssignClassesToStudent.tsx";
+import { StudentFromApi } from "../StudentFromApi";
 
 export interface ClassFromApi extends Class {
   modality: Modality;

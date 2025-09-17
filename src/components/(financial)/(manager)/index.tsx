@@ -40,7 +40,9 @@ export type BillFromApi = Omit<Bill, 'amount' | 'amountPaid' | 'dueDate' | 'paym
     children: BillFromApi[];
     type: 'PAYABLE' | 'RECEIVABLE';
     totalInstallments?: number;
+    sale: Sale | null; // ADICIONADO: Inclui a venda na tipagem
 };
+
 
 interface MenuItemProps {
     bill: BillFromApi;

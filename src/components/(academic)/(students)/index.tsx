@@ -16,10 +16,11 @@ import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
 import 'dayjs/locale/es';
 import 'dayjs/locale/en';
-import NewStudent, { StudentFromApi } from "./modals/NewStudent";
+import NewStudent from "./modals/NewStudent";
 import UpdateStudent from "./modals/UpdateStudent";
 import { Class } from "@prisma/client";
 import toggleStudentActive from "./toggleStudentActive";
+import { StudentFromApi } from "./StudentFromApi";
 
 interface MenuItemProps {
     student: StudentFromApi;
@@ -46,7 +47,7 @@ export default function AllStudentsData() {
     const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-    const { data: categoryGroups, error, isLoading, mutate } = useSWR<StudentFromApi[]>(
+    const { data: students, error, isLoading, mutate } = useSWR<StudentFromApi[]>(
         () => sessionData?.user?.tenancyId
             ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/students`
             : null,
@@ -150,14 +151,14 @@ export default function AllStudentsData() {
 
     return (
         <>
-            <DataView<StudentFromApi>
-                data={categoryGroups || []}
+            <DataView<(StudentFromApi & { fullName: string; })>
+                data={students?.map((student) => ({ ...student, fullName: `${student.firstName} ${student.lastName}`})) || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
                     label: t("academic.students.modals.create.title")
                 }}
                 baseUrl="/system/academic/students/"
-                mutate={mutate}
+                mutate={mutate as any}
                 pageTitle={t("academic.students.title")}
                 searchbarPlaceholder={t("academic.students.searchbarPlaceholder")}
                 columns={[
@@ -174,12 +175,8 @@ export default function AllStudentsData() {
                         }
                     },
                     {
-                        key: "firstName", label: t("academic.students.modals.personalData.fields.firstName.label"),
+                        key: "fullName", label: t("academic.students.modals.personalData.fields.fullName.label"),
                         sortable: true
-                    },
-                    {
-                        key: "lastName", label: t("academic.students.modals.personalData.fields.lastName.label"),
-                        sortable: true,
                     },
                     {
                         key: "classes", label: t("academic.classes.title"),
@@ -191,6 +188,11 @@ export default function AllStudentsData() {
                                 return value;
                             }
                         }
+                    },
+                     {
+                        key: "subscriptions", label: t("academic.students.modals.health.fields.canLeaveAlone.label"),
+                        sortable: true,
+                        render: (val: StudentFromApi["subscriptions"]) => val?.[0]?.plan?.name || JSON.stringify(val)
                     },
                     {
                         key: "documentOfIdentity", label: t("academic.students.modals.personalData.fields.documentOfIdentity.label"),

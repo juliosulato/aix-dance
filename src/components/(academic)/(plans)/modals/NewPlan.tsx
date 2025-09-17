@@ -39,7 +39,6 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
             amount: 0.00,
             frequency: 1,
             type: "MONTHLY",
-            contractModelId: null
         }
     });
 

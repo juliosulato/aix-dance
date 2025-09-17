@@ -26,6 +26,7 @@ import { BsBox } from "react-icons/bs";
 import { MdBookmarkBorder } from "react-icons/md";
 
 import { useTranslations } from "next-intl";
+import { RiMoneyDollarCircleLine } from "react-icons/ri";
 
 const useMenuData = () => {
   const t = useTranslations("appShell");
@@ -68,8 +69,14 @@ const useMenuData = () => {
         { icon: <MdGroups />, label: t("navbar.academic.classes"), href: "/system/academic/classes" },
         { icon: <FaChalkboardTeacher />, label: t("navbar.academic.teachers"), href: "/system/academic/teachers" },
         { icon: <MdOutlineCategory />, label: t("navbar.academic.modalities"), href: "/system/academic/modalities" },
+        { icon: <TbContract />, label: t("navbar.academic.plans"), href: "/system/academic/plans" },
         // { icon: <LuChartSpline />, label: t("navbar.academic.academicReports"), href: "/system/academic/reports" },
       ],
+    },
+    {
+      icon: <RiMoneyDollarCircleLine/>,
+      label: "PDV",
+       href: "/system/point-of-sale"
     },
     // {
     //   icon: <TbCalendarEvent />,

@@ -6,13 +6,16 @@ import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import { useTranslations } from "next-intl";
 import deleteStudents from "../delete";
 import UpdateStudent from "../modals/UpdateStudent";
-import { StudentFromApi } from "../modals/NewStudent";
 import { Tabs } from "@mantine/core";
 import GeneralStudentsView from "./general";
 import StudentHistoryView from "./history";
 import StudentClassView from "./StudentClasses";
 import StudentContractsView from "./StudentContracts";
-import { redirect, usePathname, useRouter } from "next/navigation";
+import { redirect, usePathname, useRouter, useSearchParams } from "next/navigation";
+import StudentBillsView from "../(bills)/StudentBillsView";
+import { StudentFromApi } from "../StudentFromApi";
+import PointOfSale from "../(sales)/point-of-sale";
+import Sales from "../(sales)";
 
 export default function StudentsView({ student, tenancyId }: { student: StudentFromApi, tenancyId: string }) {
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
@@ -32,8 +35,7 @@ export default function StudentsView({ student, tenancyId }: { student: StudentF
 
     const t = useTranslations();
     const router = useRouter();
-    const pathname = usePathname();
-    const searchParams = new URLSearchParams(window.location.search);
+    const searchParams = useSearchParams();
     const currentTab = searchParams.get("tab") || "general";
 
     const [tab, setTab] = useState(currentTab);
@@ -76,10 +78,10 @@ export default function StudentsView({ student, tenancyId }: { student: StudentF
                     <GeneralStudentsView student={student} />
                 </Tabs.Panel>
                 <Tabs.Panel value="payments">
-                    PAGAMENTOS
+                    <StudentBillsView student={student} />
                 </Tabs.Panel>
                 <Tabs.Panel value="sales">
-                    Vendas
+                    <Sales student={student}/>
                 </Tabs.Panel>
                 <Tabs.Panel value="classes">
                     <StudentClassView student={student} />

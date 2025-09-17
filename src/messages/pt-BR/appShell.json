@@ -33,7 +33,8 @@
             "financialAccounts": "Contas Bancárias",
             "financialGroups": "Grupos",
             "financialPaymentMethods": "Formas de Pagamento",
-            "financialReports": "Relatórios"
+            "financialReports": "Relatórios",
+            "sales": "Vendas"
         },
         "inventory": {
             "label": "Estoque",

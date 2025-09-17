@@ -62,7 +62,7 @@ model Sale {
   items     SaleItem[]
   bills     Bill[]
 
-  student   Student   @relation(fields: [studentId], references: [id])
+  student   Student?   @relation(fields: [studentId], references: [id])
   tenancy   Tenancy   @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
   
   createdAt DateTime @default(now())

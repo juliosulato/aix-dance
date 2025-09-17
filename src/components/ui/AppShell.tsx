@@ -117,6 +117,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                                     onClick={() => {
                                         setActiveMain(activeMain === index ? null : index)
                                     }}
+                                    href={item.href}
                                     opened={activeMain === index}
                                     rightSection={item.subitems && <HiOutlineChevronRight size={12} className="mantine-rotate-rtl" />}
                                     classNames={{ section: "text-xl m-auto" }}

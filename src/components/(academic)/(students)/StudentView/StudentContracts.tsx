@@ -7,7 +7,6 @@ import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 import "dayjs/locale/es";
 import "dayjs/locale/en";
-import { StudentFromApi } from "../modals/NewStudent";
 import { ActionIcon, Badge, Button, CopyButton, Menu, Text, Tooltip } from "@mantine/core";
 import { useState } from "react";
 import NewStudentContract from "../(contracts)/new";
@@ -17,6 +16,7 @@ import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import deleteStudentContracts from "./deleteStudentContracts";
 import archiveStudentContracts from "./archiveStudentContracts";
 import { ContractStatus } from "@prisma/client";
+import { StudentFromApi } from "../StudentFromApi";
 
 // Tipagem para o item do contrato, assumindo que a API retorna o título do modelo
 type ContractItem = StudentFromApi["contracts"][0] & { title?: string };
@@ -116,8 +116,8 @@ export default function StudentContractsView({ student }: { student: StudentFrom
         searchbarPlaceholder={"Pesquisar por título do contrato..."}
         columns={[
           { key: "title" as any, label: "Título do Contrato", render: (value, item) => item?.title || 'Contrato Personalizado' },
-          { key: "createdAt", label: "Criado Em", render: (value) => dayjs(value).format("DD/MM/YYYY") },
-          { key: "signedAt", label: "Assinado Em", render: (value) => value ? dayjs(value).format("DD/MM/YYYY") : '-' },
+          { key: "createdAt", label: "Criado Em", render: (value) => dayjs(value).format("DD/MM/YYYY [às] HH:mm") },
+          { key: "signedAt", label: "Assinado Em", render: (value) => value ? dayjs(value).format("DD/MM/YYYY [às] HH:mm") : '-' },
           { key: "status", label: "Status", render: (status) => renderStatusBadge(status) },
         ]}
         RenderRowMenu={(item) => <MenuItem item={item} />}
@@ -129,7 +129,7 @@ export default function StudentContractsView({ student }: { student: StudentFrom
             </div>
             <div className="flex flex-col gap-2 mt-2">
               {renderStatusBadge(item.status)}
-              <Text size="sm"><strong>Criado em:</strong> {dayjs(item.createdAt).format("DD/MM/YYYY")}</Text>
+              <Text size="sm"><strong>Criado em:</strong> {dayjs(item.createdAt).format("DD/MM/YYYY [às] HH:mm")}</Text>
               {item.signedAt && <Text size="sm"><strong>Assinado em:</strong> {dayjs(item.signedAt).format("DD/MM/YYYY")}</Text>}
             </div>
           </>

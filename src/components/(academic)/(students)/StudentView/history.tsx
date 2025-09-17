@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import { StudentFromApi } from "../modals/NewStudent";
 import { FaRegClock } from "react-icons/fa";
+import { StudentFromApi } from "../StudentFromApi";
 
 export default function StudentHistoryView(student: StudentFromApi) {
     const history = student.history.sort((a, b) => dayjs(b.createdAt).unix() - dayjs(a.createdAt).unix());

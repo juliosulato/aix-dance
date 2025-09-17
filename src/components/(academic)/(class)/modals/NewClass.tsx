@@ -50,10 +50,8 @@ function NewClass({ opened, onClose, mutate }: Props) {
     const handleNextStep = async () => {
         let fieldsToValidate: (keyof CreateClassInput)[] = [];
         if (active === 0) {
-            // Campos da primeira etapa
             fieldsToValidate = ['name', 'modalityId', 'teacherId', 'schedules'];
         } else if (active === 1) {
-            // Campos da segunda etapa
             fieldsToValidate = ['students'];
         }
 

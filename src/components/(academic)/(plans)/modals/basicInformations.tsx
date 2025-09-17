@@ -126,29 +126,7 @@ export default function Plan__BasicInformations({ control, errors, register, ten
             />
 
 
-            <Controller
-                name="contractModelId"
-                control={control}
-                render={({ field }) => (
-                    <Select
-                        label={t("fields.contractModel.label")}
-                        id="contractModelId"
-                        name="contractModelId"
-                        placeholder={t("fields.contractModel.placeholder")}
-                        value={field.value}
-                        searchable
-                        data={contractModelsIds.map((c) => ({
-                            label: c.title,
-                            value: c.id
-                        }))}
-                        nothingFoundMessage={g("general.boolean.notFound")}
-                        onChange={field.onChange}
-                        clearable
-                        key={field.value || 'empty'} // <--- Adicione esta linha!
-                        className="md:col-span-2 lg:col-span-3 3xl:col-span-4"
-                    />
-                )}
-            />
+           
         </div>
     )
 }

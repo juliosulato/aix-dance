@@ -15,6 +15,7 @@ import { Student, StudentClass } from "@prisma/client";
 import Image from "next/image";
 import notFound from "@/assets/images/not-found.avif";
 import { FaSearch } from "react-icons/fa";
+import { StudentFromApi } from "../../(students)/StudentFromApi";
 
 // Interface para representar a matrícula com o aluno aninhado, como vem da API
 interface StudentClassWithStudent extends StudentClass {
@@ -25,7 +26,6 @@ type Props = {
     opened: boolean;
     onClose: () => void;
     mutate: KeyedMutator<any>;
-    // A API retorna um array de StudentClass, cada um com um objeto 'student' dentro
     classData: (ClassFromApi & { days: any[], studentClasses: StudentClassWithStudent[] }) | null;
 }
 
@@ -44,8 +44,6 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
         defaultValues: { studentIds: [] }
     });
 
-    // CORREÇÃO: Cria uma lista memoizada apenas com as matrículas ATIVAS.
-    // Esta é a fonte da verdade para o estado inicial do modal.
     const activeEnrollments = useMemo(
         () => classData?.studentClasses?.filter((e: any) => e.status === 'ACTIVE') || [],
         [classData?.studentClasses]
@@ -57,7 +55,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
     }
 
     // 1. Busca todos os alunos da tenancy para popular o dropdown
-    const { data: allStudents } = useSWR<Student[]>(
+    const { data: allStudents } = useSWR<StudentFromApi[]>(
         () => sessionData?.user.tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/students` : null,
         fetcher
     );
@@ -65,7 +63,6 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
     const studentOptions = useMemo(() => {
         const optionsMap = new Map<string, { label: string; value: string }>();
 
-        // CORREÇÃO: Usa a lista filtrada de matrículas ativas.
         if (activeEnrollments) {
             activeEnrollments.forEach((enrollment: any) => {
                 const student = enrollment.student;
@@ -74,6 +71,8 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
                         label: `${student.firstName} ${student.lastName}`,
                         value: student.id,
                     });
+
+
                 }
             });
         }
@@ -91,22 +90,16 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
     }, [allStudents, activeEnrollments]);
 
 
-    // 2. Popula o formulário com os alunos que já estão na turma
     useEffect(() => {
         if (classData && classData.studentClasses) {
-            // CORREÇÃO: Usa a lista filtrada para popular o formulário.
             const currentStudentIds = activeEnrollments.map((enrollment: any) => enrollment.student.id);
             reset({ studentIds: currentStudentIds });
         }
-    }, [classData, activeEnrollments, reset]); // Adicionada a dependência correta
-
-    // 3. Assiste aos IDs selecionados no formulário
+    }, [classData, activeEnrollments, reset]);
     const selectedStudentIds = useWatch({ control, name: "studentIds", defaultValue: [] });
 
-    // 4. Lógica aprimorada para exibir os alunos selecionados
     const studentsMap = useMemo(() => {
         const map = new Map<string, Student>();
-        // CORREÇÃO: Usa a lista filtrada para construir o mapa de exibição.
         if (activeEnrollments) {
             activeEnrollments.forEach((enrollment: any) => map.set(enrollment.student.id, enrollment.student));
         }
@@ -123,7 +116,6 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
     }, [selectedStudentIds, studentsMap]);
 
 
-    // 5. Lógica para enviar apenas as diferenças para o backend
 async function handleAssignStudents(data: EnrollStudentsInput) {
   if (status !== "authenticated" || !classData?.id) return;
   setVisible(true);
@@ -147,7 +139,6 @@ async function handleAssignStudents(data: EnrollStudentsInput) {
       headers: { "Content-Type": "application/json" },
     }));
 
-    // Histórico de cada aluno matriculado
     studentsToEnroll.forEach((studentId) => {
       promises.push(
         fetch(

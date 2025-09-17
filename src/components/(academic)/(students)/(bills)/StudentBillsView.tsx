@@ -1,0 +1,216 @@
+import dayjs from "dayjs";
+import { FaCalendarAlt, FaRegClock } from "react-icons/fa";
+import { StudentFromApi } from "../StudentFromApi";
+import DataView from "@/components/ui/DataView";
+import { ActionIcon, Badge, Box, Button, Divider, Flex, Menu, Text } from "@mantine/core";
+import { StatusTextToBadge } from "@/utils/statusTextToBadge";
+import { useLocale, useTranslations } from "use-intl";
+import 'dayjs/locale/pt-br';
+import 'dayjs/locale/en';
+import 'dayjs/locale/es';
+import { useState } from "react";
+import deleteBills from "@/components/(financial)/(manager)/delete";
+import { BiDotsVerticalRounded, BiTrash } from "react-icons/bi";
+import { RiMoneyDollarCircleLine } from "react-icons/ri";
+
+interface MenuItemProps {
+    bill: StudentFromApi["bills"][0];
+    onUpdateClick: (b: StudentFromApi["bills"][0]) => void;
+    onDeleteClick: (b: StudentFromApi["bills"][0]) => void;
+}
+
+interface MenuItemsProps {
+    selectedIds: string[];
+    onBulkDeleteClick: (ids: string[]) => void;
+}
+
+export default function StudentBillsView({ student }: { student: StudentFromApi }) {
+    const bills = student.bills.sort((a, b) => a.status === "OVERDUE" ? -1 : 1 || dayjs(b.dueDate).diff(dayjs(a.dueDate)));
+    const t = useTranslations("");
+    const locale = useLocale();
+    dayjs.locale(locale);
+
+    const [openUpdate, setOpenUpdate] = useState<boolean>(false);
+    const [openPayBill, setOpenPayBill] = useState<boolean>(false);
+    const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
+    const [selectedBill, setSelectedBill] = useState<StudentFromApi["bills"][0] | null>(null);
+    const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
+    const [isDeleting, setIsDeleting] = useState<boolean>(false);
+
+
+
+    const handleUpdateClick = (bill: StudentFromApi["bills"][0]) => {
+        setSelectedBill(bill);
+        setOpenUpdate(true);
+    };
+
+    const handleDeleteClick = (bill: StudentFromApi["bills"][0]) => {
+        setSelectedBill(bill);
+        setIdsToDelete([]);
+        setConfirmModalOpen(true);
+    };
+
+    const handleBulkDeleteClick = (ids: string[]) => {
+        setIdsToDelete(ids);
+        setSelectedBill(null);
+        setConfirmModalOpen(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        setIsDeleting(true);
+        const tenancyId = student.tenancyId;
+        if (!tenancyId) return;
+
+        const finalIdsToDelete = idsToDelete.length > 0 ? idsToDelete : (selectedBill ? [selectedBill.id] : []);
+
+        if (finalIdsToDelete.length === 0) {
+            setIsDeleting(false);
+            setConfirmModalOpen(false);
+            return;
+        }
+
+        try {
+            await deleteBills(finalIdsToDelete, tenancyId, t);
+            window.location.reload();
+        } catch (error) {
+            console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);
+        } finally {
+            setIsDeleting(false);
+            setConfirmModalOpen(false);
+            setSelectedBill(null);
+            setIdsToDelete([]);
+        }
+    };
+
+    const MenuItem = ({ bill, onUpdateClick, onDeleteClick }: MenuItemProps) => (
+        <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+            <Menu shadow="md" width={200} withinPortal>
+                <Menu.Target>
+                    <ActionIcon variant="light" color="gray" radius={"md"}>
+                        <BiDotsVerticalRounded />
+                    </ActionIcon>
+                </Menu.Target>
+                <Menu.Dropdown>
+                    <Menu.Item leftSection={<RiMoneyDollarCircleLine size={14} />} onClick={() => {
+                        setOpenPayBill(true);
+                        setSelectedBill(bill)
+                    }}>
+                        <span>{t("financial.bills.payBill")}</span>
+                    </Menu.Item>
+                    <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(bill)}>
+                        {t("general.actions.delete")}
+                    </Menu.Item>
+                </Menu.Dropdown>
+            </Menu>
+        </div>
+    );
+
+    const MenuItems = ({ selectedIds, onBulkDeleteClick }: MenuItemsProps) => (
+        <Menu shadow="md" width={200} withinPortal>
+            <Menu.Target>
+                <ActionIcon variant="light" color="gray" radius={"md"}>
+                    <BiDotsVerticalRounded />
+                </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+                <Menu.Label>{t("general.actions.manyActions")}</Menu.Label>
+                <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
+                    {t("general.actions.deleteMany", {
+                        items: selectedIds.length
+                    })}
+                </Menu.Item>
+            </Menu.Dropdown>
+        </Menu>
+    );
+
+
+    return (
+        <>
+            <div className="bg-neutral-100 p-4 md:p-6 lg:p-8 rounded-2xl border-neutral-200 border mt-4 md:mt-6">
+                <DataView<typeof bills[0]>
+                    data={bills}
+                    baseUrl="/system/financial/manager/"
+                    pageTitle={`${t("financial.bills.title")}`}
+                    searchbarPlaceholder={t("financial.bills.searchbarPlaceholder")}
+                    dateFilterOptions={[
+                        { key: 'dueDate', label: 'Data de Vencimento' },
+                        { key: 'createdAt', label: 'Data de Criação' },
+                    ]}
+                    columns={[
+                        {
+                            key: "complement",
+                            label: t("financial.bills.modals.fields.complement.label"),
+                            render: (value) => value ? value : "",
+                            sortable: true
+                        },
+                        {
+                            key: "amount",
+                            label: t("financial.bills.modals.fields.amount.label"),
+                            render: (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value),
+                            sortable: true
+                        },
+                        {
+                            key: "amountPaid",
+                            label: t("financial.bills.modals.fields.amountPaid.label"),
+                            render: (value) => value ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value) : '-',
+                            sortable: true
+                        },
+                        {
+                            key: "installmentNumber",
+                            label: t("financial.bills.modals.fields.installmentNumber.label"),
+                            render: (value) => value ? <span className="text-primary">{value}</span> : <span className="text-primary">1</span>,
+                            sortable: true
+                        },
+                        {
+                            key: "description",
+                            label: t("financial.bills.modals.fields.description.label"),
+                        },
+                        {
+                            key: "dueDate",
+                            label: t("financial.bills.modals.fields.dueDate.label"),
+                            render: (value) => dayjs(value).format("DD/MM/YYYY"),
+                            sortable: true
+                        },
+                        {
+                            key: "status",
+                            label: t("financial.bills.modals.fields.status.label"),
+                            render: (st) => StatusTextToBadge(st, true, t)
+                        },
+                    ]}
+                    RenderRowMenu={(item) => <MenuItem bill={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
+                    RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
+                    renderCard={(item) => (
+                        <Box className="flex flex-col h-full">
+                            <Flex justify="space-between" align="start">
+                                {StatusTextToBadge(item.status, true, t)}
+                                <MenuItem bill={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />
+                            </Flex>
+
+                            <Divider my="xs" />
+
+                            <Flex justify="space-between" align="center">
+                                <Text size="sm" c="dimmed">Vencimento</Text>
+                                <Flex align="center" gap="xs">
+                                    <FaCalendarAlt className="text-gray-500" />
+                                    <Text size="sm" fw={500}>{dayjs(item.dueDate).format("DD/MM/YYYY")}</Text>
+                                </Flex>
+                            </Flex>
+
+                            <Flex justify="space-between" align="center" mt="sm">
+                                <Text size="lg" fw={700} c="gray.8">
+                                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(item.amount))}
+                                </Text>
+                                {(item.installments && item.installments > 1) && (
+                                    <Badge variant="light" color="gray">
+                                        {item.installmentNumber}
+                                    </Badge>
+                                )}
+                            </Flex>
+                        </Box>
+                    )}
+                />
+            </div>
+        </>
+
+    )
+}

@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import "./globals.css";
 import { routing } from "@/i18n/routing";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
@@ -11,6 +11,7 @@ import theme from "@/utils/theme";
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
 import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -33,7 +34,11 @@ export default async function RootLayout({
   params: Promise<{ locale: string; }>
 }>) {
   const { locale } = await params;
+  const session = await auth();
 
+  if (!session) {
+    redirect(`/${locale}/auth/login`);
+  }
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }

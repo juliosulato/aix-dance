@@ -6,7 +6,6 @@ import { NextRequest } from 'next/server';
 const intlMiddleware = createIntlMiddleware(routing);
 
 export default auth((req: NextRequest) => {
-  // Aplica o middleware de internacionalização após a autenticação
   return intlMiddleware(req);
 });
 

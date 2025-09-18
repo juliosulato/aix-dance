@@ -33,16 +33,18 @@ export default function StudentClassView({ student }: { student: StudentFromApi 
 
   if (status !== "authenticated") return <div>{t("errors.invalidSession")}</div>;
 
+  const activeClassLength = student.classes.filter((c: any) => c.status == "ACTIVE").length;
+
   return (
     <div className="bg-neutral-100 p-4 md:p-6 lg:p-8 rounded-2xl border-neutral-200 border mt-4 md:mt-6">
       <DataView<StudentClassFromApi>
         pageTitle="Turmas"
         data={classes || []}
         baseUrl="/system/academic/classes/"
-        openNewModal={{
+        openNewModal={ ({
             label: t("manageAssignments"),
             func: () => setOpenAssign(true)
-        }}
+        })}
         mutate={() => window.location.reload() as any}
         searchbarPlaceholder={t("searchbarPlaceholder")}
         columns={[

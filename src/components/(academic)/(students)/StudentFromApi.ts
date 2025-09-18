@@ -10,6 +10,6 @@ export interface StudentFromApi extends Student {
   history: StudentHistory[];
   contracts: StudentContract[];
   subscriptions: (Subscription & {
-    plan: Plan;
+    plan: Plan | null;
   })[];
 }

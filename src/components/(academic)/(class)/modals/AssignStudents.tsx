@@ -11,7 +11,7 @@ import { EnrollStudentsInput, getEnrollStudentsSchema } from "@/schemas/academic
 import useSWR, { KeyedMutator } from "swr";
 import { ClassFromApi } from ".."; // Ajuste o caminho se necessário
 import { fetcher } from "@/utils/fetcher";
-import { Student, StudentClass } from "@prisma/client";
+import { Class, Student, StudentClass } from "@prisma/client";
 import Image from "next/image";
 import notFound from "@/assets/images/not-found.avif";
 import { FaSearch } from "react-icons/fa";
@@ -39,7 +39,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
 
     const enrollSchema = getEnrollStudentsSchema(t);
 
-    const { control, handleSubmit, formState: { errors }, reset } = useForm<EnrollStudentsInput>({
+    const { control, handleSubmit, formState: { errors }, reset, setValue } = useForm<EnrollStudentsInput>({
         resolver: zodResolver(enrollSchema),
         defaultValues: { studentIds: [] }
     });
@@ -116,93 +116,161 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
     }, [selectedStudentIds, studentsMap]);
 
 
-async function handleAssignStudents(data: EnrollStudentsInput) {
-  if (status !== "authenticated" || !classData?.id) return;
-  setVisible(true);
+    async function handleAssignStudents(data: EnrollStudentsInput) {
+        if (status !== "authenticated" || !classData?.id) return;
+        setVisible(true);
 
-  const initialStudentIds = activeEnrollments.map((e: any) => e?.student?.id);
-  const finalStudentIds = data.studentIds || [];
+        const initialStudentIds = activeEnrollments.map((e: any) => e?.student?.id);
+        const finalStudentIds = data.studentIds || [];
 
-  const studentsToEnroll = finalStudentIds.filter(id => !initialStudentIds.includes(id));
-  const studentsToArchive = initialStudentIds.filter(id => !finalStudentIds.includes(id));
+        const studentsToEnroll = finalStudentIds.filter(id => !initialStudentIds.includes(id));
+        const studentsToArchive = initialStudentIds.filter(id => !finalStudentIds.includes(id));
 
-  const promises: Promise<Response>[] = [];
-  const tenancyId = sessionData!.user.tenancyId;
-  const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/classes/${classData.id}/enrollments`;
-  const className = classData?.name || "Turma desconhecida";
+        const promises: Promise<Response>[] = [];
+        const tenancyId = sessionData!.user.tenancyId;
+        const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/classes/${classData.id}/enrollments`;
+        const className = classData?.name || "Turma desconhecida";
 
-  if (studentsToEnroll.length > 0) {
-    // Matrícula
-    promises.push(fetch(baseUrl, {
-      method: "POST",
-      body: JSON.stringify({ studentIds: studentsToEnroll }),
-      headers: { "Content-Type": "application/json" },
-    }));
+        if (studentsToEnroll.length > 0) {
+            promises.push(fetch(baseUrl, {
+                method: "POST",
+                body: JSON.stringify({ studentIds: studentsToEnroll }),
+                headers: { "Content-Type": "application/json" },
+            }));
 
-    studentsToEnroll.forEach((studentId) => {
-      promises.push(
-        fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,
-          {
-            method: "POST",
-            body: JSON.stringify({
-              description: `Aluno matriculado na turma ${className}`,
-            }),
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-      );
-    });
-  }
+            studentsToEnroll.forEach(async (studentId) => {
+                const student: StudentFromApi = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${studentId}`).then(res => res.json());
 
-  if (studentsToArchive.length > 0) {
-    // Arquivar
-    promises.push(fetch(`${baseUrl}/archive`, {
-      method: "PATCH",
-      body: JSON.stringify({ studentIds: studentsToArchive }),
-      headers: { "Content-Type": "application/json" },
-    }));
+                if (student.subscriptions.length === 0) {
+                    notifications.show({ message: "O aluno " + student.firstName + " " + student.lastName + " não possui um plano ativo.", color: "red" });
+                    return;
+                }
 
-    // Histórico de cada aluno removido
-    studentsToArchive.forEach((studentId) => {
-      promises.push(
-        fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,
-          {
-            method: "POST",
-            body: JSON.stringify({
-              description: `Aluno removido da turma ${className}`,
-            }),
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-      );
-    });
-  }
+                if (student.subscriptions.length > 1) {
+                    notifications.show({ message: "O aluno " + student.firstName + " " + student.lastName + " possui mais de um plano ativo. Verifique manualmente.", color: "yellow" });
+                    return;
+                }
 
-  if (promises.length === 0) {
-    notifications.show({ message: t("notifications.noChanges") });
-    onClose();
-    setVisible(false);
-    return;
-  }
+                if (!student.classes) {
+                    notifications.show({ message: "Não foi possível verificar as aulas do aluno " + student.firstName + " " + student.lastName + ".", color: "red" });
+                    return;
+                }
 
-  try {
-    const responses = await Promise.all(promises);
-    const hasError = responses.some((res) => !res.ok);
-    if (hasError) throw new Error("Uma ou mais operações falharam.");
+                if (!student.subscriptions[0].plan) {
+                    notifications.show({ message: "O aluno " + student.firstName + " " + student.lastName + " não possui um plano ativo.", color: "red" });
+                    return;
+                }
 
-    notifications.show({ message: t("notifications.success"), color: "green" });
-    await mutate();
-    handleClose();
-  } catch (err) {
-    console.error(err);
-    notifications.show({ color: "red", message: t("notifications.error") });
-  } finally {
-    setVisible(false);
-  }
-}
+                const studentClassesLength = student.classes.filter((c: Class) => c.active == true).length;
+                const plan = student.subscriptions[0].plan;
 
+                if (plan.frequency >= studentClassesLength) {
+                    notifications.show({ message: "O aluno " + student.firstName + " " + student.lastName + " atingiu o limite de aulas do plano.", color: "red" });
+                    return;
+                }
+
+                promises.push(
+                    fetch(
+                        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,
+                        {
+                            method: "POST",
+                            body: JSON.stringify({
+                                description: `Aluno matriculado na turma ${className}`,
+                            }),
+                            headers: { "Content-Type": "application/json" },
+                        }
+                    )
+                );
+            });
+        }
+
+        if (studentsToArchive.length > 0) {
+            // Arquivar
+            promises.push(fetch(`${baseUrl}/archive`, {
+                method: "PATCH",
+                body: JSON.stringify({ studentIds: studentsToArchive }),
+                headers: { "Content-Type": "application/json" },
+            }));
+
+            // Histórico de cada aluno removido
+            studentsToArchive.forEach((studentId) => {
+                promises.push(
+                    fetch(
+                        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,
+                        {
+                            method: "POST",
+                            body: JSON.stringify({
+                                description: `Aluno removido da turma ${className}`,
+                            }),
+                            headers: { "Content-Type": "application/json" },
+                        }
+                    )
+                );
+            });
+        }
+
+        if (promises.length === 0) {
+            notifications.show({ message: t("notifications.noChanges") });
+            onClose();
+            setVisible(false);
+            return;
+        }
+
+        try {
+            const responses = await Promise.all(promises);
+            const hasError = responses.some((res) => !res.ok);
+            if (hasError) throw new Error("Uma ou mais operações falharam.");
+
+            notifications.show({ message: t("notifications.success"), color: "green" });
+            await mutate();
+            handleClose();
+        } catch (err) {
+            console.error(err);
+            notifications.show({ color: "red", message: t("notifications.error") });
+        } finally {
+            setVisible(false);
+        }
+    }
+
+    const [invalidStudentIds, setInvalidStudentIds] = useState<string[]>([]);
+    const [validatingIds, setValidatingIds] = useState<string[]>([]);
+
+    const handleStudentChange = async (selectedIds: string[]) => {
+        const prevIds = selectedStudentIds || [];
+        const addedIds = selectedIds.filter(id => !prevIds.includes(id));
+        if (addedIds.length === 0) {
+            setInvalidStudentIds(ids => ids.filter(id => selectedIds.includes(id)));
+            setValue("studentIds", selectedIds);
+            return;
+        }
+
+        const newId = addedIds[0];
+        setValidatingIds(ids => [...ids, newId]);
+        const student = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData?.user.tenancyId}/students/${newId}`
+        ).then(res => res.json());
+
+        let error = "";
+        if (!student.subscriptions || student.subscriptions.length === 0)
+            error = "não possui um plano ativo.";
+        else if (student.subscriptions.length > 1)
+            error = "possui mais de um plano ativo. Verifique manualmente.";
+        else if (!student.classes)
+            error = "não foi possível verificar as aulas.";
+        else if (!student.subscriptions[0].plan)
+            error = "não possui um plano ativo.";
+        else if (student.classes.length >= student.subscriptions[0].plan.frequency)
+            error = "atingiu o limite de aulas do plano.";
+
+        if (error) {
+            notifications.show({ message: `O aluno ${student.firstName} ${student.lastName} ${error}`, color: "red" });
+            setInvalidStudentIds(ids => [...ids, newId]);
+            setValue("studentIds", prevIds);
+        } else {
+            setValue("studentIds", selectedIds);
+        }
+        setValidatingIds(ids => ids.filter(id => id !== newId));
+    };
 
     if (status === "loading") return <LoadingOverlay visible />;
 
@@ -224,6 +292,7 @@ async function handleAssignStudents(data: EnrollStudentsInput) {
                                     className="!w-full"
                                     nothingFoundMessage={g("notFound")}
                                     rightSection={<FaSearch />}
+                                    onChange={handleStudentChange}
                                     error={errors.studentIds?.message}
                                 />
                             )}

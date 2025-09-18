@@ -2,10 +2,10 @@
 
 import InfoTerm from "@/components/ui/Infoterm";
 import { useTranslations } from "next-intl";
-import { StudentFromApi } from "../modals/NewStudent";
 import dayjs from "dayjs";
 import { Gender } from "@prisma/client";
 import { Avatar } from "@mantine/core";
+import { StudentFromApi } from "../StudentFromApi";
 
 export default function GeneralStudentsView({ student }: { student: StudentFromApi }) {
     const t = useTranslations();

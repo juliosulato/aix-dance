@@ -14,12 +14,13 @@ import notFound from "@/assets/images/not-found.avif";
 import { FaSearch } from "react-icons/fa";
 import { Student } from "@prisma/client";
 import z from "zod";
+import { StudentFromApi } from "../StudentFromApi";
 
 type Props = {
   opened: boolean;
   onClose: () => void;
   mutate: KeyedMutator<any>;
-  student: Student & { classes: any[] }; // classes vem com studentClasses do aluno
+  student: StudentFromApi; // classes vem com studentClasses do aluno
 };
 
 type FormValues = {
@@ -40,7 +41,6 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
     defaultValues: { classIds: [] },
   });
 
-  // 🔹 1. Buscar TODAS as turmas disponíveis da tenancy
   const { data: allClasses } = useSWR<any[]>(
     () =>
       sessionData?.user.tenancyId
@@ -49,7 +49,6 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
     fetcher
   );
 
-  // 🔹 2. Matrículas atuais do aluno
   const activeClassIds = useMemo(
     () =>
       student.classes
@@ -58,7 +57,6 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
     [student.classes]
   );
 
-  // 🔹 3. Popular o formulário quando abrir o modal
   useEffect(() => {
     reset({ classIds: activeClassIds });
   }, [student, activeClassIds, reset]);
@@ -81,6 +79,14 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
     if (status !== "authenticated" || !student?.id) return;
     setVisible(true);
 
+    const studentPlanFrequency = student?.subscriptions && student.subscriptions[0].plan ? student.subscriptions[0].plan.frequency : 0;
+
+    if (studentPlanFrequency > 0 && data.classIds.length > studentPlanFrequency) {
+      notifications.show({ message: "O aluno não pode ser matriculado em mais turmas do que o permitido pelo plano.", color: "red" });
+      setVisible(false);
+      return;
+    }
+
     const initialIds = activeClassIds;
     const finalIds = data.classIds || [];
 
@@ -91,11 +97,10 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
     const tenancyId = sessionData!.user.tenancyId;
 
     if (toEnroll.length > 0) {
-      
-      
+
       toEnroll.forEach((classId) => {
         const classInfo = allClasses?.find((c) => c.id === classId);
-      const className = classInfo?.name || "Turma desconhecida";
+        const className = classInfo?.name || "Turma desconhecida";
 
         promises.push(
           fetch(

@@ -7,8 +7,8 @@ import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal, ScrollArea, NumberInput, Select } from "@mantine/core";
-import { Bill, BillStatus } from "@prisma/client";
-import { KeyedMutator } from "swr";
+import { Bank, Bill, BillStatus } from "@prisma/client";
+import useSWR, { KeyedMutator } from "swr";
 import dayjs from "dayjs";
 
 import { getPayBillSchema } from "@/schemas/financial/bill.schema";
@@ -16,6 +16,8 @@ import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { DateInput } from "@mantine/dates";
 import { useLocale } from "next-intl";
 import z from "zod";
+import { BankSelect } from "../../(banks)/BankSelect";
+import { fetcher } from "@/utils/fetcher";
 
 // Tipagem para os dados que vêm do Zod schema
 type PayBillInput = z.infer<ReturnType<typeof getPayBillSchema>>;
@@ -43,6 +45,9 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
     const [isLoading, setIsLoading] = useState(false);
 
     const payBillSchema = getPayBillSchema((key: string) => t(key as any));
+    const { data: sessionData } = useSession();
+    
+    const { data: banks } = useSWR<Bank[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData?.user.tenancyId}/banks`, fetcher);
 
     const { control, handleSubmit, formState: { errors }, reset } = useForm<PayBillInput>({
         resolver: zodResolver(payBillSchema),
@@ -59,7 +64,6 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
         }
     }, [bill, reset]);
 
-    const { data: sessionData } = useSession();
 
     async function handlePayBill(data: PayBillInput) {
         if (!sessionData?.user.tenancyId || !bill) {
@@ -178,6 +182,25 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                                     onChange={field.onChange}
                                     error={errors.status?.message}
                                     required
+                                    className="md:col-span-2"
+                                />
+                            )}
+                        />
+
+
+                        <Controller
+                            control={control}
+                            name="bankId"
+                            render={({ field }) => (
+                                <Select
+                                    label={t("fields.bank.label")}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    error={errors.bankId?.message}
+                                    searchable
+                                    clearable
+                                    data={banks?.map((bank) => ({ label: bank.name, value: bank.id })) || []}
+                                    placeholder={t("fields.bank.placeholder")}
                                     className="md:col-span-2"
                                 />
                             )}

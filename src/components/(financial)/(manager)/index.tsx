@@ -18,7 +18,7 @@ import 'dayjs/locale/en';
 import 'dayjs/locale/es';
 import NewBill from "./modals/NewBill";
 import UpdateBill from "./modals/UpdateBill";
-import { Bank, Bill, CategoryBill, FormsOfReceipt, Supplier } from "@prisma/client";
+import { Bank, Bill, CategoryBill, FormsOfReceipt, Sale, Supplier } from "@prisma/client";
 import { StatusTextToBadge } from "@/utils/statusTextToBadge";
 import { FaCalendarAlt } from "react-icons/fa";
 import PayBill from "./modals/PayBill";

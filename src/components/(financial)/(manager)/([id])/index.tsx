@@ -116,7 +116,7 @@ export default function BillView({ bill, tenancyId }: { bill: BillFromApi, tenan
             {/* ADICIONADO: Link para a venda associada */}
             {bill.saleId && (
                 <InfoTerm label="Venda de Origem" icon={<FaLink />} href={`/system/sales/${bill.saleId}`}>
-                    Ver venda #{bill.saleId.substring(0, 8)}
+                    Ver venda #{bill.saleId}
                 </InfoTerm>
             )}
             </div>

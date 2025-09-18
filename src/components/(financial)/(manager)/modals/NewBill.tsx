@@ -36,10 +36,9 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
             description: "",
             amount: 0,
             status: BillStatus.PENDING,
-            supplierId: null,
-            categoryId: null,
-            bankId: null,
-
+            supplierId: undefined,
+            categoryId: undefined,
+            bankId: undefined,
             paymentMode: 'INSTALLMENTS', 
             installments: 1,
             dueDate: new Date(),

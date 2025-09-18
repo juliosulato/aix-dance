@@ -10,7 +10,7 @@ import { BiSupport } from "react-icons/bi";
 import LogoSVG from "../Logo";
 import { HiOutlineChevronRight, HiOutlineChevronDown } from "react-icons/hi2";
 import { signOut, useSession } from "next-auth/react";
-import { IoNotificationsOutline } from "react-icons/io5";
+import NotificationBell from "./NotificationBell";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa";
 import { LuBrain, LuLogOut } from "react-icons/lu";
@@ -79,11 +79,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         </Menu.Dropdown>
                     </Menu>
 
-                    <Tooltip label={t("header.notifications.label")} color="violet">
-                        <ActionIcon size="42px" radius="lg" variant="light" color="gray">
-                            <IoNotificationsOutline className="text-2xl" />
-                        </ActionIcon>
-                    </Tooltip>
+                    <NotificationBell />
                     <Menu>
                         <Menu.Target>
                             <Button className="flex items-center gap-2 !h-full !p-0" variant="transparent">
@@ -179,7 +175,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                             active={pathname === "/system/settings/users"}
                         />
 
-                        <LanguagePicker />
+                        {/* <LanguagePicker /> */}
                     </NavLink>
                     <NavLink
                         color="violet"

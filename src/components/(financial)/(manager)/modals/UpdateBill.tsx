@@ -51,15 +51,13 @@ export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
                 status: bill.status,
                 dueDate: bill.dueDate ? new Date(bill.dueDate) : undefined,
                 paymentDate: bill.paymentDate ? new Date(bill.paymentDate) : undefined,
-                supplierId: bill.supplierId,
-                categoryId: bill.categoryId,
-                formsOfReceiptId: bill.formsOfReceiptId,
-                bankId: bill.bankId,
-                // Campos relacionados a recorrência que também podem ser atualizados
-                installments: bill.installments,
-                recurrence: bill.recurrence ?? undefined,
+                supplierId: bill.supplierId || undefined,
+                categoryId: bill.categoryId || undefined,
+                bankId: bill.bankId || undefined,
+                installments: bill.installments || undefined,
+                recurrence: bill.recurrence || undefined,
                 recurrenceEndDate: bill.recurrenceEndDate ? new Date(bill.recurrenceEndDate) : undefined,
-                recurrenceCount: bill.recurrenceCount ?? undefined,
+                recurrenceCount: bill.recurrenceCount || undefined,
             });
         }
     }, [bill, reset]);

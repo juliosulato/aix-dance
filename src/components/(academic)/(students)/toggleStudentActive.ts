@@ -1,7 +1,7 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { Translations } from "@/types/translations";
-import { StudentFromApi } from "./modals/NewStudent";
+import { StudentFromApi } from "./StudentFromApi";
 
 async function toggleStudentActive(
   item: StudentFromApi,

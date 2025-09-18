@@ -17,11 +17,10 @@ import Address from "./address";
 import AvatarUpload from "../../../avatarUpload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyedMutator } from "swr";
-import { Address as AddressType, CommissionTier, Permission, Teacher, User } from "@prisma/client";
+import { Address as AddressType, CommissionTier, Teacher, User } from "@prisma/client";
 import Teacher__AccessDataUpdate from "./accessDataUpdate";
 
 export interface TeacherFromApi extends User {
-    permissions: Permission[];
     teacher: (Teacher & {
         comissionTiers: CommissionTier[];
         address: AddressType | null;

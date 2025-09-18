@@ -40,7 +40,6 @@ export default function UpdatePlan({ opened, onClose, mutate, plan }: Props) {
             amount: 0.00,
             frequency: 1,
             type: "MONTHLY",
-            contractModelId: null
         }
     });
 

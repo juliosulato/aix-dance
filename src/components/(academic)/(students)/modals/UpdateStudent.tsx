@@ -21,7 +21,7 @@ import Address from "../../../AddressForm";
 import { KeyedMutator } from "swr";
 import { Address as AddressPrisma, Student, StudentGuardian } from "@prisma/client";
 import { CreateStudentInput, getCreateStudentSchema } from "@/schemas/academic/student.schema";
-import { StudentFromApi } from "./NewStudent";
+import { StudentFromApi } from "../StudentFromApi";
 
 dayjs.extend(customParseFormat);
 
@@ -87,7 +87,7 @@ useEffect(() => {
       })) ?? [],
     });
 
-    setAvatarUrl(student.image);
+    setAvatarUrl(student.image || "");
   }
   
 }, [student, reset]);

@@ -1,9 +1,9 @@
-import { CreatePaymentMethodInput, UpdatePaymentMethodInput } from "@/schemas/financial/payment-method.schema";
+import { CreateFormsOfReceiptInput, UpdateFormsOfReceiptInput } from "@/schemas/financial/forms-receipt.schema";
 import { TextInput } from "@mantine/core";
 import { useTranslations } from "next-intl";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 
-export default function PaymentMethod__BasicInformations({ register, errors }: { register: UseFormRegister<CreatePaymentMethodInput | UpdatePaymentMethodInput>; errors: FieldErrors<CreatePaymentMethodInput | UpdatePaymentMethodInput>; }) {
+export default function FormsOfReceipt__BasicInformations({ register, errors }: { register: UseFormRegister<CreateFormsOfReceiptInput | UpdateFormsOfReceiptInput>; errors: FieldErrors<CreateFormsOfReceiptInput | UpdateFormsOfReceiptInput>; }) {
     const t = useTranslations("financial.payment-methods.modals");
     
     return (

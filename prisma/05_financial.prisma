@@ -23,7 +23,7 @@ model Bill {
     subscriptionId    String?
     subscription      Subscription?    @relation(fields: [subscriptionId], references: [id])
 
-    saleId String?
+    saleId Int?
     sale   Sale?   @relation(fields: [saleId], references: [id])
 
     studentId String?
@@ -35,9 +35,11 @@ model Bill {
     categoryId String?
     category   CategoryBill? @relation(fields: [categoryId], references: [id])
 
-    paymentMethodId String?
-    paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+    formsOfReceiptId String?
+    formsOfReceipt   FormsOfReceipt? @relation(fields: [formsOfReceiptId], references: [id])
 
+    paymentMethod   PaymentMethod?  @default(CASH)
+    
     bankId String?
     bank   Bank?   @relation(fields: [bankId], references: [id])
 
@@ -52,17 +54,29 @@ model Bill {
     @@schema("financial")
 }
 
+enum PaymentMethod {
+    CREDIT_CARD
+    DEBIT_CARD
+    CASH
+    BANK_SLIP
+    BANK_TRANSFER
+    PIX
+
+    @@schema("financial")
+}
+
 model Sale {
-  id        String    @id @default(cuid())
+  id        Int    @id @default(autoincrement())
   tenancyId String
   studentId String
   
   totalAmount Decimal
+  discountPercentage Float @default(0)
   
   items     SaleItem[]
   bills     Bill[]
 
-  student   Student?   @relation(fields: [studentId], references: [id])
+  student   Student   @relation(fields: [studentId], references: [id],  onDelete: Cascade)
   tenancy   Tenancy   @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
   
   createdAt DateTime @default(now())
@@ -71,7 +85,7 @@ model Sale {
 
 model SaleItem {
   id          String   @id @default(cuid())
-  saleId      String
+  saleId      Int
   
   description String
   unitAmount  Decimal
@@ -199,14 +213,13 @@ model CategoryGroup {
     @@schema("financial")
 }
 
-model PaymentMethod {
+model FormsOfReceipt {
     id       String  @id @default(cuid())
     name     String
     operator String?
 
     fees     PaymentFee[]
     bills    Bill[]
-    teachers Teacher[]
 
     tenancyId String
     tenancy   Tenancy @relation(fields: [tenancyId], references: [id])
@@ -219,8 +232,8 @@ model PaymentMethod {
 
 model PaymentFee {
     id               String        @id @default(cuid())
-    paymentMethodId  String
-    paymentMethod    PaymentMethod @relation(fields: [paymentMethodId], references: [id], onDelete: Cascade)
+    formsOfReceiptId  String
+    formsOfReceipt    FormsOfReceipt @relation(fields: [formsOfReceiptId], references: [id], onDelete: Cascade)
     minInstallments  Int           @default(1)
     maxInstallments  Int           @default(1)
     feePercentage    Float

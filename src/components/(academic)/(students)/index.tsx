@@ -113,13 +113,6 @@ export default function AllStudentsData() {
                     <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(student)}>
                         {t("general.actions.delete")}
                     </Menu.Item>
-                    <Menu.Item color={student.active ? "red" : "green"} leftSection={<GrUpdate size={14} />} onClick={() => toggleStudentActive(student, sessionData?.user.tenancyId || "", t)}>
-                        {student.active ? (
-                            t("academic.students.status.update.ACTIVE")
-                        ) : (
-                            t("academic.students.status.update.INACTIVE")
-                        )}
-                    </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
         </div>

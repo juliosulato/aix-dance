@@ -53,7 +53,7 @@ export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
                 paymentDate: bill.paymentDate ? new Date(bill.paymentDate) : undefined,
                 supplierId: bill.supplierId,
                 categoryId: bill.categoryId,
-                paymentMethodId: bill.paymentMethodId,
+                formsOfReceiptId: bill.formsOfReceiptId,
                 bankId: bill.bankId,
                 // Campos relacionados a recorrência que também podem ser atualizados
                 installments: bill.installments,

@@ -6,30 +6,30 @@ import { useTranslations } from "next-intl";
 
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
-import { UpdatePaymentMethodInput, getUpdatePaymentMethodSchema } from "@/schemas/financial/payment-method.schema";
-import { PaymentMethod } from "..";
+import { UpdateFormsOfReceiptInput, getUpdateFormsOfReceiptSchema } from "@/schemas/financial/forms-receipt.schema";
+import { FormsOfReceipt } from "..";
 import { KeyedMutator } from "swr";
-import PaymentMethod__BasicInformations from "./basic-informations";
-import PaymentMethod__Fees from "./feeForm";
+import FormsOfReceipt__BasicInformations from "./basic-informations";
+import FormsOfReceipt__Fees from "./feeForm";
 
 type Props = {
-  paymentMethod: PaymentMethod | null;
+  formsOfReceipt: FormsOfReceipt | null;
   opened: boolean;
   onClose: () => void;
   onSuccess?: () => void;
-  mutate: () => void | KeyedMutator<PaymentMethod[]>;
+  mutate: () => void | KeyedMutator<FormsOfReceipt[]>;
 };
 
-export default function UpdatePaymentMethod({ mutate, paymentMethod, opened, onClose, onSuccess }: Props) {
+export default function UpdateFormsOfReceipt({ mutate, formsOfReceipt, opened, onClose, onSuccess }: Props) {
   const t = useTranslations("financial.payment-methods.modals");
   const g = useTranslations("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const updatePaymentMethodSchema = getUpdatePaymentMethodSchema((key: string) => t(key as any));
+  const updateFormsOfReceiptSchema = getUpdateFormsOfReceiptSchema((key: string) => t(key as any));
 
   const { control, handleSubmit, formState: { errors }, register, reset } =
-    useForm<UpdatePaymentMethodInput>({
-      resolver: zodResolver(updatePaymentMethodSchema) as any,
+    useForm<UpdateFormsOfReceiptInput>({
+      resolver: zodResolver(updateFormsOfReceiptSchema) as any,
       defaultValues: { // inicial vazio
         name: undefined,
         operator: undefined,
@@ -37,13 +37,13 @@ export default function UpdatePaymentMethod({ mutate, paymentMethod, opened, onC
       },
     });
 
-  // 👉 Atualiza os valores do formulário sempre que mudar o `paymentMethod`
+  // 👉 Atualiza os valores do formulário sempre que mudar o `formsOfReceipt`
   useEffect(() => {
-    if (paymentMethod) {
+    if (formsOfReceipt) {
       reset({
-        name: paymentMethod.name,
-        operator: paymentMethod.operator ?? undefined,
-        fees: paymentMethod.fees.map((fee) => ({
+        name: formsOfReceipt.name,
+        operator: formsOfReceipt.operator ?? undefined,
+        fees: formsOfReceipt.fees.map((fee) => ({
           customerInterest: fee.customerInterest,
           feePercentage: fee.feePercentage,
           maxInstallments: fee.maxInstallments,
@@ -52,11 +52,11 @@ export default function UpdatePaymentMethod({ mutate, paymentMethod, opened, onC
         })),
       });
     }
-  }, [paymentMethod, reset]);
+  }, [formsOfReceipt, reset]);
 
   const { data: sessionData } = useSession();
 
-  async function updatePaymentMethod(data: UpdatePaymentMethodInput) {
+  async function updateFormsOfReceipt(data: UpdateFormsOfReceiptInput) {
     if (!sessionData?.user.tenancyId) {
       notifications.show({ color: "red", message: g("errors.invalidSession") });
       return;
@@ -64,14 +64,14 @@ export default function UpdatePaymentMethod({ mutate, paymentMethod, opened, onC
     setIsLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/payment-methods/${paymentMethod?.id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/forms-of-receipt/${formsOfReceipt?.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...data }),
         }
       );
-      if (!response.ok) throw new Error("Failed to update payment method");
+      if (!response.ok) throw new Error("Failed to update forms of receipt");
       notifications.show({ message: t("update.notifications.success"), color: "green" });
       if (onSuccess) onSuccess();
       onClose();
@@ -98,12 +98,12 @@ export default function UpdatePaymentMethod({ mutate, paymentMethod, opened, onC
       }}
     >
       <form
-        onSubmit={handleSubmit(updatePaymentMethod)}
+        onSubmit={handleSubmit(updateFormsOfReceipt)}
         className="flex flex-col gap-4"
       >
         <LoadingOverlay visible={isLoading} />
-        <PaymentMethod__BasicInformations register={register} errors={errors} />
-        <PaymentMethod__Fees control={control} register={register} errors={errors} />
+        <FormsOfReceipt__BasicInformations register={register} errors={errors} />
+        <FormsOfReceipt__Fees control={control} register={register} errors={errors} />
         <Button
           type="submit"
           loading={isLoading}

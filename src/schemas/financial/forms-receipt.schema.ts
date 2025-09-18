@@ -1,7 +1,7 @@
 import toTitleCase from "@/utils/toTitleCase";
 import z from "zod";
 
-export const getCreatePaymentMethodSchema = (t: (key: string) => string) => z.object({
+export const getCreateFormsOfReceiptSchema = (t: (key: string) => string) => z.object({
   name: z.string().min(1, { message: t('fields.name.errors.required') }).transform(toTitleCase),
   operator: z.string().optional(),
   fees: z.array(z.object({
@@ -23,10 +23,10 @@ export const getCreatePaymentMethodSchema = (t: (key: string) => string) => z.ob
     path: ['fees']
 });
 
-export const getUpdatePaymentMethodSchema = (t: (key: string) => string) =>
-  getCreatePaymentMethodSchema(t).partial();
+export const getUpdateFormsOfReceiptSchema = (t: (key: string) => string) =>
+  getCreateFormsOfReceiptSchema(t).partial();
 
 
 // Tipos inferidos
-export type CreatePaymentMethodInput = z.infer<ReturnType<typeof getCreatePaymentMethodSchema>>;
-export type UpdatePaymentMethodInput = z.infer<ReturnType<typeof getUpdatePaymentMethodSchema>>;
+export type CreateFormsOfReceiptInput = z.infer<ReturnType<typeof getCreateFormsOfReceiptSchema>>;
+export type UpdateFormsOfReceiptInput = z.infer<ReturnType<typeof getUpdateFormsOfReceiptSchema>>;

@@ -89,7 +89,7 @@ const useMenuData = () => {
         // { icon: <MdOutlineSpaceDashboard />, label: t("navbar.financial.financialSummary"), href: "/system/financial/resume" },
         { icon: <PiMoneyWavy />, label: t("navbar.financial.financialManager"), href: "/system/financial/manager/" },
         { icon: <TbBuildingBank />, label: t("navbar.financial.financialAccounts"), href: "/system/financial/bank-accounts" },
-        { icon: <MdPayment />, label: t("navbar.financial.financialPaymentMethods"), href: "/system/financial/payment-methods" },
+        { icon: <MdPayment />, label: t("navbar.financial.financialFormsOfReceipts"), href: "/system/financial/forms-of-receipt" },
         { icon: <MdOutlineCategory />, label: t("navbar.financial.financialCategories"), href: "/system/financial/categories" },
         { icon: <BsBox />, label: t("navbar.financial.financialGroups"), href: "/system/financial/groups" },
         // { icon: <LuChartSpline />, label: t("navbar.financial.financialReports"), href: "/system/financial/reports" },

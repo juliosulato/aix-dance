@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, LoadingOverlay, Modal, Select, Group, Alert } from '@mantine/core';
+import { Button, LoadingOverlay, Modal, Select, Group, Alert, Text } from '@mantine/core';
 import { useSession } from 'next-auth/react';
 import { notifications } from '@mantine/notifications';
 import { ContractModel, ContractStatus, Plan, Student, Tenancy } from '@prisma/client';
@@ -29,6 +29,9 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
     const tenancyId = sessionData?.user.tenancyId;
 
     const { data: students } = useSWR<Student[]>(tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students` : null, fetcher);
+
+    // Buscar status do aluno selecionado
+    const selectedStudent = students?.find(s => s.id === studentId);
     const { data: contractModels } = useSWR<ContractModel[]>(tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/contract-models` : null, fetcher);
     const { data: tenancy } = useSWR<Tenancy>(tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}` : null, fetcher);
 
@@ -156,12 +159,21 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
                 <Controller name="contractModelId" control={control} render={({ field }) => (<Select label="Selecione o Modelo de Contrato" placeholder="Escolha um modelo" data={contractModels?.map(m => ({ value: m.id, label: m.title })) || []} {...field} error={errors.contractModelId?.message} required />)} />
                 <Alert icon={<FaInfoCircle size={16} />} title="Revisão do Contrato" color="blue" radius="md" mt="md"> O contrato abaixo foi preenchido automaticamente. Reveja as informações antes de gerar. </Alert>
 
+                {/* Alerta de bloqueio acadêmico */}
+                {selectedStudent && selectedStudent.active === false && (
+                    <Alert icon={<FaInfoCircle size={16} />} title="Ação Bloqueada" color="red" radius="md" mt="md">
+                        <Text size="sm">
+                            Este aluno está <strong>inativo</strong> devido a pendências financeiras. Não é possível gerar novos contratos enquanto o status estiver bloqueado.
+                        </Text>
+                    </Alert>
+                )}
+
                 <RichText key={richTextKey} control={control} onContentChange={(content) => setValue('htmlContent', content)} />
 
                 <Group justify="flex-end" mt="md">
                     <Button variant="default" onClick={handleClose}>Cancelar</Button>
-                    <Button type="submit" loading={isLoading}>
-                        {onConfirm ? "Confirmar Contrato" : "Gerar Contrato"}
+                    <Button type="submit" loading={isLoading} disabled={selectedStudent && selectedStudent.active === false}>
+                        {selectedStudent && selectedStudent.active === false ? "Ação Bloqueada" : (onConfirm ? "Confirmar Contrato" : "Gerar Contrato")}
                     </Button>
                 </Group>
             </form>

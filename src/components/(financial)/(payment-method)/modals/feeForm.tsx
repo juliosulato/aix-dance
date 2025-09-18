@@ -6,17 +6,17 @@ import { useTranslations } from "next-intl";
 import { Button, ActionIcon, NumberInput, Checkbox } from "@mantine/core";
 import { FaPercentage } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { CreatePaymentMethodInput, UpdatePaymentMethodInput } from "@/schemas/financial/payment-method.schema";
+import { CreateFormsOfReceiptInput, UpdateFormsOfReceiptInput } from "@/schemas/financial/forms-receipt.schema";
 
 
-export default function PaymentMethod__Fees({
+export default function FormsOfReceipt__Fees({
   control,
   register,
   errors,
 }: {
-  control: Control<CreatePaymentMethodInput | UpdatePaymentMethodInput>;
-  register: UseFormRegister<CreatePaymentMethodInput | UpdatePaymentMethodInput>;
-  errors: FieldErrors<CreatePaymentMethodInput | UpdatePaymentMethodInput>;
+  control: Control<CreateFormsOfReceiptInput | UpdateFormsOfReceiptInput>;
+  register: UseFormRegister<CreateFormsOfReceiptInput | UpdateFormsOfReceiptInput>;
+  errors: FieldErrors<CreateFormsOfReceiptInput | UpdateFormsOfReceiptInput>;
 }) {
   const t = useTranslations("financial.payment-methods.modals");
   const { fields, append, remove } = useFieldArray({ control, name: "fees" });

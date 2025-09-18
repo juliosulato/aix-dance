@@ -2,23 +2,23 @@
 
 import InfoTerm from "@/components/ui/Infoterm";
 import { SimpleGrid } from "@mantine/core";
-import { PaymentMethod } from "..";
+import { FormsOfReceipt } from "..";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import deletePaymentMethod from "../deletePaymentMethod";
-import UpdatePaymentMethod from "../modals/updatePaymentMethod";
+import deleteFormsOfReceipt from "../deleteFormsOfReceipt";
+import UpdateFormsOfReceipt from "../modals/updateFormsOfReceipt";
 import { useState } from "react";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import { useTranslations } from "next-intl";
 
-export default function PaymentMethodView({ paymentMethod, tenancyId }: { paymentMethod: PaymentMethod, tenancyId: string }) {
+export default function FormsOfReceiptView({ formsOfReceipt, tenancyId }: { formsOfReceipt: FormsOfReceipt, tenancyId: string }) {
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
     const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            await deletePaymentMethod([paymentMethod.id], tenancyId);
-            window.location.replace("/system/financial/payment-methods");
+            await deleteFormsOfReceipt([formsOfReceipt.id], tenancyId);
+            window.location.replace("/system/financial/forms-of-receipt");
         } catch (error) {
             console.error("Falha ao excluir a forma de pagamento:", error);
             setIsDeleting(false);
@@ -45,10 +45,10 @@ export default function PaymentMethodView({ paymentMethod, tenancyId }: { paymen
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={t("financial.payment-methods.modals.fields.name.label")} children={paymentMethod.name} />
-                <InfoTerm label={t("financial.payment-methods.modals.fields.operator.label")} children={paymentMethod.operator} />
-                {paymentMethod.fees.length > 0 && <h2 className="md:col-span-2 lg:col-span-3 font-bold text-xl my-4">{t("financial.payment-methods.modals.feesSubtitle")}</h2>}
-                {paymentMethod.fees.map((fee) => (
+                <InfoTerm label={t("financial.payment-methods.modals.fields.name.label")} children={formsOfReceipt.name} />
+                <InfoTerm label={t("financial.payment-methods.modals.fields.operator.label")} children={formsOfReceipt.operator} />
+                {formsOfReceipt.fees.length > 0 && <h2 className="md:col-span-2 lg:col-span-3 font-bold text-xl my-4">{t("financial.payment-methods.modals.feesSubtitle")}</h2>}
+                {formsOfReceipt.fees.map((fee) => (
                      <div className="grid gap-4 md:grid-cols-2 md:col-span-2 lg:col-span-3" key={fee.id}>
                         <InfoTerm label={t("financial.payment-methods.modals.fields.fees.minInstallments")} children={fee.minInstallments} />
                         <InfoTerm label={t("financial.payment-methods.modals.fields.fees.maxInstallments")} children={fee.maxInstallments} />
@@ -59,7 +59,7 @@ export default function PaymentMethodView({ paymentMethod, tenancyId }: { paymen
                 ))}
             </div>
 
-            <UpdatePaymentMethod paymentMethod={paymentMethod} onClose={() => setOpenUpdate(false)} opened={openUpdate} mutate={() => window.location.reload()} />
+            <UpdateFormsOfReceipt formsOfReceipt={formsOfReceipt} onClose={() => setOpenUpdate(false)} opened={openUpdate} mutate={() => window.location.reload()} />
             <ConfirmationModal
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
@@ -70,7 +70,7 @@ export default function PaymentMethodView({ paymentMethod, tenancyId }: { paymen
                 loading={isDeleting}
             >
                 Você tem certeza que deseja excluir a forma de pagamento
-                <strong className="mx-1">{paymentMethod.name}</strong>?
+                <strong className="mx-1">{formsOfReceipt.name}</strong>?
                 Esta ação não poderá ser desfeita.
             </ConfirmationModal>
         </div>

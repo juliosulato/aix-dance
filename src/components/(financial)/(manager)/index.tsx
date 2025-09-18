@@ -18,7 +18,7 @@ import 'dayjs/locale/en';
 import 'dayjs/locale/es';
 import NewBill from "./modals/NewBill";
 import UpdateBill from "./modals/UpdateBill";
-import { Bank, Bill, CategoryBill, PaymentMethod, Supplier } from "@prisma/client";
+import { Bank, Bill, CategoryBill, FormsOfReceipt, Supplier } from "@prisma/client";
 import { StatusTextToBadge } from "@/utils/statusTextToBadge";
 import { FaCalendarAlt } from "react-icons/fa";
 import PayBill from "./modals/PayBill";
@@ -36,7 +36,7 @@ export type BillFromApi = Omit<Bill, 'amount' | 'amountPaid' | 'dueDate' | 'paym
     bank: Bank | null;
     supplier: Supplier | null;
     category: CategoryBill | null;
-    paymentMethod: PaymentMethod | null;
+    formsOfReceipt: FormsOfReceipt | null;
     children: BillFromApi[];
     type: 'PAYABLE' | 'RECEIVABLE';
     totalInstallments?: number;
@@ -247,9 +247,9 @@ export default function AllBillsData() {
                         sortable: true
                     },
                     {
-                        key: "paymentMethod",
+                        key: "formsOfReceipt",
                         label: t("financial.bills.modals.fields.payment-method.label"),
-                        render: (paymentMethod) => paymentMethod?.name || '-',
+                        render: (formsOfReceipt) => formsOfReceipt?.name || '-',
                         sortable: true
                     },
                     {

@@ -28,7 +28,7 @@ model Tenancy {
     banks          Bank[]
     categoryBills  CategoryBill[]
     categoryGroups CategoryGroup[]
-    paymentMethods PaymentMethod[]
+    formsOfReceipts FormsOfReceipt[]
     subscriptions  Subscription[]
     sales          Sale[]
 
@@ -235,8 +235,6 @@ model Plan {
     amount    Decimal
     isActive  Boolean  @default(true)
 
-    contractModelId String?
-    contractModel   ContractModel? @relation(fields: [contractModelId], references: [id], onDelete: Cascade)
 
     monthlyInterest    Float
     finePercentage     Float
@@ -248,7 +246,6 @@ model Plan {
 
     subscriptions Subscription[]
     
-    // Relação com o schema financeiro
     saleItems     SaleItem[] 
 
     @@schema("tenancy")

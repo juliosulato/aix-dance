@@ -1,5 +1,5 @@
 {
-    "title": "Formas de Pagamento",
+    "title": "Formas de Recebimento",
     "searchbarPlaceholder": "Pesquise por nome ou operador",
     "modals": {
         "create": {
@@ -20,8 +20,8 @@
             "title": "Confirmar Exclusão",
             "confirmLabel": "Sim, Excluir",
             "cancelLabel": "Cancelar",
-            "textArray": "Você tem certeza que deseja excluir as {paymentMethods} formas de pagamento selecionadas?",
-            "text": "Você tem certeza que deseja excluir a forma de pagamento {paymentMethods}?",
+            "textArray": "Você tem certeza que deseja excluir as {formsOfReceipts} Formas de Recebimento selecionadas?",
+            "text": "Você tem certeza que deseja excluir a forma de pagamento {formsOfReceipts}?",
             "warn": "Esta ação não poderá ser desfeita."
         },
         "basicInfoSubtitle": "Informações Básicas",

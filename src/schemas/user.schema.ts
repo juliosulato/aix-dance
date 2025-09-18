@@ -29,7 +29,7 @@ export const getTeacherSchema = (t: (key: string) => string) => {
     remunerationType: z.enum(RemunerationType, { error: t("teachers.modals.create.remuneration.fields.contractType.errors.required") }),
     baseAmount: z.number({ error: t("academic.teachers.modals.create.remuneration.fields.baseAmount.errors.required") }).min(1, t("academic.teachers.modals.create.remuneration.fields.baseAmount.errors.min")),
     paymentDay: z.number().int().min(1).max(31).default(5),
-    paymentMethodId: z.string().optional(),
+    formsOfReceiptId: z.string().optional(),
     paymentData: z.string().optional(),
     observations: z.string().optional(),
 

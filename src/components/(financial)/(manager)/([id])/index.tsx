@@ -85,7 +85,7 @@ export default function BillView({ bill, tenancyId }: { bill: BillFromApi, tenan
                     {bill.category?.name}
                 </InfoTerm>
                 <InfoTerm label={t("financial.bills.modals.fields.payment-method.label")} icon={<FaCreditCard />}>
-                    {bill.paymentMethod?.name}
+                    {bill.formsOfReceipt?.name}
                 </InfoTerm>
                 <InfoTerm label={t("financial.bills.modals.fields.bank.label")} icon={<FaUniversity />}>
                     {bill.bank?.name}

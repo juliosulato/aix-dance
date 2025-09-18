@@ -5,7 +5,7 @@ import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import useSWR from 'swr';
-import { Tenancy, Plan, Student, PaymentMethod, Subscription } from '@prisma/client';
+import { Tenancy, Plan, Student, FormsOfReceipt, Subscription } from '@prisma/client';
 import { FaSearch, FaUser, FaPlusCircle, FaFileAlt, FaRegTrashAlt, FaExclamationTriangle } from 'react-icons/fa';
 import { ActionIcon, Button, NumberInput, Select, TextInput, Alert, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
@@ -20,7 +20,7 @@ import { StudentFromApi } from '../StudentFromApi';
 const saleFormSchema = z.object({
     studentId: z.string().min(1, { message: "Selecione um aluno." }),
     payments: z.array(z.object({
-        paymentMethodId: z.string().min(1),
+        formsOfReceiptId: z.string().min(1),
         amount: z.number().positive("O valor do pagamento deve ser positivo."),
         installments: z.number().int().min(1, "O mínimo é 1 parcela.").default(1),
     })).min(1, "Adicione pelo menos uma forma de pagamento."),
@@ -62,7 +62,7 @@ export default function PointOfSale({ tenancyId, studentId: preselectedStudentId
     const { data: tenancy } = useSWR<Tenancy>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}`, fetcher);
     const { data: plans } = useSWR<Plan[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/plans`, fetcher);
     const { data: students } = useSWR<Student[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students`, fetcher);
-    const { data: paymentMethods } = useSWR<PaymentMethod[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/payment-methods`, fetcher);
+    const { data: formsOfReceipt } = useSWR<FormsOfReceipt[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/forms-of-receipt`, fetcher);
 
     // --- Estados do Componente ---
     const [searchTerm, setSearchTerm] = useState('');
@@ -84,6 +84,12 @@ export default function PointOfSale({ tenancyId, studentId: preselectedStudentId
         selectedStudentId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${selectedStudentId}` : null,
         fetcher
     );
+
+    // --- Buscar status do aluno selecionado ---
+    const selectedStudent = useMemo(() => {
+        if (!students || !selectedStudentId) return undefined;
+        return students.find(s => s.id === selectedStudentId);
+    }, [students, selectedStudentId]);
 
     // --- Lógica de Produtos e Carrinho ---
     const availableProducts = useMemo((): Product[] => {
@@ -163,14 +169,14 @@ export default function PointOfSale({ tenancyId, studentId: preselectedStudentId
     }, [preselectedStudentId, setValue]);
 
     useEffect(() => {
-        if (paymentMethods && paymentMethods.length > 0 && paymentFields.length === 0) {
+        if (formsOfReceipt && formsOfReceipt.length > 0 && paymentFields.length === 0) {
             appendPayment({
-                paymentMethodId: paymentMethods[0].id,
+                formsOfReceiptId: formsOfReceipt[0].id,
                 amount: finalTotal,
                 installments: 1
             });
         }
-    }, [paymentMethods, paymentFields.length, appendPayment, finalTotal]);
+    }, [formsOfReceipt, paymentFields.length, appendPayment, finalTotal]);
 
 
     useEffect(() => {
@@ -278,6 +284,14 @@ export default function PointOfSale({ tenancyId, studentId: preselectedStudentId
                                     </Text>
                                 </Alert>
                             )}
+                            {/* --- Alerta de bloqueio acadêmico --- */}
+                            {selectedStudent && selectedStudent.active === false && (
+                                <Alert icon={<FaExclamationTriangle size={18} />} title="Ação Bloqueada" color="red" radius="md" mb="md" variant="light">
+                                    <Text size="sm">
+                                        Este aluno está <strong>inativo</strong> devido a pendências financeiras. Não é possível realizar novas matrículas, vendas ou contratos enquanto o status estiver bloqueado.
+                                    </Text>
+                                </Alert>
+                            )}
                             <div className="space-y-3 mb-4 max-h-[40vh] overflow-y-auto">
                                 {cart.map(item => (
                                     <div key={item.cartId} className="border border-neutral-300  p-3 rounded-md">
@@ -347,7 +361,7 @@ export default function PointOfSale({ tenancyId, studentId: preselectedStudentId
                                                     </div>
 
                                                     <div className='grid grid-cols-1 md:grid-cols-2 lg:col-span-3 items-center justify-center gap-2'>
-                                                        <Controller name={`payments.${index}.paymentMethodId`} control={control} render={({ field }) => (<Select data={paymentMethods?.map(p => ({ value: p.id, label: p.name })) || []} value={field.value} onChange={field.onChange} placeholder="Forma de pagamento" label="Forma de pagamento" size="md" radius="md" />)} />
+                                                        <Controller name={`payments.${index}.formsOfReceiptId`} control={control} render={({ field }) => (<Select data={formsOfReceipt?.map(p => ({ value: p.id, label: p.name })) || []} value={field.value} onChange={field.onChange} placeholder="Forma de pagamento" label="Forma de pagamento" size="md" radius="md" />)} />
                                                         <Controller name={`payments.${index}.installments`} control={control} render={({ field }) => (<NumberInput min={1} value={field.value} onChange={e => field.onChange(Number(e) || 1)} placeholder="Parc." label="Parc." size="md" radius="md" />)} />
                                                         <Controller name={`payments.${index}.amount`} control={control} render={({ field }) => (<NumberInput allowDecimal decimalSeparator=',' min={0} value={field.value}
                                                             onChange={(val) => field.onChange(val)}
@@ -356,12 +370,12 @@ export default function PointOfSale({ tenancyId, studentId: preselectedStudentId
                                                 </div>
                                             ))}
                                         </div>
-                                        <button type="button" onClick={() => appendPayment({ paymentMethodId: paymentMethods?.[0]?.id || '', amount: 0, installments: 1 })} className="mt-2 text-sm text-purple-600 font-semibold">+ Adicionar Pagamento</button>
+                                        <button type="button" onClick={() => appendPayment({ formsOfReceiptId: formsOfReceipt?.[0]?.id || '', amount: 0, installments: 1 })} className="mt-2 text-sm text-purple-600 font-semibold">+ Adicionar Pagamento</button>
                                     </div>
                                 </div>
                                 <br />
-                                <Button loading={isSubmitting} color='green' fullWidth size="lg" radius="lg" type="submit"  >
-                                    {isSubmitting ? "Processando..." : "Finalizar Venda"}
+                                <Button loading={isSubmitting} color='green' fullWidth size="lg" radius="lg" type="submit"  disabled={selectedStudent && selectedStudent.active === false}>
+                                    {selectedStudent && selectedStudent.active === false ? "Ação Bloqueada" : (isSubmitting ? "Processando..." : "Finalizar Venda")}
                                 </Button>
                             </div>
                         </form>

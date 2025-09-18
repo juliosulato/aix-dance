@@ -3,7 +3,7 @@ import SaleView from "@/components/(academic)/(students)/(sales)/SaleView";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 import { getTranslations } from "next-intl/server";
 
-export default async function PaymentMethodPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function FormsOfReceiptPage({ params }: { params: Promise<{ id: string }> }) {
     const session = await auth();
     const t = await getTranslations("");
 
@@ -14,7 +14,7 @@ export default async function PaymentMethodPage({ params }: { params: Promise<{ 
                 menu={[
                     { label: t("appShell.navbar.financial.financialSummary"), href: "/system/summary" },
                     { label: t("appShell.navbar.financial.financialManager"), href: "/system/financial/manager" },
-                    { label: t("appShell.navbar.financial.financialPaymentMethods"), href: "/system/financial/payment-methods" },
+                    { label: t("appShell.navbar.financial.financialFormsOfReceipts"), href: "/system/financial/forms-of-receipt" },
                     { label: t("appShell.navbar.financial.financialCategories"), href: "/system/financial/categories" },
                     { label: t("appShell.navbar.financial.financialGroups"), href: "/system/financial/groups" },
                     { label: t("appShell.navbar.financial.financialAccounts"), href: "/system/financial/bank-accounts" },

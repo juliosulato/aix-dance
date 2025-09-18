@@ -2,7 +2,7 @@ import { CreateBillInput } from "@/schemas/financial/bill.schema";
 import { fetcher } from "@/utils/fetcher";
 import { NumberInput, Select, TextInput } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { Bank, CategoryBill, PaymentMethod, Supplier } from "@prisma/client";
+import { Bank, CategoryBill, FormsOfReceipt, PaymentMethod, Supplier } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { Control, Controller, FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
@@ -23,7 +23,6 @@ export default function BasicInformations({ control, errors, register }: Props) 
     const t = useTranslations("financial.bills.modals");
 
     const { data: suppliers } = useSWR<Supplier[]>(session.data?.user.tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data.user.tenancyId}/suppliers` : null, fetcher);
-    const { data: paymentMethods } = useSWR<PaymentMethod[]>(session.data?.user.tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data.user.tenancyId}/payment-methods` : null, fetcher);
     const { data: categories } = useSWR<CategoryBill[]>(session.data?.user.tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data.user.tenancyId}/category-bills` : null, fetcher);
     const { data: banks } = useSWR<Bank[]>(session.data?.user.tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data.user.tenancyId}/banks` : null, fetcher);
 
@@ -55,14 +54,14 @@ export default function BasicInformations({ control, errors, register }: Props) 
                 render={({ field }) => (
                     <Select
                         label={t("fields.bank.label")}
-                        data={banks?.map((supplier) => ({
-                            label: supplier.name, value: supplier.id
+                        data={banks?.map((bank) => ({
+                            label: bank.name, value: bank.id
                         })) || []}
                         value={field.value}
                         onChange={field.onChange}
-                        error={errors.supplierId?.message}
+                        error={errors.bankId?.message}
                         searchable
-                        clearable
+                        withAsterisk
                     />
                 )}
             />
@@ -84,17 +83,22 @@ export default function BasicInformations({ control, errors, register }: Props) 
                 )}
             />
             <Controller
-                name="paymentMethodId"
+                name="paymentMethod"
                 control={control}
                 render={({ field }) => (
                     <Select
                         label={t("fields.payment-method.label")}
-                        data={paymentMethods?.map((paymentMethod) => ({
-                            label: paymentMethod.name, value: paymentMethod.id
-                        })) || []}
+                        data={[
+                            { label: "Dinheiro", value: PaymentMethod.CASH },
+                            { label: "Cartão de Crédito", value: PaymentMethod.CREDIT_CARD },
+                            { label: "Cartão de Débito", value: PaymentMethod.DEBIT_CARD },
+                            { label: "Transferência Bancária", value: PaymentMethod.BANK_TRANSFER },
+                            { label: "PIX", value: PaymentMethod.PIX },
+                            { label: "Boleto", value: PaymentMethod.BANK_SLIP },
+                        ]}
                         value={field.value}
                         onChange={field.onChange}
-                        error={errors.paymentMethodId?.message}
+                        error={errors.paymentMethod?.message}
                         searchable
                         clearable
                     />

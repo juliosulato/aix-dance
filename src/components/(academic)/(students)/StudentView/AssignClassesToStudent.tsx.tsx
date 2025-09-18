@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, Button, LoadingOverlay, Modal, MultiSelect, Text } from "@mantine/core";
+import { Avatar, Button, LoadingOverlay, Modal, MultiSelect, Text, Alert } from "@mantine/core";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -200,6 +200,14 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
           onSubmit={handleSubmit(handleAssignClasses)}
           className="flex flex-col gap-4 p-4"
         >
+          {/* Alerta de bloqueio acadêmico */}
+          {student.active === false && (
+            <Alert color="red" title="Ação Bloqueada" radius="md" mb="md">
+              <Text size="sm">
+                Este aluno está <strong>inativo</strong> devido a pendências financeiras. Não é possível matricular em turmas enquanto o status estiver bloqueado.
+              </Text>
+            </Alert>
+          )}
           <Controller
             name="classIds"
             control={control}
@@ -212,6 +220,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
                 className="!w-full"
                 nothingFoundMessage={g("notFound")}
                 rightSection={<FaSearch />}
+                disabled={student.active === false}
               />
             )}
           />
@@ -241,8 +250,8 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
             <Button variant="default" onClick={onClose}>
               {rootT("general.actions.cancel")}
             </Button>
-            <Button type="submit" color="violet">
-              {rootT("forms.submit")}
+            <Button type="submit" color="violet" disabled={student.active === false}>
+              {student.active === false ? "Ação Bloqueada" : rootT("forms.submit")}
             </Button>
           </div>
         </form>

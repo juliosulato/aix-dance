@@ -67,7 +67,7 @@
                     "paymentDay": {
                         "label": "Dia do Pagamento"
                     },
-                    "paymentMethod": {
+                    "formsOfReceipt": {
                         "label": "Método de Pagamento Preferencial"
                     },
                     "paymentDetails": {

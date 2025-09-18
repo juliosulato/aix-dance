@@ -4,7 +4,7 @@ import InfoTerm from "@/components/ui/Infoterm";
 import { FaUser, FaFileInvoiceDollar, FaBoxOpen, FaMoneyBillWave } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import dayjs from "dayjs";
-import { Bill, PaymentMethod, Plan, Sale, SaleItem, Student } from "@prisma/client";
+import { Bill, FormsOfReceipt, Plan, Sale, SaleItem, Student } from "@prisma/client";
 import { Divider, Skeleton, Text } from "@mantine/core";
 import Link from "next/link";
 import useSWR from "swr";
@@ -14,8 +14,8 @@ import { fetcher } from "@/utils/fetcher";
 type SaleItemFromApi = SaleItem & { plan: Plan | null };
 
 type BillFromApi = Bill & { 
-    paymentMethod: PaymentMethod | null,
-    children: (Bill & { paymentMethod: PaymentMethod | null })[]
+    formsOfReceipt: FormsOfReceipt | null,
+    children: (Bill & { formsOfReceipt: FormsOfReceipt | null })[]
 };
 
 type SaleFromApi = Sale & {
@@ -114,7 +114,7 @@ export default function SaleView({ saleId, tenancyId }: { saleId: string, tenanc
                                 <div className="flex items-center gap-4">
                                     <FaMoneyBillWave className="text-green-600" />
                                     <div>
-                                        <Text size="sm" fw={500}>{payment.paymentMethod?.name || t("financial.sales.view.payments.notInformed")}</Text>
+                                        <Text size="sm" fw={500}>{payment.formsOfReceipt?.name || t("financial.sales.view.payments.notInformed")}</Text>
                                         <Text size="xs" c="dimmed">
                                            {t("financial.sales.view.payments.paidAt")} {dayjs(payment.paymentDate).format("DD/MM/YYYY")}
                                         </Text>

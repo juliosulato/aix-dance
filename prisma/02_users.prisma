@@ -45,8 +45,8 @@ model Teacher {
   remunerationType RemunerationType
   baseAmount Decimal
   paymentDay Int @default(5)
-  paymentMethodId String?
-  paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id], onDelete: Cascade)
+  paymentMethod   PaymentMethod? @default(CASH)
+  
   paymentData String?
   observations String?
   

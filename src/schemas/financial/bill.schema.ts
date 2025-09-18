@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { BillStatus, BillType, RecurrenceType } from '@prisma/client';
+import { BillStatus, BillType, PaymentMethod, RecurrenceType } from '@prisma/client';
 
 // Função para tradução
 type Translator = (key: string) => string;
@@ -16,10 +16,10 @@ const baseBillSchema = (t: Translator) => z.object({
   status: z.enum(BillStatus, {
     error: t('fields.status.errors.required')
   }),
-  supplierId: z.string().cuid2().optional().nullable(),
-  categoryId: z.string().cuid2().optional().nullable(),
-  paymentMethodId: z.string().cuid2().optional().nullable(),
-  bankId: z.string().cuid2().optional().nullable(),
+  supplierId: z.string().optional().nullable(),
+  categoryId: z.string().optional().nullable(),
+  paymentMethod: z.enum(PaymentMethod),
+  bankId: z.string().min(1, t('fields.bank.errors.required')),
 });
 
 // Schema para o modo "À vista ou Parcelado" (Criação)
@@ -81,7 +81,8 @@ export const getUpdateBillSchema = (t: Translator) => baseBillSchema(t).extend({
 export const getPayBillSchema = (t: Translator) => z.object({
   status: z.enum(BillStatus, t('errors.status')),
   amountPaid: z.number().nonnegative(),
-  paymentDate: z.date()
+  paymentDate: z.date(),
+  bankId: z.string().min(1, t('fields.bank.errors.required')),
 });
 
 export type CreateBillInput = z.infer<ReturnType<typeof getCreateBillSchema>>;

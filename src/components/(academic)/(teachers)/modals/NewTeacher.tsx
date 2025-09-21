@@ -34,7 +34,7 @@ function NewTeacher({ opened, onClose }: Props) {
 
     const createUserSchema = getCreateUserSchema(t);
 
-    const { control, handleSubmit, formState: { errors }, register, reset, trigger } = useForm<CreateUserInput>({
+    const { control, handleSubmit, formState: { errors }, register, reset, trigger , watch} = useForm<CreateUserInput>({
         resolver: zodResolver(createUserSchema) as any,
         defaultValues: {
             teacher: {
@@ -78,7 +78,6 @@ function NewTeacher({ opened, onClose }: Props) {
             isValid = await trigger(firstStepFields);
         } else if (active === 1) {
             const secondStepFields: (keyof CreateUserInput)[] = [
-                "user",
                 "password",
                 "confirmPassword",
             ];
@@ -105,7 +104,7 @@ function NewTeacher({ opened, onClose }: Props) {
         try {
             const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/users`, {
                 method: "POST",
-                body: JSON.stringify({...data, image: avatar}),
+                body: JSON.stringify({...data, image: avatar, role: "TEACHER" }),
                 headers: { "Content-Type": "application/json" },
             });
 
@@ -128,7 +127,7 @@ function NewTeacher({ opened, onClose }: Props) {
 
     return (
         <>
-            <Modal opened={opened} onClose={onClose} title={t("teachers.modals.create.title")} size="auto" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
+            <Modal opened={opened} onClose={onClose} title={t("academic.teachers.modals.create.title")} size="auto" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
                 <form onSubmit={handleSubmit(createTeacher)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw] lg:p-6">
                     <Stepper active={active} onStepClick={setActive}>
                         <Stepper.Step>
@@ -151,7 +150,7 @@ function NewTeacher({ opened, onClose }: Props) {
                             </div>
                         </Stepper.Step>
                         <Stepper.Step>
-                            <Teacher__AccessData register={register as any} errors={errors} control={control as any} />
+                            <Teacher__AccessData watch={watch as any} errors={errors} control={control as any} />
                             <br />
                             <Teacher__RemunerationData errors={errors} control={control as any} />
                             <br />

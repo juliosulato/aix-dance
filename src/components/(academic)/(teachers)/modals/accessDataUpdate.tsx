@@ -41,6 +41,9 @@ function UpdateTeacherAccessData({ opened, onClose, user, mutate }: Props) {
     const { control, handleSubmit, formState: { errors }, register, reset, trigger } = useForm<UpdateUserInput>({
         resolver: zodResolver(updateUserSchema) as any,
         mode: 'all',
+        defaultValues: { 
+            email: user?.email || "",
+        }
     });
 
     useEffect(() => {
@@ -96,11 +99,10 @@ function UpdateTeacherAccessData({ opened, onClose, user, mutate }: Props) {
                         <h2 className="text-lg font-bold md:col-span-2">{t("academic.teachers.modals.update.accessData.title")}</h2>
                         <TextInput
                             prefix="@"
-                            label={t("academic.teachers.modals.update.accessData.fields.user.label")}
-                            placeholder={t("academic.teachers.modals.update.accessData.fields.user.placeholder")}
+                            label={"E-mail de acesso"}
                             className="md:col-span-2"
-                            {...register("user")}
-                            error={errors.user?.message}
+                            {...register("email")}
+                            error={errors.email?.message}
                         />
 
                         <Controller

@@ -93,14 +93,7 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
                 )}
             />
 
-            <Controller
-                name="teacher.formsOfReceiptId"
-                control={control}
-                render={({ field }) => (
-                     <Select {...field} label={t("fields.formsOfReceipt.label")} data={[]} nothingFoundMessage={g("notFound")} />
-                )}
-            />
-           
+        
             <Controller
                 name="teacher.paymentData"
                 control={control}

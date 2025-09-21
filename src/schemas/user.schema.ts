@@ -26,7 +26,7 @@ export const getTeacherSchema = (t: (key: string) => string) => {
     address: addressSchema.optional(),
     dateOfBirth: z.string().transform((arg) => dayjs(arg, "DD-MM-YYYY").format("YYYY-MM-DD")),
 
-    remunerationType: z.enum(RemunerationType, { error: t("teachers.modals.create.remuneration.fields.contractType.errors.required") }),
+    remunerationType: z.enum(RemunerationType, { error: t("academic.teachers.modals.create.remuneration.fields.contractType.errors.required") }),
     baseAmount: z.number({ error: t("academic.teachers.modals.create.remuneration.fields.baseAmount.errors.required") }).min(1, t("academic.teachers.modals.create.remuneration.fields.baseAmount.errors.min")),
     paymentDay: z.number().int().min(1).max(31).default(5),
     formsOfReceiptId: z.string().optional(),
@@ -47,7 +47,6 @@ export const getCreateUserSchema = (t: (key: string) => string) => {
     firstName: z.string().min(1, t("forms.general-fields.firstName.errors.required")),
     lastName: z.string().min(1, t("forms.general-fields.lastName.errors.required")),
     email: z.email(t("forms.general-fields.email.errors.invalid")),
-    user: z.string().optional(),
     role: z.enum(UserRole, { error: t("settings.users.modals.create.generalData.fields.role.errors.required") }).default("STAFF"),
     image: z.string().optional(),
     teacher: teacherSchema.optional(),

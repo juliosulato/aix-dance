@@ -1,7 +1,7 @@
 "use client";
 
 import { fetcher } from "@/utils/fetcher";
-import { Class, Modality, Student, User } from "@prisma/client";
+import { Class, ClassAttendance, Modality, Student, StudentClass, User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
@@ -22,9 +22,12 @@ import UpdateClass from "./modals/UpdateClass";
 
 export interface ClassFromApi extends Class {
     modality: Modality;
-    teacher: User;
+    teacher: User; 
     assistant: User | null;
-    studentClasses: Student[];
+    studentClasses: (StudentClass & {
+        student: Student;
+    })[];
+    classAttendances?: ClassAttendance[];
 }
 
 interface MenuItemProps {

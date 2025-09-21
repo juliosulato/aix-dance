@@ -69,7 +69,7 @@ function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
     useEffect(() => {
         if (user) {
             const preparedData = prepareTeacherForForm(user);
-            reset({ ...preparedData, teacher: { ...preparedData.teacher, dateOfBirth: dayjs(preparedData.teacher?.dateOfBirth).format("DD/MM/YYYY") }, password: undefined, confirmPassword: undefined, user: undefined });
+            reset({ ...preparedData, teacher: { ...preparedData.teacher, dateOfBirth: dayjs(preparedData.teacher?.dateOfBirth).format("DD/MM/YYYY") }, password: undefined, confirmPassword: undefined });
             setVisible(false);
         }
     }, [user, reset])

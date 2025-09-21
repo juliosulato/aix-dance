@@ -5,7 +5,7 @@ import { useDisclosure } from "@mantine/hooks";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import useMenuData from "@/utils/menuData";
-import { TbCalendarEvent, TbSettings, TbUser } from "react-icons/tb";
+import { TbCalendarEvent, TbSettings, TbUser, TbUsers } from "react-icons/tb";
 import { BiSupport } from "react-icons/bi";
 import LogoSVG from "../Logo";
 import { HiOutlineChevronRight, HiOutlineChevronDown } from "react-icons/hi2";
@@ -141,6 +141,43 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                             </div>
                         ))}
                     </div>
+
+                    {session.data?.user.role === "TEACHER" || session.data?.user.role === "ADMIN" ? (
+                        <NavLink
+                            color="violet"
+                            leftSection={<TbUsers />}
+                            label={"Área do Professor"}
+                            active={activeMain === "/system/teachers"}
+                            onClick={() => {
+                                setActiveMain(activeMain === "/system/teachers" ? null : "/system/teachers")
+                            }}
+                            opened={activeMain === "/system/teachers"}
+                            rightSection={<HiOutlineChevronRight size={12} className="mantine-rotate-rtl" />}
+                            classNames={{ section: "text-xl m-auto" }}
+                            className={`rounded-full !py-3 transition-all duration-300 ease-in px-5 !justify-start`}
+                        >
+                            <NavLink
+                                label="Turmas"
+                                color="violet"
+                                variant="subtle"
+                                leftSection={<MdGroups />}
+                                href={"/system/teachers/classes"}
+                                className="rounded-full !px-5 !py-3 transition-all duration-300 ease-in"
+                                classNames={{ section: "text-xl" }}
+                                active={pathname === "/system/teachers/classes"}
+                            />
+                            <NavLink
+                                label="Minhas Aulas"
+                                color="violet"
+                                variant="subtle"
+                                leftSection={<TbCalendarEvent />}
+                                href={"/system/teachers/mylessons"}
+                                className="rounded-full !px-5 !py-3 transition-all duration-300 ease-in"
+                                classNames={{ section: "text-xl" }}
+                                active={pathname === "/system/teachers/mylessons"}
+                            />
+                        </NavLink>
+                    ) : null}
                 </div>
 
                 <div className="flex flex-col gap-2">

@@ -63,9 +63,9 @@ export default function NewClass__AboutOfClass({ control, errors, tenancyId }: P
                             error={errors.modalityId?.message}
                             required
                             searchable
-                            nothingFoundMessage={g("general.boolean.notFound")}
+                            nothingFoundMessage={g("general.notFound")}
                         />
-                        <p className="text-xs text-neutral-500">{t("fields.modality.description")} <Link href={"/system/academic/modalities"}>{g("appShell.navbar.settings")}</Link></p>
+                        <p className="text-xs text-neutral-500">{t("fields.modality.description")} <Link className="text-primary underline" href={"/system/academic/modalities"}>{g("appShell.navbar.academic.modalities")}</Link></p>
                     </div>
                 )}
             />
@@ -82,7 +82,7 @@ export default function NewClass__AboutOfClass({ control, errors, tenancyId }: P
                         error={errors.teacherId?.message}
                         required
                         searchable
-                        nothingFoundMessage={g("general.boolean.notFound")}
+                        nothingFoundMessage={g("general.notFound")}
                     />
                 )}
             />

@@ -32,9 +32,7 @@ export default async function AttendancePage({ params }: { params: Promise<{ att
                 menu={[{
                     label: "Minhas Turmas", href: "/system/teachers/classes",
                 }, 
-                {
-                      label: "Minhas Aulas", href: "/system/teachers/mylessons",
-                    },
+                
                 { label: attendance.class.name, href: `/system/teachers/classes/${attendance.classId}` }]}
             />
             <h1 className="text-2xl font-bold mb-4">Detalhes da Lista de Chamada</h1>

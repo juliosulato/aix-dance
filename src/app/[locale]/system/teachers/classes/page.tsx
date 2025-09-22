@@ -28,9 +28,6 @@ export default async function TeachersClassesPage() {
                     ]}
                     menu={[{
                       label: "Turmas", href: "/system/teachers/classes",
-                    },
-                    {
-                      label: "Minhas Aulas", href: "/system/teachers/mylessons",
                     }
 ]}
                   />

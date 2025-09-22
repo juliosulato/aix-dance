@@ -10,6 +10,7 @@ declare module "next-auth" {
       country: string;
       tenancyId: string;
       role: UserRole;
+      teacherId?: string; // Adicionado para professores
     } & DefaultSession["user"];
   }
 }

@@ -98,9 +98,7 @@ export default function ClassDetails({ session, classId }: { session: Session, c
                 menu={[{
                     label: "Minhas Turmas", href: "/system/teachers/classes",
                 },
-                {
-                    label: "Minhas Aulas", href: "/system/teachers/mylessons",
-                },
+               
                 {
                     label: classData.name, href: `/system/teachers/classes/${classId}`
                 }]}

@@ -45,9 +45,9 @@ const useMenuData = () => {
       icon: <GrHomeRounded />,
       label: t("navbar.home.label"),
       subitems: [
-        { icon: <AiOutlineDashboard />, label: t("navbar.home.dashboard"), href: "/system/dashboard" },
+        // { icon: <AiOutlineDashboard />, label: t("navbar.home.dashboard"), href: "/system/dashboard" },
         { icon: <FiCalendar />, label: t("navbar.home.classSchedule"), href: "/system/class-schedule" },
-        { icon: <MdOutlineViewAgenda />, label: t("navbar.home.calendar"), href: "/system/calendar" },
+        // { icon: <MdOutlineViewAgenda />, label: t("navbar.home.calendar"), href: "/system/calendar" },
         // { icon: <IoExtensionPuzzleOutline />, label: t("navbar.home.integrations"), href: "/system/integracoes" },
         // { icon: <IoMdHelpCircleOutline />, label: t("navbar.home.help"), href: "/system/help" },
       ],

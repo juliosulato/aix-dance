@@ -39,9 +39,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 breakpoint: 'xl',
                 collapsed: { mobile: mobileOpened, desktop: desktopOpened }
             }}
-
         >
-            <AppShellMantine.Header className="flex items-center justify-between h-full">
+            <AppShellMantine.Header className="flex items-center justify-between h-full print:hidden">
                 <div className="flex items-center justify-between gap-2  py-2 px-4 xl:px-6 xl:py-3 xl:!min-w-[300px] h-[80px] xl:border-r xl:border-neutral-300">
                     <LogoSVG className={`h-full`} />
                     <Burger opened={!desktopOpened} onClick={toggleDesktop} size="sm" className="hidden xl:block" />
@@ -99,133 +98,99 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 </div>
             </AppShellMantine.Header>
 
-            <AppShellMantine.Navbar className="py-4 md:py-6 px-4 md:px-6 flex flex-col gap-4 justify-between">
-                <div className="flex flex-col gap-4 relative">
+            {session.data?.user.role !== "TEACHER" && (
 
-                    <div className="flex flex-col gap-2">
-                        {menuData.map((item, index) => (
-                            <div key={index} className="flex flex-col gap-1">
-                                <NavLink
-                                    color="violet"
-                                    leftSection={item.icon}
-                                    label={item.label}
-                                    active={activeMain === index}
-                                    onClick={() => {
-                                        setActiveMain(activeMain === index ? null : index)
-                                    }}
-                                    href={item.href}
-                                    opened={activeMain === index}
-                                    rightSection={item.subitems && <HiOutlineChevronRight size={12} className="mantine-rotate-rtl" />}
-                                    classNames={{ section: "text-xl m-auto" }}
-                                    className={`rounded-full !py-3 transition-all duration-300 ease-in px-5 !justify-start`}
-                                >
-                                    {item?.subitems && activeMain === index ? (
-                                        <div className="transition-all duration-300 ease-in">
-                                            {item.subitems.map((subitem, subindex) => (
-                                                <NavLink
-                                                    color="violet"
-                                                    variant="subtle"
-                                                    key={subindex}
-                                                    leftSection={subitem.icon}
-                                                    label={subitem.label}
-                                                    href={subitem.href}
-                                                    className="rounded-full !px-5 !py-3 transition-all duration-300 ease-in"
-                                                    classNames={{ section: "text-xl" }}
+                <AppShellMantine.Navbar className="py-4 md:py-6 px-4 md:px-6 flex flex-col gap-4 justify-between print:hidden">
+                    <div className="flex flex-col gap-4 relative">
 
-                                                    active={pathname === subitem.href}
-                                                />
-                                            ))}
-                                        </div>
-                                    ) : null}
-                                </NavLink>
-                            </div>
-                        ))}
+                        <div className="flex flex-col gap-2">
+                            {menuData.map((item, index) => (
+                                <div key={index} className="flex flex-col gap-1">
+                                    <NavLink
+                                        color="violet"
+                                        leftSection={item.icon}
+                                        label={item.label}
+                                        active={activeMain === index}
+                                        onClick={() => {
+                                            setActiveMain(activeMain === index ? null : index)
+                                        }}
+                                        href={item.href}
+                                        opened={activeMain === index}
+                                        rightSection={item.subitems && <HiOutlineChevronRight size={12} className="mantine-rotate-rtl" />}
+                                        classNames={{ section: "text-xl m-auto" }}
+                                        className={`rounded-full !py-3 transition-all duration-300 ease-in px-5 !justify-start`}
+                                    >
+                                        {item?.subitems && activeMain === index ? (
+                                            <div className="transition-all duration-300 ease-in">
+                                                {item.subitems.map((subitem, subindex) => (
+                                                    <NavLink
+                                                        color="violet"
+                                                        variant="subtle"
+                                                        key={subindex}
+                                                        leftSection={subitem.icon}
+                                                        label={subitem.label}
+                                                        href={subitem.href}
+                                                        className="rounded-full !px-5 !py-3 transition-all duration-300 ease-in"
+                                                        classNames={{ section: "text-xl" }}
+
+                                                        active={pathname === subitem.href}
+                                                    />
+                                                ))}
+                                            </div>
+                                        ) : null}
+                                    </NavLink>
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
-                    {session.data?.user.role === "TEACHER" || session.data?.user.role === "ADMIN" ? (
+                    <div className="flex flex-col gap-2">
                         <NavLink
                             color="violet"
-                            leftSection={<TbUsers />}
-                            label={"Área do Professor"}
-                            active={activeMain === "/system/teachers"}
-                            onClick={() => {
-                                setActiveMain(activeMain === "/system/teachers" ? null : "/system/teachers")
-                            }}
-                            opened={activeMain === "/system/teachers"}
+                            leftSection={<TbSettings />}
+                            label={t("navbar.settings.label")}
+                            active={pathname === "/settings"}
+                            onClick={() => setActiveMain(activeMain === "/settings" ? null : "/settings")}
+                            opened={activeMain === "/settings"}
+                            className={`rounded-full !py-3 transition-all duration-300 ease-in !px-5 !justify-start `}
                             rightSection={<HiOutlineChevronRight size={12} className="mantine-rotate-rtl" />}
-                            classNames={{ section: "text-xl m-auto" }}
-                            className={`rounded-full !py-3 transition-all duration-300 ease-in px-5 !justify-start`}
                         >
                             <NavLink
-                                label="Turmas"
                                 color="violet"
                                 variant="subtle"
-                                leftSection={<MdGroups />}
-                                href={"/system/teachers/classes"}
+                                leftSection={<LuBrain />}
+                                label={"Minha Academia"}
+                                href={"/system/settings/company"}
                                 className="rounded-full !px-5 !py-3 transition-all duration-300 ease-in"
                                 classNames={{ section: "text-xl" }}
-                                active={pathname === "/system/teachers/classes"}
+                                active={pathname === "/system/settings/company"}
                             />
                             <NavLink
-                                label="Minhas Aulas"
                                 color="violet"
                                 variant="subtle"
-                                leftSection={<TbCalendarEvent />}
-                                href={"/system/teachers/mylessons"}
+                                leftSection={<TbUser />}
+                                label={"Usuários"}
+                                href={"/system/settings/users"}
                                 className="rounded-full !px-5 !py-3 transition-all duration-300 ease-in"
                                 classNames={{ section: "text-xl" }}
-                                active={pathname === "/system/teachers/mylessons"}
+                                active={pathname === "/system/settings/users"}
                             />
+
+                            {/* <LanguagePicker /> */}
                         </NavLink>
-                    ) : null}
-                </div>
-
-                <div className="flex flex-col gap-2">
-                    <NavLink
-                        color="violet"
-                        leftSection={<TbSettings />}
-                        label={t("navbar.settings.label")}
-                        active={pathname === "/settings"}
-                        onClick={() => setActiveMain(activeMain === "/settings" ? null : "/settings")}
-                        opened={activeMain === "/settings"}
-                        className={`rounded-full !py-3 transition-all duration-300 ease-in !px-5 !justify-start `}
-                        rightSection={<HiOutlineChevronRight size={12} className="mantine-rotate-rtl" />}
-                    >
                         <NavLink
                             color="violet"
-                            variant="subtle"
-                            leftSection={<LuBrain />}
-                            label={"Minha Academia"}
-                            href={"/system/settings/company"}
-                            className="rounded-full !px-5 !py-3 transition-all duration-300 ease-in"
-                            classNames={{ section: "text-xl" }}
-                            active={pathname === "/system/settings/company"}
-                        />
-                        <NavLink
-                            color="violet"
-                            variant="subtle"
-                            leftSection={<TbUser />}
-                            label={"Usuários"}
-                            href={"/system/settings/users"}
-                            className="rounded-full !px-5 !py-3 transition-all duration-300 ease-in"
-                            classNames={{ section: "text-xl" }}
-                            active={pathname === "/system/settings/users"}
+                            leftSection={<BiSupport />}
+                            label={t("navbar.support")}
+                            href="https://wa.me/5514981834361?text=Olá!%20Gostaria%20de%20ajuda%20com%20o%20AIX Dance."
+                            target="_blank"
+                            active={pathname === "/support"}
+                            className={`rounded-full !py-3 transition-all duration-300 ease-in !px-5 !justify-start `}
                         />
 
-                        {/* <LanguagePicker /> */}
-                    </NavLink>
-                    <NavLink
-                        color="violet"
-                        leftSection={<BiSupport />}
-                        label={t("navbar.support")}
-                        href="https://wa.me/5514981834361?text=Olá!%20Gostaria%20de%20ajuda%20com%20o%20AIX Dance."
-                        target="_blank"
-                        active={pathname === "/support"}
-                        className={`rounded-full !py-3 transition-all duration-300 ease-in !px-5 !justify-start `}
-                    />
-
-                </div>
-            </AppShellMantine.Navbar>
+                    </div>
+                </AppShellMantine.Navbar>
+            )}
 
             <AppShellMantine.Main>{children}</AppShellMantine.Main>
         </AppShellMantine>

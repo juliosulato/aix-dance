@@ -1,12 +1,10 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { Plan } from "@prisma/client";
-import { Translations } from "@/types/translations";
 
 async function deleteStudents(
   items: Plan | string[],
   tenancyId: string,
-  t: Translations,
   mutate?: KeyedMutator<Plan[]>
 ) {
   const isArray = Array.isArray(items);
@@ -14,7 +12,7 @@ async function deleteStudents(
 
   if (idsToDelete.length === 0) {
     notifications.show({
-      message: t("academic.students.delete.errors.noLength"),
+      message: "Nenhum item selecionado para exclusão.",
       color: "red",
     });
     return;
@@ -33,8 +31,8 @@ async function deleteStudents(
     ));
 
   notifications.show({
-    title: t("academic.students.delete.notifications.wait.title"),
-    message: t("academic.students.delete.notifications.wait.message"),
+    title: "Aguarde...",
+    message: "Excluindo os registros selecionados...",
     color: "yellow",
   });
 
@@ -53,12 +51,12 @@ async function deleteStudents(
 
     notifications.clean();
     notifications.show({
-      message: t("academic.students.delete.notifications.success"),
+      message: "Registros excluídos com sucesso!",
       color: "green",
     });
   } catch (error) {
     notifications.show({
-      message: t("academic.students.delete.errors.internalError"),
+      message: "Ocorreu um erro interno. Tente novamente.",
       color: "red",
     });
     // Reverte a UI em caso de erro

@@ -1,5 +1,4 @@
 import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form";
-import { useTranslations } from "next-intl";
 import { NumberInput, TextInput } from "@mantine/core";
 import { DatePickerInput } from '@mantine/dates';
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
@@ -15,15 +14,14 @@ type Props = {
 };
 
 export default function BankAccount__BasicInformations({ control, errors, register }: Props) {
-    const t = useTranslations("financial.banks.modals");
 
     return (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <h2 className="text-lg font-bold md:col-span-2">{t("subtitle")}</h2>
+            <h2 className="text-lg font-bold md:col-span-2">{"Texto"}</h2>
 
             <TextInput
-                label={t("fields.name.label")}
-                placeholder={t("fields.name.placeholder")}
+                label={"Texto"}
+                placeholder={"Texto"}
                 {...register("name")}
                 error={errors.name?.message}
                 required
@@ -33,24 +31,24 @@ export default function BankAccount__BasicInformations({ control, errors, regist
             />
 
             <TextInput
-                label={t("fields.code.label")}
-                placeholder={t("fields.code.placeholder")}
+                label={"Texto"}
+                placeholder={"Texto"}
                 {...register("code")}
                 error={errors.code?.message}
                 classNames={{ input: "!border-transparent !rounded-none !border-b !border-b-neutral-300" }}
             />
 
             <TextInput
-                label={t("fields.agency.label")}
-                placeholder={t("fields.agency.placeholder")}
+                label={"Texto"}
+                placeholder={"Texto"}
                 {...register("agency")}
                 error={errors.agency?.message}
                 classNames={{ input: "!border-transparent !rounded-none !border-b !border-b-neutral-300" }}
             />
 
             <TextInput
-                label={t("fields.account.label")}
-                placeholder={t("fields.account.placeholder")}
+                label={"Texto"}
+                placeholder={"Texto"}
                 {...register("account")}
                 error={errors.account?.message}
                 className="md:col-span-2"
@@ -63,7 +61,7 @@ export default function BankAccount__BasicInformations({ control, errors, regist
                 render={({ field }) => (
                     <NumberInput
                         {...field}
-                        label={t("fields.maintenanceFeeAmount.label")}
+                        label={"Texto"}
                         placeholder="0,00"
                         allowDecimal
                         decimalSeparator=","
@@ -86,7 +84,7 @@ export default function BankAccount__BasicInformations({ control, errors, regist
                         allowDecimal={false}
                         placeholder="5"
                         {...field}
-                        label={t("fields.maintenanceFeeDue.label")}
+                        label={"Texto"}
                         error={errors.maintenanceFeeDue?.message}
                         classNames={{ input: "!border-transparent !rounded-none !border-b !border-b-neutral-300" }}
                     />
@@ -94,8 +92,8 @@ export default function BankAccount__BasicInformations({ control, errors, regist
             />
 
             <TextInput
-                label={t("fields.description.label")}
-                placeholder={t("fields.description.placeholder")}
+                label={"Texto"}
+                placeholder={"Texto"}
                 {...register("description")}
                 error={errors.description?.message}
                 className="md:col-span-2"

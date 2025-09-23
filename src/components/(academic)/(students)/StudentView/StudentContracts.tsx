@@ -1,7 +1,6 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useLocale } from "next-intl";
 import DataView from "@/components/ui/DataView";
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
@@ -22,8 +21,6 @@ import { StudentFromApi } from "../StudentFromApi";
 type ContractItem = StudentFromApi["contracts"][0] & { title?: string };
 
 export default function StudentContractsView({ student }: { student: StudentFromApi }) {
-  const locale = useLocale();
-  dayjs.locale(locale);
 
   const [openNew, setOpenNew] = useState<boolean>(false);
   const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
@@ -37,7 +34,7 @@ export default function StudentContractsView({ student }: { student: StudentFrom
   const tenancyId = sessionData.user.tenancyId;
 
   const handleCopyLink = (contractId: string) => {
-    const link = `https://aixdance.mazzaux.com.br/${locale}/contracts/sign/${contractId}`;
+    const link = `https://aixdance.mazzaux.com.br/pt-BR/contracts/sign/${contractId}`;
     navigator.clipboard.writeText(link);
     notifications.show({
       title: "Link Copiado!",
@@ -116,8 +113,8 @@ export default function StudentContractsView({ student }: { student: StudentFrom
         searchbarPlaceholder={"Pesquisar por título do contrato..."}
         columns={[
           { key: "title" as any, label: "Título do Contrato", render: (value, item) => item?.title || 'Contrato Personalizado' },
-          { key: "createdAt", label: "Criado Em", render: (value) => dayjs(value).format("DD/MM/YYYY [às] HH:mm") },
-          { key: "signedAt", label: "Assinado Em", render: (value) => value ? dayjs(value).format("DD/MM/YYYY [às] HH:mm") : '-' },
+          { key: "createdAt", label: "Criado Em", render: (value) => dayjs(value).format("DD/MM/YYYY") },
+          { key: "signedAt", label: "Assinado Em", render: (value) => value ? dayjs(value).format("DD/MM/YYYY") : '-' },
           { key: "status", label: "Status", render: (status) => renderStatusBadge(status) },
         ]}
         RenderRowMenu={(item) => <MenuItem item={item} />}
@@ -129,7 +126,7 @@ export default function StudentContractsView({ student }: { student: StudentFrom
             </div>
             <div className="flex flex-col gap-2 mt-2">
               {renderStatusBadge(item.status)}
-              <Text size="sm"><strong>Criado em:</strong> {dayjs(item.createdAt).format("DD/MM/YYYY [às] HH:mm")}</Text>
+              <Text size="sm"><strong>Criado em:</strong> {dayjs(item.createdAt).format("DD/MM/YYYY")}</Text>
               {item.signedAt && <Text size="sm"><strong>Assinado em:</strong> {dayjs(item.signedAt).format("DD/MM/YYYY")}</Text>}
             </div>
           </>

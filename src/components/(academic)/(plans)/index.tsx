@@ -3,7 +3,6 @@
 import { fetcher } from "@/utils/fetcher";
 import { Plan, PlanType } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import useSWR from "swr";
 import deletePlans from "./delete";
@@ -32,9 +31,6 @@ interface MenuItemsProps {
 }
 
 export default function AllPlansData() {
-    const t = useTranslations("");
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     const { data: sessionData, status } = useSession();
 
@@ -104,12 +100,12 @@ export default function AllPlansData() {
                     </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
-                    <Menu.Label>{t("general.actions.title")}</Menu.Label>
+                    <Menu.Label>{"Ações"}</Menu.Label>
                     <Menu.Item leftSection={<GrUpdate size={14} />} onClick={() => onUpdateClick(plans)}>
-                        {t("general.actions.edit")}
+                        {"Editar"}
                     </Menu.Item>
                     <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(plans)}>
-                        {t("general.actions.delete")}
+                        {"Excluir"}
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
@@ -124,7 +120,7 @@ export default function AllPlansData() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{t("general.actions.manyActions")}</Menu.Label>
+                <Menu.Label>{"Texto"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
                     {t("general.actions.deleteMany", {
                         items: selectedIds.length
@@ -137,22 +133,22 @@ export default function AllPlansData() {
     const renderCicle = (val: PlanType) => {
         switch (val) {
             case "MONTHLY":
-                return t("academic.plans.modals.basicInformations.fields.cicle.planTypes.MONTHLY");
+                return "Texto";
                 break;
             case "SEMMONTLY":
-                return t("academic.plans.modals.basicInformations.fields.cicle.planTypes.SEMMONTLY");
+                return "Texto";
             break;
             case "BI_MONTHLY":
-                return t("academic.plans.modals.basicInformations.fields.cicle.planTypes.BI_MONTHLY");
+                return "Texto";
             break;
             case "QUARTERLY":
-                return t("academic.plans.modals.basicInformations.fields.cicle.planTypes.QUARTERLY");
+                return "Texto";
             break;
             case "BI_ANNUAL":
-                return t("academic.plans.modals.basicInformations.fields.cicle.planTypes.BI_ANNUAL");
+                return "Texto";
             break;
             case "ANNUAL":
-                return t("academic.plans.modals.basicInformations.fields.cicle.planTypes.ANNUAL");
+                return "Texto";
             break;
             default: 
                 return "";
@@ -161,8 +157,8 @@ export default function AllPlansData() {
     }
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
-    if (error) return <p>{t("general.errors.loadingData")}</p>;
+    if (status !== "authenticated") return <div>{"Texto"}</div>;
+    if (error) return <p>{"Texto"}</p>;
 
 
     return (
@@ -171,26 +167,26 @@ export default function AllPlansData() {
                 data={categoryGroups || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: t("academic.plans.modals.create.title")
+                    label: "Texto"
                 }}
                 baseUrl="/system/academic/plans/"
                 mutate={mutate}
-                pageTitle={t("academic.plans.title")}
-                searchbarPlaceholder={t("academic.plans.searchbarPlaceholder")}
+                pageTitle={"Planos"}
+                searchbarPlaceholder={"Texto"}
                 columns={[
-                    { key: "name", label: t("academic.plans.modals.basicInformations.fields.name.label"), sortable: true },
+                    { key: "name", label: "Texto", sortable: true },
                     {
-                        key: "amount", label: t("academic.plans.modals.basicInformations.fields.amount.label"),
+                        key: "amount", label: "Texto",
                         render: (value) => value ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value) : '-',
                         sortable: true
                     },
                     {
-                        key: "frequency", label: t("academic.plans.modals.basicInformations.fields.frequency.label"),
+                        key: "frequency", label: "Texto",
                         sortable: true,
-                        render: (value) => `${value} ${t("academic.plans.modals.basicInformations.fields.frequency.suffix")}`
+                        render: (value) => `${value} ${"Texto"}`
                     },
                      {
-                        key: "type", label: t("academic.plans.modals.basicInformations.fields.cicle.label"),
+                        key: "type", label: "Texto",
                         sortable: true,
                         render: (value) => renderCicle(value)
                     }
@@ -205,7 +201,7 @@ export default function AllPlansData() {
                         </div>
                         <div className="flex flex-row justify-between items-start">
                             {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(item.amount))}
-                            <span><strong>{t("academic.plans.modals.basicInformations.fields.cicle.label")}:</strong> {renderCicle(item.type)}</span>
+                            <span><strong>{"Texto"}:</strong> {renderCicle(item.type)}</span>
                         </div>
                     </>
                 )}
@@ -229,9 +225,9 @@ export default function AllPlansData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={t("academic.plans.modals.confirmModal.title")}
-                confirmLabel={t("academic.plans.modals.confirmModal.confirmLabel")}
-                cancelLabel={t("academic.plans.modals.confirmModal.cancelLabel")}
+                title={"Texto"}
+                confirmLabel={"Texto"}
+                cancelLabel={"Texto"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
@@ -244,7 +240,7 @@ export default function AllPlansData() {
                     })
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{t("academic.plans.modals.confirmModal.warn")}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Texto"}</Text>
             </ConfirmationModal>
         </>
     );

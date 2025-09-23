@@ -8,7 +8,6 @@ import deleteFormsOfReceipt from "../deleteFormsOfReceipt";
 import UpdateFormsOfReceipt from "../modals/updateFormsOfReceipt";
 import { useState } from "react";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
-import { useTranslations } from "next-intl";
 
 export default function FormsOfReceiptView({ formsOfReceipt, tenancyId }: { formsOfReceipt: FormsOfReceipt, tenancyId: string }) {
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
@@ -26,35 +25,34 @@ export default function FormsOfReceiptView({ formsOfReceipt, tenancyId }: { form
         }
     };
 
-    const t = useTranslations();
 
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
             <div className="flex flex-col items-center justify-center md:justify-between gap-4 md:flex-row md:flex-wrap mb-4">
-                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{t("financial.payment-methods.view.title")}</h1>
+                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{"Texto"}</h1>
                 <div className="flex gap-4 md:gap-6">
                     <button className="text-red-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setConfirmModalOpen(true)}>
                         <FaTrash />
-                        <span>{t("general.actions.delete")}</span>
+                        <span>{"Excluir"}</span>
                     </button>
                     <button className="text-primary flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setOpenUpdate(true)}>
                         <FaEdit />
-                        <span>{t("general.actions.update")}</span>
+                        <span>{"Atualizar"}</span>
                     </button>
                 </div>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={t("financial.payment-methods.modals.fields.name.label")} children={formsOfReceipt.name} />
-                <InfoTerm label={t("financial.payment-methods.modals.fields.operator.label")} children={formsOfReceipt.operator} />
-                {formsOfReceipt.fees.length > 0 && <h2 className="md:col-span-2 lg:col-span-3 font-bold text-xl my-4">{t("financial.payment-methods.modals.feesSubtitle")}</h2>}
+                <InfoTerm label={"Texto"} children={formsOfReceipt.name} />
+                <InfoTerm label={"Texto"} children={formsOfReceipt.operator} />
+                {formsOfReceipt.fees.length > 0 && <h2 className="md:col-span-2 lg:col-span-3 font-bold text-xl my-4">{"Texto"}</h2>}
                 {formsOfReceipt.fees.map((fee) => (
                      <div className="grid gap-4 md:grid-cols-2 md:col-span-2 lg:col-span-3" key={fee.id}>
-                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.minInstallments")} children={fee.minInstallments} />
-                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.maxInstallments")} children={fee.maxInstallments} />
-                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.feePercentage")} children={`${fee.feePercentage.toFixed(2).replace(/\./g, ",")}%`} />
-                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.receiveInDays")} children={`${fee.receiveInDays}`} />
-                        <InfoTerm label={t("financial.payment-methods.modals.fields.fees.customerInterest")} children={fee.customerInterest ? t("general.boolean.yes") : t("general.boolean.no")} />
+                        <InfoTerm label={"Texto"} children={fee.minInstallments} />
+                        <InfoTerm label={"Texto"} children={fee.maxInstallments} />
+                        <InfoTerm label={"Texto"} children={`${fee.feePercentage.toFixed(2).replace(/\./g, ",")}%`} />
+                        <InfoTerm label={"Texto"} children={`${fee.receiveInDays}`} />
+                        <InfoTerm label={"Texto"} children={fee.customerInterest ? "Texto" : "Texto"} />
                     </div>
                 ))}
             </div>

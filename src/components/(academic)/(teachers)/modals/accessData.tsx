@@ -1,6 +1,5 @@
 import { CreateUserInput, UpdateUserInput } from "@/schemas/user.schema";
 import { PasswordInput, TextInput } from "@mantine/core";
-import { useTranslations } from "next-intl";
 import { Control, Controller, FieldErrors, UseFormRegister, UseFormWatch } from "react-hook-form";
 
 type Props = {
@@ -10,13 +9,12 @@ type Props = {
 };
 
 export default function Teacher__AccessData({ control, errors, watch }: Props) {
-    const t = useTranslations("academic.teachers.modals.create.accessData");
 
     const email = watch("email");
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2">
-            <h2 className="text-lg font-bold md:col-span-2">{t("title")}</h2>
+            <h2 className="text-lg font-bold md:col-span-2">{"Texto"}</h2>
             <TextInput
                 prefix="@"
                 label={"Email"}
@@ -32,7 +30,7 @@ export default function Teacher__AccessData({ control, errors, watch }: Props) {
                     <PasswordInput
                         {...field}
                         required
-                        label={t("fields.password.label")}
+                        label={"Texto"}
                         error={errors.password?.message}
                     />
                 )}
@@ -45,7 +43,7 @@ export default function Teacher__AccessData({ control, errors, watch }: Props) {
                     <PasswordInput
                         {...field}
                         required
-                        label={t("fields.confirmPassword.label")}
+                        label={"Texto"}
                         error={errors.confirmPassword?.message}
                     />
                 )}

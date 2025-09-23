@@ -5,7 +5,6 @@ import { FaEdit } from "react-icons/fa";
 import { BiArchiveIn } from "react-icons/bi";
 import { useState } from "react";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
-import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import archiveClasses from "../archive";
 import UpdateClass from "../modals/UpdateClass";
@@ -35,17 +34,26 @@ export interface ClassViewData extends Omit<ClassFromApi, 'studentClasses'> {
 // Componente para exibir os horários de forma organizada
 const ScheduleSummary = ({ days }: { days: ClassViewData['days'] }) => {
     // Usamos o hook aqui para manter o componente mais independente
-    const t = useTranslations("academic.classes");
 
     if (!days || days.length === 0) {
-        return <InfoTerm label={t("modals.formSteps.one.classDaysAndHours.title")} children={"Nenhum horário definido"} />;
+        return <InfoTerm label={"Dias e Horários das Aulas"} children={"Nenhum horário definido"} />;
     }
+
+    const dayNames = {
+        monday: "Segunda",
+        tuesday: "Terça", 
+        wednesday: "Quarta",
+        thursday: "Quinta",
+        friday: "Sexta",
+        saturday: "Sábado", 
+        sunday: "Domingo"
+    };
 
     const groupedDays = days.reduce((acc, day) => {
         const dayKey = day.dayOfWeek.toLowerCase();
         if (!acc[dayKey]) {
             acc[dayKey] = {
-                day: t(`modals.formSteps.one.classDaysAndHours.days.${dayKey}` as any),
+                day: dayNames[dayKey as keyof typeof dayNames] || dayKey,
                 ranges: []
             };
         }
@@ -69,16 +77,12 @@ export default function ClassView({ classData, tenancyId }: { classData: ClassVi
     const [isOpenAssign, setIsOpenAssign] = useState<boolean>(false);
     const [isArchiving, setIsArchiving] = useState<boolean>(false);
     
-    // Hooks de tradução com escopo para código mais limpo
-    const t = useTranslations("academic.classes");
-    const g = useTranslations("general");
-    
     const router = useRouter();
 
     const handleArchive = async () => {
         setIsArchiving(true);
         try {
-            await archiveClasses([classData.id], tenancyId, t as any);
+            await archiveClasses([classData.id], tenancyId);
             router.push("/system/academic/classes");
             router.refresh();
         } catch (error) {
@@ -92,43 +96,43 @@ export default function ClassView({ classData, tenancyId }: { classData: ClassVi
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
             <div className="flex flex-col items-center justify-center md:justify-between gap-4 md:flex-row md:flex-wrap mb-4">
-                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{t("view.title")}</h1>
+                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{classData.name}</h1>
                 <div className="flex gap-4 md:gap-6">
                     <button className="text-orange-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setConfirmModalOpen(true)}>
                         <BiArchiveIn />
-                        <span>{g("actions.archive")}</span>
+                        <span>Arquivar</span>
                     </button>
                     <button className="text-primary flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setOpenUpdate(true)}>
                         <FaEdit />
-                        <span>{g("actions.update")}</span>
+                        <span>Atualizar</span>
                     </button>
                     <button className="text-primary flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setIsOpenAssign(true)}>
                         <PiStudent />
-                        <span>{g("actions.assign")}</span>
+                        <span>Designar</span>
                     </button>
                 </div>
             </div>
 
             {/* --- SEÇÃO DE INFORMAÇÕES BÁSICAS --- */}
-            <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 mb-2">{t("modals.formSteps.one.title")}</h2>
+            <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 mb-2">{"Informações Básicas"}</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={t("modals.formSteps.one.fields.name.label")} children={classData.name} />
-                <InfoTerm label={t("modals.formSteps.one.fields.modality.label")} children={classData.modality.name} />
-                <InfoTerm label={t("modals.formSteps.one.fields.teacher.label")} children={`${classData.teacher.firstName} ${classData.teacher.lastName}`} />
+                <InfoTerm label={"Nome"} children={classData.name} />
+                <InfoTerm label={"Modalidade"} children={classData.modality.name} />
+                <InfoTerm label={"Professor"} children={`${classData.teacher.firstName} ${classData.teacher.lastName}`} />
                 {classData.assistant && (
-                    <InfoTerm label={t("modals.formSteps.one.fields.assistant.label")} children={`${classData.assistant.firstName} ${classData.assistant.lastName}`} />
+                    <InfoTerm label={"Assistente"} children={`${classData.assistant.firstName} ${classData.assistant.lastName}`} />
                 )}
-                <InfoTerm label={t("modals.formSteps.one.fields.online.label")} children={classData.online ? g("yes") : g("boolean.no")} />
+                <InfoTerm label={"Online"} children={classData.online ? "Sim" : "Não"} />
             </div>
 
             {/* --- SEÇÃO DE DIAS E HORÁRIOS --- */}
-            <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{t("modals.formSteps.one.classDaysAndHours.title")}</h2>
+            <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{"Texto"}</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <ScheduleSummary days={classData.days} />
             </div>
 
             {/* --- SEÇÃO DE ALUNOS ATIVOS --- */}
-            <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{t("modals.formSteps.two.title")}</h2>
+            <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{"Texto"}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {classData.studentClasses?.some((link: any) => link.status === "ACTIVE") ? (
                     classData.studentClasses.map((link: any) => (
@@ -143,14 +147,14 @@ export default function ClassView({ classData, tenancyId }: { classData: ClassVi
                         )
                     ))
                 ) : (
-                    <Text className="text-neutral-500 md:col-span-full">{t("view.noStudents")}</Text>
+                    <Text className="text-neutral-500 md:col-span-full">{"Texto"}</Text>
                 )}
             </div>
             
             {/* --- SEÇÃO DE ALUNOS INATIVOS (só aparece se houver algum) --- */}
             {classData.studentClasses?.some((link: any) => link.status === "INACTIVE") && (
                 <>
-                    <Divider label={t("view.inactiveStudentsLabel")} labelPosition="center" my="md" />
+                    <Divider label={"Texto"} labelPosition="center" my="md" />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {classData.studentClasses.map((link: any) => (
                             link.status === "INACTIVE" && (
@@ -174,15 +178,15 @@ export default function ClassView({ classData, tenancyId }: { classData: ClassVi
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleArchive}
-                title={t("modals.archiveConfirm.title")}
-                confirmLabel={g("actions.archive")}
-                cancelLabel={g("actions.cancel")}
+                title={"Texto"}
+                confirmLabel={"Arquivar"}
+                cancelLabel={"Cancelar"}
                 confirmColor="orange"
                 loading={isArchiving}
             >
-                {t("modals.archiveConfirm.text", { class: classData?.name || "" })}
+                Você tem certeza que deseja arquivar a turma <strong>{classData?.name}</strong>?
                 <br />
-                <Text component="span" c="orange" size="sm" fw={500} mt="md">{t("modals.archiveConfirm.warn")}</Text>
+                <Text component="span" c="orange" size="sm" fw={500} mt="md">{"Texto"}</Text>
             </ConfirmationModal>
         </div>
     );

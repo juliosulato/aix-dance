@@ -1,17 +1,15 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { Translations } from "@/types/translations";
 import { TeacherFromApi } from "./modals/UpdateTeacher";
 
 async function toggleUserActive(
   item: TeacherFromApi,
   tenancyId: string,
-  t: Translations,
   mutate?: KeyedMutator<TeacherFromApi[]>
 ) {
   if (!item) {
     notifications.show({
-      message: t("academic.users.toggle.errors.noStudent"),
+      message: "Nenhum professor selecionado",
       color: "red",
     });
     return;
@@ -30,8 +28,8 @@ async function toggleUserActive(
     ));
 
   notifications.show({
-    title: t("academic.users.toggle.notifications.wait.title"),
-    message: t("academic.users.toggle.notifications.wait.message"),
+    title: "Aguarde",
+    message: "Atualizando status do professor...",
     color: "yellow",
   });
 
@@ -45,17 +43,17 @@ async function toggleUserActive(
     });
 
     if (!response.ok) {
-      throw new Error("Falha ao atualizar o estudante na API.");
+      throw new Error("Falha ao atualizar o professor na API.");
     }
 
     notifications.clean();
     notifications.show({
-      message: t("academic.users.toggle.notifications.success"),
+      message: "Status atualizado com sucesso",
       color: "green",
     });
   } catch (error) {
     notifications.show({
-      message: t("academic.users.toggle.errors.internalError"),
+      message: "Erro interno do servidor",
       color: "red",
     });
     // Reverte em caso de erro

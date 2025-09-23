@@ -3,7 +3,6 @@
 import { fetcher } from "@/utils/fetcher";
 import { Modality } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import useSWR from "swr";
 import deleteModality from "./delete";
@@ -33,10 +32,7 @@ interface MenuItemsProps {
 }
 
 export default function AllModalityData() {
-    const t = useTranslations("");
     const { data: sessionData, status } = useSession();
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     const [openNew, setOpenNew] = useState<boolean>(false);
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
@@ -104,12 +100,12 @@ export default function AllModalityData() {
                     </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
-                    <Menu.Label>{t("general.actions.title")}</Menu.Label>
+                    <Menu.Label>{"Ações"}</Menu.Label>
                     <Menu.Item leftSection={<GrUpdate size={14} />} onClick={() => onUpdateClick(categoryGroup)}>
-                        {t("general.actions.edit")}
+                        {"Editar"}
                     </Menu.Item>
                     <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(categoryGroup)}>
-                        {t("general.actions.delete")}
+                        {"Excluir"}
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
@@ -124,7 +120,7 @@ export default function AllModalityData() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{t("general.actions.manyActions")}</Menu.Label>
+                <Menu.Label>{"Texto"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
                     {t("general.actions.deleteMany", {
                         items: selectedIds.length
@@ -135,8 +131,8 @@ export default function AllModalityData() {
     );
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
-    if (error) return <p>{t("general.errors.loadingData")}</p>;
+    if (status !== "authenticated") return <div>{"Texto"}</div>;
+    if (error) return <p>{"Texto"}</p>;
 
 
     return (
@@ -146,14 +142,14 @@ export default function AllModalityData() {
                 data={modalities || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: t("academic.modalities.modals.create.title")
+                    label: "Texto"
                 }}
                 baseUrl="/system/financial/modalities/"
                 mutate={mutate}
-                pageTitle={t("academic.modalities.title")}
-                searchbarPlaceholder={t("academic.modalities.searchbarPlaceholder")}
+                pageTitle={"Texto"}
+                searchbarPlaceholder={"Texto"}
                 columns={[
-                    { key: "name", label: t("academic.modalities.modals.fields.name.label") },
+                    { key: "name", label: "Texto" },
                 ]}
                 RenderRowMenu={(item) => <MenuItem categoryGroup={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
                 RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
@@ -185,9 +181,9 @@ export default function AllModalityData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={t("academic.modalities.modals.confirmModal.title")}
-                confirmLabel={t("academic.modalities.modals.confirmModal.confirmLabel")}
-                cancelLabel={t("academic.modalities.modals.confirmModal.cancelLabel")}
+                title={"Texto"}
+                confirmLabel={"Texto"}
+                cancelLabel={"Texto"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
@@ -200,7 +196,7 @@ export default function AllModalityData() {
                     })
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{t("academic.modalities.modals.confirmModal.warn")}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Texto"}</Text>
             </ConfirmationModal>
         </>
     );

@@ -4,12 +4,11 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal, TextInput } from "@mantine/core";
 import { KeyedMutator } from "swr";
 import { Modality } from "@prisma/client";
-import { CreateModalityInput, getCreateModality } from "@/schemas/academic/modality";
+import { CreateModalityInput, createModalitySchema } from "@/schemas/academic/modality";
 
 type Props = {
     opened: boolean;
@@ -18,11 +17,9 @@ type Props = {
 };
 
 export default function NewModalities({ opened, onClose, mutate }: Props) {
-    const t = useTranslations("academic.modalities.modals");
-    const g = useTranslations("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const createModalitySchema = getCreateModality((key: string) => t(key as any));
+    // Usamos o schema estático
 
     const { handleSubmit, formState: { errors }, register, reset } = useForm<CreateModalityInput>({
         resolver: zodResolver(createModalitySchema) as any,
@@ -48,7 +45,7 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
 
             if (responseData.code) {
                 notifications.show({
-                    message: t("errors.MODALITY_ALREADY_EXISTS"),
+                    message: "Texto",
                     color: "yellow"
                 });
             }
@@ -56,7 +53,7 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
             if (!response.ok) throw new Error("Failed to create modality");
 
             notifications.show({
-                message: t("create.notifications.success"),
+                message: "Texto",
                 color: "green"
             });
             reset();
@@ -67,7 +64,7 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
 
             if (error?.code == "MODALITY_ALREADY_EXISTS") {
                 notifications.show({
-                    message: t("errors.MODALITY_ALREADY_EXISTS"),
+                    message: "Texto",
                     color: "yellow"
                 });
             }
@@ -88,7 +85,7 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
         <Modal
             opened={opened}
             onClose={onClose}
-            title={t("create.title")}
+            title={"Texto"}
             size="lg"
             radius="lg"
             centered
@@ -97,8 +94,8 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
             <form onSubmit={handleSubmit(createModality, handleFormErrors)} className="flex flex-col gap-4">
                 <LoadingOverlay visible={isLoading} />
                 <TextInput
-                    label={t("fields.name.label")}
-                    placeholder={t("fields.name.placeholder")}
+                    label={"Texto"}
+                    placeholder={"Texto"}
                     {...register("name")}
                     error={errors.name?.message}
                     required

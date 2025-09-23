@@ -3,7 +3,6 @@
 import { fetcher } from "@/utils/fetcher";
 import { Class, ClassAttendance, Modality, Student, StudentClass, User } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import useSWR from "swr";
 import archiveClasses from "./archive"; // ATUALIZADO: Importa a nova função
@@ -42,9 +41,6 @@ interface MenuItemsProps {
 }
 
 export default function AllClassesData() {
-    const t = useTranslations("");
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     const { data: sessionData, status } = useSession();
 
@@ -97,7 +93,7 @@ export default function AllClassesData() {
         }
 
         try {
-            await archiveClasses(finalIdsToArchive, tenancyId, t, mutate as any);
+            await archiveClasses(finalIdsToArchive, tenancyId, mutate as any);
             // O mutate já é chamado dentro da função de arquivamento
         } catch (error) {
             console.error("Falha ao arquivar a(s) turma(s):", error);
@@ -119,13 +115,13 @@ export default function AllClassesData() {
                     </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
-                    <Menu.Label>{t("general.actions.title")}</Menu.Label>
+                    <Menu.Label>{"Ações"}</Menu.Label>
                     <Menu.Item leftSection={<GrUpdate size={14} />} onClick={() => onUpdateClick(classItem)}>
-                        {t("general.actions.edit")}
+                        {"Editar"}
                     </Menu.Item>
                     <Menu.Item color="orange" leftSection={<BiArchiveIn size={14} />} onClick={() => onArchiveClick(classItem)}>
-                        {t("general.actions.archive")}
-                    </Menu.Item>
+                    Arquivar
+                                        </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
         </div>
@@ -140,19 +136,17 @@ export default function AllClassesData() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{t("general.actions.manyActions")}</Menu.Label>
+                <Menu.Label>Arquivar</Menu.Label>
                 <Menu.Item color="orange" leftSection={<BiArchiveIn size={14} />} onClick={() => onBulkArchiveClick(selectedIds)}>
-                    {t("general.actions.archiveMany", {
-                        count: selectedIds.length
-                    })}
+                   Arquivar Todos
                 </Menu.Item>
             </Menu.Dropdown>
         </Menu>
     );
     
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
-    if (error) return <p>{t("general.errors.loadingData")}</p>;
+    if (status !== "authenticated") return <div>{"Texto"}</div>;
+    if (error) return <p>{"Texto"}</p>;
 
     return (
         <>
@@ -160,17 +154,17 @@ export default function AllClassesData() {
                 data={classes || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: t("academic.classes.modals.create.title")
+                    label: "Texto"
                 }}
                 baseUrl="/system/academic/classes/"
                 mutate={mutate}
-                pageTitle={t("academic.classes.title")}
-                searchbarPlaceholder={t("academic.classes.searchbarPlaceholder")}
+                pageTitle={"Turmas"}
+                searchbarPlaceholder={"Texto"}
                 columns={[
-                    { key: "name", label: t("academic.classes.modals.formSteps.one.fields.name.label"), sortable: true },
-                    { key: "modality", label: t("academic.classes.modals.formSteps.one.fields.modality.label"), render: (modality) => modality?.name || '-', sortable: true },
-                    { key: "teacher", label: t("academic.classes.modals.formSteps.one.fields.teacher.label"), sortable: true, render: (teacher) => teacher ? `${teacher.firstName} ${teacher.lastName}` : '-' },
-                    { key: "studentClasses", label: t("academic.classes.modals.formSteps.two.title"), sortable: true, render: (studentClasses: ClassFromApi["studentClasses"]) => studentClasses.length }
+                    { key: "name", label: "Texto", sortable: true },
+                    { key: "modality", label: "Texto", render: (modality) => modality?.name || '-', sortable: true },
+                    { key: "teacher", label: "Texto", sortable: true, render: (teacher) => teacher ? `${teacher.firstName} ${teacher.lastName}` : '-' },
+                    { key: "studentClasses", label: "Texto", sortable: true, render: (studentClasses: ClassFromApi["studentClasses"]) => studentClasses.length }
                 ]}
                 RenderRowMenu={(item) => <MenuItem classItem={item} onUpdateClick={handleUpdateClick} onArchiveClick={handleArchiveClick} />}
                 RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkArchiveClick={handleBulkArchiveClick} />}
@@ -181,9 +175,9 @@ export default function AllClassesData() {
                             <MenuItem classItem={item} onUpdateClick={handleUpdateClick} onArchiveClick={handleArchiveClick} />
                         </div>
                         <div className="flex flex-col gap-2 mt-2">
-                           <Text size="sm"><strong>{t("academic.classes.modals.formSteps.one.fields.modality.label")}:</strong> {item.modality?.name || '-'}</Text>
-                           <Text size="sm"><strong>{t("academic.classes.modals.formSteps.one.fields.teacher.label")}:</strong> {item.teacher ? `${item.teacher.firstName} ${item.teacher.lastName}` : '-'}</Text>
-                           <Text size="sm"><strong>{t("academic.classes.modals.formSteps.two.title")}:</strong> {item.studentClasses.length ?? 0}</Text>
+                           <Text size="sm"><strong>{"Texto"}:</strong> {item.modality?.name || '-'}</Text>
+                           <Text size="sm"><strong>{"Texto"}:</strong> {item.teacher ? `${item.teacher.firstName} ${item.teacher.lastName}` : '-'}</Text>
+                           <Text size="sm"><strong>{"Texto"}:</strong> {item.studentClasses.length ?? 0}</Text>
                         </div>
                     </>
                 )}
@@ -204,18 +198,18 @@ export default function AllClassesData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleArchiveConfirm}
-                title={t("academic.classes.modals.archiveConfirm.title")}
-                confirmLabel={t("general.actions.archive")}
-                cancelLabel={t("general.actions.cancel")}
+                title={"Texto"}
+                confirmLabel={"Texto"}
+                cancelLabel={"Cancelar"}
                 loading={isArchiving}
             >
                 {idsToArchive.length > 0 ? (
-                    t("academic.classes.modals.archiveConfirm.textArray", { count: idsToArchive.length })
+                    "Tem certeza que deseja arquivar todos essas turmas?"
                 ) : (
-                    t("academic.classes.modals.archiveConfirm.text", { class: selectedClass?.name || "" })
+                    <span>Tem certeza que deseja arquivar a turma <strong>{selectedClass?.name}</strong>?</span>
                 )}
                 <br />
-                <Text component="span" c="orange" size="sm" fw={500} mt="md">{t("academic.classes.modals.archiveConfirm.warn")}</Text>
+                <Text component="span" c="orange" size="sm" fw={500} mt="md">{"Texto"}</Text>
             </ConfirmationModal>
         </>
     );

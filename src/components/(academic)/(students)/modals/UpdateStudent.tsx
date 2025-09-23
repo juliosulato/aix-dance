@@ -1,7 +1,6 @@
 "use client"
 
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
-import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
@@ -36,16 +35,13 @@ type Props = {
 
 
 function UpdateStudent({ opened, onClose, mutate, student }: Props) {
-  const t = useTranslations("");
-  const locale = useLocale();
-  dayjs.locale(locale);
 
   const { data: sessionData, status } = useSession();
 
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
   const [visible, setVisible] = useState(false);
 
-  const createStudentSchema = getCreateStudentSchema((key: string) => t(key as any));
+  const createStudentSchema = getCreateStudentSchema();
 
   const { control, register, handleSubmit, watch, formState: { errors }, reset } = useForm<CreateStudentInput>({
     resolver: zodResolver(createStudentSchema),
@@ -67,7 +63,7 @@ useEffect(() => {
       gender: student.gender as "MALE" | "FEMALE" | "NON_BINARY" | "OTHER",
       cellPhoneNumber: student.cellPhoneNumber,
       dateOfBirth: student.dateOfBirth
-        ? dayjs(student.dateOfBirth).format("DD-MM-YYYY")
+        ? dayjs(student.dateOfBirth).format("YYYY-MM-DD")
         : "",
       documentOfIdentity: student.documentOfIdentity,
       email: student.email ?? undefined,
@@ -117,7 +113,7 @@ useEffect(() => {
       if (!response.ok) throw new Error("Failed to update plan.");
 
       notifications.show({
-        message: t("academic.students.update.notifications.success"),
+        message: "Texto",
         color: "green"
       });
       setAvatarUrl(undefined);
@@ -127,8 +123,8 @@ useEffect(() => {
     } catch (error) {
       console.error(error);
       notifications.show({
-        title: t("general.errors.title"),
-        message: t("general.errors.unexpected"),
+        title: "Texto",
+        message: "Texto",
         color: "red"
       });
     } finally {
@@ -141,14 +137,14 @@ useEffect(() => {
   };
 
     if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
+    if (status !== "authenticated") return <div>{"Texto"}</div>;
 
     return (
     <>
       <Modal
         opened={opened}
         onClose={onClose}
-        title={t("students.modals.titles.create")}
+        title={"Texto"}
         size="auto"
         radius="lg"
         centered
@@ -170,7 +166,7 @@ useEffect(() => {
             size="lg"
             className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
           >
-            {t("forms.submit")}
+            {"Salvar"}
           </Button>
         </form>
 

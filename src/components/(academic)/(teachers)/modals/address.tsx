@@ -1,6 +1,5 @@
 "use client";
 import { TextInput } from "@mantine/core";
-import { useTranslations } from "next-intl";
 import { FieldErrors, UseFormRegister, FieldValues, Path } from "react-hook-form";
 
 type Props<T extends FieldValues> = {
@@ -10,8 +9,6 @@ type Props<T extends FieldValues> = {
 }
 
 export default function Address<T extends FieldValues>({ errors, register, fieldPath }: Props<T>) {
-    const f = useTranslations("forms.address");
-
     const getError = (fieldName: string) => {
         const path = `${fieldPath}.${fieldName}`.split('.');
         let current: any = errors;

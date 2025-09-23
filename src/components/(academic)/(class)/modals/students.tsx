@@ -1,7 +1,6 @@
 "use client";
 
 import { Avatar, MultiSelect } from "@mantine/core";
-import { useTranslations } from "next-intl";
 import { FaSearch } from "react-icons/fa";
 import Image from "next/image";
 import notFound from "@/assets/images/not-found.avif";
@@ -18,9 +17,6 @@ type Props = {
 };
 
 export default function Class__Students({ control, errors, tenancyId }: Props) {
-    const t = useTranslations("academic.classes.modals.formSteps.two");
-    const g = useTranslations("general");
-
     const { data: allStudents } = useSWR<StudentFromApi[]>(
         () => tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students` : null,
         fetcher
@@ -76,19 +72,19 @@ export default function Class__Students({ control, errors, tenancyId }: Props) {
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col gap-4">
-            <h2 className="text-lg font-bold">{t("title")}</h2>
+            <h2 className="text-lg font-bold">{"Texto"}</h2>
             <Controller
                 name="students"
                 control={control}
                 render={({ field }) => (
                     <MultiSelect
-                        label={t("fields.students.label")}
-                        placeholder={t("fields.students.placeholder")}
+                        label={"Texto"}
+                        placeholder={"Texto"}
                         data={studentOptions}
                         {...field}
                         searchable
                         className="!w-full"
-                        nothingFoundMessage={g("notFound")}
+                        nothingFoundMessage={"Nada encontrado..."}
                         rightSection={<FaSearch />}
                         error={errors.students?.message}
                     />
@@ -99,8 +95,8 @@ export default function Class__Students({ control, errors, tenancyId }: Props) {
                 {studentsSelected.length === 0 ? (
                     <div className="flex flex-col gap-3 items-center justify-center text-center">
                         <Image src={notFound} alt="Nenhum aluno selecionado" className="max-w-[150px]" />
-                        <h3 className="text-xl text-primary font-bold">{t("noStudents.title")}</h3>
-                        <p className="max-w-xs text-neutral-500">{t("noStudents.description")}</p>
+                        <h3 className="text-xl text-primary font-bold">{"Texto"}</h3>
+                        <p className="max-w-xs text-neutral-500">{"Texto"}</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

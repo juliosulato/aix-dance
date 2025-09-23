@@ -1,7 +1,6 @@
 "use client";
 
 import { Button, LoadingOverlay, Modal, PasswordInput, TextInput, Select } from "@mantine/core";
-import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import dayjs from "dayjs";
@@ -14,7 +13,7 @@ import { notifications } from "@mantine/notifications";
 import AvatarUpload from "@/components/avatarUpload";
 import { KeyedMutator } from "swr";
 import { UserFromApi } from "./UserFromApi";
-import { getUpdateUserSchema, UpdateUserInput } from "@/schemas/user.schema";
+import { updateUserSchema, UpdateUserInput } from "@/schemas/user.schema";
 
 type Props = {
     opened: boolean;
@@ -25,11 +24,10 @@ type Props = {
 };
 
 function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
-    const t = useTranslations("");
     const [visible, setVisible] = useState(false);
     const [avatar, setAvatar] = useState<string | null>(user?.image || null);
 
-    const updateUserSchema = getUpdateUserSchema(t);
+    // Usamos o schema estático
 
     const { control, handleSubmit, formState: { errors }, register, reset, setValue } = useForm<UpdateUserInput>({
         resolver: zodResolver(updateUserSchema) as any,
@@ -50,32 +48,30 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
         onClose();
     };
 
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     async function updateUser(data: UpdateUserInput) {
         setVisible(true);
 
         if (data.prevPassword === "" && (data.password !== "" || data.confirmPassword !== "")) {
-            notifications.show({ color: "red", message: t("settings.users.modals.update.notifications.prevPassword") });
+            notifications.show({ color: "red", message: "Texto" });
             setVisible(false);
             return;
         }
 
         if (data.password === "" && data.confirmPassword !== "") {
-            notifications.show({ color: "red", message: t("settings.users.modals.update.notifications.password") });
+            notifications.show({ color: "red", message: "Texto" });
             setVisible(false);
             return;
         }
 
         if (data.password !== "" && data.confirmPassword === "") {
-            notifications.show({ color: "red", message: t("settings.users.modals.update.notifications.confirmPassword") });
+            notifications.show({ color: "red", message: "Texto" });
             setVisible(false);
             return;
         }
 
         if (data.password !== data.confirmPassword) {
-            notifications.show({ color: "red", message: t("settings.users.modals.update.notifications.passwordsMismatch") });
+            notifications.show({ color: "red", message: "Texto" });
             setVisible(false);
             return;
         }
@@ -93,18 +89,18 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
             if (!resp.ok) {
                 const error = await resp.json();
                 if (error?.code === "INVALID_PASSWORD") {
-                    notifications.show({ color: "red", message: t("settings.users.errors.INVALID_PASSWORD") });
+                    notifications.show({ color: "red", message: "Texto" });
                 } else {
                     throw new Error("Erro ao atualizar usuário");
                 }
                 return;
             }
 
-            notifications.show({ message: t("settings.users.modals.update.notifications.success"), color: "green" });
+            notifications.show({ message: "Texto", color: "green" });
             handleClose();
             mutate();
         } catch (err: any) {
-            notifications.show({ color: "red", message: t("settings.users.modals.update.notifications.error") });
+            notifications.show({ color: "red", message: "Texto" });
         } finally {
             setVisible(false);
         }
@@ -115,7 +111,7 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
             <Modal
                 opened={opened}
                 onClose={handleClose}
-                title={t("settings.users.modals.update.title")}
+                title={"Texto"}
                 size="xl"
                 radius="lg"
                 centered
@@ -130,22 +126,22 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
 
                         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2">
                             <TextInput
-                                label={t("forms.general-fields.firstName.label")}
-                                placeholder={t("forms.general-fields.firstName.placeholder")}
+                                label={"Primeiro Nome"}
+                                placeholder={"Texto"}
                                 required
                                 {...register("firstName")}
                                 error={errors.firstName?.message}
                             />
                             <TextInput
-                                label={t("forms.general-fields.lastName.label")}
-                                placeholder={t("forms.general-fields.lastName.placeholder")}
+                                label={"Sobrenome"}
+                                placeholder={"Texto"}
                                 required
                                 {...register("lastName")}
                                 error={errors.lastName?.message}
                             />
                             <TextInput
-                                label={t("forms.general-fields.email.label")}
-                                placeholder={t("forms.general-fields.email.placeholder")}
+                                label={"E-mail"}
+                                placeholder={"Texto"}
                                 required
                                 className="md:col-span-2"
                                 {...register("email")}
@@ -158,10 +154,10 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
                                 render={({ field }) => (
                                     <Select
                                         {...field}
-                                        label={t("settings.users.role.label")}
+                                        label={"Texto"}
                                         data={[
-                                            { value: "ADMIN", label: t("settings.users.role.admin") },
-                                            { value: "STAFF", label: t("settings.users.role.staff") },
+                                            { value: "ADMIN", label: "Texto" },
+                                            { value: "STAFF", label: "Texto" },
                                         ]}
                                         required
                                     />
@@ -177,7 +173,7 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
                                 render={({ field }) => (
                                     <PasswordInput
                                         {...field}
-                                        label={t("settings.users.modals.update.accessData.fields.prevPassword.label")}
+                                        label={"Texto"}
                                         error={errors.prevPassword?.message}
                                     />
                                 )}
@@ -188,7 +184,7 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
                                 render={({ field }) => (
                                     <PasswordInput
                                         {...field}
-                                        label={t("settings.users.modals.update.accessData.fields.password.label")}
+                                        label={"Texto"}
                                         error={errors.password?.message}
                                     />
                                 )}
@@ -199,7 +195,7 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
                                 render={({ field }) => (
                                     <PasswordInput
                                         {...field}
-                                        label={t("settings.users.modals.update.accessData.fields.confirmPassword.label")}
+                                        label={"Texto"}
                                         error={errors.confirmPassword?.message}
                                     />
                                 )}
@@ -215,7 +211,7 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
                         fullWidth={false}
                         className="!text-sm !font-medium tracking-wider w-full md!w-fit ml-auto"
                     >
-                        {t("forms.save")}
+                        {"Texto"}
                     </Button>
                 </form>
             </Modal>

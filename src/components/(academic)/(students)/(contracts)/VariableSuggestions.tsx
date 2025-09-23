@@ -1,5 +1,4 @@
 import { notifications } from "@mantine/notifications";
-import { useTranslations } from "next-intl";
 
 // Lista de variáveis disponíveis, agrupadas por categoria.
 // Você pode expandir esta lista com base no seu modelo de dados no Prisma.
@@ -38,12 +37,11 @@ const variableGroups = [
 ];
 
 export default function VariableSuggestions() {
-    const t = useTranslations("");
 
     // Função para copiar texto para a área de transferência.
     // Usando `document.execCommand` para maior compatibilidade em iframes.
     const copyToClipboard = (text: string) => {
-        const textArea = document.createElement("textarea");
+        const textArea = document.createElemen"Texto";
         textArea.value = text;
         textArea.style.position = "fixed"; // Previne rolagem da página.
         textArea.style.left = "-9999px";
@@ -58,7 +56,7 @@ export default function VariableSuggestions() {
         } catch (err) {
             console.error('Falha ao copiar texto: ', err);
             notifications.show({
-                message: t("academic.student-contracts.variables.copyFailed"),
+                message: "Texto",
                 color: 'red',
             });
         }
@@ -67,9 +65,9 @@ export default function VariableSuggestions() {
 
     return (
         <div className="p-4 border rounded-lg bg-neutral-50 h-full">
-            <h3 className="font-semibold text-gray-800 mb-2">{t("academic.student-contracts.variables.title")}</h3>
+            <h3 className="font-semibold text-gray-800 mb-2">{"Texto"}</h3>
             <p className="text-sm text-gray-600 mb-4">
-                {t("academic.student-contracts.variables.description")}
+                {"Texto"}
             </p>
             <div className="space-y-4">
                 {variableGroups.map(({ groupKey, variables }) => (
@@ -82,7 +80,7 @@ export default function VariableSuggestions() {
                                     type="button"
                                     onClick={() => copyToClipboard(variable)}
                                     className="bg-purple-100 text-purple-800 text-xs font-mono py-1 px-2 rounded-md hover:bg-purple-200 transition-colors"
-                                    title={t("academic.student-contracts.variables.copyTooltip")}
+                                    title={"Texto"}
                                 >
                                     {variable}
                                 </button>

@@ -1,21 +1,28 @@
-import toTitleCase from '@/utils/toTitleCase';
 import { z } from 'zod';
-import { addressSchema } from './address.schema';
 
-export const getCreateSupplierSchema = (t: (key: string) => string) => z.object({
-  name: z.string({ error: t("general.errors.string")}).min(1, { message: t('supplier.modals.fields.name.errors.required') }).transform(toTitleCase),
-  corporateReason: z.string({ error: t("general.errors.string")}).optional(),
-  documentType: z.string({ error: t("general.errors.string")}).optional(),
-  document: z.string({ error: t("general.errors.string")}).optional(),
-  email: z.string({ error: t("general.errors.string")}).optional(),
-  phoneNumber: z.string({ error: t("general.errors.string")}).optional(),
-  cellPhoneNumber: z.string({ error: t("general.errors.string")}).optional(),
+const addressSchema = z.object({
+  postalCode: z.string().min(1, { message: "CEP é obrigatório" }),
+  street: z.string().min(1, { message: "Rua é obrigatória" }),
+  number: z.string().optional(),
+  complement: z.string().optional(),
+  neighborhood: z.string().min(1, { message: "Bairro é obrigatório" }),
+  city: z.string().min(1, { message: "Cidade é obrigatória" }),
+  state: z.string().min(1, { message: "Estado é obrigatório" }),
+});
+
+const createSupplierSchema = z.object({
+  name: z.string().min(1, { message: "O nome é obrigatório" }),
+  corporateReason: z.string().optional(),
+  documentType: z.string().optional(),
+  document: z.string().optional(),
+  email: z.string().email({ message: "E-mail inválido" }).optional(),
+  phoneNumber: z.string().optional(),
+  cellPhoneNumber: z.string().optional(),
   address: addressSchema.optional(),
 });
 
-export const getUpdateSupplierSchema = (t: (key: string) => string) =>
-  getCreateSupplierSchema(t).partial();
+const updateSupplierSchema = createSupplierSchema.partial();
 
-export type CreateSupplierInput = z.infer<ReturnType<typeof getCreateSupplierSchema>>;
-export type UpdateSupplierInput = z.infer<ReturnType<typeof getUpdateSupplierSchema>>;
-
+export { createSupplierSchema, updateSupplierSchema };
+export type CreateSupplierInput = z.infer<typeof createSupplierSchema>;
+export type UpdateSupplierInput = z.infer<typeof updateSupplierSchema>;

@@ -2,7 +2,6 @@
 
 import { fetcher } from "@/utils/fetcher";
 import { useSession } from "next-auth/react";
-import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import useSWR from "swr";
 import deleteUsers from "./delete";
@@ -33,9 +32,6 @@ interface MenuItemsProps {
 }
 
 export default function AllTeachersData() {
-    const t = useTranslations("");
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     const { data: sessionData, status } = useSession();
 
@@ -106,19 +102,15 @@ export default function AllTeachersData() {
                     </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
-                    <Menu.Label>{t("general.actions.title")}</Menu.Label>
+                    <Menu.Label>{"Ações"}</Menu.Label>
                     <Menu.Item leftSection={<GrUpdate size={14} />} onClick={() => onUpdateClick(teacher)}>
-                        {t("general.actions.edit")}
+                        {"Editar"}
                     </Menu.Item>
                     <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(teacher)}>
-                        {t("general.actions.delete")}
+                        {"Excluir"}
                     </Menu.Item>
-                    <Menu.Item color={teacher.active ? "red" : "green"} leftSection={<GrUpdate size={14} />} onClick={() => toggleUserActive(teacher, sessionData?.user.tenancyId || "", t)}>
-                        {teacher.active ? (
-                            t("academic.teachers.status.update.ACTIVE")
-                        ) : (
-                            t("academic.teachers.status.update.INACTIVE")
-                        )}
+                    <Menu.Item color={teacher.active ? "red" : "green"} leftSection={<GrUpdate size={14} />} onClick={() => toggleUserActive(teacher, sessionData?.user.tenancyId || "")}>
+                        {teacher.active ? "Desativar" : "Ativar"}
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
@@ -133,19 +125,17 @@ export default function AllTeachersData() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{t("general.actions.manyActions")}</Menu.Label>
+                <Menu.Label>{"Texto"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
-                    {t("general.actions.deleteMany", {
-                        count: selectedIds.length
-                    })}
+                    {"Excluir selecionados"}
                 </Menu.Item>
             </Menu.Dropdown>
         </Menu>
     );
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
-    if (error) return <p>{t("general.errors.loadingData")}</p>;
+    if (status !== "authenticated") return <div>{"Texto"}</div>;
+    if (error) return <p>{"Texto"}</p>;
 
     const d = teachers?.map((teacher) => ({
         ...teacher,
@@ -158,12 +148,12 @@ export default function AllTeachersData() {
                 data={d || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: t("academic.teachers.modals.create.title")
+                    label: "Texto"
                 }}
                 baseUrl="/system/academic/teachers/"
                 mutate={mutate as any}
-                pageTitle={t("academic.teachers.title")}
-                searchbarPlaceholder={t("academic.teachers.searchbarPlaceholder")}
+                pageTitle={"Professores"}
+                searchbarPlaceholder={"Texto"}
                 columns={[
                     {
                         key: "image", label: "", sortable: false,
@@ -173,49 +163,49 @@ export default function AllTeachersData() {
                                 <Avatar name={item.firstName} color="#7439FA" size="64px" radius={"16px"} />
                         )
                     },
-                    { key: "fullName", label: t("forms.general-fields.fullName.label"), sortable: true },
+                    { key: "fullName", label: "Nome Completo", sortable: true },
                     {
                         key: "email",
-                        label: t("forms.general-fields.email.label"),
+                        label: "E-mail",
                         sortable: true
                     },
                     {
                         key: "teacher",
-                        label: t("academic.teachers.modals.create.remuneration.fields.contractType.label"),
+                        label: "Texto",
                         sortable: false,
-                        render: (teacher) => teacher?.remunerationType ? t(`academic.teachers.modals.create.remuneration.fields.contractType.options.${teacher.remunerationType}`) : "-"
+                        render: (teacher) => teacher?.remunerationType || "-"
                     },
                     {
                         key: "teacher",
                         sortable: false,
-                        label: t("forms.general-fields.document.label"),
+                        label: "CPF",
                         render: (teacher) => teacher?.document || "-"
                     },
                     {
                         key: "teacher",
-                        label: t("academic.teachers.modals.create.remuneration.fields.baseAmount.label"),
+                        label: "Texto",
                         sortable: false,
-                        render: (teacher: Teacher) => new Intl.NumberFormat(locale, { style: "currency", currency: "BRL" }).format(Number(teacher.baseAmount)) || "-"
+                        render: (teacher: Teacher) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(teacher.baseAmount)) || "-"
                     },
                     {
                         key: "teacher",
-                        label: t("forms.general-fields.cellPhoneNumber.label"),
+                        label: "Celular",
                         sortable: false,
                         render: (teacher) => teacher?.cellPhoneNumber ? <a href={`https://wa.me/${String(teacher.cellPhoneNumber).replace(/\D/g, "")}`}>{String(teacher.cellPhoneNumber)}</a> : "-"
                     },
                     {
                         key: "active",
-                        label: t("academic.students.status.label"),
+                        label: "Texto",
                         render: (active) => {
                             if (active) {
                                 return (
-                                    <Tooltip label={t("academic.students.status.ACTIVE")} color="green">
+                                    <Tooltip label={"Texto"} color="green">
                                         <div className={`w-4 h-4 rounded-full bg-green-500`}></div>
                                     </Tooltip>
                                 );
                             } else {
                                 return (
-                                    <Tooltip label={t("academic.students.status.INACTIVE")} color="red">
+                                    <Tooltip label={"Texto"} color="red">
                                         <div className={`w-4 h-4 rounded-full bg-red-500`}></div>
                                     </Tooltip>
                                 )
@@ -242,7 +232,7 @@ export default function AllTeachersData() {
                                         {`${item.firstName} ${item.lastName}`}
                                     </Text>
                                     <Text size="sm" c="dimmed">
-                                        {t("academic.teachers.view.registeredAt", { date: dayjs(item.createdAt).format("DD/MM/YYYY") })}
+                                        {`Registrado em ${dayjs(item.createdAt).format("DD/MM/YYYY")}`}
                                     </Text>
                                 </div>
                             </div>
@@ -250,9 +240,9 @@ export default function AllTeachersData() {
                         </div>
                         <div className="mt-2 border-gray-200">
                             <div className="flex items-center gap-2 mb-2">
-                                <Text size="sm" fw={500} className="w-28">{t("academic.teachers.modals.create.remuneration.fields.contractType.label")}:</Text>
+                                <Text size="sm" fw={500} className="w-28">{"Texto"}:</Text>
                                 <Text size="sm" c="dimmed">
-                                    {item.teacher?.remunerationType ? t(`academic.teachers.modals.create.remuneration.fields.contractType.options.${item.teacher.remunerationType}`) : "-"}
+                                    {item.teacher?.remunerationType || "-"}
                                 </Text>
                             </div>
                             {item.teacher?.cellPhoneNumber && (
@@ -292,20 +282,18 @@ export default function AllTeachersData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={t("academic.teachers.modals.confirmModal.title")}
-                confirmLabel={t("general.actions.delete")}
-                cancelLabel={t("general.actions.cancel")}
+                title={"Texto"}
+                confirmLabel={"Excluir"}
+                cancelLabel={"Cancelar"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
-                    t("academic.teachers.modals.confirmModal.textArray", { count: idsToDelete.length })
+                    "Tem certeza que deseja excluir os professores selecionados?"
                 ) : (
-                    t("academic.teachers.modals.confirmModal.text", {
-                        teacher: selectedTeacher?.firstName + " " + selectedTeacher?.lastName || ""
-                    })
+                    `Tem certeza que deseja excluir o professor ${selectedTeacher?.firstName + " " + selectedTeacher?.lastName || ""}?`
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{t("academic.teachers.modals.confirmModal.warn")}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Texto"}</Text>
             </ConfirmationModal>
         </>
     );

@@ -2,7 +2,6 @@ import { Gender } from "@prisma/client";
 import { useState, memo } from "react";
 import { PhoneInput } from "@/components/ui/cellPhoneInput";
 import { InputBase, Select, TextInput } from "@mantine/core";
-import { useTranslations } from "next-intl";
 import 'dayjs/locale/pt-br';
 import DocumentInput from "@/components/ui/documentInput";
 import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form";
@@ -19,12 +18,10 @@ type Props = {
 
 function NewStudent__PersonalData({ control, register, errors }: Props) {
     const [gender, setGender] = useState<Gender | null>(null);
-    const t = useTranslations("academic.students.modals.personalData");
-    const g = useTranslations("forms.general-fields");
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
-            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{t("title")}</h2>
+            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{"Texto"}</h2>
 
             <TextInput
                 label={g("firstName.label")}
@@ -149,8 +146,8 @@ function NewStudent__PersonalData({ control, register, errors }: Props) {
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={t("fields.howDidYouMeetUs.label")}
-                        placeholder={t("fields.howDidYouMeetUs.placeholder")}
+                        label={"Texto"}
+                        placeholder={"Texto"}
                         data={[
                             { label: "Instagram", value: "instagram" },
                             { label: "Facebook", value: "facebook" },

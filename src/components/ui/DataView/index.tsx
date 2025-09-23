@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import DataViewHead from "./DataViewHead";
 import React, { useState } from "react";
 import DataViewTable from "./DataViewTable";
@@ -58,7 +57,6 @@ export default function DataView<T>({
     renderHead,
     printable = true
 }: DataViewProps<T>) {
-    const t = useTranslations("");
     const [activeView, setActiveView] = React.useState<"table" | "grade">("grade");
     const [searchValue, setSearchValue] = React.useState<string>("");
     const [activePage, setPage] = React.useState(1);
@@ -201,7 +199,7 @@ export default function DataView<T>({
                 </head>
                 <body>
                     <h1>${pageTitle}</h1>
-                    <p>Gerado em: ${dayjs().format("DD/MM/YYYY HH:mm")}</p>
+                    <p>Gerado em: ${dayjs().format("DD/MM/YYYY")}</p>
                     <table>
                         <thead><tr>${tableHeaders}</tr></thead>
                         <tbody>${tableRows}</tbody>
@@ -237,7 +235,6 @@ export default function DataView<T>({
     return (
         <div className="flex flex-col gap-4 md:gap-6">
             <DataViewHead
-                t={t}
                 pageTitle={pageTitle}
                 searchbarPlaceholder={searchbarPlaceholder}
                 activeView={activeView}
@@ -319,7 +316,7 @@ export default function DataView<T>({
                     <Grid.Col span={{ base: 12, md: 4 }}>
                         <Select
                             value={rowsPerPage}
-                            label={t("dataView.itemsPerPage")}
+                            label={"Texto"}
                             onChange={value => {
                                 setRowsPerPage(value || '12');
                                 setPage(1);

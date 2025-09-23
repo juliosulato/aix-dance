@@ -2,7 +2,6 @@
 
 import InfoTerm from "@/components/ui/Infoterm";
 import { FaUser, FaFileInvoiceDollar, FaBoxOpen, FaMoneyBillWave } from "react-icons/fa";
-import { useTranslations } from "next-intl";
 import dayjs from "dayjs";
 import { Bill, FormsOfReceipt, Plan, Sale, SaleItem, Student } from "@prisma/client";
 import { Divider, Skeleton, Text } from "@mantine/core";
@@ -26,7 +25,6 @@ type SaleFromApi = Sale & {
 
 
 export default function SaleView({ saleId, tenancyId }: { saleId: string, tenancyId: string }) {
-    const t = useTranslations();
 
     // --- Busca os dados da Venda ---
     const { data: sale, error, isLoading } = useSWR<SaleFromApi>(
@@ -55,7 +53,7 @@ export default function SaleView({ saleId, tenancyId }: { saleId: string, tenanc
     }
 
     if (error || !sale) {
-        return <div className="text-center text-red-500">{t("general.errors.loadingData")}</div>;
+        return <div className="text-center text-red-500">{"Texto"}</div>;
     }
 
     const mainBill = sale.bills.find(b => !b.parentId);
@@ -66,26 +64,26 @@ export default function SaleView({ saleId, tenancyId }: { saleId: string, tenanc
             {/* --- Cabeçalho --- */}
             <div className="flex flex-col md:flex-row md:flex-wrap gap-4 justify-between items-center mb-4">
                 <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">
-                    {t("financial.sales.view.title")}
+                    {"Detalhes da Venda"}
                 </h1>
                 <Text size="sm" c="dimmed">
-                    {t("financial.sales.view.registeredAt")} {dayjs(sale.createdAt).format("DD/MM/YYYY [às] HH:mm")}
+                    {"Criado em"} {dayjs(sale.createdAt).format("DD/MM/YYYY")}
                 </Text>
             </div>
 
             {/* --- Informações Gerais --- */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                <InfoTerm label={t("financial.sales.view.student")} icon={<FaUser />} href={`/system/academic/students/${sale.studentId}`}>
+                <InfoTerm label={"Texto"} icon={<FaUser />} href={`/system/academic/students/${sale.studentId}`}>
                     {sale.student.firstName} {sale.student.lastName}
                 </InfoTerm>
-                <InfoTerm label={t("financial.sales.view.totalAmount")} icon={<FaFileInvoiceDollar />}>
+                <InfoTerm label={"Texto"} icon={<FaFileInvoiceDollar />}>
                     {formatCurrency(sale.totalAmount as any)}
                 </InfoTerm>
             </div>
 
             {/* --- Itens da Venda --- */}
             <div>
-                <Divider my="lg" label={t("financial.sales.view.items.title")} labelPosition="center" />
+                <Divider my="lg" label={"Texto"} labelPosition="center" />
                 <div className="flex flex-col gap-3 mt-4">
                     {sale.items.map(item => (
                         <div key={item.id} className="p-3 bg-gray-50 rounded-lg flex justify-between items-center">
@@ -107,16 +105,16 @@ export default function SaleView({ saleId, tenancyId }: { saleId: string, tenanc
             {/* --- Pagamentos Realizados --- */}
             {payments.length > 0 && (
                 <div>
-                    <Divider my="lg" label={t("financial.sales.view.payments.title")} labelPosition="center" />
+                    <Divider my="lg" label={"Texto"} labelPosition="center" />
                     <div className="flex flex-col gap-3 mt-4">
                         {payments.map(payment => (
                              <Link href={`/system/financial/manager/${payment.id}`} key={payment.id} className="p-3 bg-gray-50 hover:bg-violet-50 rounded-lg transition-colors flex justify-between items-center">
                                 <div className="flex items-center gap-4">
                                     <FaMoneyBillWave className="text-green-600" />
                                     <div>
-                                        <Text size="sm" fw={500}>{payment.formsOfReceipt?.name || t("financial.sales.view.payments.notInformed")}</Text>
+                                        <Text size="sm" fw={500}>{payment.formsOfReceipt?.name || "Forma de recebimento"}</Text>
                                         <Text size="xs" c="dimmed">
-                                           {t("financial.sales.view.payments.paidAt")} {dayjs(payment.paymentDate).format("DD/MM/YYYY")}
+                                           {"Pago em"} {dayjs(payment.paymentDate).format("DD/MM/YYYY")}
                                         </Text>
                                     </div>
                                 </div>

@@ -2,7 +2,6 @@
 
 import { fetcher } from "@/utils/fetcher";
 import { useSession } from "next-auth/react";
-import { useLocale, useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
 import deleteBills from "./delete";
@@ -56,10 +55,7 @@ interface MenuItemsProps {
 }
 
 export default function AllBillsData() {
-    const t = useTranslations("");
     const { data: sessionData, status } = useSession();
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     const [openNew, setOpenNew] = useState<boolean>(false);
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
@@ -126,7 +122,7 @@ export default function AllBillsData() {
         }
 
         try {
-            await deleteBills(finalIdsToDelete, tenancyId, t, mutate as any);
+            await deleteBills(finalIdsToDelete, tenancyId, mutate as any);
             mutate();
         } catch (error) {
             console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);
@@ -147,18 +143,18 @@ export default function AllBillsData() {
                     </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
-                    <Menu.Label>{t("general.actions.title")}</Menu.Label>
+                    <Menu.Label>{"Ações"}</Menu.Label>
                     <Menu.Item leftSection={<GrUpdate size={14} />} onClick={() => onUpdateClick(bill)}>
-                        {t("general.actions.edit")}
+                        {"Editar"}
                     </Menu.Item>
                     <Menu.Item leftSection={<RiMoneyDollarCircleLine size={14} />} onClick={() => {
                         setOpenPayBill(true);
                         setSelectedBill(bill)
                     }}>
-                        <span>{t("financial.bills.payBill")}</span>
+                        <span>{"Texto"}</span>
                     </Menu.Item>
                     <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(bill)}>
-                        {t("general.actions.delete")}
+                        {"Excluir"}
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
@@ -173,19 +169,17 @@ export default function AllBillsData() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{t("general.actions.manyActions")}</Menu.Label>
+                <Menu.Label>{"Texto"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
-                    {t("general.actions.deleteMany", {
-                        items: selectedIds.length
-                    })}
+                    {"Excluir selecionados"}
                 </Menu.Item>
             </Menu.Dropdown>
         </Menu>
     );
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
-    if (error) return <p>{t("general.errors.loadingData")}</p>;
+    if (status !== "authenticated") return <div>{"Texto"}</div>;
+    if (error) return <p>{"Texto"}</p>;
 
     return (
         <>
@@ -193,8 +187,8 @@ export default function AllBillsData() {
                 data={filteredBills}
                 baseUrl="/system/financial/manager/"
                 mutate={mutate}
-                pageTitle={`${t("financial.bills.title")}`}
-                searchbarPlaceholder={t("financial.bills.searchbarPlaceholder")}
+                pageTitle={`${"Texto"}`}
+                searchbarPlaceholder={"Texto"}
                 dateFilterOptions={[
                     { key: 'dueDate', label: 'Data de Vencimento' },
                     { key: 'createdAt', label: 'Data de Criação' },
@@ -202,65 +196,65 @@ export default function AllBillsData() {
                 columns={[
                     {
                         key: "complement",
-                        label: t("financial.bills.modals.fields.complement.label"),
+                        label: "Texto",
                         render: (value) => value ? value : "",
                         sortable: true
                     },
                     {
                         key: "amount",
-                        label: t("financial.bills.modals.fields.amount.label"),
+                        label: "Texto",
                         render: (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value),
                         sortable: true
                     },
                     {
                         key: "amountPaid",
-                        label: t("financial.bills.modals.fields.amountPaid.label"),
+                        label: "Texto",
                         render: (value) => value ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value) : '-',
                         sortable: true
                     },
                     {
                         key: "installmentNumber",
-                        label: t("financial.bills.modals.fields.installmentNumber.label"),
+                        label: "Texto",
                         render: (value) => value ? <span className="text-primary">{value}</span> : <span className="text-primary">1</span>,
                         sortable: true
                     },
                     {
                         key: "description",
-                        label: t("financial.bills.modals.fields.description.label"),
+                        label: "Descrição",
                     },
                     {
                         key: "dueDate",
-                        label: t("financial.bills.modals.fields.dueDate.label"),
+                        label: "Vencimento",
                         render: (value) => dayjs(value).format("DD/MM/YYYY"),
                         sortable: true
                     },
                     {
                         key: "bank",
-                        label: t("financial.bills.modals.fields.bank.label"),
+                        label: "Banco",
                         render: (bank) => bank?.name || '-',
                         sortable: true
                     },
                     {
                         key: "category",
-                        label: t("financial.bills.modals.fields.category.label"),
+                        label: "Texto",
                         render: (category) => category?.name || '-',
                         sortable: true
                     },
                     {
                         key: "formsOfReceipt",
-                        label: t("financial.bills.modals.fields.payment-method.label"),
+                        label: "Texto",
                         render: (formsOfReceipt) => formsOfReceipt?.name || '-',
                         sortable: true
                     },
                     {
                         key: "recurrence",
-                        label: t("financial.bills.modals.fields.subscription.frequency.label"),
+                        label: "Texto",
                         render: (rec) => rec
                     },
                     {
                         key: "status",
-                        label: t("financial.bills.modals.fields.status.label"),
-                        render: (st) => StatusTextToBadge(st, true, t)
+                        label: "Texto",
+                        render: (st) => StatusTextToBadge(st, true)
                     },
                 ]}
                 renderHead={() => (
@@ -273,10 +267,10 @@ export default function AllBillsData() {
                         >
                             <Tabs.List>
                                 <Tabs.Tab value="payable">
-                                    {t("financial.bills.payable")}
+                                    {"Texto"}
                                 </Tabs.Tab>
                                 <Tabs.Tab value="receivable">
-                                    {t("financial.bills.receivable")}
+                                    {"Texto"}
                                 </Tabs.Tab>
                             </Tabs.List>
                         </Tabs>
@@ -290,7 +284,7 @@ export default function AllBillsData() {
                                 rightSection={<IoAdd />}
                                 onClick={() => setOpenNew(true)}
                             >
-                                {t("financial.bills.modals.create.title")}
+                                {"Texto"}
                             </Button>
                         )}
                     </>
@@ -300,7 +294,7 @@ export default function AllBillsData() {
                 renderCard={(item) => (
                     <Box className="flex flex-col h-full">
                         <Flex justify="space-between" align="start">
-                            {StatusTextToBadge(item.status, true, t)}
+                            {StatusTextToBadge(item.status, true)}
                             <MenuItem bill={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />
                         </Flex>
 
@@ -363,22 +357,18 @@ export default function AllBillsData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={t("financial.bills.modals.confirmModal.title")}
-                confirmLabel={t("financial.bills.modals.confirmModal.confirmLabel")}
-                cancelLabel={t("financial.bills.modals.confirmModal.cancelLabel")}
+                title={"Texto"}
+                confirmLabel={"Texto"}
+                cancelLabel={"Texto"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
-                    t("financial.bills.modals.confirmModal.textArray",
-                        { bills: idsToDelete.length }
-                    )
+                    "Tem certeza que deseja excluir as contas selecionadas?"
                 ) : (
-                    t("financial.bills.modals.confirmModal.text", {
-                        bill: dayjs(selectedBill?.dueDate).format("DD MMMM YYYY") || ""
-                    })
+                    `Tem certeza que deseja excluir a conta com vencimento em ${dayjs(selectedBill?.dueDate).format("DD/MM/YYYY") || ""}?`
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{t("financial.bills.modals.confirmModal.warn")}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Texto"}</Text>
             </ConfirmationModal>
         </>
     );

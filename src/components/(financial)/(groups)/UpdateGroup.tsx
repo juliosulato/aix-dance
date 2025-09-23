@@ -4,10 +4,9 @@ import { useEffect, useState } from "react";
 import { useForm, FieldErrors, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal, TextInput } from "@mantine/core";
-import { UpdateCategoryGroupInput, getUpdateCategoryGroupSchema } from "@/schemas/financial/category-group.schema";
+import { UpdateCategoryGroupInput, updateCategoryGroupSchema } from "@/schemas/financial/category-group.schema";
 import { KeyedMutator } from "swr";
 import { CategoryGroup } from "@prisma/client";
 
@@ -19,11 +18,10 @@ type Props = {
 };
 
 export default function UpdateCategoryGroup({ opened, onClose, categoryGroups, mutate }: Props) {
-    const t = useTranslations("financial.category-groups");
-    const g = useTranslations("");
+
     const [isLoading, setIsLoading] = useState(false);
 
-    const updateCategoryGroupSchema = getUpdateCategoryGroupSchema((key: string) => t(key as any));
+    // Usamos o schema estático
 
     const { handleSubmit, formState: { errors }, register, reset } = useForm<UpdateCategoryGroupInput>({
         resolver: zodResolver(updateCategoryGroupSchema),
@@ -57,7 +55,7 @@ export default function UpdateCategoryGroup({ opened, onClose, categoryGroups, m
             if (!response.ok) throw new Error("Failed to create category group");
 
             notifications.show({
-                message: t("modals.create.notifications.success"),
+                message: "Texto",
                 color: "green"
             });
             reset();
@@ -87,7 +85,7 @@ export default function UpdateCategoryGroup({ opened, onClose, categoryGroups, m
         <Modal
             opened={opened}
             onClose={onClose}
-            title={t("modals.create.title")}
+            title={"Texto"}
             size="md"
             radius="lg"
             centered
@@ -96,8 +94,8 @@ export default function UpdateCategoryGroup({ opened, onClose, categoryGroups, m
             <form onSubmit={handleSubmit(updateCategoryGroup, handleFormErrors)} className="flex flex-col gap-4">
                 <LoadingOverlay visible={isLoading} />
                 <TextInput
-                    label={t("modals.fields.name.label")}
-                    placeholder={t("modals.fields.name.placeholder")}
+                    label={"Texto"}
+                    placeholder={"Texto"}
                     {...register("name")}
                     error={errors.name?.message}
                     required

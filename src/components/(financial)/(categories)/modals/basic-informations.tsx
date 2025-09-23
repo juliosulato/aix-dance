@@ -1,4 +1,3 @@
-import { useTranslations } from "next-intl";
 import { Select, TextInput } from "@mantine/core";
 import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form";
 import { CreateCategoryBillInput, UpdateCategoryBillInput } from "@/schemas/financial/category-bill.schema";
@@ -14,8 +13,6 @@ type Props = {
 };
 
 export default function Category__BasicInformations({ control, errors, register, tenancyId }: Props) {
-    const t = useTranslations("financial.categories.modals");
-    const g = useTranslations("general");
 
     const { data: groups, isLoading: isLoadingGroups } = useSWR<CategoryGroup[]>(
         tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/category-groups` : null,
@@ -30,8 +27,8 @@ export default function Category__BasicInformations({ control, errors, register,
     return (
         <div className="rounded-xl grid grid-cols-1 md:grid-cols-2 gap-4">
             <TextInput
-                label={t("fields.name.label")}
-                placeholder={t("fields.name.placeholder")}
+                label={"Texto"}
+                placeholder={"Texto"}
                 {...register("name")}
                 error={errors.name?.message}
                 required
@@ -44,8 +41,8 @@ export default function Category__BasicInformations({ control, errors, register,
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={t("fields.nature.label")}
-                        placeholder={t("fields.nature.placeholder")}
+                        label={"Texto"}
+                        placeholder={"Texto"}
                         data={[
                             { label: t('fields.nature.enums.revenue'), value: BillNature.REVENUE },
                             { label: t('fields.nature.enums.expense'), value: BillNature.EXPENSE },
@@ -62,8 +59,8 @@ export default function Category__BasicInformations({ control, errors, register,
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={t("fields.type.label")}
-                        placeholder={t("fields.type.placeholder")}
+                        label={"Texto"}
+                        placeholder={"Texto"}
                         data={[
                             { label: t('fields.type.enums.fixed'), value: BillCategoryType.FIXED },
                             { label: t('fields.type.enums.variable'), value: BillCategoryType.VARIABLE },
@@ -80,14 +77,14 @@ export default function Category__BasicInformations({ control, errors, register,
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={t("fields.group.label")}
-                        placeholder={t("fields.group.placeholder")}
+                        label={"Texto"}
+                        placeholder={"Texto"}
                         data={groups?.map(g => ({ label: g.name, value: g.id })) || []}
                         {...field}
                         error={errors.groupId?.message}
                         searchable
                         clearable
-                        nothingFoundMessage={g("notFound")}
+                        nothingFoundMessage={"Nada encontrado..."}
                         disabled={isLoadingGroups}
                         className="md:col-span-2"
                     />
@@ -99,14 +96,14 @@ export default function Category__BasicInformations({ control, errors, register,
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={t("fields.parent.label")}
-                        placeholder={t("fields.parent.placeholder")}
+                        label={"Texto"}
+                        placeholder={"Texto"}
                         data={parentCategories?.map(p => ({ label: p.name, value: p.id })) || []}
                         {...field}
                         error={errors.parentId?.message}
                         searchable
                         clearable
-                        nothingFoundMessage={g("notFound")}
+                        nothingFoundMessage={"Nada encontrado..."}
                         disabled={isLoadingParents}
                         className="md:col-span-2"
                     />

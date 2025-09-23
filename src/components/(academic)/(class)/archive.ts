@@ -1,17 +1,15 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { Translations } from "@/types/translations";
 import { Class } from "@prisma/client";
 
-async function archiveClasses(
-  idsToArchive: string[],
+async function arquivarTurmas(
+  idsParaArquivar: string[],
   tenancyId: string,
-  t: Translations,
   mutate?: KeyedMutator<Class[]>
 ) {
-  if (idsToArchive.length === 0) {
+  if (idsParaArquivar.length === 0) {
     notifications.show({
-      message: t("academic.classes.archive.errors.noLength"),
+      message: "Nenhuma turma selecionada para arquivar.",
       color: "red",
     });
     return;
@@ -22,50 +20,51 @@ async function archiveClasses(
   // Atualização otimista da UI: remove as turmas da lista visível
   mutate &&
     (await mutate(
-      (currentData) =>
-        currentData?.filter((c) => !idsToArchive.includes(c.id)) || [],
+      (dadosAtuais) =>
+        dadosAtuais?.filter((c) => !idsParaArquivar.includes(c.id)) || [],
       {
         revalidate: false,
       }
     ));
 
   notifications.show({
-    title: t("academic.classes.archive.notifications.wait.title"),
-    message: t("academic.classes.archive.notifications.wait.message"),
+    title: "Aguarde",
+    message: "Arquivando turmas...",
     color: "yellow",
   });
 
   try {
     // Cria um array de promises, uma para cada requisição de arquivamento
-    const archivePromises = idsToArchive.map(id => 
+    const promessasArquivar = idsParaArquivar.map((id) =>
       fetch(`${apiUrl}/${id}/archive`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
       })
     );
-    
+
     // Executa todas as promises em paralelo
-    const responses = await Promise.all(archivePromises);
+    const respostas = await Promise.all(promessasArquivar);
 
     // Verifica se alguma das requisições falhou
-    const failedRequest = responses.find(res => !res.ok);
-    if (failedRequest) {
-      throw new Error(`Falha ao arquivar uma ou mais turmas. Status: ${failedRequest.status}`);
+    const requisicaoFalhou = respostas.find((res) => !res.ok);
+    if (requisicaoFalhou) {
+      throw new Error(
+        `Falha ao arquivar uma ou mais turmas. Status: ${requisicaoFalhou.status}`
+      );
     }
 
     notifications.clean();
     notifications.show({
-      message: t("academic.classes.archive.notifications.success"),
+      message: "Turmas arquivadas com sucesso!",
       color: "green",
     });
 
-    // Revalida os dados da SWR para garantir consistência, mas não reverte a UI otimista
+    // Revalida os dados do SWR para garantir consistência, mas não reverte a UI otimista
     mutate && mutate();
-
   } catch (error) {
     console.error("Erro ao arquivar turmas:", error);
     notifications.show({
-      message: t("academic.classes.archive.errors.internalError"),
+      message: "Ocorreu um erro interno ao arquivar as turmas.",
       color: "red",
     });
     // Reverte a UI em caso de erro, trazendo as turmas de volta
@@ -73,4 +72,4 @@ async function archiveClasses(
   }
 }
 
-export default archiveClasses;
+export default arquivarTurmas;

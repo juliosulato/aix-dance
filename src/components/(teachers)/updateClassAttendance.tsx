@@ -10,7 +10,6 @@ import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 import "dayjs/locale/en";
 import "dayjs/locale/es";
-import { useLocale } from "next-intl";
 import { notifications } from "@mantine/notifications";
 
 const schema = z.object({
@@ -26,8 +25,6 @@ const schema = z.object({
 }).partial();
 
 export default function UpdateClassAttendance({ studentsClass, opened, onClose, teacherId, prevClassAttendance }: { studentsClass: ClassFromApi, opened: boolean, onClose: () => void, teacherId: string, prevClassAttendance: any }) {
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     const { control, register, formState: { errors }, handleSubmit, reset } = useForm<z.infer<typeof schema>>({
         resolver: zodResolver(schema) as any,
@@ -132,7 +129,7 @@ export default function UpdateClassAttendance({ studentsClass, opened, onClose, 
                             onChange={value => field.onChange(value)}
                             error={errors.date?.message}
                             required
-                            locale={locale}
+                            locale={"pt-br"}
                             withSeconds={false}
                         />
                     )}

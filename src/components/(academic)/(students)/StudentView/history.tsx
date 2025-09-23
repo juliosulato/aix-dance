@@ -19,7 +19,7 @@ export default function StudentHistoryView(student: StudentFromApi) {
             ))}
 
             <span className="text-sm text-gray-500 mt-4">
-                Aluno(a) criado em {dayjs(student.createdAt).format("DD/MM/YYYY HH:mm")}
+                Aluno(a) criado em {dayjs(student.createdAt).format("DD/MM/YYYY")}
             </span>
         </div>
     )

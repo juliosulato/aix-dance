@@ -4,14 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import BasicInformations from "./basicInformations";
 import NewPlan__Fees from "./fees";
 import { KeyedMutator } from "swr";
 import { Plan } from "@prisma/client";
-import { getCreatePlanSchema, CreatePlanInput } from "@/schemas/academic/plan";
+import { createPlanSchema, CreatePlanInput } from "@/schemas/academic/plan";
 
 type Props = {
     opened: boolean;
@@ -20,12 +19,11 @@ type Props = {
 };
 
 export default function NewPlan({ opened, onClose, mutate }: Props) {
-    const t = useTranslations("");
-    const g = useTranslations("");
+
     
     const [visible, setVisible] = useState(false);
 
-    const createPlanSchema = getCreatePlanSchema((key: string) => t(key as any));
+    // Usamos o schema estático
 
     const { control, handleSubmit, formState: { errors }, register, watch, reset } = useForm<CreatePlanInput>({
         resolver: zodResolver(createPlanSchema),
@@ -46,7 +44,7 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
 
     const { data: sessionData, status } = useSession();
     if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
+    if (status !== "authenticated") return <div>{"Texto"}</div>;
 
     async function createPlan(data: CreatePlanInput) {
         if (!sessionData?.user.tenancyId) {
@@ -70,7 +68,7 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
             if (!response.ok) throw new Error("Failed to update plan.");
 
             notifications.show({
-                message: t("update.notifications.success"),
+                message: "Texto",
                 color: "green"
             });
             reset();
@@ -95,7 +93,7 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
             <Modal
                 opened={opened}
                 onClose={onClose}
-                title={t("academic.plans.modals.create.title")}
+                title={"Texto"}
                 size="auto"
                 radius="lg"
                 centered

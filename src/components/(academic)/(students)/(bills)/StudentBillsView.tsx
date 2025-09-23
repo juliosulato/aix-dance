@@ -4,7 +4,6 @@ import { StudentFromApi } from "../StudentFromApi";
 import DataView from "@/components/ui/DataView";
 import { ActionIcon, Badge, Box, Button, Divider, Flex, Menu, Text } from "@mantine/core";
 import { StatusTextToBadge } from "@/utils/statusTextToBadge";
-import { useLocale, useTranslations } from "use-intl";
 import 'dayjs/locale/pt-br';
 import 'dayjs/locale/en';
 import 'dayjs/locale/es';
@@ -26,9 +25,6 @@ interface MenuItemsProps {
 
 export default function StudentBillsView({ student }: { student: StudentFromApi }) {
     const bills = student.bills.sort((a, b) => a.status === "OVERDUE" ? -1 : 1 || dayjs(b.dueDate).diff(dayjs(a.dueDate)));
-    const t = useTranslations("");
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
     const [openPayBill, setOpenPayBill] = useState<boolean>(false);
@@ -70,7 +66,7 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
         }
 
         try {
-            await deleteBills(finalIdsToDelete, tenancyId, t);
+            await deleteBills(finalIdsToDelete, tenancyId);
             window.location.reload();
         } catch (error) {
             console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);
@@ -95,10 +91,10 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
                         setOpenPayBill(true);
                         setSelectedBill(bill)
                     }}>
-                        <span>{t("financial.bills.payBill")}</span>
+                        <span>{"Texto"}</span>
                     </Menu.Item>
                     <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(bill)}>
-                        {t("general.actions.delete")}
+                        {"Excluir"}
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
@@ -113,11 +109,9 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{t("general.actions.manyActions")}</Menu.Label>
+                <Menu.Label>{"Ações"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
-                    {t("general.actions.deleteMany", {
-                        items: selectedIds.length
-                    })}
+                    {`Excluir ${selectedIds.length} item${selectedIds.length > 1 ? 's' : ''}`}
                 </Menu.Item>
             </Menu.Dropdown>
         </Menu>
@@ -129,9 +123,10 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
             <div className="bg-neutral-100 p-4 md:p-6 lg:p-8 rounded-2xl border-neutral-200 border mt-4 md:mt-6">
                 <DataView<typeof bills[0]>
                     data={bills}
+                    
                     baseUrl="/system/financial/manager/"
-                    pageTitle={`${t("financial.bills.title")}`}
-                    searchbarPlaceholder={t("financial.bills.searchbarPlaceholder")}
+                    pageTitle={`${"Texto"}`}
+                    searchbarPlaceholder={"Texto"}
                     dateFilterOptions={[
                         { key: 'dueDate', label: 'Data de Vencimento' },
                         { key: 'createdAt', label: 'Data de Criação' },
@@ -139,42 +134,47 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
                     columns={[
                         {
                             key: "complement",
-                            label: t("financial.bills.modals.fields.complement.label"),
+                            label: "Texto",
                             render: (value) => value ? value : "",
                             sortable: true
                         },
                         {
                             key: "amount",
-                            label: t("financial.bills.modals.fields.amount.label"),
+                            label: "Texto",
                             render: (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value),
                             sortable: true
                         },
                         {
                             key: "amountPaid",
-                            label: t("financial.bills.modals.fields.amountPaid.label"),
+                            label: "Texto",
                             render: (value) => value ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value) : '-',
                             sortable: true
                         },
                         {
                             key: "installmentNumber",
-                            label: t("financial.bills.modals.fields.installmentNumber.label"),
+                            label: "Texto",
                             render: (value) => value ? <span className="text-primary">{value}</span> : <span className="text-primary">1</span>,
                             sortable: true
                         },
                         {
                             key: "description",
-                            label: t("financial.bills.modals.fields.description.label"),
+                            label: "Descrição",
                         },
                         {
                             key: "dueDate",
-                            label: t("financial.bills.modals.fields.dueDate.label"),
+                            label: "Vencimento",
                             render: (value) => dayjs(value).format("DD/MM/YYYY"),
                             sortable: true
                         },
                         {
                             key: "status",
-                            label: t("financial.bills.modals.fields.status.label"),
-                            render: (st) => StatusTextToBadge(st, true, t)
+                            label: "Status",
+                            render: (st) => StatusTextToBadge(st, true, { 
+                                'PENDING': 'Pendente',
+                                'PAID': 'Pago',
+                                'OVERDUE': 'Atrasado',
+                                'CANCELLED': 'Cancelado'
+                            })
                         },
                     ]}
                     RenderRowMenu={(item) => <MenuItem bill={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
@@ -182,7 +182,12 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
                     renderCard={(item) => (
                         <Box className="flex flex-col h-full">
                             <Flex justify="space-between" align="start">
-                                {StatusTextToBadge(item.status, true, t)}
+                                {StatusTextToBadge(item.status, true, { 
+                                    'PENDING': 'Pendente',
+                                    'PAID': 'Pago',
+                                    'OVERDUE': 'Atrasado',
+                                    'CANCELLED': 'Cancelado'
+                                })}
                                 <MenuItem bill={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />
                             </Flex>
 

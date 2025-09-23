@@ -1,7 +1,6 @@
 "use client"
 
 import { Button, LoadingOverlay, Modal, Stepper } from "@mantine/core";
-import { useLocale, useTranslations } from "next-intl";
 import Teacher__PersonalData from "./personalData";
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
@@ -10,7 +9,7 @@ import 'dayjs/locale/en';
 import Teacher__RemunerationData from "./remuneration";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { getUpdateUserSchema, UpdateUserInput } from "@/schemas/user.schema"; 
+import { updateUserSchema, UpdateUserInput } from "@/schemas/user.schema"; 
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
 import Address from "./address";
@@ -54,12 +53,11 @@ const prepareTeacherForForm = (teacher: TeacherFromApi): UpdateUserInput => {
 
 
 function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
-    const t = useTranslations();
     const [active, setActive] = useState(0);
     const [visible, setVisible] = useState(true);
     const [avatar, setAvatar] = useState<string | null>(null);
 
-    const updateUserSchema = getUpdateUserSchema(t); // Usamos o schema parcial para atualização
+    // Usamos o schema estático para atualização
 
     const { control, handleSubmit, formState: { errors }, register, reset, trigger } = useForm<UpdateUserInput>({
         resolver: zodResolver(updateUserSchema) as any,
@@ -69,13 +67,11 @@ function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
     useEffect(() => {
         if (user) {
             const preparedData = prepareTeacherForForm(user);
-            reset({ ...preparedData, teacher: { ...preparedData.teacher, dateOfBirth: dayjs(preparedData.teacher?.dateOfBirth).format("DD/MM/YYYY") }, password: undefined, confirmPassword: undefined });
+            reset({ ...preparedData, teacher: { ...preparedData.teacher, dateOfBirth: dayjs(preparedData.teacher?.dateOfBirth).format("YYYY-MM-DD") }, password: undefined, confirmPassword: undefined });
             setVisible(false);
         }
     }, [user, reset])
 
-    const locale = useLocale();
-    dayjs.locale(locale);
     
     const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
 
@@ -130,7 +126,7 @@ function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
 
     return (
         <>
-            <Modal opened={opened} onClose={onClose} title={t("academic.teachers.modals.update.title")} size="auto" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
+            <Modal opened={opened} onClose={onClose} title={"Texto"} size="auto" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
                 <form onSubmit={handleSubmit(updateTeacher)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw] lg:p-6">
                     <Stepper active={active} onStepClick={setActive}>
                         <Stepper.Step>
@@ -147,7 +143,7 @@ function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
                                         fullWidth={false}
                                         onClick={handleNextStep}
                                         className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
-                                    >{t("forms.next")}</Button>
+                                    >{"Próximo"}</Button>
                                 </div>
                             </div>
                         </Stepper.Step>
@@ -163,7 +159,7 @@ function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
                                     fullWidth={false}
                                     onClick={prevStep}
                                     className="!text-sm !font-medium tracking-wider w-full md:!w-fit"
-                                >{t("forms.prev")}</Button>
+                                >{"Voltar"}</Button>
                                 <Button
                                     type="submit"
                                     color="#7439FA"
@@ -171,7 +167,7 @@ function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
                                     size="lg"
                                     fullWidth={false}
                                     className="!text-sm !font-medium tracking-wider w-full md!w-fit ml-auto"
-                                >{t("forms.submit")}</Button>
+                                >{"Salvar"}</Button>
                             </div>
                         </Stepper.Step>
                     </Stepper>

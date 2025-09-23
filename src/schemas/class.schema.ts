@@ -36,4 +36,7 @@ export const createClassSchema = z.object({
   }),
 });
 
+export const updateClassSchema = createClassSchema.partial();
+
 export type CreateClassInput = z.infer<typeof createClassSchema>;
+export type UpdateClassInput = z.infer<typeof updateClassSchema>;

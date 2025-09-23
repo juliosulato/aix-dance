@@ -4,10 +4,9 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
-import { UpdateCategoryBillInput, getUpdateCategorySchema } from "@/schemas/financial/category-bill.schema";
+import { UpdateCategoryBillInput, updateCategoryBillSchema } from "@/schemas/financial/category-bill.schema";
 import CategoryBill__BasicInformations from "./basic-informations";
 import { KeyedMutator } from "swr";
 import { CategoryBill } from "@prisma/client";
@@ -20,11 +19,10 @@ type Props = {
 };
 
 export default function UpdateCategoryBill({ opened, onClose, mutate, category }: Props) {
-    const t = useTranslations("financial.categories.modals");
-    const g = useTranslations("");
+
     const [isLoading, setIsLoading] = useState(false);
 
-    const updateCategoryBillSchema = getUpdateCategorySchema((key: string) => t(key as any));
+    // Usamos o schema estático
 
     const { control, handleSubmit, formState: { errors }, register, reset } = useForm<UpdateCategoryBillInput>({
         resolver: zodResolver(updateCategoryBillSchema),
@@ -63,7 +61,7 @@ export default function UpdateCategoryBill({ opened, onClose, mutate, category }
 
             if (responseData.code) {
                 notifications.show({
-                    message: t("errors.CATEGORY_ALREADY_EXISTS"),
+                    message: "Texto",
                     color: "yellow"
                 });
             }
@@ -71,7 +69,7 @@ export default function UpdateCategoryBill({ opened, onClose, mutate, category }
             if (!response.ok) throw new Error("Failed to create category bill");
 
             notifications.show({
-                message: t("update.notifications.success"),
+                message: "Texto",
                 color: "green"
             });
             reset();
@@ -101,7 +99,7 @@ export default function UpdateCategoryBill({ opened, onClose, mutate, category }
         <Modal
             opened={opened}
             onClose={onClose}
-            title={t("update.title")}
+            title={"Texto"}
             size="lg"
             radius="lg"
             centered

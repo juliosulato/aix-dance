@@ -1,7 +1,6 @@
 "use client"
 
 import { Button, LoadingOverlay, Modal, Stepper } from "@mantine/core";
-import { useTranslations } from "next-intl";
 import 'dayjs/locale/pt-br';
 import { useEffect, useState } from "react";
 import AboutOfClass from "./aboutOfClass";
@@ -51,7 +50,6 @@ const transformDaysToSchedules = (days: any[]) => {
 
 
 function UpdateClass({ opened, onClose, mutate, classData }: Props) {
-    const t = useTranslations("");
     const [active, setActive] = useState(0);
     const [visible, setVisible] = useState(false);
 
@@ -116,11 +114,11 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
             });
 
             if (!resp.ok) throw new Error("Erro ao atualizar turma");
-            notifications.show({ message: t("academic.classes.modals.update.notifications.success"), color: "green" });
+            notifications.show({ message: "Texto", color: "green" });
             mutate();
             onClose();
         } catch (err) {
-            notifications.show({ color: "red", message: t("academic.classes.modals.update.notifications.error") });
+            notifications.show({ color: "red", message: "Texto" });
         } finally {
             setVisible(false);
         }
@@ -128,31 +126,31 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
 
     return (
         <>
-            <Modal opened={opened} onClose={onClose} title={t("academic.classes.modals.update.title")} size="auto" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
+            <Modal opened={opened} onClose={onClose} title={"Texto"} size="auto" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
                 <form onSubmit={handleSubmit(updateClass)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 w-full lg:w-[60vw] lg:p-6" >
                     <Stepper active={active} onStepClick={setActive}>
-                        <Stepper.Step label={t("academic.classes.modals.formSteps.one.step")} >
+                        <Stepper.Step label={"Texto"} >
                            <div className="flex flex-col gap-4">
                                 <AboutOfClass control={control} errors={errors} tenancyId={sessionData.user.tenancyId} />
                                 <DayOfClassesAndHours setValue={setValue} watch={watch}  errors={errors} />
-                                <div className="flex justify-end"><Button type="button" color="#7439FA" radius={"lg"} size="lg" onClick={handleNextStep}>{t("forms.next")}</Button></div>
+                                <div className="flex justify-end"><Button type="button" color="#7439FA" radius={"lg"} size="lg" onClick={handleNextStep}>{"Próximo"}</Button></div>
                             </div>
                         </Stepper.Step>
-                        <Stepper.Step label={t("academic.classes.modals.formSteps.two.step")} >
+                        <Stepper.Step label={"Texto"} >
                             <div className="flex flex-col gap-4">
                                 <NewClass__Students control={control} errors={errors} tenancyId={sessionData.user.tenancyId} />
                                 <div className="flex justify-between">
-                                    <Button type="button" color="#7439FA" radius={"lg"} size="lg" onClick={prevStep}>{t("forms.prev")}</Button>
-                                    <Button type="button" color="#7439FA" radius={"lg"} size="lg" onClick={handleNextStep}>{t("forms.next")}</Button>
+                                    <Button type="button" color="#7439FA" radius={"lg"} size="lg" onClick={prevStep}>{"Voltar"}</Button>
+                                    <Button type="button" color="#7439FA" radius={"lg"} size="lg" onClick={handleNextStep}>{"Próximo"}</Button>
                                 </div>
                             </div>
                         </Stepper.Step>
-                        <Stepper.Step label={t("academic.classes.modals.formSteps.three.step")}>
+                        <Stepper.Step label={"Texto"}>
                             <div className="flex flex-col gap-4">
                                 <NewClass__Resume control={control as any} tenancyId={sessionData.user.tenancyId} />
                                 <div className="flex justify-between">
-                                    <Button type="button" color="#7439FA" radius={"lg"} size="lg" onClick={prevStep}>{t("forms.prev")}</Button>
-                                    <Button type="submit" color="#7439FA" radius={"lg"} size="lg">{t("forms.submit")}</Button>
+                                    <Button type="button" color="#7439FA" radius={"lg"} size="lg" onClick={prevStep}>{"Voltar"}</Button>
+                                    <Button type="submit" color="#7439FA" radius={"lg"} size="lg">{"Salvar"}</Button>
                                 </div>
                             </div>
                         </Stepper.Step>

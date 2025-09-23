@@ -1,21 +1,25 @@
-import { Translations } from "@/types/translations";
 import { Tooltip } from "@mantine/core";
 import { BillStatus } from "@prisma/client";
 
 export function StatusTextToBadge(
     status: BillStatus | string | boolean,
     tooltip: boolean = false,
-    t: Translations,
+    translations?: any, // Manter para compatibilidade mas não usar
     size?: string
 ) {
     const classes = `${size ? size : "w-4 h-4"} rounded-full`;
 
-    
+    const statusLabels = {
+        "PENDING": "Pendente",
+        "OVERDUE": "Em atraso",
+        "CANCELLED": "Cancelado",
+        "PAID": "Pago"
+    };
 
     switch (status) {
         case "PENDING":
             return tooltip ? (
-                <Tooltip label={t("financial.bills.modals.status.PENDING")} color="yellow">
+                <Tooltip label={statusLabels.PENDING} color="yellow">
                     <div className={`${classes} bg-yellow-500`}></div>
                 </Tooltip>
             ) : (
@@ -24,7 +28,7 @@ export function StatusTextToBadge(
 
         case "OVERDUE":
             return tooltip ? (
-                <Tooltip label={t("financial.bills.modals.status.OVERDUE")} color="red">
+                <Tooltip label={statusLabels.OVERDUE} color="red">
                     <div className={`${classes} bg-red-500`}></div>
                 </Tooltip>
             ) : (
@@ -32,7 +36,7 @@ export function StatusTextToBadge(
             );
         case "CANCELLED":
             return tooltip ? (
-                <Tooltip label={t("financial.bills.modals.status.CANCELLED")} color="gray">
+                <Tooltip label={statusLabels.CANCELLED} color="gray">
                     <div className={`${classes} bg-gray-500`}></div>
                 </Tooltip>
             ) : (
@@ -41,7 +45,7 @@ export function StatusTextToBadge(
 
         case "PAID":
             return tooltip ? (
-                <Tooltip label={t("financial.bills.modals.status.PAID")} color="green">
+                <Tooltip label={statusLabels.PAID} color="green">
                     <div className={`${classes} bg-green-500`}></div>
                 </Tooltip>
             ) : (

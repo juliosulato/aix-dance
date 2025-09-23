@@ -8,7 +8,7 @@ export default async function FormsOfReceiptPage({ params }: { params: Promise<{
     return session?.user.tenancyId && (
         <main>
             <Breadcrumps
-                items={["Início", "Financeiro", "Gerenciador",t("appShell.navbar.financial.sales") ]}
+                items={["Início", "Financeiro", "Gerenciador", "Vendas"]}
                 menu={[
                     { label: "Resumo", href: "/system/summary" },
                     { label: "Gerenciador", href: "/system/financial/manager" },

@@ -10,7 +10,6 @@ import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 import "dayjs/locale/en";
 import "dayjs/locale/es";
-import { useLocale } from "next-intl";
 import { notifications } from "@mantine/notifications";
 
 const schema = z.object({
@@ -32,8 +31,6 @@ export default function NewClassAttendance({ studentsClass, opened, onClose, tea
     teacherId: string,
     attendanceToEdit?: any // tipar conforme seu modelo de chamada
 }) {
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     const { control, register, formState: { errors }, handleSubmit, reset, setValue } = useForm<z.infer<typeof schema>>({
         resolver: zodResolver(schema) as any,
@@ -179,7 +176,7 @@ export default function NewClassAttendance({ studentsClass, opened, onClose, tea
                             onChange={value => field.onChange(value)}
                             error={errors.date?.message}
                             required
-                            locale={locale}
+                            locale={"pt-br"}
                             withSeconds={false}
                         />
                     )}

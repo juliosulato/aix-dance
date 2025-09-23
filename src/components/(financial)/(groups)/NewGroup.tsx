@@ -4,10 +4,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal, TextInput } from "@mantine/core";
-import { CreateCategoryGroupInput, getCreateCategoryGroupSchema } from "@/schemas/financial/category-group.schema";
+import { CreateCategoryGroupInput, createCategoryGroupSchema } from "@/schemas/financial/category-group.schema";
 import { KeyedMutator } from "swr";
 import { CategoryGroup } from "@prisma/client";
 
@@ -18,11 +17,10 @@ type Props = {
 };
 
 export default function NewCategoryGroup({ opened, onClose, mutate }: Props) {
-    const t = useTranslations("financial.category-groups");
-    const g = useTranslations("");
+
     const [isLoading, setIsLoading] = useState(false);
 
-    const createCategoryGroupSchema = getCreateCategoryGroupSchema((key: string) => t(key as any));
+    // Usamos o schema estático
 
     const { handleSubmit, formState: { errors }, register, reset } = useForm<CreateCategoryGroupInput>({
         resolver: zodResolver(createCategoryGroupSchema),
@@ -48,7 +46,7 @@ export default function NewCategoryGroup({ opened, onClose, mutate }: Props) {
             if (!response.ok) throw new Error("Failed to create category group");
 
             notifications.show({
-                message: t("modals.create.notifications.success"),
+                message: "Texto",
                 color: "green"
             });
             reset();
@@ -78,7 +76,7 @@ export default function NewCategoryGroup({ opened, onClose, mutate }: Props) {
         <Modal
             opened={opened}
             onClose={onClose}
-            title={t("modals.create.title")}
+            title={"Texto"}
             size="md"
             radius="lg"
             centered
@@ -87,8 +85,8 @@ export default function NewCategoryGroup({ opened, onClose, mutate }: Props) {
             <form onSubmit={handleSubmit(createCategoryGroup, handleFormErrors)} className="flex flex-col gap-4">
                 <LoadingOverlay visible={isLoading} />
                 <TextInput
-                    label={t("modals.fields.name.label")}
-                    placeholder={t("modals.fields.name.placeholder")}
+                    label={"Texto"}
+                    placeholder={"Texto"}
                     {...register("name")}
                     error={errors.name?.message}
                     required

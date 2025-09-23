@@ -1,14 +1,13 @@
 "use client"
 
 import { Button, LoadingOverlay, Modal, PasswordInput, TextInput } from "@mantine/core";
-import { useLocale, useTranslations } from "next-intl";
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
 import 'dayjs/locale/es';
 import 'dayjs/locale/en';
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { getUpdateUserSchema, UpdateUserInput } from "@/schemas/user.schema";
+import { updateUserSchema, UpdateUserInput } from "@/schemas/user.schema";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,10 +32,9 @@ type Props = {
 
 
 function UpdateTeacherAccessData({ opened, onClose, user, mutate }: Props) {
-    const t = useTranslations();
     const [visible, setVisible] = useState(true);
 
-    const updateUserSchema = getUpdateUserSchema(t);
+    // Usamos o schema estático
 
     const { control, handleSubmit, formState: { errors }, register, reset, trigger } = useForm<UpdateUserInput>({
         resolver: zodResolver(updateUserSchema) as any,
@@ -53,8 +51,6 @@ function UpdateTeacherAccessData({ opened, onClose, user, mutate }: Props) {
         }
     }, [user, reset])
 
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     const { data: sessionData, status } = useSession();
     if (status === "loading" && !user) return <LoadingOverlay visible />;
@@ -93,10 +89,10 @@ function UpdateTeacherAccessData({ opened, onClose, user, mutate }: Props) {
 
     return (
         <>
-            <Modal opened={opened} onClose={onClose} title={t("academic.teachers.modals.update.title")} size="auto" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
+            <Modal opened={opened} onClose={onClose} title={"Texto"} size="auto" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
                 <form onSubmit={handleSubmit(updateTeacher)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw] lg:p-6">
                     <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2">
-                        <h2 className="text-lg font-bold md:col-span-2">{t("academic.teachers.modals.update.accessData.title")}</h2>
+                        <h2 className="text-lg font-bold md:col-span-2">{"Texto"}</h2>
                         <TextInput
                             prefix="@"
                             label={"E-mail de acesso"}
@@ -111,7 +107,7 @@ function UpdateTeacherAccessData({ opened, onClose, user, mutate }: Props) {
                             render={({ field }) => (
                                 <PasswordInput
                                     {...field}
-                                    label={t("academic.teachers.modals.update.accessData.fields.password.label")}
+                                    label={"Texto"}
                                     error={errors.password?.message}
                                 />
                             )}
@@ -123,12 +119,12 @@ function UpdateTeacherAccessData({ opened, onClose, user, mutate }: Props) {
                             render={({ field }) => (
                                 <PasswordInput
                                     {...field}
-                                    label={t("academic.teachers.modals.update.accessData.fields.confirmPassword.label")}
+                                    label={"Texto"}
                                     error={errors.confirmPassword?.message}
                                 />
                             )}
                         />
-                        <p className="text-neutral-400 underline">{t("academic.teachers.modals.update.accessData.warn")}</p>
+                        <p className="text-neutral-400 underline">{"Texto"}</p>
                     </div>
                     <Button
                         type="submit"
@@ -137,7 +133,7 @@ function UpdateTeacherAccessData({ opened, onClose, user, mutate }: Props) {
                         size="lg"
                         fullWidth={false}
                         className="!text-sm !font-medium tracking-wider w-full md!w-fit ml-auto"
-                    >{t("forms.submit")}</Button>
+                    >{"Salvar"}</Button>
 
                 </form>
             </Modal>

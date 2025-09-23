@@ -4,7 +4,6 @@ import { NumberInput, Select, TextInput } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { Bank, CategoryBill, FormsOfReceipt, PaymentMethod, Supplier } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import { Control, Controller, FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import useSWR from "swr";
@@ -20,7 +19,6 @@ type Props = {
 
 export default function BasicInformations({ control, errors, register }: Props) {
     const session = useSession();
-    const t = useTranslations("financial.bills.modals");
 
     const { data: suppliers } = useSWR<Supplier[]>(session.data?.user.tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data.user.tenancyId}/suppliers` : null, fetcher);
     const { data: categories } = useSWR<CategoryBill[]>(session.data?.user.tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data.user.tenancyId}/category-bills` : null, fetcher);
@@ -28,13 +26,13 @@ export default function BasicInformations({ control, errors, register }: Props) 
 
     return (
         <div className="border border-neutral-300 p-4 md:p-6 rounded-xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <h2 className="text-lg font-semibold col-span-full">{t("section1-title")}</h2>
+            <h2 className="text-lg font-semibold col-span-full">{"Texto"}</h2>
             <Controller
                 name="amount"
                 control={control}
                 render={({ field }) => (
                     <NumberInput
-                        label={t("fields.amount.label")}
+                        label={"Texto"}
                         allowDecimal
                         decimalSeparator=","
                         required
@@ -53,7 +51,7 @@ export default function BasicInformations({ control, errors, register }: Props) 
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={t("fields.bank.label")}
+                        label={"Texto"}
                         data={banks?.map((bank) => ({
                             label: bank.name, value: bank.id
                         })) || []}
@@ -70,7 +68,7 @@ export default function BasicInformations({ control, errors, register }: Props) 
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={t("fields.supplier.label")}
+                        label={"Texto"}
                         data={suppliers?.map((supplier) => ({
                             label: supplier.name, value: supplier.id
                         })) || []}
@@ -87,7 +85,7 @@ export default function BasicInformations({ control, errors, register }: Props) 
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={t("fields.payment-method.label")}
+                        label={"Texto"}
                         data={[
                             { label: "Dinheiro", value: PaymentMethod.CASH },
                             { label: "Cartão de Crédito", value: PaymentMethod.CREDIT_CARD },
@@ -110,7 +108,7 @@ export default function BasicInformations({ control, errors, register }: Props) 
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={t("fields.category.label")}
+                        label={"Texto"}
                         data={categories?.map((category) => ({
                             label: category.name, value: category.id
                         })) || []}
@@ -124,7 +122,7 @@ export default function BasicInformations({ control, errors, register }: Props) 
             />
 
             <TextInput
-                label={t("fields.description.label")}
+                label={"Texto"}
                 error={errors.description?.message}
                 {...register("description")}
                 className="md:col-span-2 lg:col-span-3"

@@ -4,10 +4,9 @@ import { useState } from "react";
 import { Control, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
-import { CreateCategoryBillInput, getCreateCategoryBillSchema } from "@/schemas/financial/category-bill.schema";
+import { CreateCategoryBillInput, createCategoryBillSchema } from "@/schemas/financial/category-bill.schema";
 import NewCategoryBill__BasicInformations from "./basic-informations";
 import { KeyedMutator } from "swr";
 import { CategoryBill } from "@prisma/client";
@@ -19,11 +18,10 @@ type Props = {
 };
 
 export default function NewCategoryBill({ opened, onClose, mutate }: Props) {
-    const t = useTranslations("financial.categories.modals");
-    const g = useTranslations("");
+
     const [isLoading, setIsLoading] = useState(false);
 
-    const createCategoryBillSchema = getCreateCategoryBillSchema((key: string) => t(key as any));
+    // Usamos o schema estático
 
     const { control, handleSubmit, formState: { errors }, register, reset } = useForm<CreateCategoryBillInput>({
         resolver: zodResolver(createCategoryBillSchema),
@@ -49,7 +47,7 @@ export default function NewCategoryBill({ opened, onClose, mutate }: Props) {
 
             if (responseData.code) {
                 notifications.show({
-                    message: t("errors.CATEGORY_ALREADY_EXISTS"),
+                    message: "Texto",
                     color: "yellow"
                 });
             }
@@ -57,7 +55,7 @@ export default function NewCategoryBill({ opened, onClose, mutate }: Props) {
             if (!response.ok) throw new Error("Failed to create category bill");
 
             notifications.show({
-                message: t("create.notifications.success"),
+                message: "Texto",
                 color: "green"
             });
             reset();
@@ -68,7 +66,7 @@ export default function NewCategoryBill({ opened, onClose, mutate }: Props) {
             
             if (error?.code == "CATEGORY_ALREADY_EXISTS") {
                 notifications.show({
-                    message: t("errors.CATEGORY_ALREADY_EXISTS"),
+                    message: "Texto",
                     color: "yellow"
                 });
             }
@@ -89,7 +87,7 @@ export default function NewCategoryBill({ opened, onClose, mutate }: Props) {
         <Modal
             opened={opened}
             onClose={onClose}
-            title={t("create.title")}
+            title={"Texto"}
             size="lg"
             radius="lg"
             centered

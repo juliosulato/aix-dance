@@ -3,7 +3,6 @@
 import { fetcher } from "@/utils/fetcher";
 import { Bank } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import { useState } from "react";
 import useSWR from "swr";
 import deleteBanks from "./delete";
@@ -32,7 +31,6 @@ interface MenuItemsProps {
 }
 
 export default function AllBanksData() {
-    const t = useTranslations("");
     const { data: sessionData, status } = useSession();
 
     const [openNew, setOpenNew] = useState<boolean>(false);
@@ -80,7 +78,7 @@ export default function AllBanksData() {
         }
 
         try {
-            await deleteBanks(finalIdsToDelete, tenancyId, t, mutate);
+            await deleteBanks(finalIdsToDelete, tenancyId, {}, mutate);
             mutate();
         } catch (error) {
             console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);
@@ -101,12 +99,12 @@ export default function AllBanksData() {
                     </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
-                    <Menu.Label>{t("general.actions.title")}</Menu.Label>
+                    <Menu.Label>{"Ações"}</Menu.Label>
                     <Menu.Item leftSection={<GrUpdate size={14} />} onClick={() => onUpdateClick(bankAccount)}>
-                        {t("general.actions.edit")}
+                        {"Editar"}
                     </Menu.Item>
                     <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(bankAccount)}>
-                        {t("general.actions.delete")}
+                        {"Excluir"}
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
@@ -121,19 +119,17 @@ export default function AllBanksData() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{t("general.actions.manyActions")}</Menu.Label>
+                <Menu.Label>{"Ações"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
-                    {t("general.actions.deleteMany", {
-                        items: selectedIds.length
-                    })}
+                    {`Excluir ${selectedIds.length} item${selectedIds.length > 1 ? 's' : ''}`}
                 </Menu.Item>
             </Menu.Dropdown>
         </Menu>
     );
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
-    if (error) return <p>{t("general.errors.loadingData")}</p>;
+    if (status !== "authenticated") return <div>{"Texto"}</div>;
+    if (error) return <p>{"Texto"}</p>;
 
 
     return (
@@ -142,19 +138,19 @@ export default function AllBanksData() {
                 data={banks || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: t("financial.banks.modals.create.title")
+                    label: "Texto"
                 }}
                 baseUrl="/system/financial/bank-accounts/"
                 mutate={mutate}
-                pageTitle={t("financial.banks.title")}
-                searchbarPlaceholder={t("financial.banks.searchbarPlaceholder")}
+                pageTitle={"Texto"}
+                searchbarPlaceholder={"Texto"}
                 columns={[
-                    { key: "name", label: t("financial.banks.modals.fields.name.label") },
-                    { key: "agency", label: t("financial.banks.modals.fields.agency.label") },
-                    { key: "account", label: t("financial.banks.modals.fields.account.label") },
-                    { key: "code", label: t("financial.banks.modals.fields.code.label") },
-                    { key: "maintenanceFeeAmount", label: t("financial.banks.modals.fields.maintenanceFeeAmount.label") },
-                    { key: "maintenanceFeeDue", label: t("financial.banks.modals.fields.maintenanceFeeDue.label") },
+                    { key: "name", label: "Texto" },
+                    { key: "agency", label: "Texto" },
+                    { key: "account", label: "Texto" },
+                    { key: "code", label: "Texto" },
+                    { key: "maintenanceFeeAmount", label: "Texto" },
+                    { key: "maintenanceFeeDue", label: "Texto" },
                 ]}
                 RenderRowMenu={(item) => <MenuItem bankAccount={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
                 RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
@@ -166,7 +162,7 @@ export default function AllBanksData() {
                         </div>
                         <div className="flex flex-col mt-4">
                             <Text size="xs" c="dimmed" mt="sm">
-                                {t("forms.general-fields.createdAt")} {dayjs(item.createdAt).format("DD/MM/YYYY")}
+                                {"Criado em"} {dayjs(item.createdAt).format("DD/MM/YYYY")}
                             </Text>
                         </div>
                     </>
@@ -191,22 +187,18 @@ export default function AllBanksData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={t("financial.banks.modals.confirmModal.title")}
-                confirmLabel={t("financial.banks.modals.confirmModal.confirmLabel")}
-                cancelLabel={t("financial.banks.modals.confirmModal.cancelLabel")}
+                title={"Texto"}
+                confirmLabel={"Texto"}
+                cancelLabel={"Texto"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
-                    t("financial.banks.modals.confirmModal.textArray",
-                        { banks: idsToDelete.length }
-                    )
+                    `Tem certeza de que deseja excluir ${idsToDelete.length} banco${idsToDelete.length > 1 ? 's' : ''}?`
                 ) : (
-                    t("financial.banks.modals.confirmModal.text", {
-                        bank: selectedBank?.name || ""
-                    })
+                    `Tem certeza de que deseja excluir o banco ${selectedBank?.name || ""}?`
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{t("financial.banks.modals.confirmModal.warn")}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Esta ação não pode ser desfeita."}</Text>
             </ConfirmationModal>
         </>
     );

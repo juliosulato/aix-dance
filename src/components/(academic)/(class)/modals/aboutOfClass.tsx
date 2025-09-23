@@ -1,7 +1,6 @@
 "use client";
 
 import { Checkbox, Select, TextInput } from "@mantine/core";
-import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { CreateClassInput, UpdateClassInput } from "@/schemas/academic/class.schema";
 import { Control, Controller, FieldErrors } from "react-hook-form";
@@ -16,10 +15,6 @@ type Props = {
 };
 
 export default function NewClass__AboutOfClass({ control, errors, tenancyId }: Props) {
-    const t = useTranslations("academic.classes.modals.formSteps.one");
-    const g = useTranslations("");
-
-    // --- Busca de dados para os selects ---
     const { data: modalities } = useSWR<Modality[]>(
         () => tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/modalities` : null,
         fetcher
@@ -34,15 +29,15 @@ export default function NewClass__AboutOfClass({ control, errors, tenancyId }: P
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <h2 className="text-lg font-bold md:col-span-full">{t("title")}</h2>
+            <h2 className="text-lg font-bold md:col-span-full">{"Texto"}</h2>
             
             <Controller
                 name="name"
                 control={control}
                 render={({ field }) => (
                     <TextInput
-                        label={t("fields.name.label")}
-                        placeholder={t("fields.name.placeholder")}
+                        label={"Texto"}
+                        placeholder={"Texto"}
                         {...field}
                         error={errors.name?.message}
                         required
@@ -56,16 +51,16 @@ export default function NewClass__AboutOfClass({ control, errors, tenancyId }: P
                 render={({ field }) => (
                     <div className="flex flex-col gap-1">
                         <Select
-                            label={t("fields.modality.label")}
-                            placeholder={t("fields.modality.placeholder")}
+                            label={"Texto"}
+                            placeholder={"Texto"}
                             data={modalityOptions}
                             {...field}
                             error={errors.modalityId?.message}
                             required
                             searchable
-                            nothingFoundMessage={g("general.notFound")}
+                            nothingFoundMessage={"Nada encontrado..."}
                         />
-                        <p className="text-xs text-neutral-500">{t("fields.modality.description")} <Link className="text-primary underline" href={"/system/academic/modalities"}>{g("appShell.navbar.academic.modalities")}</Link></p>
+                        <p className="text-xs text-neutral-500">{"Texto"} <Link className="text-primary underline" href={"/system/academic/modalities"}>{g("appShell.navbar.academic.modalities")}</Link></p>
                     </div>
                 )}
             />
@@ -75,14 +70,13 @@ export default function NewClass__AboutOfClass({ control, errors, tenancyId }: P
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={t("fields.teacher.label")}
-                        placeholder={t("fields.teacher.placeholder")}
+                        label={"Texto"}
                         data={teacherOptions}
                         {...field}
                         error={errors.teacherId?.message}
                         required
                         searchable
-                        nothingFoundMessage={g("general.notFound")}
+                        nothingFoundMessage={"Nada encontrado..."}
                     />
                 )}
             />
@@ -92,8 +86,8 @@ export default function NewClass__AboutOfClass({ control, errors, tenancyId }: P
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={t("fields.assistant.label")}
-                        placeholder={t("fields.assistant.placeholder")}
+                        label={"Texto"}
+                        placeholder={"Texto"}
                         data={teacherOptions}
                         {...field}
                         error={errors.assistantId?.message}
@@ -111,7 +105,7 @@ export default function NewClass__AboutOfClass({ control, errors, tenancyId }: P
                     <Checkbox
                         checked={field.value || false}
                         onChange={(event) => field.onChange(event.currentTarget.checked)}
-                        label={t("fields.online.label")}
+                        label={"Texto"}
                         className="md:col-span-full mt-4"
                     />
                 )}

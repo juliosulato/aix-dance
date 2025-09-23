@@ -1,6 +1,5 @@
 "use client";
 import { Checkbox, Textarea } from "@mantine/core";
-import { useTranslations } from "next-intl";
 import { useState, memo, useCallback, useMemo } from "react";
 import { Control, Controller, FieldErrors } from "react-hook-form";
 import { CreateStudentFormData } from "@/schemas/studentSchema";
@@ -102,7 +101,6 @@ ControlledCheckbox.displayName = 'ControlledCheckbox';
 
 // Componente principal otimizado
 function Checkboxies({ control, errors }: Props) {
-  const t = useTranslations("academic.students.modals.health");
   
   // Estado otimizado com objeto único
   const [showFields, setShowFields] = useState({
@@ -143,12 +141,12 @@ function Checkboxies({ control, errors }: Props) {
 
   // Memoizar labels para evitar re-renders
   const labels = useMemo(() => ({
-    healthProblems: t("fields.healthProblems.label"),
-    medicalAdvice: t("fields.medicalAdvice.label"),
-    painOrDiscomfort: t("fields.painOrDiscomfort.label"),
-    textarea: t("textarea"),
-    canLeaveAlone: t("fields.canLeaveAlone.label"),
-    haveGuardian: t("fields.haveGuardian.label"),
+    healthProblems: "Texto",
+    medicalAdvice: "Texto",
+    painOrDiscomfort: "Texto",
+    textarea: "Texto",
+    canLeaveAlone: "Texto",
+    haveGuardian: "Texto",
   }), [t]);
 
   return (

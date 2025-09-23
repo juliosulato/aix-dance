@@ -1,6 +1,5 @@
 "use client";
 import { Burger, Menu } from "@mantine/core";
-import { useTranslations } from "next-intl";
 import { HiOutlineChevronLeft } from "react-icons/hi2";
 
 type Props = {
@@ -11,7 +10,6 @@ type Props = {
     items: string[];
 };
 export default function Breadcrumps({ menu, items }: Props) {
-    const t = useTranslations("general");
 
     if (!menu.every(item => item.label && item.href)) {
         throw new Error("Each item must have a label, href, and icon");
@@ -24,7 +22,7 @@ export default function Breadcrumps({ menu, items }: Props) {
                 <div className="flex items-center justify-center w-4 h-4 bg-primary text-white rounded-full">
                     <HiOutlineChevronLeft />
                 </div>
-                <span>{t("actions.back")}</span>
+                <span>{"Texto"}</span>
             </button>
             <Menu position="bottom-end" shadow="md" withArrow>
                 <Menu.Target>

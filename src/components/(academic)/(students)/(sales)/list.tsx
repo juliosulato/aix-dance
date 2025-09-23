@@ -53,7 +53,7 @@ export default function StudentSalesHistory({ tenancyId, studentId }: Props) {
                     {
                         key: "createdAt",
                         label: "Data",
-                        render: (value) => dayjs(value).format("DD/MM/YYYY HH:mm"),
+                        render: (value) => dayjs(value).format("DD/MM/YYYY"),
                         sortable: true,
                     },
                     {
@@ -81,7 +81,7 @@ export default function StudentSalesHistory({ tenancyId, studentId }: Props) {
                                     Venda #{item.id}
                                 </Text>
                                 <Text size="sm" c="dimmed">
-                                    {dayjs(item.createdAt).format("DD/MM/YYYY às HH:mm")}
+                                    {dayjs(item.createdAt).format("DD/MM/YYYY")}
                                 </Text>
                             </div>
                             <Text fw={700} size="lg" c="green">

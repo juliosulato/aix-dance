@@ -1,7 +1,6 @@
 "use client";
 
 import InfoTerm from "@/components/ui/Infoterm";
-import { useTranslations } from "next-intl";
 import { Control, useWatch } from "react-hook-form";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
@@ -23,12 +22,12 @@ const ScheduleSummary = ({ schedules, t }: { schedules: CreateClassInput['schedu
         }));
 
     if (activeDays.length === 0) {
-        return <InfoTerm label={t("academic.classes.modals.formSteps.one.classDaysAndHours.title")} children={"Nenhum horário definido"} />;
+        return <InfoTerm label={"Texto"} children={"Nenhum horário definido"} />;
     }
 
     return (
         <>
-            <h3 className="text-lg font-bold md:col-span-full text-primary">{t("academic.classes.modals.formSteps.one.classDaysAndHours.title")}</h3>
+            <h3 className="text-lg font-bold md:col-span-full text-primary">{"Texto"}</h3>
             {activeDays.map(dayInfo => (
                 <InfoTerm key={dayInfo.day} label={dayInfo.day} children={dayInfo.ranges} />
             ))}
@@ -38,7 +37,6 @@ const ScheduleSummary = ({ schedules, t }: { schedules: CreateClassInput['schedu
 
 
 export default function NewClass__Resume({ control, tenancyId }: Props) {
-    const t = useTranslations();
 
     // useWatch para observar todos os valores do formulário em tempo real
     const watchedValues = useWatch({ control });
@@ -58,15 +56,15 @@ export default function NewClass__Resume({ control, tenancyId }: Props) {
 
     return (
         <div className="mt-4 flex flex-col gap-4 w-full ">
-            <h2 className="text-lg font-bold">{t("academic.classes.modals.formSteps.three.title")}</h2>
+            <h2 className="text-lg font-bold">{"Texto"}</h2>
             
             <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <h3 className="text-lg font-bold md:col-span-full text-primary">{t("academic.classes.modals.formSteps.one.title")}</h3>
-                <InfoTerm label={t("academic.classes.modals.formSteps.one.fields.name.label")} children={watchedValues.name} />
-                <InfoTerm label={t("academic.classes.modals.formSteps.one.fields.modality.label")} children={modalityName} />
-                <InfoTerm label={t("academic.classes.modals.formSteps.one.fields.teacher.label")} children={teacherName} />
-                {assistantName && <InfoTerm label={t("academic.classes.modals.formSteps.one.fields.assistant.label")} children={assistantName} />}
-                <InfoTerm label={t("academic.classes.modals.formSteps.one.fields.online.label")} children={watchedValues.online ? t("general.yes") : t("general.boolean.no")} />
+                <h3 className="text-lg font-bold md:col-span-full text-primary">{"Texto"}</h3>
+                <InfoTerm label={"Texto"} children={watchedValues.name} />
+                <InfoTerm label={"Texto"} children={modalityName} />
+                <InfoTerm label={"Texto"} children={teacherName} />
+                {assistantName && <InfoTerm label={"Texto"} children={assistantName} />}
+                <InfoTerm label={"Texto"} children={watchedValues.online ? "Texto" : "Texto"} />
 
                 <div className="md:col-span-full"><hr className="my-2"/></div>
 
@@ -74,9 +72,9 @@ export default function NewClass__Resume({ control, tenancyId }: Props) {
             </div>
 
             <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col gap-4">
-                <h3 className="text-lg font-bold text-primary">{t("academic.classes.modals.formSteps.three.stepTwoTitle")}</h3>
+                <h3 className="text-lg font-bold text-primary">{"Texto"}</h3>
                 <InfoTerm 
-                    label={t("academic.classes.modals.formSteps.two.fields.students.label")} 
+                    label={"Texto"} 
                     children={selectedStudentsNames || "Nenhum aluno selecionado"} 
                 />
             </div>

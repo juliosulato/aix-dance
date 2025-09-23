@@ -88,6 +88,7 @@ function AvatarUpload({ defaultUrl, onUploadComplete }: Props) {
     ctx?.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
     const dataUrl = canvas.toDataURL("image/png");
 
+
     // Converte para Blob para upload
     const res = await fetch(dataUrl);
     const blob = await res.blob();

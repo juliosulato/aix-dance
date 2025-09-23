@@ -4,12 +4,11 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal, ScrollArea, Tabs } from "@mantine/core";
 import { Bill, BillStatus, BillType } from "@prisma/client";
 
-import { CreateBillInput, getCreateBillSchema } from "@/schemas/financial/bill.schema";
+import { CreateBillInput, createBillSchema } from "@/schemas/financial/bill.schema";
 import BasicInformations from "./basic-informations";
 import Subscription from "./subscription";
 import CashOrInstallments from "./cash-or-installments";
@@ -22,12 +21,11 @@ type Props = {
 };
 
 export default function NewBill({ opened, onClose, mutate }: Props) {
-    const t = useTranslations("financial.bills.modals");
-    const g = useTranslations("");
+
     const [isLoading, setIsLoading] = useState(false);
     const [activeTab, setActiveTab] = useState<string | null>('cash-or-installments');
 
-    const createBillSchema = getCreateBillSchema((key: string) => t(key as any));
+    // Usamos o schema estático
 
     const { control, handleSubmit, formState: { errors }, register, reset, watch, setValue } = useForm<CreateBillInput>({
         resolver: zodResolver(createBillSchema) as any,
@@ -82,13 +80,13 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
                 throw new Error("Failed to create bill");
             }
 
-            notifications.show({ message: t("create.notifications.success"), color: "green" });
+            notifications.show({ message: "Texto", color: "green" });
             reset();
             onClose();
             mutate();
         } catch (error) {
             console.error(error);
-            notifications.show({ message: t("create.notifications.error"), color: "red" });
+            notifications.show({ message: "Texto", color: "red" });
         } finally {
             setIsLoading(false);
         }
@@ -109,7 +107,7 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
         <Modal
             opened={opened}
             onClose={onClose}
-            title={t("create.title")}
+            title={"Texto"}
             size="xl"
             radius="lg"
             centered
@@ -122,11 +120,11 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
                         <BasicInformations  {...formControlProps as any}/>
                         
                         <div>
-                            <h2 className="text-lg font-semibold mb-2">{t("section2-title")}</h2>
+                            <h2 className="text-lg font-semibold mb-2">{"Texto"}</h2>
                             <Tabs value={activeTab} onChange={handleTabChange} color="#7439FA" variant="pills" radius="lg" classNames={{ tab: "!p-4 md:!px-6 !font-semibold"}}>
                                 <Tabs.List>
-                                    <Tabs.Tab value="cash-or-installments">{t("tabs.cash-or-installments")}</Tabs.Tab>
-                                    <Tabs.Tab value="subscription">{t("tabs.subscription")}</Tabs.Tab>
+                                    <Tabs.Tab value="cash-or-installments">{"Texto"}</Tabs.Tab>
+                                    <Tabs.Tab value="subscription">{"Texto"}</Tabs.Tab>
                                 </Tabs.List>
 
                                 <Tabs.Panel value="cash-or-installments" pt="xs">

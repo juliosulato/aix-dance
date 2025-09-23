@@ -2,7 +2,6 @@
 
 import { fetcher } from "@/utils/fetcher";
 import { useSession } from "next-auth/react";
-import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import useSWR from "swr";
 import { ActionIcon, Avatar, LoadingOverlay, Menu, Text, Tooltip } from "@mantine/core";
@@ -33,9 +32,6 @@ interface MenuItemsProps {
 }
 
 export default function AllUsersData() {
-    const t = useTranslations("");
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     const { data: sessionData, status } = useSession();
 
@@ -90,13 +86,13 @@ export default function AllUsersData() {
         try {
             if (users?.length === 1) {
                 return notifications.show({
-                    message: t("settings.users.errors.lastUser"),
+                    message: "Texto",
                     color: "red",
                 });
             }
 
 
-            await deleteUsers(finalIdsToDelete, tenancyId, t, mutate as any);
+            await deleteUsers(finalIdsToDelete, tenancyId, mutate as any);
             mutate();
         } catch (error) {
             console.error("Falha ao desativar professores:", error);
@@ -117,14 +113,14 @@ export default function AllUsersData() {
                     </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
-                    <Menu.Label>{t("general.actions.title")}</Menu.Label>
+                    <Menu.Label>{"Ações"}</Menu.Label>
                     <Menu.Item leftSection={<GrUpdate size={14} />} onClick={() => onUpdateClick(user)}>
-                        {t("general.actions.edit")}
+                        {"Editar"}
                     </Menu.Item>
                     <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => {
                         if (d?.length === 1) {
                              notifications.show({
-                                message: t("settings.users.errors.last_user"),
+                                message: "Texto",
                                 color: "red",
                             });
                             return;
@@ -133,7 +129,7 @@ export default function AllUsersData() {
                         }
                         
                     }}>
-                        {t("general.actions.delete")}
+                        {"Excluir"}
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
@@ -142,8 +138,8 @@ export default function AllUsersData() {
 
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
-    if (error) return <p>{t("general.errors.loadingData")}</p>;
+    if (status !== "authenticated") return <div>{"Texto"}</div>;
+    if (error) return <p>{"Texto"}</p>;
 
 
     return (
@@ -152,12 +148,12 @@ export default function AllUsersData() {
                 data={d || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: t("settings.users.modals.create.title")
+                    label: "Texto"
                 }}
                 baseUrl=""
                 mutate={mutate as any}
-                pageTitle={t("settings.users.title")}
-                searchbarPlaceholder={t("settings.users.searchbarPlaceholder")}
+                pageTitle={"Usuários"}
+                searchbarPlaceholder={"Texto"}
                 columns={[
                     {
                         key: "image", label: "", sortable: false,
@@ -167,21 +163,21 @@ export default function AllUsersData() {
                                 <Avatar name={item.firstName} color="#7439FA" size="64px" radius={"16px"} />
                         )
                     },
-                    { key: "fullName", label: t("forms.general-fields.fullName.label"), sortable: true },
+                    { key: "fullName", label: "Nome Completo", sortable: true },
                     {
                         key: "email",
-                        label: t("forms.general-fields.email.label"),
+                        label: "E-mail",
                         sortable: true
                     },
                     {
                         key: "role",
-                        label: t("settings.users.role.label"),
+                        label: "Texto",
                         sortable: true,
                         render: (val) => {
                             if (val === "ADMIN") {
-                                return t("settings.users.role.admin");
+                                return "Texto";
                             } else if (val === "STAFF") {
-                                return t("settings.users.role.staff");
+                                return "Texto";
                             } else {
                                 return val;
                             }
@@ -206,7 +202,7 @@ export default function AllUsersData() {
                                         {`${item.firstName} ${item.lastName}`}
                                     </Text>
                                     <Text size="sm" c="dimmed">
-                                        {t("settings.users.view.registeredAt", { date: dayjs(item.createdAt).format("DD/MM/YYYY") })}
+                                        {`Registrado em ${dayjs(item.createdAt).format("DD/MM/YYYY")}`}
                                     </Text>
                                 </div>
                             </div>
@@ -233,20 +229,18 @@ export default function AllUsersData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={t("settings.users.modals.confirmModal.title")}
-                confirmLabel={t("general.actions.delete")}
-                cancelLabel={t("general.actions.cancel")}
+                title={"Texto"}
+                confirmLabel={"Excluir"}
+                cancelLabel={"Cancelar"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
-                    t("settings.users.modals.confirmModal.textArray", { count: idsToDelete.length })
+                    "Tem certeza que deseja excluir os usuários selecionados?"
                 ) : (
-                    t("settings.users.modals.confirmModal.text", {
-                        user: selectedUser?.firstName + " " + selectedUser?.lastName || ""
-                    })
+                    `Tem certeza que deseja excluir o usuário selecionado?`
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{t("settings.users.modals.confirmModal.warn")}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Texto"}</Text>
             </ConfirmationModal>
         </>
     );

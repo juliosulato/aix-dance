@@ -1,7 +1,6 @@
 "use client";
 
 import { Avatar, Button, LoadingOverlay, Modal, MultiSelect, Text, Alert } from "@mantine/core";
-import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
@@ -28,9 +27,6 @@ type FormValues = {
 };
 
 function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
-  const t = useTranslations("academic.students.modals.assignClasses");
-  const g = useTranslations("general");
-  const rootT = useTranslations("");
   const [visible, setVisible] = useState(false);
   const { data: sessionData, status } = useSession();
 
@@ -162,7 +158,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
     }
 
     if (promises.length === 0) {
-      notifications.show({ message: t("notifications.noChanges") });
+      notifications.show({ message: "Texto" });
       onClose();
       setVisible(false);
       return;
@@ -173,12 +169,12 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
       const hasError = responses.some((res) => !res.ok);
       if (hasError) throw new Error("Erro ao salvar");
 
-      notifications.show({ message: t("notifications.success"), color: "green" });
+      notifications.show({ message: "Texto", color: "green" });
       await mutate();
       onClose();
     } catch (err) {
       console.error(err);
-      notifications.show({ message: t("notifications.error"), color: "red" });
+      notifications.show({ message: "Texto", color: "red" });
     } finally {
       setVisible(false);
     }
@@ -213,12 +209,12 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
             control={control}
             render={({ field }) => (
               <MultiSelect
-                label={t("fields.classes.label")}
+                label={"Texto"}
                 data={classOptions}
                 {...field}
                 searchable
                 className="!w-full"
-                nothingFoundMessage={g("notFound")}
+                nothingFoundMessage={"Nada encontrado..."}
                 rightSection={<FaSearch />}
                 disabled={student.active === false}
               />
@@ -229,7 +225,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
             {selectedClassIds.length === 0 ? (
               <div className="flex flex-col items-center justify-center gap-2 text-neutral-500">
                 <Image src={notFound} alt="no-classes" className="max-w-[150px]" />
-                <Text>{t("noClasses")}</Text>
+                <Text>{"Texto"}</Text>
               </div>
             ) : (
               selectedClassIds.map((classId) => {

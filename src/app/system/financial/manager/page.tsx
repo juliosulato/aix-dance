@@ -2,8 +2,6 @@ import AllBillsData from "@/components/(financial)/(manager)";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 
 export default async function PayablePage() {
-    const t = await getTranslations();
-
     return (
         <main>
             <Breadcrumps

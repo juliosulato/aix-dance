@@ -1,7 +1,6 @@
 import { fetcher } from "@/utils/fetcher";
 import { Bank } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import { Control, Controller, FieldErrors, FieldValues, Path } from "react-hook-form";
 import useSWR from "swr";
 import { Select } from "@mantine/core";
@@ -17,7 +16,6 @@ export type BankSelectProps<T extends FieldValues> = {
 
 export function BankSelect<T extends FieldValues>({ control, errors, name, label, required }: BankSelectProps<T>) {
     const session = useSession();
-    const t = useTranslations("financial.bills.modals");
     const { data: banks } = useSWR<Bank[]>(session.data?.user.tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data.user.tenancyId}/banks` : null, fetcher);
 
     return (
@@ -26,7 +24,7 @@ export function BankSelect<T extends FieldValues>({ control, errors, name, label
             control={control}
             render={({ field }) => (
                 <Select
-                    label={label || t("fields.bank.label")}
+                    label={label || "Texto"}
                     data={banks?.map((bank) => ({ label: bank.name, value: bank.id })) || []}
                     value={field.value}
                     onChange={field.onChange}

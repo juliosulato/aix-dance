@@ -2,7 +2,6 @@
 
 import { fetcher } from "@/utils/fetcher";
 import { useSession } from "next-auth/react";
-import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import useSWR from "swr";
 import deletePlans from "./delete";
@@ -34,9 +33,6 @@ interface MenuItemsProps {
 }
 
 export default function AllStudentsData() {
-    const t = useTranslations("");
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     const { data: sessionData, status } = useSession();
 
@@ -85,7 +81,7 @@ export default function AllStudentsData() {
         }
 
         try {
-            await deletePlans(finalIdsToDelete, tenancyId, t, mutate as any);
+            await deletePlans(finalIdsToDelete, tenancyId, mutate as any);
             mutate();
         } catch (error) {
             console.error("Falha ao excluir alunos:", error);
@@ -106,12 +102,12 @@ export default function AllStudentsData() {
                     </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
-                    <Menu.Label>{t("general.actions.title")}</Menu.Label>
+                    <Menu.Label>{"Ações"}</Menu.Label>
                     <Menu.Item leftSection={<GrUpdate size={14} />} onClick={() => onUpdateClick(student)}>
-                        {t("general.actions.edit")}
+                        {"Editar"}
                     </Menu.Item>
                     <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(student)}>
-                        {t("general.actions.delete")}
+                        {"Excluir"}
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
@@ -126,11 +122,9 @@ export default function AllStudentsData() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{t("general.actions.manyActions")}</Menu.Label>
+                <Menu.Label>{"Ações"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
-                    {t("general.actions.deleteMany", {
-                        items: selectedIds.length
-                    })}
+                    {`Excluir ${selectedIds.length} item${selectedIds.length > 1 ? 's' : ''}`}
                 </Menu.Item>
             </Menu.Dropdown>
         </Menu>
@@ -138,8 +132,8 @@ export default function AllStudentsData() {
 
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
-    if (error) return <p>{t("general.errors.loadingData")}</p>;
+    if (status !== "authenticated") return <div>{"Texto"}</div>;
+    if (error) return <p>{"Texto"}</p>;
 
 
     return (
@@ -148,12 +142,12 @@ export default function AllStudentsData() {
                 data={students?.map((student) => ({ ...student, fullName: `${student.firstName} ${student.lastName}`})) || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: t("academic.students.modals.create.title")
+                    label: "Texto"
                 }}
                 baseUrl="/system/academic/students/"
                 mutate={mutate as any}
-                pageTitle={t("academic.students.title")}
-                searchbarPlaceholder={t("academic.students.searchbarPlaceholder")}
+                pageTitle={"Alunos e Matrículas"}
+                searchbarPlaceholder={"Procure por nome, CPF ou e-mail do aluno..."}
                 columns={[
                     {
                         key: "image", label: "", sortable: false,
@@ -168,11 +162,11 @@ export default function AllStudentsData() {
                         }
                     },
                     {
-                        key: "fullName", label: t("academic.students.modals.personalData.fields.fullName.label"),
+                        key: "fullName", label: "Texto",
                         sortable: true
                     },
                     {
-                        key: "classes", label: t("academic.classes.title"),
+                        key: "classes", label: "Turmas",
                         sortable: true,
                         render: (value) => {
                             if (value && Array.isArray(value)) {
@@ -183,18 +177,18 @@ export default function AllStudentsData() {
                         }
                     },
                      {
-                        key: "subscriptions", label: t("academic.students.modals.health.fields.canLeaveAlone.label"),
+                        key: "subscriptions", label: "Texto",
                         sortable: true,
                         render: (val: StudentFromApi["subscriptions"]) => val?.[0]?.plan?.name || JSON.stringify(val)
                     },
                     {
-                        key: "documentOfIdentity", label: t("academic.students.modals.personalData.fields.documentOfIdentity.label"),
+                        key: "documentOfIdentity", label: "Texto",
                         sortable: true,
                     },
                     {
-                        key: "canLeaveAlone", label: t("academic.students.modals.health.fields.canLeaveAlone.label"),
+                        key: "canLeaveAlone", label: "Texto",
                         sortable: true,
-                        render: (val) => val ? t("general.boolean.yes") : t("general.boolean.no")
+                        render: (val) => val ? "Texto" : "Texto"
                     },
                     {
                         key: "attendanceAverage",
@@ -212,23 +206,23 @@ export default function AllStudentsData() {
                         }
                     },
                     {
-                        key: "cellPhoneNumber", label: t("academic.students.modals.personalData.fields.cellPhoneNumber.label"),
+                        key: "cellPhoneNumber", label: "Texto",
                         sortable: true,
                         render: (value) => <a href={`https://wa.me/${value.replace(/\D/g, "")}`}>{value}</a>
                     },
                     {
                         key: "active",
-                        label: t("academic.students.status.label"),
+                        label: "Texto",
                         render: (active) => {
                             if (active) {
                                 return (
-                                    <Tooltip label={t("academic.students.status.ACTIVE")} color="green">
+                                    <Tooltip label={"Texto"} color="green">
                                         <div className={`w-4 h-4 rounded-full bg-green-500`}></div>
                                     </Tooltip>
                                 );
                             } else {
                                 return (
-                                    <Tooltip label={t("academic.students.status.INACTIVE")} color="red">
+                                    <Tooltip label={"Texto"} color="red">
                                         <div className={`w-4 h-4 rounded-full bg-red-500`}></div>
                                     </Tooltip>
                                 )
@@ -310,13 +304,13 @@ export default function AllStudentsData() {
                                 {(() => {
                                     if (item.active) {
                                         return (
-                                            <Tooltip label={t("academic.students.status.ACTIVE")} color="green">
+                                            <Tooltip label={"Texto"} color="green">
                                                 <div className={`w-4 h-4 rounded-full bg-green-500`}></div>
                                             </Tooltip>
                                         );
                                     } else {
                                         return (
-                                            <Tooltip label={t("academic.students.status.INACTIVE")} color="red">
+                                            <Tooltip label={"Texto"} color="red">
                                                 <div className={`w-4 h-4 rounded-full bg-red-500`}></div>
                                             </Tooltip>
                                         )
@@ -346,22 +340,18 @@ export default function AllStudentsData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={t("academic.students.modals.confirmModal.title")}
-                confirmLabel={t("academic.students.modals.confirmModal.confirmLabel")}
-                cancelLabel={t("academic.students.modals.confirmModal.cancelLabel")}
+                title={"Texto"}
+                confirmLabel={"Texto"}
+                cancelLabel={"Cancelar"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
-                    t("academic.students.modals.confirmModal.textArray",
-                        { count: idsToDelete.length }
-                    )
+                    `Tem certeza de que deseja excluir ${idsToDelete.length} aluno${idsToDelete.length > 1 ? 's' : ''}?`
                 ) : (
-                    t("academic.students.modals.confirmModal.text", {
-                        student: selectedStudent?.firstName + " " + selectedStudent?.lastName || ""
-                    })
+                    `Tem certeza de que deseja excluir o aluno ${selectedStudent?.firstName + " " + selectedStudent?.lastName || ""}?`
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{t("academic.students.modals.confirmModal.warn")}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Esta ação não pode ser desfeita."}</Text>
             </ConfirmationModal>
         </>
     );

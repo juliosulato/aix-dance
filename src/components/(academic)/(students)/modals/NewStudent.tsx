@@ -1,7 +1,6 @@
 "use client"
 
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
-import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
@@ -32,9 +31,6 @@ type Props = {
 
 
 function NewStudent({ opened, onClose, mutate }: Props) {
-  const t = useTranslations("");
-  const locale = useLocale();
-  dayjs.locale(locale);
 
 
   const { data: sessionData, status } = useSession();
@@ -42,7 +38,7 @@ function NewStudent({ opened, onClose, mutate }: Props) {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
 
-  const createStudentSchema = getCreateStudentSchema((key: string) => t(key as any));
+  const createStudentSchema = getCreateStudentSchema();
 
   const { control, register, handleSubmit, watch, formState: { errors }, reset } = useForm<CreateStudentInput>({
     resolver: zodResolver(createStudentSchema),
@@ -86,7 +82,7 @@ function NewStudent({ opened, onClose, mutate }: Props) {
       if (!response.ok) throw new Error("Failed to update plan.");
 
       notifications.show({
-        message: t("update.notifications.success"),
+        message: "Texto",
         color: "green"
       });
       setAvatarUrl(null);
@@ -96,8 +92,8 @@ function NewStudent({ opened, onClose, mutate }: Props) {
     } catch (error) {
       console.error(error);
       notifications.show({
-        title: t("general.errors.title"),
-        message: t("general.errors.unexpected"),
+        title: "Texto",
+        message: "Texto",
         color: "red"
       });
     } finally {
@@ -110,14 +106,14 @@ function NewStudent({ opened, onClose, mutate }: Props) {
   };
 
     if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
+    if (status !== "authenticated") return <div>{"Texto"}</div>;
 
     return (
     <>
       <Modal
         opened={opened}
         onClose={handleClose}
-        title={t("academic.students.modals.create.title")}
+        title={"Texto"}
         size="auto"
         radius="lg"
         centered
@@ -139,7 +135,7 @@ function NewStudent({ opened, onClose, mutate }: Props) {
             size="lg"
             className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
           >
-            {t("forms.submit")}
+            {"Salvar"}
           </Button>
         </form>
 

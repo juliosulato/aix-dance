@@ -16,7 +16,6 @@ import { FaRegUser } from "react-icons/fa";
 import { LuBrain, LuLogOut } from "react-icons/lu";
 import { MdGroups } from "react-icons/md";
 import { PiMoneyWavy } from "react-icons/pi";
-import { useTranslations } from "next-intl";
 import { LanguagePicker } from "./LanguagePicker";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
@@ -28,7 +27,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
     const session = useSession();
 
-    const t = useTranslations("appShell");
 
     return (
         <AppShellMantine
@@ -88,10 +86,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         </Menu.Target>
                         <Menu.Dropdown>
                             <Menu.Item leftSection={<FaRegUser />}>
-                                {t("header.user_menu.profile")}
+                                {"Texto"}
                             </Menu.Item>
                             <Menu.Item leftSection={<LuLogOut />} onClick={() => signOut({ redirect: true, redirectTo: "/auth/signin" })}>
-                                {t("header.user_menu.logout")}
+                                {"Texto"}
                             </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
@@ -148,7 +146,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         <NavLink
                             color="violet"
                             leftSection={<TbSettings />}
-                            label={t("navbar.settings.label")}
+                            label={"Texto"}
                             active={pathname === "/settings"}
                             onClick={() => setActiveMain(activeMain === "/settings" ? null : "/settings")}
                             opened={activeMain === "/settings"}
@@ -181,7 +179,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         <NavLink
                             color="violet"
                             leftSection={<BiSupport />}
-                            label={t("navbar.support")}
+                            label={"Texto"}
                             href="https://wa.me/5514981834361?text=Olá!%20Gostaria%20de%20ajuda%20com%20o%20AIX Dance."
                             target="_blank"
                             active={pathname === "/support"}

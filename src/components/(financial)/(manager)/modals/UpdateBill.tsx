@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal, ScrollArea, SegmentedControl, Tabs, Text } from "@mantine/core";
 import { Bill, BillStatus, RecurrenceType } from "@prisma/client";
 import { KeyedMutator } from "swr";
 
-import { UpdateBillInput, getUpdateBillSchema } from "@/schemas/financial/bill.schema";
+import { UpdateBillInput, updateBillSchema } from "@/schemas/financial/bill.schema";
 import BasicInformations from "./basic-informations";
 import CashOrInstallments from "./cash-or-installments";
 import { FaEdit } from "react-icons/fa";
@@ -32,12 +31,11 @@ type Props = {
 };
 
 export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
-    const t = useTranslations("financial.bills.modals");
-    const g = useTranslations("");
+
     const [isLoading, setIsLoading] = useState(false);
     const [updateScope, setUpdateScope] = useState<'ONE' | 'ALL_FUTURE'>('ONE');
 
-    const updateBillSchema = getUpdateBillSchema((key: string) => t(key as any));
+    // Usamos o schema estático
 
     const { control, handleSubmit, formState: { errors }, register, reset, watch, setValue } = useForm<UpdateBillInput>({
         resolver: zodResolver(updateBillSchema) as any,
@@ -86,12 +84,12 @@ export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
                 throw new Error(errorData.message || "Failed to update bill");
             }
 
-            notifications.show({ message: t("update.notifications.success"), color: "green" });
+            notifications.show({ message: "Texto", color: "green" });
             onClose();
             mutate(); // Revalida o cache do SWR
         } catch (error: any) {
             console.error(error);
-            notifications.show({ message: error.message || t("update.notifications.error"), color: "red" });
+            notifications.show({ message: error.message || "Texto", color: "red" });
         } finally {
             setIsLoading(false);
         }
@@ -113,7 +111,7 @@ export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
         <Modal
             opened={opened}
             onClose={onClose}
-            title={t("update.title")}
+            title={"Texto"}
             size="xl"
             radius="lg"
             centered
@@ -127,11 +125,11 @@ export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
                         {isSeries ? (
                             <div className="text-center p-4 bg-gray-50 rounded-lg">
                                 <FaEdit className="mx-auto text-gray-400 text-2xl mb-2" />
-                                <Text size="sm" c="dimmed">{t("editSeriesDisabled")}</Text>
+                                <Text size="sm" c="dimmed">{"Texto"}</Text>
                             </div>
                         ) : (
                             <div>
-                                <h2 className="text-lg font-semibold mb-2">{t("section2-title")}</h2>
+                                <h2 className="text-lg font-semibold mb-2">{"Texto"}</h2>
                                 <CashOrInstallments control={control as any} errors={errors as any} register={register as any} setValue={setValue as any} watch={watch as any}  />
                             </div>
                         )}

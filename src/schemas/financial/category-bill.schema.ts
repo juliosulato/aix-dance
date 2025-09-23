@@ -1,21 +1,19 @@
-import toTitleCase from "@/utils/toTitleCase";
 import { BillCategoryType, BillNature } from "@prisma/client";
 import z from "zod";
 
-export const getCreateCategoryBillSchema = (t: (key: string) => string) => z.object({
-  name: z.string().min(1, { message: t('fields.name.errors.required') }).transform(toTitleCase),
+export const createCategoryBillSchema = z.object({
+  name: z.string().min(1, { message: 'O nome é obrigatório' }),
   nature: z.enum([BillNature.REVENUE, BillNature.EXPENSE], {
-    error: t('fields.nature.errors.required'),
+    message: 'Natureza é obrigatória',
   }),
   type: z.enum([BillCategoryType.FIXED, BillCategoryType.VARIABLE], {
-    error: t('fields.type.errors.required'),
+    message: 'Tipo é obrigatório',
   }),
-  groupId: z.cuid2({ message: t('fields.group.errors.invalid') }).optional().nullable(),
-  parentId: z.cuid2({ message: t('fields.parent.errors.invalid') }).optional().nullable(),
+  groupId: z.string().cuid2({ message: 'Grupo de categoria inválido' }).optional().nullable(),
+  parentId: z.string().cuid2({ message: 'Categoria pai inválida' }).optional().nullable(),
 });
 
-export const getUpdateCategorySchema = (t: (key: string) => string) => getCreateCategoryBillSchema(t).partial();
+export const updateCategoryBillSchema = createCategoryBillSchema.partial();
 
-
-export type CreateCategoryBillInput = z.infer<ReturnType<typeof getCreateCategoryBillSchema>>;
-export type UpdateCategoryBillInput = z.infer<ReturnType<typeof getUpdateCategorySchema>>;
+export type CreateCategoryBillInput = z.infer<typeof createCategoryBillSchema>;
+export type UpdateCategoryBillInput = z.infer<typeof updateCategoryBillSchema>;

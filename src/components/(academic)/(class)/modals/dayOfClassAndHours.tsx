@@ -2,7 +2,6 @@
 
 import { ActionIcon, Checkbox, CloseIcon, Tooltip } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
-import { useTranslations } from "next-intl";
 import { IoAdd } from "react-icons/io5";
 import { Control, FieldErrors, UseFormSetValue, WatchInternal } from "react-hook-form";
 import { CreateClassInput, UpdateClassInput } from "@/schemas/academic/class.schema";
@@ -22,17 +21,14 @@ export default function DayOfClassesAndHours({
   setValue,
   watch,
 }: Props) {
-  const t = useTranslations("academic.classes.modals.formSteps.one.classDaysAndHours");
-  const g = useTranslations("");
-
   const days: { key: DayKey; label: string }[] = [
-    { key: "sunday", label: t("days.sunday") },
-    { key: "monday", label: t("days.monday") },
-    { key: "tuesday", label: t("days.tuesday") },
-    { key: "wednesday", label: t("days.wednesday") },
-    { key: "thursday", label: t("days.thursday") },
-    { key: "friday", label: t("days.friday") },
-    { key: "saturday", label: t("days.saturday") },
+    { key: "sunday", label: "Texto" },
+    { key: "monday", label: "Texto" },
+    { key: "tuesday", label: "Texto" },
+    { key: "wednesday", label: "Texto" },
+    { key: "thursday", label: "Texto" },
+    { key: "friday", label: "Texto" },
+    { key: "saturday", label: "Texto" },
   ];
 
   const schedules = watch("schedules");
@@ -72,7 +68,7 @@ export default function DayOfClassesAndHours({
 
   return (
     <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col">
-      <h2 className="text-lg font-bold">{t("title")}</h2>
+      <h2 className="text-lg font-bold">{"Texto"}</h2>
       {errors.schedules && !errors.schedules.root && (
           <p className="text-sm text-red-500 mt-1">{errors.schedules.message}</p>
       )}
@@ -99,7 +95,7 @@ export default function DayOfClassesAndHours({
                 )}
 
                 <div className="flex flex-row gap-3 justify-center items-center">
-                  <span>{t("hours.from")}</span>
+                  <span>{"Texto"}</span>
                   <TimeInput
                     value={range.from}
                     disabled={!schedules?.[day.key]?.enabled}
@@ -109,7 +105,7 @@ export default function DayOfClassesAndHours({
                     // Exibe a mensagem de erro específica para este campo
                     error={errors.schedules?.[day.key]?.ranges?.[index]?.from?.message}
                   />
-                  <span>{t("hours.to")}</span>
+                  <span>{"Texto"}</span>
                   <TimeInput
                     value={range.to}
                     disabled={!schedules?.[day.key]?.enabled}

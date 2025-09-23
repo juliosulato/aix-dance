@@ -1,11 +1,10 @@
-import toTitleCase from '@/utils/toTitleCase';
 import { z } from 'zod';
 
-export const getCreateCategoryGroupSchema = (t: (key: string) => string) => z.object({
-  name: z.string().min(1, { message: t('modals.fields.name.errors.required') }).transform(toTitleCase),
+export const createCategoryGroupSchema = z.object({
+  name: z.string().min(1, { message: 'O nome é obrigatório' }),
 });
 
-export const getUpdateCategoryGroupSchema = (t: (key: string) => string) => getCreateCategoryGroupSchema(t).partial();
+export const updateCategoryGroupSchema = createCategoryGroupSchema.partial();
 
-export type CreateCategoryGroupInput = z.infer<ReturnType<typeof getCreateCategoryGroupSchema>>;
-export type UpdateCategoryGroupInput = z.infer<ReturnType<typeof getUpdateCategoryGroupSchema>>;
+export type CreateCategoryGroupInput = z.infer<typeof createCategoryGroupSchema>;
+export type UpdateCategoryGroupInput = z.infer<typeof updateCategoryGroupSchema>;

@@ -2,7 +2,6 @@ import { Gender } from "@prisma/client";
 import { useState } from "react";
 import { PhoneInput } from "@/components/ui/cellPhoneInput";
 import { InputBase, Select, TextInput } from "@mantine/core";
-import { useLocale, useTranslations } from "next-intl";
 import { DateInput } from "@mantine/dates"
 import DocumentInput from "@/components/ui/documentInput";
 import dayjs from "dayjs";
@@ -21,13 +20,9 @@ type Props = {
 
 export default function Teacher__PersonalData({ control, errors, register }: Props) {
     const [gender, setGender] = useState<Gender | null>(null);
-    const t = useTranslations("academic.teachers.modals.create.personalData");
-    const g = useTranslations("forms.general-fields");
-    const locale = useLocale();
-    dayjs.locale(locale);
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
-            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{t("title")}</h2>
+            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{"Texto"}</h2>
             
             <TextInput
                 label={g("firstName.label")}
@@ -147,8 +142,8 @@ export default function Teacher__PersonalData({ control, errors, register }: Pro
             />
 
             <TextInput
-                label={t("fields.professionalRegister.label")}
-                placeholder={t("fields.professionalRegister.placeholder")}
+                label={"Texto"}
+                placeholder={"Texto"}
                 className="md:col-span-2 lg:col-span-3 3xl:col-span-4"
                 {...register("teacher.professionalRegister")}
             />

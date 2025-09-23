@@ -1,25 +1,22 @@
-import toTitleCase from '@/utils/toTitleCase';
 import { PlanType } from '@prisma/client';
 import { z } from 'zod';
 
-export const getCreatePlanSchema = (t: (key: string) => string) => z.object({
-  name: z.string().min(1, { message: t("fields.name.errors.required") }).transform(toTitleCase),
-  frequency: z.number({ error:  t("fields.frequency.errors.invalid") }).min(1, { message:  t("fields.frequency.errors.min-one") }),
-  type: z.enum(PlanType, { error:  t("fields.planType.errors.invalid") }),
-  amount: z.number({ error:  t("fields.amount.errors.invalid") }).min(0, { message: t("fields.amount.errors.min-zero")  }),
-
-  monthlyInterest: z.number({ error: t("fields.monthlyInterest.errors.invalid") }).min(0, { message: t("fields.monthlyInterest.errors.min-zero") }),
-  finePercentage: z.number({ error: t("fields.finePercentage.errors.invalid") }).min(0, { message: t("fields.finePercentage.errors.min-zero") }),
-  discountPercentage: z.number({ error: t("fields.discountPercentage.errors.invalid") }).min(0, { message: t("fields.discountPercentage.errors.min-zero") }),
-
-  maximumDiscountPeriod: z.number().min(0, { message: t("fields.maximumDiscountPeriod.errors.min-zero") }).optional(),
-  interestGracePeriod: z.number().min(0, { message: t("fields.interestGracePeriod.errors.min-zero") }).optional(),
-  fineGracePeriod: z.number().min(0, { message: t("fields.fineGracePeriod.errors.min-zero") }).optional()
+const planSchema = z.object({
+  name: z.string().min(1, { message: "O nome do plano é obrigatório" }),
+  frequency: z.number({ error: "Frequência inválida" }).min(1, { message: "Frequência deve ser maior que zero" }),
+  type: z.enum(PlanType, { error: "Tipo de plano inválido" }),
+  amount: z.number({ error: "Valor do plano inválido" }).min(0, { message: "O valor do plano deve ser maior ou igual a zero" }),
+  contractModelId: z.string().nullable().optional(),
+  monthlyInterest: z.number({ error: "Juros mensal inválido" }).min(0, { message: "Juros mensal deve ser maior ou igual a zero" }),
+  finePercentage: z.number({ error: "Multa inválida" }).min(0, { message: "Multa deve ser maior ou igual a zero" }),
+  discountPercentage: z.number({ error: "Desconto inválido" }).min(0, { message: "Desconto deve ser maior ou igual a zero" }),
+  maximumDiscountPeriod: z.number().min(0, { message: "Período máximo de desconto inválido" }).optional(),
+  interestGracePeriod: z.number().min(0, { message: "Período de carência para juros inválido" }).optional(),
+  fineGracePeriod: z.number().min(0, { message: "Período de carência para multa inválido" }).optional()
 });
 
-export const getUpdatePlanSchema = (t: (key: string) => string) =>
-  getCreatePlanSchema(t).partial();
+export const createPlanSchema = planSchema;
+export const updatePlanSchema = planSchema.partial();
 
-export type CreatePlanInput = z.infer<ReturnType<typeof getCreatePlanSchema>>;
-export type UpdatePlanInput = z.infer<ReturnType<typeof getUpdatePlanSchema>>;
-
+export type CreatePlanInput = z.infer<typeof createPlanSchema>;
+export type UpdatePlanInput = z.infer<typeof updatePlanSchema>;

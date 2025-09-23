@@ -4,11 +4,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
-import { CreateFormsOfReceiptInput, getCreateFormsOfReceiptSchema } from "@/schemas/financial/forms-receipt.schema";
+import { CreateFormsOfReceiptInput, createFormsOfReceiptSchema } from "@/schemas/financial/forms-receipt.schema";
 import FormsOfReceipt__BasicInformations from "./basic-informations";
 import FormsOfReceipt__Fees from "./feeForm";
 import { KeyedMutator } from "swr";
@@ -19,11 +18,10 @@ type Props = { opened: boolean; onClose: () => void; onSuccess?: () => void;
  };
 
 export default function NewFormsOfReceipt({ opened, onClose, onSuccess, mutate }: Props) {
-    const t = useTranslations("financial.payment-methods.modals");
-    const g = useTranslations("");
+
     const [isLoading, setIsLoading] = useState(false);
 
-    const createFormsOfReceiptSchema = getCreateFormsOfReceiptSchema((key: string) => t(key as any));
+    // Usamos o schema estático
 
     const { control, handleSubmit, formState: { errors }, register, reset } = useForm<CreateFormsOfReceiptInput>({
         resolver: zodResolver(createFormsOfReceiptSchema) as any,
@@ -45,13 +43,13 @@ export default function NewFormsOfReceipt({ opened, onClose, onSuccess, mutate }
                 body: JSON.stringify(data),
             });
             if (!response.ok) throw new Error("Failed to create forms of receipt");
-            notifications.show({ message: t("create.notifications.success"), color: "green" });
+            notifications.show({ message: "Texto", color: "green" });
             reset();
             if (onSuccess) onSuccess();
             onClose();
         } catch (error) {
             console.error(error);
-            notifications.show({ message: t("create.notifications.error"), color: "red" });
+            notifications.show({ message: "Texto", color: "red" });
         } finally {
             setIsLoading(false);
             mutate();
@@ -68,7 +66,7 @@ export default function NewFormsOfReceipt({ opened, onClose, onSuccess, mutate }
     };
 
     return (
-        <Modal opened={opened} onClose={onClose} title={t("create.title")} size="xl" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 !mb-4 border-b border-b-neutral-300" }}>
+        <Modal opened={opened} onClose={onClose} title={"Texto"} size="xl" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 !mb-4 border-b border-b-neutral-300" }}>
             <form onSubmit={handleSubmit(createFormsOfReceipt, handleFormErrors)} className="flex flex-col gap-4">
                 <LoadingOverlay visible={isLoading} />
                 <FormsOfReceipt__BasicInformations register={register as any} errors={errors} />

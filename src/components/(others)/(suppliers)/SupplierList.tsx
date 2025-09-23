@@ -2,7 +2,6 @@
 
 import { fetcher } from "@/utils/fetcher";
 import { useSession } from "next-auth/react";
-import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import useSWR from "swr";
 import { ActionIcon, LoadingOverlay, Menu, Text } from "@mantine/core";
@@ -33,10 +32,7 @@ interface MenuItemsProps {
 }
 
 export default function AllSuppliersData() {
-    const t = useTranslations("");
     const { data: sessionData, status } = useSession();
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     const [openNew, setOpenNew] = useState<boolean>(false);
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
@@ -104,12 +100,12 @@ export default function AllSuppliersData() {
                     </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
-                    <Menu.Label>{t("general.actions.title")}</Menu.Label>
+                    <Menu.Label>{"Ações"}</Menu.Label>
                     <Menu.Item leftSection={<GrUpdate size={14} />} onClick={() => onUpdateClick(categoryGroup)}>
-                        {t("general.actions.edit")}
+                        {"Editar"}
                     </Menu.Item>
                     <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(categoryGroup)}>
-                        {t("general.actions.delete")}
+                        {"Excluir"}
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
@@ -124,7 +120,7 @@ export default function AllSuppliersData() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{t("general.actions.manyActions")}</Menu.Label>
+                <Menu.Label>{"Texto"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
                     {t("general.actions.deleteMany", {
                         items: selectedIds.length
@@ -135,8 +131,8 @@ export default function AllSuppliersData() {
     );
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
-    if (error) return <p>{t("general.errors.loadingData")}</p>;
+    if (status !== "authenticated") return <div>{"Texto"}</div>;
+    if (error) return <p>{"Texto"}</p>;
 
 
     return (
@@ -145,19 +141,19 @@ export default function AllSuppliersData() {
                 data={categoryGroups || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: t("suppliers.create.title")
+                    label: "Texto"
                 }}
                 baseUrl="/system/others/suppliers/"
                 mutate={mutate}
-                pageTitle={t("suppliers.title")}
-                searchbarPlaceholder={t("suppliers.searchbarPlaceholder")}
+                pageTitle={"Texto"}
+                searchbarPlaceholder={"Texto"}
                 columns={[
-                    { key: "name", label: t("suppliers.fields.name.label") },
-                    { key: "corporateReason", label: t("suppliers.fields.corporateReason.label") },
-                    { key: "email", label: t("forms.general-fields.email.label") },
-                    { key: "cellPhoneNumber", label: t("forms.general-fields.cellPhoneNumber.label") },
-                    { key: "phoneNumber", label: t("forms.general-fields.phoneNumber.label") },
-                    { key: "document", label: t("suppliers.fields.document.label") }
+                    { key: "name", label: "Texto" },
+                    { key: "corporateReason", label: "Texto" },
+                    { key: "email", label: "E-mail" },
+                    { key: "cellPhoneNumber", label: "Celular" },
+                    { key: "phoneNumber", label: "Telefone" },
+                    { key: "document", label: "Texto" }
                 ]}
                 RenderRowMenu={(item) => <MenuItem categoryGroup={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
                 RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
@@ -168,10 +164,10 @@ export default function AllSuppliersData() {
                             <MenuItem categoryGroup={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />
                         </div>
                         <div className="flex flex-col gap-1">
-                            {item.corporateReason && <span><strong>{t("suppliers.fields.corporateReason.label")}:</strong> {item.corporateReason}</span>}
-                            {item.email && <span><strong>{t("forms.general-fields.email.label")}:</strong> {item.email}</span>}
-                            {item.phoneNumber && <span><strong>{t("forms.general-fields.phoneNumber.label")}:</strong> {item.phoneNumber}</span>}
-                            {item.document && <span><strong>{t("suppliers.fields.document.label")}:</strong> {item.document}</span>}
+                            {item.corporateReason && <span><strong>{"Texto"}:</strong> {item.corporateReason}</span>}
+                            {item.email && <span><strong>{"E-mail"}:</strong> {item.email}</span>}
+                            {item.phoneNumber && <span><strong>{"Telefone"}:</strong> {item.phoneNumber}</span>}
+                            {item.document && <span><strong>{"Texto"}:</strong> {item.document}</span>}
                         </div>
                     </>
                 )}
@@ -195,9 +191,9 @@ export default function AllSuppliersData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={t("suppliers.confirmModal.title")}
-                confirmLabel={t("suppliers.confirmModal.confirmLabel")}
-                cancelLabel={t("suppliers.confirmModal.cancelLabel")}
+                title={"Texto"}
+                confirmLabel={"Texto"}
+                cancelLabel={"Texto"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
@@ -210,7 +206,7 @@ export default function AllSuppliersData() {
                     })
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{t("suppliers.confirmModal.warn")}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Texto"}</Text>
             </ConfirmationModal>
         </>
     );

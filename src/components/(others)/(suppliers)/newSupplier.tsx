@@ -4,11 +4,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal, TextInput } from "@mantine/core";
 import { KeyedMutator } from "swr";
-import { CreateSupplierInput, getCreateSupplierSchema } from "@/schemas/supplier.schema";
+import { CreateSupplierInput, createSupplierSchema } from "@/schemas/supplier.schema";
 import Address from "@/components/AddressForm";
 import { SupplierFromApi } from "./SupplierFromApi";
 
@@ -19,12 +18,11 @@ type Props = {
 };
 
 export default function NewSupplier({ opened, onClose, mutate }: Props) {
-    const t = useTranslations("");
     const [isLoading, setIsLoading] = useState(false);
-    const createSupplier = getCreateSupplierSchema((key: string) => t(key as any));
+    // Usamos o schema estático
 
     const { handleSubmit, formState: { errors }, register, reset } = useForm<CreateSupplierInput>({
-        resolver: zodResolver(createSupplier)
+        resolver: zodResolver(createSupplierSchema)
     });
 
 
@@ -37,7 +35,7 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
 
     async function handleCreateSupplier(data: CreateSupplierInput) {
         if (!sessionData?.user.tenancyId) {
-            notifications.show({ color: "red", message: t("errors.invalidSession") });
+            notifications.show({ color: "red", message: "Texto" });
             return;
         }
 
@@ -52,7 +50,7 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
             if (!response.ok) throw new Error("Failed to create supplier");
 
             notifications.show({
-                message: t("suppliers.create.notifications.success"),
+                message: "Texto",
                 color: "green"
             });
 
@@ -62,7 +60,7 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
         } catch (error) {
             console.error(error);
             notifications.show({
-                message: t("suppliers.create.notifications.error"),
+                message: "Texto",
                 color: "red"
             });
         } finally {
@@ -72,8 +70,8 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
 
     const handleFormErrors = () => {
         notifications.show({
-            title: t("general.errors.validationTitle"),
-            message: t("general.errors.validationMessage"),
+            title: "Texto",
+            message: "Texto",
             color: 'yellow'
         });
     };
@@ -82,7 +80,7 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
         <Modal
             opened={opened}
             onClose={handleClose}
-            title={t("suppliers.create.title")}
+            title={"Texto"}
             size="xl"
             radius="lg"
             centered
@@ -90,50 +88,50 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
         >
             <form onSubmit={handleSubmit(handleCreateSupplier, handleFormErrors)} className="flex flex-col gap-4">
                 <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
-                    <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{t("suppliers.basicInformations")}</h2>
+                    <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{"Texto"}</h2>
 
                     <TextInput
                         {...register("name")}
-                        label={t("suppliers.fields.name.label")}
-                        placeholder={t("suppliers.fields.name.placeholder")}
+                        label={"Texto"}
+                        placeholder={"Texto"}
                         error={errors?.name?.message}
                         required
                     />
                     <TextInput
                         {...register("corporateReason")}
-                        label={t("suppliers.fields.corporateReason.label")}
-                        placeholder={t("suppliers.fields.corporateReason.placeholder")}
+                        label={"Texto"}
+                        placeholder={"Texto"}
                         error={errors?.corporateReason?.message}
                     />
 
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:col-span-3 lg:cols-span-4 3xl:col-span-5">
                         <TextInput
                             {...register("documentType")}
-                            label={t("suppliers.fields.documentType.label")}
-                            placeholder={t("suppliers.fields.documentType.placeholder")}
+                            label={"Texto"}
+                            placeholder={"Texto"}
                             error={errors?.documentType?.message}
                         />
                         <TextInput
                             {...register("document")}
-                            label={t("suppliers.fields.document.label")}
+                            label={"Texto"}
                             error={errors?.document?.message}
                         />
                     </div>
 
                     <TextInput
                         {...register("email")}
-                        label={t("forms.general-fields.email.label")}
+                        label={"E-mail"}
                         error={errors?.email?.message}
                     />
 
                     <TextInput
                         {...register("cellPhoneNumber")}
-                        label={t("forms.general-fields.cellPhoneNumber.label")}
+                        label={"Celular"}
                         error={errors?.cellPhoneNumber?.message}
                     />
                     <TextInput
                         {...register("phoneNumber")}
-                        label={t("forms.general-fields.phoneNumber.label")}
+                        label={"Telefone"}
                         error={errors?.phoneNumber?.message}
                     />
                 </div>
@@ -146,7 +144,7 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
                     loading={isLoading}
                     className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
                 >
-                    {t("forms.submit")}
+                    {"Salvar"}
                 </Button>
             </form>
             <LoadingOverlay visible={isLoading} />

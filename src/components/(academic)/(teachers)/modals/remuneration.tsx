@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button, Checkbox, NumberInput, Select, Table, Textarea, Tooltip, ActionIcon } from "@mantine/core";
-import { useLocale, useTranslations } from "next-intl";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
@@ -18,10 +17,6 @@ type Props = {
 };
 
 export default function Teacher__Remuneration({ control, errors }: Props) {
-    const t = useTranslations("academic.teachers.modals.create.remuneration");
-    const g = useTranslations("forms.general-fields");
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     const { fields, append, remove } = useFieldArray({
         control,
@@ -33,8 +28,8 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
     const [comission, setComission] = useState<boolean>(false);
 
     const contractTypeData = [
-        { value: RemunerationType.HOURLY, label: t("fields.contractType.options.HOURLY") },
-        { value: RemunerationType.FIXED, label: t("fields.contractType.options.FIXED") },
+        { value: RemunerationType.HOURLY, label: "Texto" },
+        { value: RemunerationType.FIXED, label: "Texto" },
     ];
 
     const handleAddRange = () => {
@@ -45,7 +40,7 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
-            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{t("title")}</h2>
+            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{"Texto"}</h2>
 
             <Controller
                 name="teacher.remunerationType"
@@ -53,8 +48,8 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
                 defaultValue={RemunerationType.HOURLY}
                 render={({ field }) => (
                     <Select
-                        label={t("fields.contractType.label")}
-                        placeholder={t("fields.contractType.placeholder")}
+                        label={"Texto"}
+                        placeholder={"Texto"}
                         data={contractTypeData}
                         value={field.value}
                         onChange={field.onChange}
@@ -69,7 +64,7 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
                 render={({ field }) => (
                      <NumberInput
                         {...field}
-                        label={remunerationType === "HOURLY" ? t("fields.baseAmount.hourly") : t("fields.baseAmount.fixed")}
+                        label={remunerationType === "HOURLY" ? "Texto" : "Texto"}
                         leftSection={<RiMoneyDollarCircleLine size={18} />}
                         allowDecimal
                         decimalSeparator=","
@@ -86,7 +81,7 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
                 render={({ field }) => (
                     <NumberInput
                         {...field}
-                        label={t("fields.paymentDay.label")}
+                        label={"Texto"}
                         min={1} max={31}
                         error={errors.teacher?.paymentDay?.message}
                     />
@@ -98,7 +93,7 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
                 name="teacher.paymentData"
                 control={control}
                 render={({ field }) => (
-                    <Textarea {...field} label={t("fields.paymentDetails.label")} className="md:col-span-2 lg:col-span-3 3xl:col-span-4" />
+                    <Textarea {...field} label={"Texto"} className="md:col-span-2 lg:col-span-3 3xl:col-span-4" />
                 )}
             />
             
@@ -106,20 +101,20 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
                 name="teacher.observations"
                 control={control}
                 render={({ field }) => (
-                     <Textarea {...field} label={t("fields.notes.label")} className="md:col-span-2 lg:col-span-3 3xl:col-span-4" />
+                     <Textarea {...field} label={"Texto"} className="md:col-span-2 lg:col-span-3 3xl:col-span-4" />
                 )}
             />
             
             <div className="flex gap-4 flex-wrap md:col-span-2 lg:col-span-3 3xl:col-span-4">
                 <div className="flex items-center gap-1">
-                     <Checkbox label={t("fields.presenceBonus.checkbox")} checked={presenceBonus} onChange={(ev) => setPresenceBonus(ev.target.checked)} />
-                     <Tooltip label={t("fields.presenceBonus.tooltip")} color="violet" arrowOffset={50} arrowPosition="center" arrowRadius={3} arrowSize={5} position="bottom-end" multiline w={220}>
+                     <Checkbox label={"Texto"} checked={presenceBonus} onChange={(ev) => setPresenceBonus(ev.target.checked)} />
+                     <Tooltip label={"Texto"} color="violet" arrowOffset={50} arrowPosition="center" arrowRadius={3} arrowSize={5} position="bottom-end" multiline w={220}>
                          <BiHelpCircle size={18} className="cursor-pointer hover:text-primary" />
                      </Tooltip>
                 </div>
                 <div className="flex items-center gap-1">
-                     <Checkbox label={t("fields.commission.checkbox")} checked={comission} onChange={(ev) => setComission(ev.target.checked)} />
-                     <Tooltip label={t("fields.commission.tooltip")} color="violet" arrowOffset={50} arrowPosition="center" arrowRadius={3} arrowSize={5} position="bottom-end" multiline w={220}>
+                     <Checkbox label={"Texto"} checked={comission} onChange={(ev) => setComission(ev.target.checked)} />
+                     <Tooltip label={"Texto"} color="violet" arrowOffset={50} arrowPosition="center" arrowRadius={3} arrowSize={5} position="bottom-end" multiline w={220}>
                          <BiHelpCircle size={18} className="cursor-pointer hover:text-primary" />
                      </Tooltip>
                 </div>
@@ -127,14 +122,14 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
 
             {presenceBonus && (
                 <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col gap-4 md:col-span-2 lg:col-span-3 3xl:col-span-4">
-                    <h2 className="text-lg font-bold">{t("fields.presenceBonus.title")}</h2>
+                    <h2 className="text-lg font-bold">{"Texto"}</h2>
                     <Controller
                         name="teacher.bonusForPresenceAmount"
                         control={control}
                         render={({ field }) => (
                             <NumberInput
                                 {...field}
-                                label={t("fields.presenceBonus.label")}
+                                label={"Texto"}
                                 leftSection={<RiMoneyDollarCircleLine size={18} />}
                                 allowDecimal
                                 decimalSeparator=","
@@ -150,11 +145,11 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
                         render={({ field }) => (
                             <div className="flex items-center gap-1">
                                 <Checkbox
-                                    label={t("fields.presenceBonus.loseBonusCheckbox")}
+                                    label={"Texto"}
                                     checked={field.value}
                                     onChange={(event) => field.onChange(event.currentTarget.checked)}
                                 />
-                                <Tooltip label={t("fields.presenceBonus.loseBonusTooltip")} color="violet" arrowOffset={50} arrowPosition="center" arrowRadius={3} arrowSize={5} position="bottom-end" multiline w={220}>
+                                <Tooltip label={"Texto"} color="violet" arrowOffset={50} arrowPosition="center" arrowRadius={3} arrowSize={5} position="bottom-end" multiline w={220}>
                                     <BiHelpCircle size={18} className="cursor-pointer hover:text-primary" />
                                 </Tooltip>
                             </div>
@@ -166,18 +161,18 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
             {comission && (
                 <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col gap-4 md:col-span-2 lg:col-span-3 3xl:col-span-4">
                     <div className="flex justify-between items-center">
-                        <h2 className="text-lg font-bold">{t("fields.commission.title")}</h2>
+                        <h2 className="text-lg font-bold">{"Texto"}</h2>
                         <Button type="button" color="#7439FA" radius="lg" size="sm" onClick={handleAddRange}>
-                            {t("fields.commission.addRange")}
+                            {"Texto"}
                         </Button>
                     </div>
                     <div>
                         <Table classNames={{ table: "!border !border-neutral-300 " }}>
                             <Table.Thead>
                                 <Table.Tr>
-                                    <Table.Th>{t("fields.commission.tableHeaders.from")}</Table.Th>
-                                    <Table.Th>{t("fields.commission.tableHeaders.to")}</Table.Th>
-                                    <Table.Th>{t("fields.commission.tableHeaders.value")}</Table.Th>
+                                    <Table.Th>{"Texto"}</Table.Th>
+                                    <Table.Th>{"Texto"}</Table.Th>
+                                    <Table.Th>{"Texto"}</Table.Th>
                                     <Table.Th>Ações</Table.Th>
                                 </Table.Tr>
                             </Table.Thead>

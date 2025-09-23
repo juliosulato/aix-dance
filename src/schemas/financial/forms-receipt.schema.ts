@@ -1,15 +1,14 @@
-import toTitleCase from "@/utils/toTitleCase";
 import z from "zod";
 
-export const getCreateFormsOfReceiptSchema = (t: (key: string) => string) => z.object({
-  name: z.string().min(1, { message: t('fields.name.errors.required') }).transform(toTitleCase),
+export const createFormsOfReceiptSchema = z.object({
+  name: z.string().min(1, { message: 'O nome é obrigatório' }),
   operator: z.string().optional(),
   fees: z.array(z.object({
-    minInstallments: z.coerce.number({ error: t('fields.fees.errors.minInstallments_invalid') }).min(1, { message: t('fields.fees.errors.minInstallments_min') }),
-    maxInstallments: z.coerce.number({ error: t('fields.fees.errors.maxInstallments_invalid') }).min(1, { message: t('fields.fees.errors.maxInstallments_min') }),
-    feePercentage: z.coerce.number({ error: t('fields.fees.errors.feePercentage_invalid') }).min(0, { message: t('fields.fees.errors.feePercentage_min') }),
+    minInstallments: z.coerce.number({ message: 'Mínimo de parcelas inválido' }).min(1, { message: 'Mínimo de parcelas deve ser 1 ou mais' }),
+    maxInstallments: z.coerce.number({ message: 'Máximo de parcelas inválido' }).min(1, { message: 'Máximo de parcelas deve ser 1 ou mais' }),
+    feePercentage: z.coerce.number({ message: 'Taxa de porcentagem inválida' }).min(0, { message: 'Taxa de porcentagem deve ser 0 ou mais' }),
     customerInterest: z.boolean().default(false),
-    receiveInDays: z.coerce.number({ error: t('fields.fees.errors.receiveInDays_invalid') }).min(0, { message: t('fields.fees.errors.receiveInDays_min') }).optional(),
+    receiveInDays: z.coerce.number({ message: 'Receber em dias inválido' }).min(0, { message: 'Receber em dias deve ser 0 ou mais' }).optional(),
   })).optional(),
 }).refine(data => {
     if (data.fees) {
@@ -19,14 +18,11 @@ export const getCreateFormsOfReceiptSchema = (t: (key: string) => string) => z.o
     }
     return true;
 }, {
-    message: t('fields.fees.errors.installments_order'),
+    message: 'O número mínimo de parcelas não pode ser maior que o máximo',
     path: ['fees']
 });
 
-export const getUpdateFormsOfReceiptSchema = (t: (key: string) => string) =>
-  getCreateFormsOfReceiptSchema(t).partial();
+export const updateFormsOfReceiptSchema = createFormsOfReceiptSchema.partial();
 
-
-// Tipos inferidos
-export type CreateFormsOfReceiptInput = z.infer<ReturnType<typeof getCreateFormsOfReceiptSchema>>;
-export type UpdateFormsOfReceiptInput = z.infer<ReturnType<typeof getUpdateFormsOfReceiptSchema>>;
+export type CreateFormsOfReceiptInput = z.infer<typeof createFormsOfReceiptSchema>;
+export type UpdateFormsOfReceiptInput = z.infer<typeof updateFormsOfReceiptSchema>;

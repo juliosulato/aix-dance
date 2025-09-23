@@ -2,7 +2,6 @@
 
 import { Class, Modality, Student, User } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button, Text } from "@mantine/core";
 import DataView from "@/components/ui/DataView";
@@ -22,16 +21,13 @@ export interface ClassFromApi extends Class {
 }
 
 export default function StudentClassView({ student }: { student: StudentFromApi }) {
-  const t = useTranslations("academic.classes");
-  const locale = useLocale();
-  dayjs.locale(locale);
 
   const { status } = useSession();
   const classes = adaptStudentClasses(student);
 
   const [openAssign, setOpenAssign] = useState(false);
 
-  if (status !== "authenticated") return <div>{t("errors.invalidSession")}</div>;
+  if (status !== "authenticated") return <div>{"Texto"}</div>;
 
   const activeClassLength = student.classes.filter((c: any) => c.status == "ACTIVE").length;
 
@@ -42,11 +38,11 @@ export default function StudentClassView({ student }: { student: StudentFromApi 
         data={classes || []}
         baseUrl="/system/academic/classes/"
         openNewModal={ ({
-            label: t("manageAssignments"),
+            label: "Texto",
             func: () => setOpenAssign(true)
         })}
         mutate={() => window.location.reload() as any}
-        searchbarPlaceholder={t("searchbarPlaceholder")}
+        searchbarPlaceholder={"Buscar turmas..."}
         columns={[
           { key: "class.name" as any, label: "Nome da Turma", render: (_, row) => row.class.name },
           { key: "class.studentClasses" as any, label: "Alunos Matriculados", render: (_, row) => row.class.studentClasses.length },

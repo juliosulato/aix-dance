@@ -2,11 +2,10 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
-import { UpdateFormsOfReceiptInput, getUpdateFormsOfReceiptSchema } from "@/schemas/financial/forms-receipt.schema";
+import { UpdateFormsOfReceiptInput, updateFormsOfReceiptSchema } from "@/schemas/financial/forms-receipt.schema";
 import { FormsOfReceipt } from "..";
 import { KeyedMutator } from "swr";
 import FormsOfReceipt__BasicInformations from "./basic-informations";
@@ -21,11 +20,9 @@ type Props = {
 };
 
 export default function UpdateFormsOfReceipt({ mutate, formsOfReceipt, opened, onClose, onSuccess }: Props) {
-  const t = useTranslations("financial.payment-methods.modals");
-  const g = useTranslations("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const updateFormsOfReceiptSchema = getUpdateFormsOfReceiptSchema((key: string) => t(key as any));
+  // Usamos o schema estático
 
   const { control, handleSubmit, formState: { errors }, register, reset } =
     useForm<UpdateFormsOfReceiptInput>({
@@ -72,13 +69,13 @@ export default function UpdateFormsOfReceipt({ mutate, formsOfReceipt, opened, o
         }
       );
       if (!response.ok) throw new Error("Failed to update forms of receipt");
-      notifications.show({ message: t("update.notifications.success"), color: "green" });
+      notifications.show({ message: "Texto", color: "green" });
       if (onSuccess) onSuccess();
       onClose();
       mutate()
     } catch (error) {
       console.error(error);
-      notifications.show({ message: t("update.notifications.error"), color: "red" });
+      notifications.show({ message: "Texto", color: "red" });
     } finally {
       setIsLoading(false);
     }
@@ -88,7 +85,7 @@ export default function UpdateFormsOfReceipt({ mutate, formsOfReceipt, opened, o
     <Modal
       opened={opened}
       onClose={onClose}
-      title={t("update.title")}
+      title={"Texto"}
       size="xl"
       radius="lg"
       centered

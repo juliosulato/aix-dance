@@ -1,7 +1,6 @@
 "use client"
 
 import { Avatar, Button, LoadingOverlay, Modal, MultiSelect } from "@mantine/core";
-import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
@@ -30,10 +29,6 @@ type Props = {
 }
 
 function AssignStudents({ opened, onClose, mutate, classData }: Props) {
-    const t = useTranslations("academic.classes.modals.assignStudents");
-    const g = useTranslations("general");
-    const formStepsT = useTranslations("academic.classes.modals.formSteps.two");
-    const rootT = useTranslations(""); // Para chaves na raiz, como 'forms'
     const [visible, setVisible] = useState(false);
     const { data: sessionData, status } = useSession();
 
@@ -210,7 +205,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
         }
 
         if (promises.length === 0) {
-            notifications.show({ message: t("notifications.noChanges") });
+            notifications.show({ message: "Texto" });
             onClose();
             setVisible(false);
             return;
@@ -221,12 +216,12 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
             const hasError = responses.some((res) => !res.ok);
             if (hasError) throw new Error("Uma ou mais operações falharam.");
 
-            notifications.show({ message: t("notifications.success"), color: "green" });
+            notifications.show({ message: "Texto", color: "green" });
             await mutate();
             handleClose();
         } catch (err) {
             console.error(err);
-            notifications.show({ color: "red", message: t("notifications.error") });
+            notifications.show({ color: "red", message: "Texto" });
         } finally {
             setVisible(false);
         }
@@ -276,7 +271,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
 
     return (
         <>
-            <Modal opened={opened} onClose={handleClose} title={t("title")} size="lg" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
+            <Modal opened={opened} onClose={handleClose} title={"Texto"} size="lg" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
                 <form onSubmit={handleSubmit(handleAssignStudents)} className="flex flex-col gap-4 md:gap-6 p-4">
                     <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col gap-4">
                         <Controller
@@ -290,7 +285,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
                                     {...field}
                                     searchable
                                     className="!w-full"
-                                    nothingFoundMessage={g("notFound")}
+                                    nothingFoundMessage={"Nada encontrado..."}
                                     rightSection={<FaSearch />}
                                     onChange={handleStudentChange}
                                     error={errors.studentIds?.message}
@@ -300,9 +295,9 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
                         <div className="p-4 border border-neutral-300 rounded-2xl flex flex-col gap-4 min-h-[200px]">
                             {studentsSelected.length === 0 ? (
                                 <div className="flex flex-col gap-3 items-center justify-center text-center m-auto">
-                                    <Image src={notFound} alt={t("noStudents.alt")} className="max-w-[150px]" />
-                                    <h3 className="text-xl text-primary font-bold">{t("noStudents.title")}</h3>
-                                    <p className="max-w-xs text-neutral-500">{t("noStudents.description")}</p>
+                                    <Image src={notFound} alt={"Texto"} className="max-w-[150px]" />
+                                    <h3 className="text-xl text-primary font-bold">{"Texto"}</h3>
+                                    <p className="max-w-xs text-neutral-500">{"Texto"}</p>
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

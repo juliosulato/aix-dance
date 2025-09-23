@@ -1,12 +1,10 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { Translations } from "@/types/translations";
 import { BillFromApi } from "./modals/UpdateBill";
 
 async function deleteBills(
     items: BillFromApi | string[],
     tenancyId: string,
-    t: Translations,
     mutate?: KeyedMutator<BillFromApi[]>,
 ) {
     const isArray = Array.isArray(items);

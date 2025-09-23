@@ -4,11 +4,10 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
 
-import { UpdateBankInput, getCreateBankSchema } from "@/schemas/financial/bank.schema";
+import { UpdateBankInput, createBankSchema } from "@/schemas/financial/bank.schema";
 import NewBank__BasicInformations from "./basic-informations";
 import { Bank } from "@prisma/client";
 import { KeyedMutator } from "swr";
@@ -20,11 +19,10 @@ type Props = {
 };
 
 export default function UpdateBankAccount({ opened, onClose, bankAccount, mutate }: Props) {
-    const t = useTranslations("financial.banks");
-    const g = useTranslations("");
+
     const [isLoading, setIsLoading] = useState(false);
 
-    const createBankSchema = getCreateBankSchema((key: string) => t(key as any));
+    // Usamos o schema estático
 
     const { control, handleSubmit, formState: { errors }, register, reset } = useForm<UpdateBankInput>({
         resolver: zodResolver(createBankSchema) as any,
@@ -79,7 +77,7 @@ export default function UpdateBankAccount({ opened, onClose, bankAccount, mutate
             }
 
             notifications.show({
-                message: t("modals.update.notifications.success"),
+                message: "Texto",
                 color: "green"
             });
 
@@ -112,7 +110,7 @@ export default function UpdateBankAccount({ opened, onClose, bankAccount, mutate
             <Modal
                 opened={opened}
                 onClose={onClose}
-                title={t("title")}
+                title={"Texto"}
                 size="lg"
                 radius="lg"
                 centered

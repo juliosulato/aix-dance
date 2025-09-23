@@ -4,7 +4,6 @@ import InfoTerm from "@/components/ui/Infoterm";
 import { FaEdit, FaTrash, FaCalendarAlt, FaUniversity, FaCreditCard, FaUser, FaTag, FaFileInvoiceDollar, FaReceipt, FaLink } from "react-icons/fa";
 import { useState } from "react";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
-import { useTranslations } from "next-intl";
 import deleteBills from "../delete";
 import UpdateBill from "../modals/UpdateBill";
 import dayjs from "dayjs";
@@ -21,12 +20,11 @@ export default function BillView({ bill, tenancyId }: { bill: BillFromApi, tenan
     const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-    const t = useTranslations();
 
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            await deleteBills([bill.id], tenancyId, t);
+            await deleteBills([bill.id], tenancyId);
             window.location.replace("/system/financial/manager");
         } catch (error) {
             console.error("Falha ao excluir a conta:", error);
@@ -46,57 +44,62 @@ export default function BillView({ bill, tenancyId }: { bill: BillFromApi, tenan
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-6">
             <div className="flex flex-col md:flex-row md:flex-wrap gap-4 justify-between items-center mb-4">
-                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{t("financial.bills.view.title")}</h1>
+                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{"Texto"}</h1>
                 <div className="flex gap-4 md:gap-6">
                     <button className="text-red-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setConfirmModalOpen(true)}>
                         <FaTrash />
-                        <span>{t("general.actions.delete")}</span>
+                        <span>{"Excluir"}</span>
                     </button>
                     <button className="text-primary flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setOpenUpdate(true)}>
                         <FaEdit />
-                        <span>{t("general.actions.update")}</span>
+                        <span>{"Atualizar"}</span>
                     </button>
                     {bill.status !== "PAID" && (
                         <button className="text-green-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setOpenPayBill(true)}>
                             <RiMoneyDollarCircleLine />
-                            <span>{t("financial.bills.payBill")}</span>
+                            <span>{"Texto"}</span>
                         </button>
                     )}
                 </div>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                <InfoTerm label={t("financial.bills.modals.fields.description.label")} icon={<FaFileInvoiceDollar />}>
+                <InfoTerm label={"Texto"} icon={<FaFileInvoiceDollar />}>
                     {bill.description}
                 </InfoTerm>
-                <InfoTerm label={t("financial.bills.modals.fields.status.label")}>
-                    {StatusTextToBadge(bill.status, true, t)}
+                <InfoTerm label={"Status"}>
+                    {StatusTextToBadge(bill.status, true, {
+                        'PENDING': 'Pendente',
+                        'PAID': 'Pago',
+                        'OVERDUE': 'Atrasado',
+                        'CANCELLED': 'Cancelado'
+                    })}
                 </InfoTerm>
-                <InfoTerm label={t("financial.bills.modals.fields.amount.label")} icon={<FaFileInvoiceDollar />}>
+                <InfoTerm label={"Valor"} icon={<FaFileInvoiceDollar />}>
                     {formatCurrency(bill.amount)}
                 </InfoTerm>
-                <InfoTerm label={t("financial.bills.modals.fields.dueDate.label")} icon={<FaCalendarAlt />}>
+                <InfoTerm label={"Vencimento"} icon={<FaCalendarAlt />}>
                     {dayjs(bill.dueDate).format("DD/MM/YYYY")}
                 </InfoTerm>
-                <InfoTerm label={t("financial.bills.modals.fields.supplier.label")} icon={<FaUser />}>
+                <InfoTerm label={"Fornecedor"} icon={<FaUser />}>
                     {bill.supplier?.name}
                 </InfoTerm>
-                <InfoTerm label={t("financial.bills.modals.fields.category.label")} icon={<FaTag />}>
+                <InfoTerm label={"Categoria"} icon={<FaTag />}>
                     {bill.category?.name}
                 </InfoTerm>
-                <InfoTerm label={t("financial.bills.modals.fields.payment-method.label")} icon={<FaCreditCard />}>
+                <InfoTerm label={"Forma de Pagamento"} icon={<FaCreditCard />}>
                     {bill.formsOfReceipt?.name}
                 </InfoTerm>
-                <InfoTerm label={t("financial.bills.modals.fields.bank.label")} icon={<FaUniversity />}>
+                <InfoTerm label={"Texto"} icon={<FaUniversity />}>
                     {bill.bank?.name}
                 </InfoTerm>
 
                 {bill.status === "PAID" && (
                     <>
-                        <InfoTerm label={t("financial.bills.modals.fields.amountPaid.label")} icon={<FaReceipt />}>
+                        <InfoTerm label={"Texto"} icon={<FaReceipt />}>
                             {formatCurrency(bill.amountPaid)}
                         </InfoTerm>
-                        <InfoTerm label={t("financial.bills.modals.fields.paymentDate.label")} icon={<FaCalendarAlt />}>
+                        <InfoTerm label={"Data de Pagamento"} icon={<FaCalendarAlt />}>
                             {bill.paymentDate ? dayjs(bill.paymentDate).format("DD/MM/YYYY") : "-"}
                         </InfoTerm>
                     </>
@@ -136,7 +139,12 @@ export default function BillView({ bill, tenancyId }: { bill: BillFromApi, tenan
                                     </div>
                                     <Flex align="center" gap="lg">
                                         <Text size="sm" fw={500}>{formatCurrency(child.amount)}</Text>
-                                        {StatusTextToBadge(child.status, true, t)}
+                                        {StatusTextToBadge(child.status, true, {
+                                            'PENDING': 'Pendente',
+                                            'PAID': 'Pago',
+                                            'OVERDUE': 'Atrasado',
+                                            'CANCELLED': 'Cancelado'
+                                        })}
                                     </Flex>
                                 </Link>
                             ))}
@@ -152,14 +160,12 @@ export default function BillView({ bill, tenancyId }: { bill: BillFromApi, tenan
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDelete}
-                title={t("financial.bills.modals.confirmModal.title")}
-                confirmLabel={t("financial.bills.modals.confirmModal.confirmLabel")}
-                cancelLabel={t("financial.bills.modals.confirmModal.cancelLabel")}
+                title={"Texto"}
+                confirmLabel={"Texto"}
+                cancelLabel={"Cancelar"}
                 loading={isDeleting}
             >
-                {t("financial.bills.modals.confirmModal.text", {
-                    bill: dayjs(bill?.dueDate).format("DD MMMM YYYY") || ""
-                })}
+                {`Tem certeza de que deseja excluir a conta com vencimento em ${dayjs(bill?.dueDate).format("DD/MM/YYYY") || ""}?`}
             </ConfirmationModal>
         </div >
     );

@@ -2,7 +2,6 @@
 import DataView from "@/components/ui/DataView";
 import { useEffect, useState } from "react";
 import NewFormsOfReceipt from "./modals/NewFormsOfReceipt";
-import { useLocale, useTranslations } from "next-intl";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 import { ActionIcon, LoadingOverlay, Menu, Text } from "@mantine/core";
@@ -35,14 +34,11 @@ interface MenuItemsProps {
 
 
 export default function FormsOfReceiptsView() {
-    const t = useTranslations("");
     const { data: sessionData, status } = useSession();
 
     const [openNew, setOpenNew] = useState<boolean>(false);
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
     const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     const [selectedFormsOfReceipt, setSelectedFormsOfReceipt] = useState<FormsOfReceipt | null>(null);
     const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
@@ -107,12 +103,12 @@ export default function FormsOfReceiptsView() {
                     </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
-                    <Menu.Label>{t("general.actions.title")}</Menu.Label>
+                    <Menu.Label>{"Ações"}</Menu.Label>
                     <Menu.Item leftSection={<GrUpdate size={14} />} onClick={() => onUpdateClick(formsOfReceipt)}>
-                        {t("general.actions.edit")}
+                        {"Editar"}
                     </Menu.Item>
                     <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(formsOfReceipt)}>
-                         {t("general.actions.delete")}
+                         {"Excluir"}
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
@@ -127,11 +123,9 @@ export default function FormsOfReceiptsView() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{t("general.actions.manyActions")}</Menu.Label>
+                <Menu.Label>{"Texto"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
-                     {t("general.actions.deleteMany", {
-                        items: selectedIds.length
-                     })}
+                     {"Excluir selecionados"}
                 </Menu.Item>
             </Menu.Dropdown>
         </Menu>
@@ -139,8 +133,8 @@ export default function FormsOfReceiptsView() {
 
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
-    if (error) return <p>{t("general.errors.loadingData")}</p>;
+    if (status !== "authenticated") return <div>{"Texto"}</div>;
+    if (error) return <p>{"Texto"}</p>;
 
     return (
         <>
@@ -148,15 +142,15 @@ export default function FormsOfReceiptsView() {
                 data={formsOfReceipts || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: t("financial.payment-methods.modals.create.title")
+                    label: "Texto"
                 }}
                 baseUrl="/system/financial/forms-of-receipt/"
                 mutate={mutate}
-                pageTitle={t("financial.payment-methods.title")}
-                searchbarPlaceholder={t("financial.payment-methods.searchbarPlaceholder")}
+                pageTitle={"Texto"}
+                searchbarPlaceholder={"Texto"}
                 columns={[
-                    { key: "name", label: t("financial.payment-methods.modals.fields.name.label") },
-                    { key: "operator", label: t("financial.payment-methods.modals.fields.operator.label") },
+                    { key: "name", label: "Texto" },
+                    { key: "operator", label: "Texto" },
                 ]}
                 RenderRowMenu={(item) => <MenuItem formsOfReceipt={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
                 RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
@@ -167,9 +161,9 @@ export default function FormsOfReceiptsView() {
                             <MenuItem formsOfReceipt={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />
                         </div>
                         <div className="flex flex-col mt-4">
-                            {item.operator && <Text size="sm" c="dimmed">{t("financial.payment-methods.modals.fields.operator.label")} {item.operator}</Text>}
+                            {item.operator && <Text size="sm" c="dimmed">{"Texto"} {item.operator}</Text>}
                             <Text size="xs" c="dimmed" mt="sm">
-                                {t("forms.general-fields.createdAt")} {dayjs(item.createdAt).format("DD/MM/YYYY")}
+                                {"Criado em:"} {dayjs(item.createdAt).format("DD/MM/YYYY")}
                             </Text>
                         </div>
                     </>
@@ -194,22 +188,18 @@ export default function FormsOfReceiptsView() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={t("financial.payment-method.modals.confirmModal.title")}
-                confirmLabel={t("financial.payment-method.modals.confirmModal.confirmLabel")}
-                cancelLabel={t("financial.payment-method.modals.confirmModal.cancelLabel")}
+                title={"Texto"}
+                confirmLabel={"Texto"}
+                cancelLabel={"Texto"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
-                    t("financial.payment-method.modals.confirmModal.textArray",
-                        { formsOfReceipts: idsToDelete.length }
-                    )
+                    "Tem certeza que deseja excluir os métodos de pagamento selecionados?"
                 ) : (
-                    t("financial.payment-method.modals.confirmModal.text", {
-                        formsOfReceipts: selectedFormsOfReceipt?.name || ""
-                    })
+                    `Tem certeza que deseja excluir o método de pagamento selecionado?`
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{t("financial.payment-method.modals.confirmModal.warn")}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Texto"}</Text>
             </ConfirmationModal>
         </>
     );

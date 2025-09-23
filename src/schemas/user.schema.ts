@@ -1,134 +1,127 @@
 import { Gender, RemunerationType, UserRole } from "@prisma/client";
 import { z } from "zod";
-import { getAddressSchema } from "./address.schema";
 import dayjs from "dayjs";
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 
-export const getTeacherSchema = (t: (key: string) => string) => {
-  const addressSchema = getAddressSchema(t);
+dayjs.extend(customParseFormat);
 
-  const commissionTierSchema = z.object({
+const addressSchema = z.object({
+  postalCode: z.string().min(1, { message: "CEP é obrigatório" }),
+  street: z.string().min(1, { message: "Rua é obrigatória" }),
+  number: z.string().optional(),
+  complement: z.string().optional(),
+  neighborhood: z.string().min(1, { message: "Bairro é obrigatório" }),
+  city: z.string().min(1, { message: "Cidade é obrigatória" }),
+  state: z.string().min(1, { message: "Estado é obrigatório" }),
+});
+
+const teacherSchema = z.object({
+  cellPhoneNumber: z.string().optional(),
+  phoneNumber: z.string().optional(),
+  document: z.string().min(1, "Documento é obrigatório"),
+  gender: z.enum(Gender, { error: "Gênero é obrigatório" }),
+  pronoun: z.string().optional(),
+  instagramUser: z.string().optional(),
+  professionalRegister: z.string().optional(),
+  address: addressSchema.optional(),
+  dateOfBirth: z.string().transform((arg) => dayjs(arg, "DD-MM-YYYY").format("YYYY-MM-DD")),
+  remunerationType: z.enum(RemunerationType, { error: "Tipo de remuneração é obrigatório" }),
+  baseAmount: z.number({ error: "Valor base é obrigatório" }).min(1, "O valor base deve ser no mínimo 1"),
+  paymentDay: z.number().int().min(1).max(31).default(5),
+  formsOfReceiptId: z.string().optional(),
+  paymentData: z.string().optional(),
+  observations: z.string().optional(),
+  bonusForPresenceAmount: z.number().int().optional(),
+  loseBonusWhenAbsent: z.boolean().default(true),
+  comissionTiers: z.array(z.object({
     minStudents: z.number().int().min(1),
     maxStudents: z.number().int().min(1),
     comission: z.number().min(0),
   }).refine(tier => tier.minStudents <= tier.maxStudents, {
-    message: t("academic.teachers.modals.create.remuneration.fields.commission.errors.minMax"),
+    message: "O número mínimo de alunos deve ser menor ou igual ao número máximo",
     path: ["minStudents"]
-  });
-
-  return z.object({
-    cellPhoneNumber: z.string().optional(),
-    phoneNumber: z.string().optional(),
-    document: z.string().min(1, t("forms.general-fields.document.errors.required")),
-    gender: z.enum(Gender, { error: t("academic.students.modals.personalData.fields.gender.errors.required") }),
-    pronoun: z.string().optional(),
-    instagramUser: z.string().optional(),
-    professionalRegister: z.string().optional(),
-    address: addressSchema.optional(),
-    dateOfBirth: z.string().transform((arg) => dayjs(arg, "DD-MM-YYYY").format("YYYY-MM-DD")),
-
-    remunerationType: z.enum(RemunerationType, { error: t("academic.teachers.modals.create.remuneration.fields.contractType.errors.required") }),
-    baseAmount: z.number({ error: t("academic.teachers.modals.create.remuneration.fields.baseAmount.errors.required") }).min(1, t("academic.teachers.modals.create.remuneration.fields.baseAmount.errors.min")),
-    paymentDay: z.number().int().min(1).max(31).default(5),
-    formsOfReceiptId: z.string().optional(),
-    paymentData: z.string().optional(),
-    observations: z.string().optional(),
-
-    bonusForPresenceAmount: z.number().int().optional(),
-    loseBonusWhenAbsent: z.boolean().default(true),
-
-    comissionTiers: z.array(commissionTierSchema).optional()
-  });
-};
-
-export const getCreateUserSchema = (t: (key: string) => string) => {
-  const teacherSchema = getTeacherSchema(t);
-
-  return z.object({
-    firstName: z.string().min(1, t("forms.general-fields.firstName.errors.required")),
-    lastName: z.string().min(1, t("forms.general-fields.lastName.errors.required")),
-    email: z.email(t("forms.general-fields.email.errors.invalid")),
-    role: z.enum(UserRole, { error: t("settings.users.modals.create.generalData.fields.role.errors.required") }).default("STAFF"),
-    image: z.string().optional(),
-    teacher: teacherSchema.optional(),
-
-    password: z.string()
-      .min(6, t("academic.teachers.modals.create.accessData.fields.password.errors.min"))
-      .regex(/[A-Z]/, t("academic.teachers.modals.create.accessData.fields.password.errors.uppercase"))
-      .regex(/[a-z]/, t("academic.teachers.modals.create.accessData.fields.password.errors.lowercase"))
-      .regex(/[0-9]/, t("academic.teachers.modals.create.accessData.fields.password.errors.number")),
-    confirmPassword: z.string().min(6)
-  }).refine(data => data.password === data.confirmPassword, {
-    message: t("academic.teachers.modals.create.accessData.fields.confirmPassword.errors.noMatch"),
-    path: ["confirmPassword"]
-  });
-};
-export const getUpdateUserSchema = (t: (key: string) => string) =>
-  getCreateUserSchema(t)
-    .partial()
-.extend({
-  prevPassword: z.string().optional(),
-  password: z.string().optional(),
-  confirmPassword: z.string().optional(),
-})
-.superRefine((data, ctx) => {
-  if (data.password || data.confirmPassword) {
-    if (!data.password || !data.confirmPassword) {
-      ctx.addIssue({
-        path: ["confirmPassword"],
-        code: "custom",
-        message: t("academic.teachers.modals.create.accessData.fields.confirmPassword.errors.noMatch"),
-      });
-      return;
-    }
-
-    // Força da senha
-    if (data.password.length < 6) {
-      ctx.addIssue({
-        path: ["password"],
-        code: "custom",
-        message: t("academic.teachers.modals.create.accessData.fields.password.errors.min"),
-      });
-    }
-    if (!/[A-Z]/.test(data.password)) {
-      ctx.addIssue({
-        path: ["password"],
-        code: "custom",
-        message: t("academic.teachers.modals.create.accessData.fields.password.errors.uppercase"),
-      });
-    }
-    if (!/[a-z]/.test(data.password)) {
-      ctx.addIssue({
-        path: ["password"],
-        code: "custom",
-        message: t("academic.teachers.modals.create.accessData.fields.password.errors.lowercase"),
-      });
-    }
-    if (!/[0-9]/.test(data.password)) {
-      ctx.addIssue({
-        path: ["password"],
-        code: "custom",
-        message: t("academic.teachers.modals.create.accessData.fields.password.errors.number"),
-      });
-    }
-
-    if (data.password !== data.confirmPassword) {
-      ctx.addIssue({
-        path: ["confirmPassword"],
-        code: "custom",
-        message: t("academic.teachers.modals.create.accessData.fields.confirmPassword.errors.noMatch"),
-      });
-    }
-
-    // 🔒 Checar prevPassword
-    if (!data.prevPassword) {
-      ctx.addIssue({
-        path: ["prevPassword"],
-        code: "custom",
-        message: t("academic.teachers.modals.create.accessData.fields.password.errors.prevRequired"),
-      });
-    }
-  }
+  })).optional()
 });
 
-export type CreateUserInput = z.infer<ReturnType<typeof getCreateUserSchema>>;
-export type UpdateUserInput = z.infer<ReturnType<typeof getUpdateUserSchema>>;
+export const createUserSchema = z.object({
+  firstName: z.string().min(1, "Nome é obrigatório"),
+  lastName: z.string().min(1, "Sobrenome é obrigatório"),
+  email: z.string().email("E-mail inválido"),
+  role: z.enum(UserRole, { error: "Papel do usuário é obrigatório" }).default("STAFF"),
+  image: z.string().optional(),
+  teacher: teacherSchema.optional(),
+  password: z.string()
+    .min(6, "A senha deve ter no mínimo 6 caracteres")
+    .regex(/[A-Z]/, "A senha deve conter pelo menos uma letra maiúscula")
+    .regex(/[a-z]/, "A senha deve conter pelo menos uma letra minúscula")
+    .regex(/[0-9]/, "A senha deve conter pelo menos um número"),
+  confirmPassword: z.string().min(6)
+}).refine(data => data.password === data.confirmPassword, {
+  message: "As senhas não coincidem",
+  path: ["confirmPassword"]
+});
+
+export const updateUserSchema = createUserSchema
+  .partial()
+  .extend({
+    prevPassword: z.string().optional(),
+    password: z.string().optional(),
+    confirmPassword: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.password || data.confirmPassword) {
+      if (!data.password || !data.confirmPassword) {
+        ctx.addIssue({
+          path: ["confirmPassword"],
+          code: "custom",
+          message: "As senhas não coincidem",
+        });
+        return;
+      }
+      if (data.password.length < 6) {
+        ctx.addIssue({
+          path: ["password"],
+          code: "custom",
+          message: "A senha deve ter no mínimo 6 caracteres",
+        });
+      }
+      if (!/[A-Z]/.test(data.password)) {
+        ctx.addIssue({
+          path: ["password"],
+          code: "custom",
+          message: "A senha deve conter pelo menos uma letra maiúscula",
+        });
+      }
+      if (!/[a-z]/.test(data.password)) {
+        ctx.addIssue({
+          path: ["password"],
+          code: "custom",
+          message: "A senha deve conter pelo menos uma letra minúscula",
+        });
+      }
+      if (!/[0-9]/.test(data.password)) {
+        ctx.addIssue({
+          path: ["password"],
+          code: "custom",
+          message: "A senha deve conter pelo menos um número",
+        });
+      }
+      if (data.password !== data.confirmPassword) {
+        ctx.addIssue({
+          path: ["confirmPassword"],
+          code: "custom",
+          message: "As senhas não coincidem",
+        });
+      }
+      if (!data.prevPassword) {
+        ctx.addIssue({
+          path: ["prevPassword"],
+          code: "custom",
+          message: "A senha anterior é obrigatória",
+        });
+      }
+    }
+  });
+
+export type CreateUserInput = z.infer<typeof createUserSchema>;
+export type UpdateUserInput = z.infer<typeof updateUserSchema>;

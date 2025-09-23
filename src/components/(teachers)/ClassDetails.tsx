@@ -113,7 +113,7 @@ export default function ClassDetails({ session, classId }: { session: Session, c
                         <div className="bg-white p-4 2xl:p-6 rounded-2xl shadow flex flex-col gap-2" key={attendance.id}>
                             <div className="flex items-center justify-between mb-2">
                                 <p className="font-semibold">
-                                    <strong>Data:</strong> {dayjs(attendance.date).tz("America/Sao_Paulo").format("DD/MM/YYYY HH:mm")}
+                                    <strong>Data:</strong> {dayjs(attendance.date).tz("America/Sao_Paulo").format("DD/MM/YYYY")}
                                 </p>
                                 <div className="flex gap-2">
                                     <ActionIcon

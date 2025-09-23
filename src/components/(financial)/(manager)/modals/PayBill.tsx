@@ -4,23 +4,21 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal, ScrollArea, NumberInput, Select } from "@mantine/core";
 import { Bank, Bill, BillStatus } from "@prisma/client";
 import useSWR, { KeyedMutator } from "swr";
 import dayjs from "dayjs";
 
-import { getPayBillSchema } from "@/schemas/financial/bill.schema";
+import { payBillSchema, PayBillInput } from "@/schemas/financial/bill.schema";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { DateInput } from "@mantine/dates";
-import { useLocale } from "next-intl";
 import z from "zod";
 import { BankSelect } from "../../(banks)/BankSelect";
 import { fetcher } from "@/utils/fetcher";
 
 // Tipagem para os dados que vêm do Zod schema
-type PayBillInput = z.infer<ReturnType<typeof getPayBillSchema>>;
+// type PayBillInput já importado do schema
 
 export type BillFromApi = Omit<Bill, 'dueDate' | 'paymentDate' | 'recurrenceEndDate' | 'createdAt' | 'updatedAt'> & {
     dueDate: string;
@@ -39,12 +37,10 @@ type Props = {
 };
 
 export default function PayBill({ opened, onClose, mutate, bill }: Props) {
-    const t = useTranslations("financial.bills.modals");
-    const g = useTranslations("");
-    const locale = useLocale();
+
     const [isLoading, setIsLoading] = useState(false);
 
-    const payBillSchema = getPayBillSchema((key: string) => t(key as any));
+    // Usamos o schema estático
     const { data: sessionData } = useSession();
     
     const { data: banks } = useSWR<Bank[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData?.user.tenancyId}/banks`, fetcher);
@@ -91,12 +87,12 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                 throw new Error(errorData.message || "Failed to update bill");
             }
 
-            notifications.show({ message: t("payBill.notifications.success"), color: "green" });
+            notifications.show({ message: "Texto", color: "green" });
             onClose();
             mutate(); // Revalida o cache do SWR
         } catch (error: any) {
             console.error(error);
-            notifications.show({ message: error.message || t("payBill.notifications.error"), color: "red" });
+            notifications.show({ message: error.message || "Texto", color: "red" });
         } finally {
             setIsLoading(false);
         }
@@ -115,7 +111,7 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
         <Modal
             opened={opened}
             onClose={onClose}
-            title={t("payBill.title")}
+            title={"Texto"}
             size="lg" // Tamanho menor, pois são poucos campos
             radius="lg"
             centered
@@ -130,7 +126,7 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                             control={control}
                             render={({ field }) => (
                                 <DateInput
-                                    label={t("fields.paymentDate.label")}
+                                    label={"Texto"}
                                     value={field.value}
                                     onChange={(date) => {
                                         if (!date) {
@@ -140,7 +136,7 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                                         const newDate = dayjs(date).hour(12).minute(0).second(0).toDate();
                                         field.onChange(newDate);
                                     }} error={errors.paymentDate?.message}
-                                    locale={locale}
+                                    locale={"pt-br"}
                                     required
                                     className="w-full"
                                 />
@@ -152,7 +148,7 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                             control={control}
                             render={({ field }) => (
                                 <NumberInput
-                                    label={t("fields.amountPaid.label")}
+                                    label={"Texto"}
                                     value={field.value}
                                     onChange={field.onChange}
                                     error={errors.amountPaid?.message}
@@ -171,12 +167,12 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                             control={control}
                             render={({ field }) => (
                                 <Select
-                                    label={t("fields.status.label")}
+                                    label={"Texto"}
                                     data={[
-                                        { value: BillStatus.PAID, label: t("status.PAID") },
-                                        { value: BillStatus.PENDING, label: t("status.PENDING") },
-                                        { value: BillStatus.OVERDUE, label: t("status.OVERDUE") },
-                                        { value: BillStatus.CANCELLED, label: t("status.CANCELLED") },
+                                        { value: BillStatus.PAID, label: "Texto" },
+                                        { value: BillStatus.PENDING, label: "Texto" },
+                                        { value: BillStatus.OVERDUE, label: "Texto" },
+                                        { value: BillStatus.CANCELLED, label: "Texto" },
                                     ]}
                                     value={field.value}
                                     onChange={field.onChange}
@@ -193,14 +189,14 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                             name="bankId"
                             render={({ field }) => (
                                 <Select
-                                    label={t("fields.bank.label")}
+                                    label={"Texto"}
                                     value={field.value}
                                     onChange={field.onChange}
                                     error={errors.bankId?.message}
                                     searchable
                                     clearable
                                     data={banks?.map((bank) => ({ label: bank.name, value: bank.id })) || []}
-                                    placeholder={t("fields.bank.placeholder")}
+                                    placeholder={"Texto"}
                                     className="md:col-span-2"
                                 />
                             )}

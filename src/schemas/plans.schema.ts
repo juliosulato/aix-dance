@@ -20,5 +20,5 @@ const planSchema = z.object({
 export const createPlanSchema = planSchema;
 export const updatePlanSchema = planSchema.partial();
 
-export type CreatePlanInput = z.infer<typeof createPlanSchema>
-export type UpdatePlanInput = z.infer<typeof updatePlanSchema>
+export type CreatePlanInput = z.infer<typeof createPlanSchema>;
+export type UpdatePlanInput = z.infer<typeof updatePlanSchema>;

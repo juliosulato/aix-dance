@@ -2,18 +2,18 @@ import toTitleCase from '@/utils/toTitleCase';
 import { Gender } from '@prisma/client';
 import { z } from 'zod';
 
-// Usamos uma função para que o schema possa receber a função de tradução (t)
-export const getCreateStudentSchema = (t: (key: string) => string) => z.object({
+// Schema simplificado sem dependência de traduções
+export const createStudentSchema = z.object({
     // Seção: Informações Pessoais
-    firstName: z.string().min(1, { message: t("academic.students.modals.personalData.fields.firstName.errors.required") }).transform(toTitleCase),
-    lastName: z.string().min(1, { message: t("academic.students.modals.personalData.fields.lastName.errors.required") }).transform(toTitleCase),
-    gender: z.enum(Gender, { error: t("academic.students.modals.personalData.fields.gender.errors.required") }),
-    cellPhoneNumber: z.string().min(1, { message: t("academic.students.modals.personalData.fields.cellPhoneNumber.errors.required") }),
+    firstName: z.string().min(1, { message: "Nome é obrigatório" }).transform(toTitleCase),
+    lastName: z.string().min(1, { message: "Sobrenome é obrigatório" }).transform(toTitleCase),
+    gender: z.enum(Gender, { message: "Gênero é obrigatório" }),
+    cellPhoneNumber: z.string().min(1, { message: "Celular é obrigatório" }),
     pronoun: z.string().optional(),
-    dateOfBirth: z.string().min(1, { message: t("academic.students.modals.personalData.fields.dateOfBirth.errors.required") }),
+    dateOfBirth: z.string().min(1, { message: "Data de nascimento é obrigatória" }),
     phoneNumber: z.string().optional(),
     documentOfIdentity: z.string().optional(),
-    email: z.email({ message: t("academic.students.modals.personalData.fields.email.errors.invalid") }),
+    email: z.string().email({ message: "Email inválido" }),
     howDidYouMeetUs: z.string().optional(),
     instagramUser: z.string().optional(),
 
@@ -35,18 +35,21 @@ export const getCreateStudentSchema = (t: (key: string) => string) => z.object({
     }).optional(),
 
     guardian: z.array(z.object({
-        firstName: z.string().min(1, { message: t("academic.students.modals.guardians.fields.firstName.errors.required") }),
-        lastName: z.string().min(1, { message: t("academic.students.modals.guardians.fields.lastName.errors.required") }),
-        email: z.email({ message: t("academic.students.modals.guardians.fields.email.errors.invalid") }).optional().or(z.literal('')),
-        cellPhoneNumber: z.string().min(1, { message: t("academic.students.modals.guardians.fields.cellPhoneNumber.errors.required") }),
+        firstName: z.string().min(1, { message: "Nome do responsável é obrigatório" }),
+        lastName: z.string().min(1, { message: "Sobrenome do responsável é obrigatório" }),
+        email: z.string().email({ message: "Email inválido" }).optional().or(z.literal('')),
+        cellPhoneNumber: z.string().min(1, { message: "Celular do responsável é obrigatório" }),
         relationship: z.string().optional(),
         phoneNumber: z.string().optional(),
         documentOfIdentity: z.string().optional(),
     })).optional(),
 });
 
-export const getUpdateStudentSchema = (t: (key: string) => string) =>
-    getCreateStudentSchema(t).partial();
+export const updateStudentSchema = createStudentSchema.partial();
+
+// Manter compatibilidade com código existente
+export const getCreateStudentSchema = (t?: (key: string) => string) => createStudentSchema;
+export const getUpdateStudentSchema = (t?: (key: string) => string) => updateStudentSchema;
 
 export type CreateStudentInput = z.infer<ReturnType<typeof getCreateStudentSchema>>;
 export type UpdateStudentInput = z.infer<ReturnType<typeof getUpdateStudentSchema>>;

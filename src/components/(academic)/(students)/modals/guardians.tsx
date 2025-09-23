@@ -3,7 +3,6 @@ import { ActionIcon, Button, TextInput } from "@mantine/core";
 import { PhoneInput } from "@/components/ui/cellPhoneInput";
 import { Control, FieldErrors } from "react-hook-form";
 import { CreateStudentFormData } from "@/schemas/studentSchema";
-import { useTranslations } from "next-intl";
 import DocumentInput from "@/components/ui/documentInput";
 import { BiTrash } from "react-icons/bi";
 import { UpdateStudentInput } from "@/schemas/academic/student.schema";
@@ -15,8 +14,6 @@ type Props = {
 };
 
 function NewStudent__Guardians({ control, errors }: Props) {
-  const t = useTranslations("academic.students.modals.guardians");
-  const g = useTranslations("forms.general-fields");
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -25,7 +22,7 @@ function NewStudent__Guardians({ control, errors }: Props) {
 
   return (
     <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col gap-4">
-      <h2 className="text-lg font-bold">{t("title")}</h2>
+      <h2 className="text-lg font-bold">{"Texto"}</h2>
       <Button
         onClick={() =>
           append({
@@ -44,14 +41,14 @@ function NewStudent__Guardians({ control, errors }: Props) {
         size="lg"
         className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
       >
-        {t("addGuardian")}
+        {"Texto"}
       </Button>
 
       {fields.map((field, index) => (
         <div key={field.id} className={`grid md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 gap-4 md:gap-6 py-6 ${index > 0 && "border-t border-t-neutral-300"}`}>
          <div className="flex flex-row flex-wrap justify-between items-center md:col-span-2 lg:col-span-3 3xl:col-span-4">
            <h2 className="text-base font-bold ">
-            {t("guardian")} {index + 1}
+            {"Texto"} {index + 1}
           </h2>
           <ActionIcon
             type="button"
@@ -67,7 +64,7 @@ function NewStudent__Guardians({ control, errors }: Props) {
             name={`guardian.${index}.firstName`}
             control={control}
             render={({ field }) => (
-              <TextInput label={g("firstName.label")} placeholder={g("firstName.placeholder")} {...field} required/>
+              <TextInput label={"Primeiro Nome"} placeholder={"Digite aqui Nome"} {...field} required/>
             )}
           />
 
@@ -75,32 +72,32 @@ function NewStudent__Guardians({ control, errors }: Props) {
             name={`guardian.${index}.lastName`}
             control={control}
             render={({ field }) => (
-              <TextInput label={g("lastName.label")} placeholder={g("lastName.placeholder")} {...field} required/>
+              <TextInput label={"Sobrenome"} placeholder={"Digite aqui Sobrenome"} {...field} required/>
             )}
           />
 
           <Controller
             name={`guardian.${index}.relationship`}
             control={control}
-            render={({ field }) => <TextInput label={t("fields.relationship.label")} {...field} placeholder={t("relationship.placeholder")} required/>}
+            render={({ field }) => <TextInput label={"Relação"} {...field} placeholder={"Digite aqui Relação"} required/>}
           />
 
           <Controller
             name={`guardian.${index}.cellPhoneNumber`}
             control={control}
-            render={({ field }) => <PhoneInput label={g("cellPhoneNumber.label")} {...field} required/>}
+            render={({ field }) => <PhoneInput label={"Celular"} {...field} required/>}
           />
 
           <Controller
             name={`guardian.${index}.phoneNumber`}
             control={control}
-            render={({ field }) => <PhoneInput label={g("phoneNumber.label")} {...field} />}
+            render={({ field }) => <PhoneInput label={"Telefone"} {...field} required/>}
           />
 
           <Controller
             name={`guardian.${index}.email`}
             control={control}
-            render={({ field }) => <TextInput label={g("email.label")} type="email" {...field} />}
+            render={({ field }) => <TextInput label={"Email"} type="email" {...field} required/>}
           />
 
           <Controller

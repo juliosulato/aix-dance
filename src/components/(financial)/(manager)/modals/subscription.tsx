@@ -2,7 +2,6 @@ import { CreateBillInput } from "@/schemas/financial/bill.schema";
 import { NumberInput, Select } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { RecurrenceType } from "@prisma/client";
-import { useLocale, useTranslations } from "next-intl";
 import { Control, Controller, FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
 import { localesMap } from "@/utils/locales";
 import dayjs from "dayjs";
@@ -20,9 +19,6 @@ type Props = {
 }
 
 export default function Subscription({ control, errors, watch }: Props) {
-    const t = useTranslations("financial.bills.modals");
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     const endCondition = watch("paymentMode") === "SUBSCRIPTION" ? watch("endCondition") : "noDateSet";
 
@@ -35,8 +31,8 @@ export default function Subscription({ control, errors, watch }: Props) {
                 name="recurrence"
                 render={({ field }) => (
                     <Select
-                        label={t("fields.subscription.frequency.label")}
-                        placeholder={t("fields.subscription.frequency.placeholder")}
+                        label={"Texto"}
+                        placeholder={"Texto"}
                         required
                         data={recurrenceTypes.map(type => ({
                             label: t(`fields.subscription.frequency.recurrenceTypes.${type}`),
@@ -55,8 +51,8 @@ export default function Subscription({ control, errors, watch }: Props) {
                 name="dueDate"
                 render={({ field }) => (
                     <DateInput
-                        label={t("fields.subscription.dueDate.label")}
-                        locale={locale}
+                        label={"Texto"}
+                        locale={"pt-br"}
                         onChange={(date) => {
                             if (!date) {
                                 field.onChange(null);
@@ -66,7 +62,7 @@ export default function Subscription({ control, errors, watch }: Props) {
                             field.onChange(newDate);
                         }} value={field.value ? new Date(field.value) : null}
                         error={errors?.dueDate?.message}
-                        valueFormat={t("fields.dueDate.valueFormat")}
+                        valueFormat={"Texto"}
                         required
                     />
                 )}
@@ -77,11 +73,11 @@ export default function Subscription({ control, errors, watch }: Props) {
                 name="endCondition"
                 render={({ field }) => (
                     <Select
-                        label={t("fields.subscription.endOfSubscription.label")}
+                        label={"Texto"}
                         data={[
-                            { label: t("fields.subscription.endCondition.noDateSet"), value: "noDateSet" },
-                            { label: t("fields.subscription.endCondition.chooseData"), value: "chooseData" },
-                            { label: t("fields.subscription.endCondition.numberOfCharges"), value: "numberOfCharges" }
+                            { label: "Texto", value: "noDateSet" },
+                            { label: "Texto", value: "chooseData" },
+                            { label: "Texto", value: "numberOfCharges" }
                         ]}
                         value={field.value as "noDateSet" | "chooseData" | "numberOfCharges" | undefined}
                         onChange={field.onChange}
@@ -97,8 +93,8 @@ export default function Subscription({ control, errors, watch }: Props) {
                     name="recurrenceEndDate"
                     render={({ field }) => (
                         <DateInput
-                            label={t("fields.subscription.chooseData.label")}
-                            locale={locale}
+                            label={"Texto"}
+                            locale={"pt-br"}
                             onChange={(date) => {
                                 if (!date) {
                                     field.onChange(null);
@@ -108,7 +104,7 @@ export default function Subscription({ control, errors, watch }: Props) {
                                 field.onChange(newDate);
                             }} value={field.value ? new Date(field.value as Date) : null}
                             error={(errors as any)['recurrenceEndDate']?.message}
-                            valueFormat={t("fields.dueDate.valueFormat")}
+                            valueFormat={"Texto"}
                             required
                         />
                     )}
@@ -121,8 +117,8 @@ export default function Subscription({ control, errors, watch }: Props) {
                     name="recurrenceCount"
                     render={({ field }) => (
                         <NumberInput
-                            label={t("fields.subscription.numberOfCharges.label")}
-                            suffix={` ${t("fields.subscription.numberOfCharges.suffix")}`}
+                            label={"Texto"}
+                            suffix={` ${"Texto"}`}
                             value={field.value as number | undefined}
                             onChange={(val) => field.onChange(Number(val))}
                             min={1}

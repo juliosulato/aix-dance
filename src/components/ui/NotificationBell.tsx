@@ -40,7 +40,7 @@ export default function NotificationBell() {
                         {n.bill.description} - Venc: {dayjs(n.bill.dueDate).format("DD/MM/YYYY")}
                       </Text>
                     )}
-                    <Text size="xs" c="dimmed">{dayjs(n.createdAt).format("DD/MM/YYYY HH:mm")}</Text>
+                    <Text size="xs" c="dimmed">{dayjs(n.createdAt).format("DD/MM/YYYY")}</Text>
                   </Box>
                   <ActionIcon color="red" variant="subtle" onClick={() => remove(n.id)}>
                     <MdDelete />

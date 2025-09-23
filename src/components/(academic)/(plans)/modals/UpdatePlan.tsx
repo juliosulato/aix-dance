@@ -1,11 +1,10 @@
 "use client";
 
-import { UpdatePlanInput, getUpdatePlanSchema } from "@/schemas/academic/plan";
+import { updatePlanSchema, UpdatePlanInput } from "@/schemas/academic/plan";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import BasicInformations from "./basicInformations";
@@ -21,15 +20,14 @@ type Props = {
 };
 
 export default function UpdatePlan({ opened, onClose, mutate, plan }: Props) {
-    const t = useTranslations("academic.plans.modals");
-    const g = useTranslations("");
+
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const createPlanSchema = getUpdatePlanSchema((key: string) => t(key as any));
+    // Usamos o schema estático
 
     const { control, handleSubmit, formState: { errors }, register, watch, reset } = useForm<UpdatePlanInput>({
-        resolver: zodResolver(createPlanSchema),
+        resolver: zodResolver(updatePlanSchema),
         defaultValues: {
             monthlyInterest: 0,
             discountPercentage: 0,
@@ -56,7 +54,7 @@ export default function UpdatePlan({ opened, onClose, mutate, plan }: Props) {
 
     const { data: sessionData, status } = useSession();
     if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{t("general.errors.invalidSession")}</div>;
+    if (status !== "authenticated") return <div>{"Texto"}</div>;
 
     async function createPlan(data: UpdatePlanInput) {
         if (!sessionData?.user.tenancyId) {
@@ -82,7 +80,7 @@ export default function UpdatePlan({ opened, onClose, mutate, plan }: Props) {
             if (!response.ok) throw new Error("Failed to update plan.");
 
             notifications.show({
-                message: t("update.notifications.success"),
+                message: "Texto",
                 color: "green"
             });
             reset();
@@ -109,7 +107,7 @@ export default function UpdatePlan({ opened, onClose, mutate, plan }: Props) {
             <Modal
                 opened={opened}
                 onClose={onClose}
-                title={t("title")}
+                title={"Texto"}
                 size="auto"
                 radius="lg"
                 centered

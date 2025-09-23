@@ -2,7 +2,6 @@ import { LoadingOverlay, NumberInput, Select, TextInput } from "@mantine/core";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form";
 import { ContractModel, PlanType } from "@prisma/client";
-import { useTranslations } from "next-intl";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 import { notifications } from "@mantine/notifications";
@@ -16,8 +15,7 @@ type Props = {
 };
 
 export default function Plan__BasicInformations({ control, errors, register, tenancyId }: Props) {
-    const t = useTranslations("academic.plans.modals.basicInformations");
-    const g = useTranslations("");
+
 
     const { data: contracts, error, isLoading } = useSWR<ContractModel[]>(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/contract-models`,
@@ -53,11 +51,11 @@ export default function Plan__BasicInformations({ control, errors, register, ten
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
-            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{t("title")}</h2>
+            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{"Texto"}</h2>
 
             <TextInput
-                label={t("fields.name.label")}
-                placeholder={t("fields.name.placeholder")}
+                label={"Texto"}
+                placeholder={"Texto"}
                 {...register("name")}
                 error={errors.name?.message}
                 required
@@ -69,11 +67,11 @@ export default function Plan__BasicInformations({ control, errors, register, ten
                 control={control}
                 render={({ field }) => (
                     <NumberInput
-                        label={t("fields.frequency.label")}
-                        placeholder={t("fields.frequency.placeholder")}
+                        label={"Texto"}
+                        placeholder={"Texto"}
                         min={1}
                         allowDecimal={false}
-                        suffix={t("fields.frequency.suffix")}
+                        suffix={"Texto"}
                         required
                         withAsterisk
                         value={field.value}
@@ -87,7 +85,7 @@ export default function Plan__BasicInformations({ control, errors, register, ten
                 control={control}
                 render={({ field }) => (
                     <NumberInput
-                        label={t("fields.amount.label")}
+                        label={"Texto"}
                         allowDecimal
                         decimalSeparator=","
                         required
@@ -105,16 +103,16 @@ export default function Plan__BasicInformations({ control, errors, register, ten
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={t("fields.cicle.label")}
-                        placeholder={t("fields.cicle.placeholder")}
+                        label={"Texto"}
+                        placeholder={"Texto"}
                         required
                         data={[
-                            { label: t("fields.cicle.planTypes.SEMMONTLY"), value: PlanType.SEMMONTLY },
-                            { label: t("fields.cicle.planTypes.MONTHLY"), value: PlanType.MONTHLY },
-                            { label: t("fields.cicle.planTypes.BI_MONTHLY"), value: PlanType.BI_MONTHLY },
-                            { label: t("fields.cicle.planTypes.QUARTERLY"), value: PlanType.QUARTERLY },
-                            { label: t("fields.cicle.planTypes.BI_ANNUAL"), value: PlanType.BI_ANNUAL },
-                            { label: t("fields.cicle.planTypes.ANNUAL"), value: PlanType.ANNUAL },
+                            { label: "Texto", value: PlanType.SEMMONTLY },
+                            { label: "Texto", value: PlanType.MONTHLY },
+                            { label: "Texto", value: PlanType.BI_MONTHLY },
+                            { label: "Texto", value: PlanType.QUARTERLY },
+                            { label: "Texto", value: PlanType.BI_ANNUAL },
+                            { label: "Texto", value: PlanType.ANNUAL },
                         ]}
                         classNames={{ dropdown: "!z-[1000]" }}
                         className="md:col-span-2 lg:col-span-3 3xl:col-span-4"

@@ -1,7 +1,6 @@
 "use client"
 
 import { Button, LoadingOverlay, Modal, PasswordInput, TextInput, MultiSelect, Select } from "@mantine/core";
-import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import dayjs from "dayjs";
@@ -9,7 +8,7 @@ import 'dayjs/locale/pt-br';
 import 'dayjs/locale/es';
 import 'dayjs/locale/en';
 
-import { CreateUserInput, getCreateUserSchema } from "@/schemas/user.schema";
+import { CreateUserInput, createUserSchema } from "@/schemas/user.schema";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
 import AvatarUpload from "@/components/avatarUpload";
@@ -25,11 +24,10 @@ type Props = {
 
 
 function NewUser({ opened, onClose, mutate }: Props) {
-    const t = useTranslations("");
     const [visible, setVisible] = useState(false);
     const [avatar, setAvatar] = useState<string | null>(null);
 
-    const createUserSchema = getCreateUserSchema(t);
+    // Usamos o schema estático
 
     const { control, handleSubmit, formState: { errors }, register, reset } = useForm<CreateUserInput>({
         resolver: zodResolver(createUserSchema) as any,
@@ -46,16 +44,14 @@ function NewUser({ opened, onClose, mutate }: Props) {
         onClose();
     }
 
-    const locale = useLocale();
-    dayjs.locale(locale);
 
     const { data: sessionData, status } = useSession();
     if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{t("notifications.error")}</div>;
+    if (status !== "authenticated") return <div>{"Texto"}</div>;
 
     async function createUser(data: CreateUserInput) {
         if (!sessionData?.user.tenancyId) {
-            notifications.show({ color: "red", message: t("settings.users.create.notifications.error") });
+            notifications.show({ color: "red", message: "Texto" });
             return;
         }
 
@@ -75,7 +71,7 @@ function NewUser({ opened, onClose, mutate }: Props) {
                 const data = await resp.json();
                 if (data?.code == "USER_EXISTS") {
                     notifications.show({
-                        message: t("settings.users.errors.USER_EXISTS"),
+                        message: "Texto",
                         color: "yellow"
                     });
                     return;
@@ -84,11 +80,11 @@ function NewUser({ opened, onClose, mutate }: Props) {
                 }
             }
 
-            notifications.show({ message: t("settings.users.create.notifications.success"), color: "green" });
+            notifications.show({ message: "Texto", color: "green" });
             handleClose();
             mutate();
         } catch (err: any) {
-            notifications.show({ color: "red", message: t("settings.users.create.notifications.error") });
+            notifications.show({ color: "red", message: "Texto" });
         } finally {
             setVisible(false);
         }
@@ -99,7 +95,7 @@ function NewUser({ opened, onClose, mutate }: Props) {
             <Modal
                 opened={opened}
                 onClose={handleClose}
-                title={t("title")}
+                title={"Texto"}
                 size="xl"
                 radius="lg"
                 centered
@@ -114,22 +110,22 @@ function NewUser({ opened, onClose, mutate }: Props) {
 
                         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2">
                             <TextInput
-                                label={t("forms.general-fields.firstName.label")}
-                                placeholder={t("forms.general-fields.firstName.placeholder")}
+                                label={"Primeiro Nome"}
+                                placeholder={"Texto"}
                                 required
                                 {...register("firstName")}
                                 error={errors.firstName?.message}
                             />
                             <TextInput
-                                label={t("forms.general-fields.lastName.label")}
-                                placeholder={t("forms.general-fields.lastName.placeholder")}
+                                label={"Sobrenome"}
+                                placeholder={"Texto"}
                                 required
                                 {...register("lastName")}
                                 error={errors.lastName?.message}
                             />
                             <TextInput
-                                label={t("forms.general-fields.email.label")}
-                                placeholder={t("forms.general-fields.email.placeholder")}
+                                label={"E-mail"}
+                                placeholder={"Texto"}
                                 required
                                 className="md:col-span-2"
                                 {...register("email")}
@@ -143,7 +139,7 @@ function NewUser({ opened, onClose, mutate }: Props) {
                                     <PasswordInput
                                         {...field}
                                         required
-                                        label={t("settings.users.modals.create.accessData.fields.password.label")}
+                                        label={"Texto"}
                                         error={errors.password?.message}
                                     />
                                 )}
@@ -156,7 +152,7 @@ function NewUser({ opened, onClose, mutate }: Props) {
                                     <PasswordInput
                                         {...field}
                                         required
-                                        label={t("settings.users.modals.create.accessData.fields.confirmPassword.label")}
+                                        label={"Texto"}
                                         error={errors.confirmPassword?.message}
                                     />
                                 )}
@@ -168,10 +164,10 @@ function NewUser({ opened, onClose, mutate }: Props) {
                                 render={({ field }) => (
                                     <Select
                                         {...field}
-                                        label={t("settings.users.role.label")}
+                                        label={"Texto"}
                                         data={[
-                                            { value: "ADMIN", label: t("settings.users.role.admin") },
-                                            { value: "STAFF", label: t("settings.users.role.staff") },
+                                            { value: "ADMIN", label: "Texto" },
+                                            { value: "STAFF", label: "Texto" },
                                         ]}
                                         required
                                     />
@@ -189,7 +185,7 @@ function NewUser({ opened, onClose, mutate }: Props) {
                         fullWidth={false}
                         className="!text-sm !font-medium tracking-wider w-full md!w-fit ml-auto"
                     >
-                        {t("forms.submit")}
+                        {"Salvar"}
                     </Button>
                 </form>
             </Modal>

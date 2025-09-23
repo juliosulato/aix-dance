@@ -1,7 +1,6 @@
 "use client";
 
 import { useFieldArray, Control, FieldErrors, UseFormRegister, Controller } from "react-hook-form";
-import { useTranslations } from "next-intl";
 
 import { Button, ActionIcon, NumberInput, Checkbox } from "@mantine/core";
 import { FaPercentage } from "react-icons/fa";
@@ -18,13 +17,12 @@ export default function FormsOfReceipt__Fees({
   register: UseFormRegister<CreateFormsOfReceiptInput | UpdateFormsOfReceiptInput>;
   errors: FieldErrors<CreateFormsOfReceiptInput | UpdateFormsOfReceiptInput>;
 }) {
-  const t = useTranslations("financial.payment-methods.modals");
   const { fields, append, remove } = useFieldArray({ control, name: "fees" });
 
   return (
     <div className="p-4 border border-neutral-300 rounded-xl flex flex-col gap-4">
       <div className="flex flex-col gap-2 md:gap-4 md:flex-row justify-between items-center">
-        <h2 className="text-lg font-bold">{t("feesSubtitle")}</h2>
+        <h2 className="text-lg font-bold">{"Texto"}</h2>
         <Button
           size="xs"
           variant="light"
@@ -40,7 +38,7 @@ export default function FormsOfReceipt__Fees({
             })
           }
         >
-          {t("addFeeButton")}
+          {"Texto"}
         </Button>
       </div>
       {fields.map((field, index) => (
@@ -63,7 +61,7 @@ export default function FormsOfReceipt__Fees({
             render={({ field }) => (
               <NumberInput
                 {...field}
-                label={t("fields.fees.minInstallments")}
+                label={"Texto"}
                 placeholder="1"
                 error={errors.fees?.[index]?.minInstallments?.message}
               />
@@ -77,7 +75,7 @@ export default function FormsOfReceipt__Fees({
             render={({ field }) => (
               <NumberInput
                 {...field}
-                label={t("fields.fees.maxInstallments")}
+                label={"Texto"}
                 placeholder="12"
                 error={errors.fees?.[index]?.maxInstallments?.message}
               />
@@ -91,7 +89,7 @@ export default function FormsOfReceipt__Fees({
             render={({ field }) => (
               <NumberInput
                 {...field}
-                label={t("fields.fees.feePercentage")}
+                label={"Texto"}
                 placeholder="2.99"
                 decimalScale={2}
                 fixedDecimalScale
@@ -108,7 +106,7 @@ export default function FormsOfReceipt__Fees({
             render={({ field }) => (
               <NumberInput
                 {...field}
-                label={t("fields.fees.receiveInDays")}
+                label={"Texto"}
                 placeholder="30"
                 error={errors.fees?.[index]?.receiveInDays?.message}
               />
@@ -117,7 +115,7 @@ export default function FormsOfReceipt__Fees({
 
           {/* customerInterest pode usar register */}
           <Checkbox
-            label={t("fields.fees.customerInterest")}
+            label={"Texto"}
             {...register(`fees.${index}.customerInterest`)}
             className="col-span-2 md:col-span-3 self-center mt-2"
           />

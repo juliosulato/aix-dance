@@ -5,7 +5,7 @@ import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import useSWR from 'swr';
-import { Tenancy, Plan, Student, FormsOfReceipt, Subscription } from '@prisma/client';
+import { Tenancy, Plan, Student, FormsOfReceipt } from '@prisma/client';
 import { FaSearch, FaUser, FaPlusCircle, FaFileAlt, FaRegTrashAlt, FaExclamationTriangle } from 'react-icons/fa';
 import { ActionIcon, Button, NumberInput, Select, TextInput, Alert, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
@@ -194,7 +194,7 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
                 });
             });
         }
-    }, [finalTotal, paymentFields.length, setValue]);
+    }, [finalTotal, paymentFields, paymentFields.length, setValue]);
 
     // --- Função de Submissão ---
     const onSubmit = async (data: SaleFormValues) => {
@@ -205,19 +205,21 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
             return;
         }
 
-        const itemsPayload = cart
-            .filter(item => !item.isEnrollmentFee)
-            .map(item => ({
-                planId: item.isPlan ? item.productId : undefined,
-                description: item.name,
-                quantity: 1,
-                unitAmount: item.amount,
-                contractHtmlContent: item.contractHtmlContent,
-            }));
+        // Include enrollment fee items directly in the items payload so the backend
+        // Zod validation (which requires at least one item) is satisfied. We avoid
+        // relying only on `chargeEnrollmentFee` because the schema validates items
+        // before the service can merge the fee server-side.
+        const itemsPayload = cart.map(item => ({
+            planId: item.isPlan ? item.productId : undefined,
+            description: item.isEnrollmentFee ? 'Taxa de Matrícula' : item.name,
+            quantity: 1,
+            unitAmount: item.amount,
+            contractHtmlContent: item.contractHtmlContent,
+        }));
 
         const payload = {
             ...data,
-            chargeEnrollmentFee: cart.some(item => item.isEnrollmentFee),
+            chargeEnrollmentFee: false,
             items: itemsPayload,
         };
 
@@ -227,7 +229,14 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
+            
             if (!response.ok) throw new Error((await response.json()).message || "Falha ao criar a venda.");
+
+            await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${data.studentId}/history`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ description: `Venda realizada de ${payload.items.map((item) => item.description).join(", ")}` })
+            });
 
             notifications.show({ title: 'Sucesso!', message: 'Venda realizada com sucesso!', color: 'green' });
             setCart([]);

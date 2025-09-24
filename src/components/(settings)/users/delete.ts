@@ -1,12 +1,10 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { Plan } from "@prisma/client";
-import { Translations } from "@/types/translations";
 
 async function deleteUsers(
   items: Plan | string[],
   tenancyId: string,
-  t: Translations,
   mutate?: KeyedMutator<Plan[]>
 ) {
   const isArray = Array.isArray(items);
@@ -14,7 +12,7 @@ async function deleteUsers(
 
   if (idsToDelete.length === 0) {
     notifications.show({
-      message: t("settings.users.delete.errors.noLength"),
+      message: "Nenhum usuário selecionado para exclusão.",
       color: "red",
     });
     return;
@@ -23,18 +21,13 @@ async function deleteUsers(
   const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/users`;
 
   // Atualização otimista da UI
-  mutate &&
-    (await mutate(
-      (currentData) =>
-        currentData?.filter((pm) => !idsToDelete.includes(pm.id)) || [],
-      {
-        revalidate: false,
-      }
-    ));
-
+  if (mutate) {
+    mutate();
+  }
+  
   notifications.show({
-    title: t("settings.users.delete.notifications.wait.title"),
-    message: t("settings.users.delete.notifications.wait.message"),
+    title: "Aguarde...",
+    message: "Estamos excluindo os usuários selecionados.",
     color: "yellow",
   });
 
@@ -53,16 +46,18 @@ async function deleteUsers(
 
     notifications.clean();
     notifications.show({
-      message: t("settings.users.delete.notifications.success"),
+      message: "Usuários excluídos com sucesso.",
       color: "green",
     });
   } catch (error) {
+    console.error("Erro ao excluir itens:", error);
     notifications.show({
-      message: t("settings.users.delete.errors.internalError"),
+      message: "Erro interno ao excluir usuários.",
       color: "red",
     });
-    // Reverte a UI em caso de erro
-    mutate && mutate();
+    if (mutate) { 
+        mutate();
+    }
   }
 }
 

@@ -5,7 +5,7 @@ import { StudentFromApi } from "../StudentFromApi";
 import StudentSalesHistory from "./list";
 
 export default function Sales({ student }: { student: StudentFromApi }) {
-    const [selectedTab, setSelectedTab] = useState<string>("pdv")
+    const [selectedTab, setSelectedTab] = useState<string>("pdv");
     return (
         <div className="bg-neutral-100 p-4 md:p-6 lg:p-8 rounded-2xl border-neutral-200 border !mt-4 md:!mt-6 ">
             <Tabs
@@ -23,7 +23,7 @@ export default function Sales({ student }: { student: StudentFromApi }) {
                 </Tabs.List>
 
                 <Tabs.Panel value="pdv">
-                    <PointOfSale studentId={student.id} tenancyId={student.tenancyId} />
+                    <PointOfSale studentId={student.id} />
                 </Tabs.Panel>
                 <Tabs.Panel value="history">
                     <StudentSalesHistory studentId={student.id} tenancyId={student.tenancyId}/>

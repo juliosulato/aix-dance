@@ -7,15 +7,28 @@ import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import deleteBanks from "../delete";
 import { Bank } from "@prisma/client";
 import UpdateBankAccount from "../modals/updateBankAccount";
+import { fetcher } from "@/utils/fetcher";
+import useSWR from "swr";
+import { useSession } from "next-auth/react";
 
-export default function BanksView({ bank, tenancyId }: { bank: Bank, tenancyId: string }) {
+export default function BanksView({ id }: { id: string }) {
+
+    const session = useSession();
+    const tenancyId = session?.data?.user.tenancyId as string;
+
+    const { data: bank, error } = useSWR<Bank>(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/banks/${id}`,
+        fetcher
+    );
+
+
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
     const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            await deleteBanks([bank.id], tenancyId);
+            await deleteBanks([bank?.id || "-"], tenancyId);
             window.location.replace("/system/financial/bank-accounts");
         } catch (error) {
             console.error("Falha ao excluir a forma de pagamento:", error);
@@ -23,6 +36,15 @@ export default function BanksView({ bank, tenancyId }: { bank: Bank, tenancyId: 
             setConfirmModalOpen(false);
         }
     };
+
+    if (error) {
+        console.error("Falha ao carregar os dados da conta bancária:", error);
+        return <div>Falha ao carregar os dados da conta bancária.</div>;
+    }
+
+    if (!bank) {
+        return <div>Carregando...</div>;
+    }
 
 
     return (

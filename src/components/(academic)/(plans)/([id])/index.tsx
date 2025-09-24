@@ -8,6 +8,9 @@ import { Plan, PlanType } from "@prisma/client";
 import UpdatePlan from "../modals/UpdatePlan"; // Reutilizando seu modal de atualização
 import deletePlans from "../delete"; // Reutilizando sua função de deleção (agora desativação)
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { fetcher } from "@/utils/fetcher";
+import useSWR from "swr";
 
 const formatPlanType = (type: PlanType) => {
     switch (type) {
@@ -19,9 +22,18 @@ const formatPlanType = (type: PlanType) => {
         case "ANNUAL": return "Anual";
         default: return type;
     }
-}
+};
 
-export default function PlanView({ plan, tenancyId }: { plan: Plan, tenancyId: string }) {
+export default function PlanView({ id }: { id: string }) {
+    const session = useSession();
+    const tenancyId = session?.data?.user.tenancyId as string;
+
+    const { data: plan, error } = useSWR<Plan>(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/plans/${id}`,
+        fetcher
+    );
+
+
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
     const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
@@ -31,7 +43,7 @@ export default function PlanView({ plan, tenancyId }: { plan: Plan, tenancyId: s
         setIsDeleting(true);
         try {
             // Chamando a função para desativar o plano
-            await deletePlans([plan.id], tenancyId);
+            await deletePlans([plan?.id || "-"], tenancyId);
             // Redireciona para a lista de planos após a desativação
             router.push("/system/academic/plans");
             router.refresh(); // Força a atualização dos dados na página de listagem
@@ -41,6 +53,14 @@ export default function PlanView({ plan, tenancyId }: { plan: Plan, tenancyId: s
             setConfirmModalOpen(false);
         }
     };
+
+    if (error) {
+        console.error("Falha ao carregar os dados do plano:", error);
+    }
+
+    if (!plan) {
+        return <div>Carregando...</div>;
+    }
 
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
@@ -61,30 +81,30 @@ export default function PlanView({ plan, tenancyId }: { plan: Plan, tenancyId: s
             {/* Seção de Informações Básicas */}
             <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 mb-2">{"Informações Básicas"}</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={"Nome"} children={plan.name} />
-                <InfoTerm label={"Valor"} children={`R$ ${Number(plan.amount).toFixed(2).replace(/\./g, ",")}`} />
-                <InfoTerm label={"Frequência"} children={`${plan.frequency}x`} />
-                <InfoTerm label={"Tipo"} children={formatPlanType(plan.type)} />
+                <InfoTerm label={"Nome"}>{plan.name}</InfoTerm>
+                <InfoTerm label={"Valor"}>{`R$ ${Number(plan.amount).toFixed(2).replace(/\./g, ",")}`}</InfoTerm>
+                <InfoTerm label={"Frequência"}>{`${plan.frequency}x`}</InfoTerm>
+                <InfoTerm label={"Tipo"}>{formatPlanType(plan.type)}</InfoTerm>
             </div>
 
             {/* Seção de Juros */}
             <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{"Juros"}</h2>
              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={"Mensal"} children={`${Number(plan.monthlyInterest).toFixed(2).replace(/\./g, ",")}%`} />
-                <InfoTerm label={"Carência"} children={`${plan.interestGracePeriod} dias`} />
+                <InfoTerm label={"Mensal"}>{`${Number(plan.monthlyInterest).toFixed(2).replace(/\./g, ",")}%`}</InfoTerm>
+                <InfoTerm label={"Carência"}>{`${plan.interestGracePeriod} dias`}</InfoTerm>
             </div>
 
             {/* Seção de Multa */}
             <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{"Multa"}</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={"Percentual"} children={`${Number(plan.finePercentage).toFixed(2).replace(/\./g, ",")}%`} />
-                <InfoTerm label={"Carência"} children={`${plan.fineGracePeriod} dias`} />
+                <InfoTerm label={"Percentual"}>{`${Number(plan.finePercentage).toFixed(2).replace(/\./g, ",")}%`}</InfoTerm>
+                <InfoTerm label={"Carência"}>{`${plan.fineGracePeriod} dias`}</InfoTerm>
             </div>
 
             <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{"Desconto"}</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={"Percentual"} children={`${Number(plan.discountPercentage).toFixed(2).replace(/\./g, ",")}%`} />
-                <InfoTerm label={"Período Máximo"} children={`Até ${plan.maximumDiscountPeriod} dias antes do vencimento`} />
+                <InfoTerm label={"Percentual"}>{`${Number(plan.discountPercentage).toFixed(2).replace(/\./g, ",")}%`}</InfoTerm>
+                <InfoTerm label={"Período Máximo"}>{`Até ${plan.maximumDiscountPeriod} dias antes do vencimento`}</InfoTerm>
             </div>
 
             {/* Modais de Ação */}

@@ -7,8 +7,21 @@ import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import deleteCategories from "../delete";
 import { CategoryBill } from "@prisma/client";
 import UpdateCategoryBill from "../modals/UpdateCategory";
+import { useSession } from "next-auth/react";
+import { fetcher } from "@/utils/fetcher";
+import useSWR from "swr";
 
-export default function CategoryBillView({ category, tenancyId }: { category: CategoryBill, tenancyId: string }) {
+export default function CategoryBillView({ id }: { id: string }) {
+
+    const session = useSession();
+    const tenancyId = session?.data?.user.tenancyId as string;
+
+    const { data: category, error } = useSWR<CategoryBill>(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/category-bills/${id}`,
+        fetcher
+    );
+
+
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
     const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
@@ -17,7 +30,7 @@ export default function CategoryBillView({ category, tenancyId }: { category: Ca
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            await deleteCategories([category.id], tenancyId);
+            await deleteCategories([category?.id || ""], tenancyId);
             window.location.replace("/system/financial/categories");
         } catch (error) {
             console.error("Falha ao excluir o grupo:", error);
@@ -26,6 +39,14 @@ export default function CategoryBillView({ category, tenancyId }: { category: Ca
         }
     };
 
+    if (error) {
+        console.error("Falha ao carregar os dados do grupo:", error);
+        return <div>Falha ao carregar os dados do grupo.</div>;
+    }
+
+    if (!category) {
+        return <div>Carregando...</div>;
+    }
 
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
@@ -44,7 +65,7 @@ export default function CategoryBillView({ category, tenancyId }: { category: Ca
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={"Nome"} children={category.name} />
+                <InfoTerm label={"Nome"} children={<>{category.name}</>} />
 
                 <UpdateCategoryBill category={category} onClose={() => setOpenUpdate(false)} opened={openUpdate} mutate={() => window.location.reload() as any} />
                 <ConfirmationModal

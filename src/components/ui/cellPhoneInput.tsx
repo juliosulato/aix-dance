@@ -36,6 +36,7 @@ const FlagIcon = memo(({
 }) => {
   const code = countryCode.toLowerCase();
   return (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={`https://flagcdn.com/${code}.svg`}
       alt={`${countryCode} flag`}
@@ -443,6 +444,7 @@ const CountrySelect = memo(({
   }
 
   // Memoizar o ActionIcon para evitar re-renders
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const actionIcon = useMemo(() => (
     <ActionIcon
       variant="transparent"

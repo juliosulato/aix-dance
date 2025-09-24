@@ -1,11 +1,11 @@
 "use client";
 
-import { ActionIcon, AppShell as AppShellMantine, Avatar, Burger, Button, Menu, MenuItem, NavLink, Tooltip } from "@mantine/core";
+import { ActionIcon, AppShell as AppShellMantine, Avatar, Burger, Button, Menu, NavLink, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import useMenuData from "@/utils/menuData";
-import { TbCalendarEvent, TbSettings, TbUser, TbUsers } from "react-icons/tb";
+import { TbCalendarEvent, TbSettings, TbUser } from "react-icons/tb";
 import { BiSupport } from "react-icons/bi";
 import LogoSVG from "../Logo";
 import { HiOutlineChevronRight, HiOutlineChevronDown } from "react-icons/hi2";
@@ -16,7 +16,6 @@ import { FaRegUser } from "react-icons/fa";
 import { LuBrain, LuLogOut } from "react-icons/lu";
 import { MdGroups } from "react-icons/md";
 import { PiMoneyWavy } from "react-icons/pi";
-import { LanguagePicker } from "./LanguagePicker";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
     const [activeMain, setActiveMain] = useState<number | string | null>(null);
@@ -110,7 +109,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                                         label={item.label}
                                         active={activeMain === index}
                                         onClick={() => {
-                                            setActiveMain(activeMain === index ? null : index)
+                                            setActiveMain(activeMain === index ? null : index);
                                         }}
                                         href={item.href}
                                         opened={activeMain === index}

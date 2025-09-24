@@ -2,13 +2,25 @@
 
 import { useState, useRef } from "react";
 import { Divider, Text } from "@mantine/core";
-import { FaEdit, FaTrash, FaFilePdf } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import { ContractModel } from "@prisma/client";
 import deleteContractModels from "./delete";
 import UpdateContractModelModal from "./update";
 
-export default function ContractModelView({ contractModel, tenancyId }: { contractModel: ContractModel, tenancyId: string }) {
+import useSWR from "swr";
+import { fetcher } from "@/utils/fetcher";
+import { useSession } from "next-auth/react";
+export default function ContractModelView({ id }: { id: string }) {
+        const session = useSession().data;
+        const tenancyId = session?.user.tenancyId as string;
+
+        const { data: contractModel, error } = useSWR<ContractModel>(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/contract-models/${id}`,
+            fetcher
+        );
+
+
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
     const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
@@ -17,7 +29,7 @@ export default function ContractModelView({ contractModel, tenancyId }: { contra
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            await deleteContractModels([contractModel.id], tenancyId, () => {});
+            await deleteContractModels([contractModel?.id ?? "-"], tenancyId, () => {});
             window.location.replace("/system/academic/contract-models");
         } catch (error) {
             console.error("Falha ao excluir o modelo de contrato:", error);
@@ -25,6 +37,15 @@ export default function ContractModelView({ contractModel, tenancyId }: { contra
             setConfirmModalOpen(false);
         }
     };
+
+    if (error) {
+        console.error("Falha ao carregar os dados do modelo de contrato:", error);
+        return <div>Falha ao carregar os dados do modelo de contrato.</div>;
+    }
+
+    if (!contractModel) {
+        return <div>Carregando...</div>;
+    }
 
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">

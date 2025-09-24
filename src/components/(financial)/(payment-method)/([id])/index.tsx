@@ -7,15 +7,27 @@ import deleteFormsOfReceipt from "../deleteFormsOfReceipt";
 import UpdateFormsOfReceipt from "../modals/updateFormsOfReceipt";
 import { useState } from "react";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
+import { useSession } from "next-auth/react";
+import { fetcher } from "@/utils/fetcher";
+import useSWR from "swr";
 
-export default function FormsOfReceiptView({ formsOfReceipt, tenancyId }: { formsOfReceipt: FormsOfReceipt, tenancyId: string }) {
+export default function FormsOfReceiptView({ id }: { id: string }) {
+
+    const session = useSession();
+    const tenancyId = session?.data?.user.tenancyId as string;
+
+    const { data: formsOfReceipt, error } = useSWR<FormsOfReceipt>(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/forms-of-receipt/${id}`,
+        fetcher
+    );
+
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
     const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            await deleteFormsOfReceipt([formsOfReceipt.id], tenancyId);
+            await deleteFormsOfReceipt([formsOfReceipt?.id ?? "-"], tenancyId);
             window.location.replace("/system/financial/forms-of-receipt");
         } catch (error) {
             console.error("Falha ao excluir a forma de pagamento:", error);
@@ -24,6 +36,14 @@ export default function FormsOfReceiptView({ formsOfReceipt, tenancyId }: { form
         }
     };
 
+    if (error) {
+        console.error("Falha ao carregar os dados da forma de pagamento:", error);
+        return <div>Falha ao carregar os dados da forma de pagamento.</div>;
+    }
+    
+    if (!formsOfReceipt) {
+        return <div>Carregando...</div>;
+    }
 
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">

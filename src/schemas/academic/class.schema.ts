@@ -82,11 +82,6 @@ export const enrollStudentsSchema = z.object({
     studentIds: z.array(z.string()).optional(),
 });
 
-// Manter compatibilidade com código existente
-export const getCreateClassSchema = (t?: (key: string) => string) => createClassSchema;
-export const getUpdateClassSchema = (t?: (key: string) => string) => updateClassSchema;
-export const getEnrollStudentsSchema = (t?: (key: string) => string) => enrollStudentsSchema;
-
 // Tipos exportados para uso no frontend
 export type CreateClassInput = z.infer<typeof createClassSchema>;
 export type UpdateClassInput = z.infer<typeof updateClassSchema>;

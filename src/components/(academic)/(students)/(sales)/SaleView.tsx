@@ -8,6 +8,7 @@ import { Divider, Skeleton, Text } from "@mantine/core";
 import Link from "next/link";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
+import { useSession } from "next-auth/react";
 
 // --- Tipagens para os dados que vêm da API ---
 type SaleItemFromApi = SaleItem & { plan: Plan | null };
@@ -24,7 +25,10 @@ type SaleFromApi = Sale & {
 };
 
 
-export default function SaleView({ saleId, tenancyId }: { saleId: string, tenancyId: string }) {
+export default function SaleView({ saleId }: { saleId: string }) {
+
+    const session = useSession().data;
+    const tenancyId = session?.user.tenancyId as string;
 
     // --- Busca os dados da Venda ---
     const { data: sale, error, isLoading } = useSWR<SaleFromApi>(
@@ -35,7 +39,7 @@ export default function SaleView({ saleId, tenancyId }: { saleId: string, tenanc
     const formatCurrency = (value: number | null | undefined) => {
         if (value == null) return "-";
         return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
-    }
+    };
 
     // --- Tratamento de estados de carregamento e erro ---
     if (isLoading) {

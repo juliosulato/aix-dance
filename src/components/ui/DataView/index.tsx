@@ -7,7 +7,6 @@ import { Button, Grid, Pagination, Select, Text } from "@mantine/core";
 import DataViewGrid from "./DataViewGrid";
 import { KeyedMutator } from "swr";
 import dayjs from "dayjs";
-import { FaPrint } from "react-icons/fa";
 
 // --- TIPOS (sem alterações) ---
 export type SortDirection = 'asc' | 'desc';
@@ -36,7 +35,7 @@ interface DataViewProps<T> {
     printable?: boolean;
 };
 
-import notFound from "@/assets/images/not-found.avif";
+import notFound from "@/assets/images/not-found.png";
 import Image from "next/image";
 import { IoAdd } from "react-icons/io5";
 
@@ -78,18 +77,18 @@ export default function DataView<T>({
         const verifyPageSize = () => {
             if (window.innerWidth < 768) {
                 setActiveView("grade");
-                setRowsPerPage("12")
+                setRowsPerPage("12");
             } else if (!disableTable) {
-                setActiveView("table")
-                setRowsPerPage("10")
+                setActiveView("table");
+                setRowsPerPage("10");
             }
-        }
-        verifyPageSize()
-        window.addEventListener("resize", verifyPageSize)
+        };
+        verifyPageSize();
+        window.addEventListener("resize", verifyPageSize);
         return () => {
-            window.removeEventListener("resize", verifyPageSize)
-        }
-    }, [disableTable])
+            window.removeEventListener("resize", verifyPageSize);
+        };
+    }, [disableTable]);
 
     const handleSelectRow = (id: string, selected: boolean) => {
         setSelectedRows(prev =>

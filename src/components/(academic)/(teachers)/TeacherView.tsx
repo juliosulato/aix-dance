@@ -4,33 +4,27 @@ import InfoTerm from "@/components/ui/Infoterm";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
-import { Gender, RemunerationType } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { TeacherFromApi } from "./modals/UpdateTeacher"; // Supondo que o tipo esteja aqui
 import UpdateTeacher from "./modals/UpdateTeacher";
 import deactivateUsers from "./delete"; // Supondo que a função de delete agora desative usuários
 import dayjs from "dayjs";
 import UpdateTeacherAccessData from "./modals/accessDataUpdate";
+import { useSession } from "next-auth/react";
+import useSWR from "swr";
+import { fetcher } from "@/utils/fetcher";
 
-// --- Funções Auxiliares para Formatação ---
 
-const formatGender = (gender: Gender, t: (key: string) => string) => {
-    const key = `forms.general-fields.gender.options.${gender}`;
-    return t(key);
-}
+export default function TeacherView({ id }: { id: string }) {
+        const session = useSession();
+        
+        const tenancyId = session?.data?.user.tenancyId as string;
 
-const formatRemunerationType = (type: RemunerationType, t: (key: string) => string) => {
-    const key = `academic.teachers.modals.create.remuneration.fields.contractType.options.${type}`;
-    return t(key);
-}
-
-const formatBoolean = (value: boolean | null | undefined, t: (key: string) => string) => {
-    if (value === true) return "Texto";
-    if (value === false) return "Texto";
-    return "-";
-}
-
-export default function TeacherView({ teacher, tenancyId }: { teacher: TeacherFromApi, tenancyId: string }) {
+        const { data: teacher, error } = useSWR<TeacherFromApi>(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/users/${id}`,
+            fetcher
+        );
+        
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
     const [openUpdateAccessData, setOpenUpdateAccessData] = useState<boolean>(false);
     const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
@@ -40,7 +34,7 @@ export default function TeacherView({ teacher, tenancyId }: { teacher: TeacherFr
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            await deactivateUsers([teacher.id], tenancyId);
+            await deactivateUsers([teacher?.id || "-"], tenancyId);
             router.push("/system/academic/teachers");
             router.refresh();
         } catch (error) {
@@ -51,9 +45,17 @@ export default function TeacherView({ teacher, tenancyId }: { teacher: TeacherFr
     };
 
     // Extraindo sub-objetos para facilitar o acesso e evitar erros
-    const teacherData = teacher.teacher;
-    const addressData = teacher.teacher?.address;
+    const teacherData = teacher?.teacher;
+    const addressData = teacher?.teacher?.address;
 
+    if (error) {
+        console.error("Falha ao carregar os dados do professor:", error);
+        return <div>Falha ao carregar os dados do professor.</div>;
+    }
+    
+    if (!teacher) {
+        return <div>Carregando...</div>;
+    }
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
             <div className="flex flex-col items-center justify-center md:justify-between gap-4 md:flex-row md:flex-wrap mb-4">
@@ -77,37 +79,37 @@ export default function TeacherView({ teacher, tenancyId }: { teacher: TeacherFr
             {/* Seção de Informações Pessoais */}
             <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 mb-2">{"Informações Pessoais"}</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={"Primeiro Nome"} children={teacher.firstName} />
-                <InfoTerm label={"Sobrenome"} children={teacher.lastName} />
-                <InfoTerm label={"E-mail"} children={teacher.email} />
-                <InfoTerm label={"Data de Nascimento"} children={teacherData?.dateOfBirth ? dayjs(teacherData.dateOfBirth).format("DD/MM/YYYY") : "-"} />
-                <InfoTerm label={"CPF"} children={teacherData?.document || "-"} />
-                <InfoTerm label={"Gênero"} children={teacherData?.gender || "-"} />
-                <InfoTerm label={"Pronome"} children={teacherData?.pronoun || "-"} />
-                <InfoTerm label={"Instagram"} children={teacherData?.instagramUser || "-"} />
-                <InfoTerm label={"Registro Profissional"} children={teacherData?.professionalRegister || "-"} />
+                <InfoTerm label={"Primeiro Nome"}>{teacher.firstName}</InfoTerm>
+                <InfoTerm label={"Sobrenome"}>{teacher.lastName}</InfoTerm>
+                <InfoTerm label={"E-mail"}>{teacher.email}</InfoTerm>
+                <InfoTerm label={"Data de Nascimento"}>{teacherData?.dateOfBirth ? dayjs(teacherData.dateOfBirth).format("DD/MM/YYYY") : "-"}</InfoTerm>
+                <InfoTerm label={"CPF"}>{teacherData?.document || "-"}</InfoTerm>
+                <InfoTerm label={"Gênero"}>{teacherData?.gender || "-"}</InfoTerm>
+                <InfoTerm label={"Pronome"}>{teacherData?.pronoun || "-"}</InfoTerm>
+                <InfoTerm label={"Instagram"}>{teacherData?.instagramUser || "-"}</InfoTerm>
+                <InfoTerm label={"Registro Profissional"}>{teacherData?.professionalRegister || "-"}</InfoTerm>
             </div>
 
              {/* Seção de Endereço */}
             <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{"Endereço"}</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={"Logradouro"} children={addressData?.publicPlace || "-"} />
-                <InfoTerm label={"Número"} children={addressData?.number || "-"} />
-                <InfoTerm label={"Complemento"} children={addressData?.complement || "-"} />
-                <InfoTerm label={"Bairro"} children={addressData?.neighborhood || "-"} />
-                <InfoTerm label={"Cidade"} children={addressData?.city || "-"} />
-                <InfoTerm label={"Estado"} children={addressData?.state || "-"} />
-                <InfoTerm label={"CEP"} children={addressData?.zipCode || "-"} />
+                <InfoTerm label={"Logradouro"}>{addressData?.publicPlace || "-"}</InfoTerm>
+                <InfoTerm label={"Número"}>{addressData?.number || "-"}</InfoTerm>
+                <InfoTerm label={"Complemento"}>{addressData?.complement || "-"}</InfoTerm>
+                <InfoTerm label={"Bairro"}>{addressData?.neighborhood || "-"}</InfoTerm>
+                <InfoTerm label={"Cidade"}>{addressData?.city || "-"}</InfoTerm>
+                <InfoTerm label={"Estado"}>{addressData?.state || "-"}</InfoTerm>
+                <InfoTerm label={"CEP"}>{addressData?.zipCode || "-"}</InfoTerm>
             </div>
 
             {/* Seção de Remuneração */}
             <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{"Remuneração"}</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={"Tipo de Remuneração"} children={teacherData?.remunerationType || "-"} />
-                <InfoTerm label={teacherData?.remunerationType == "HOURLY" ? "Valor por Hora" : "Salário Base"} children={`R$ ${Number(teacherData?.baseAmount || 0).toFixed(2).replace(/\./g, ",")}`} />
-                <InfoTerm label={"Dia do Pagamento"} children={`${teacherData?.paymentDay || "-"}`} />
-                <InfoTerm label={"Bônus por Presença"} children={`R$ ${Number(teacherData?.bonusForPresenceAmount ?? 0).toFixed(2).replace(/\./g, ",")}`} />
-                <InfoTerm label={"Perde Bônus quando Ausente"} children={teacherData?.loseBonusWhenAbsent ? "Sim" : "Não"} />
+                <InfoTerm label={"Tipo de Remuneração"}>{teacherData?.remunerationType || "-"}</InfoTerm>
+                <InfoTerm label={teacherData?.remunerationType == "HOURLY" ? "Valor por Hora" : "Salário Base"}>{`R$ ${Number(teacherData?.baseAmount || 0).toFixed(2).replace(/\./g, ",")}`}</InfoTerm>
+                <InfoTerm label={"Dia do Pagamento"}>{`${teacherData?.paymentDay || "-"}`}</InfoTerm>
+                <InfoTerm label={"Bônus por Presença"}>{`R$ ${Number(teacherData?.bonusForPresenceAmount ?? 0).toFixed(2).replace(/\./g, ",")}`}</InfoTerm>
+                <InfoTerm label={"Perde Bônus quando Ausente"}>{teacherData?.loseBonusWhenAbsent ? "Sim" : "Não"}</InfoTerm>
             </div>
 
              {/* Seção de Comissões */}
@@ -117,9 +119,9 @@ export default function TeacherView({ teacher, tenancyId }: { teacher: TeacherFr
                     <div className="grid gap-4 md:grid-cols-1">
                         {teacherData.comissionTiers.map((tier, index) => (
                            <div key={index} className="grid grid-cols-3 gap-4 p-2 border-b">
-                               <InfoTerm label={"Mínimo de Alunos"} children={`${tier.minStudents} alunos`} />
-                               <InfoTerm label={"Máximo de Alunos"} children={`${tier.maxStudents} alunos`} />
-                               <InfoTerm label={"Comissão"} children={`R$ ${Number(tier.comission).toFixed(2).replace(/\./g, ",")}`} />
+                               <InfoTerm label={"Mínimo de Alunos"}>{`${tier.minStudents} alunos`}</InfoTerm>
+                               <InfoTerm label={"Máximo de Alunos"}>{`${tier.maxStudents} alunos`}</InfoTerm>
+                               <InfoTerm label={"Comissão"}>{`R$ ${Number(tier.comission).toFixed(2).replace(/\./g, ",")}`}</InfoTerm>
                            </div>
                         ))}
                     </div>

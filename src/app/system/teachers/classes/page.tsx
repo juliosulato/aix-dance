@@ -1,23 +1,28 @@
-import { auth } from "@/auth";
+"use client";
+import { ClassFromApi } from "@/components/(academic)/(class)";
 import Breadcrumps from "@/components/ui/Breadcrumps";
+import { fetcher } from "@/utils/fetcher";
 import { Button } from "@mantine/core";
+import { useSession } from "next-auth/react";
+import useSWR from "swr";
 
-async function getAllClasses(tenancyId: string, teacherId: string) {
-    const classes = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/classes`).then((res) => {
-        if (!res.ok) {
-            throw new Error("Failed to fetch classes");
-        }
-        return res.json();
-    });
+export default function TeachersClassesPage() {
+    const session = useSession().data;
 
+    const { data, error } = useSWR<ClassFromApi[]>(session?.user?.tenancyId && session?.user.id ? `/api/teachers/${session.user.id}/classes?tenancyId=${session.user.tenancyId}` : null, fetcher);
+
+    if (error) {
+        return <div className="text-center text-red-500">Erro ao carregar os dados das turmas</div>;
+    }
+    
+    if (!data) {
+        return <div className="text-center">Carregando...</div>;
+    }
+
+    
+    const classes = data.filter((c: any) => c.active);
+    const teacherId = session?.user.id;
     const teacherClasses = classes.filter((c: any) => c.teacherId === teacherId).filter((c: any) => c.active);
-
-    return { teacherClasses, classes: classes.filter((c: any) => c.active) };
-}
-export default async function TeachersClassesPage() {
-    const session = await auth();
-
-    const { teacherClasses, classes } = await getAllClasses(session?.user.tenancyId!, session?.user.id!);
 
     return (
         <main className="flex flex-col gap-4">

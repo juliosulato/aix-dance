@@ -7,17 +7,26 @@ import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import deleteCategoryGroups from "../delete";
 import { CategoryGroup } from "@prisma/client";
 import UpdateCategoryGroup from "../UpdateGroup";
+import { useSession } from "next-auth/react";
+import useSWR from "swr";
+import { fetcher } from "@/utils/fetcher";
 
-export default function CategoryGroupView({ categoryGroup, tenancyId }: { categoryGroup: CategoryGroup, tenancyId: string }) {
+export default function CategoryGroupView({ id }: { id: string }) {
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
     const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
-
+    const session = useSession();
+    const tenancyId = session?.data?.user.tenancyId as string;
+    
+    const { data: categoryGroup, error } = useSWR<CategoryGroup>(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/category-groups/${id}`,
+        fetcher
+    );
 
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            await deleteCategoryGroups([categoryGroup.id], tenancyId);
+            await deleteCategoryGroups([categoryGroup?.id ?? "-"], tenancyId);
             window.location.replace("/system/financial/groups");
         } catch (error) {
             console.error("Falha ao excluir o grupo:", error);
@@ -25,6 +34,15 @@ export default function CategoryGroupView({ categoryGroup, tenancyId }: { catego
             setConfirmModalOpen(false);
         }
     };
+
+    if (error) {
+        console.error("Falha ao carregar os dados do grupo:", error);
+        return <div>Falha ao carregar os dados do grupo.</div>;
+    }
+
+    if (!categoryGroup) {
+        return <div>Carregando...</div>;
+    }
 
 
     return (

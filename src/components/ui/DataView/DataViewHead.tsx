@@ -166,13 +166,13 @@ export default function DataViewHead<T>({
                                     <DateInput
                                         label={"Data inicial"}
                                         value={localDateFilter?.from || null}
-                                        onChange={(date) => setLocalDateFilter((prev: any) => ({ ...prev, key: prev?.key || dateFilterOptions?.[0]?.key!, from: date, to: prev?.to || null }))}
+                                        onChange={(date) => setLocalDateFilter((prev: any) => ({ ...prev, key: prev?.key ?? dateFilterOptions?.[0]?.key, from: date, to: prev?.to || null }))}
                                         clearable
                                     />
                                     <DateInput
                                         label={"Data final"}
                                         value={localDateFilter?.to || null}
-                                        onChange={(date) => setLocalDateFilter((prev: any) => ({ ...prev, key: prev?.key || dateFilterOptions?.[0]?.key!, from: prev?.from || null, to: date }))}
+                                        onChange={(date) => setLocalDateFilter((prev: any) => ({ ...prev, key: prev?.key ?? dateFilterOptions?.[0]?.key, from: prev?.from || null, to: date }))}
                                         clearable
                                         minDate={localDateFilter?.from || undefined}
                                     />
@@ -238,5 +238,5 @@ export default function DataViewHead<T>({
                 </div>
             </div>
         </div>
-    )
+    );
 }

@@ -3,7 +3,7 @@
 import { Avatar, MultiSelect } from "@mantine/core";
 import { FaSearch } from "react-icons/fa";
 import Image from "next/image";
-import notFound from "@/assets/images/not-found.avif";
+import notFound from "@/assets/images/not-found.png";
 import { CreateClassInput, UpdateClassInput } from "@/schemas/academic/class.schema";
 import { Control, Controller, FieldErrors, useWatch } from "react-hook-form";
 import useSWR from "swr";

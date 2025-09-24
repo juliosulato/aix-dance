@@ -3,9 +3,8 @@ import SaleView from "@/components/(academic)/(students)/(sales)/SaleView";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 
 export default async function FormsOfReceiptPage({ params }: { params: Promise<{ id: string }> }) {
-    const session = await auth();
 
-    return session?.user.tenancyId && (
+    return (
         <main>
             <Breadcrumps
                 items={["Início", "Financeiro", "Gerenciador", "Vendas"]}
@@ -19,7 +18,7 @@ export default async function FormsOfReceiptPage({ params }: { params: Promise<{
                     { label: "Relatórios", href: "/system/financial/reports" },
                 ]} />
             <br />
-            <SaleView saleId={(await params).id} tenancyId={session?.user.tenancyId} />
+            <SaleView saleId={(await params).id} />
         </main>
     );
 }

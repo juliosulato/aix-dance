@@ -1,26 +1,10 @@
-import { auth } from "@/auth";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 import TeacherView from "@/components/(academic)/(teachers)/TeacherView";
-import { TeacherFromApi } from "@/components/(academic)/(teachers)/modals/UpdateTeacher";
 
 export default async function TeacherPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
 
-    const session = await auth();
-
-    const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session?.user.tenancyId}/users/${id}`,
-        { headers: { "Accept": "application/json" } }
-    );
-
-    if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`Backend returned ${res.status}: ${text}`);
-    }
-
-    const teacher: TeacherFromApi = await res.json();
-
-    return session?.user.tenancyId && (
+    return (
         <main>
             <Breadcrumps
                 items={["Início", "Acadêmico", "Professores"]}
@@ -33,7 +17,7 @@ export default async function TeacherPage({ params }: { params: Promise<{ id: st
                 ]}
             />
             <br />
-            <TeacherView teacher={teacher} tenancyId={session.user.tenancyId} />
+            <TeacherView id={id} />
         </main>
     );
 }

@@ -8,8 +8,20 @@ import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import deleteSuppliers from "./delete";
 import UpdateSupplier from "./UpdateSupplier";
 import { SupplierFromApi } from "./SupplierFromApi";
+import { useSession } from "next-auth/react";
+import { fetcher } from "@/utils/fetcher";
+import useSWR from "swr";
 
-export default function SupplierView({ supplier, tenancyId }: { supplier: SupplierFromApi, tenancyId: string }) {
+export default function SupplierView({ id }: { id: string }) {
+    const session = useSession().data;
+    const tenancyId = session?.user.tenancyId as string;
+
+    const { data: supplier, error } = useSWR<SupplierFromApi>(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/suppliers/${id}`,
+        fetcher
+    );
+    
+
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);
     const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
@@ -18,7 +30,7 @@ export default function SupplierView({ supplier, tenancyId }: { supplier: Suppli
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            await deleteSuppliers([supplier.id], tenancyId);
+            await deleteSuppliers([supplier?.id ?? "-"], tenancyId);
             window.location.replace("/system/suppliers");
         } catch (error) {
             console.error("Falha ao excluir o fornecedor:", error);
@@ -27,7 +39,12 @@ export default function SupplierView({ supplier, tenancyId }: { supplier: Suppli
         }
     };
 
-    return (
+    if (error)  {
+        console.error("Falha ao carregar os dados do fornecedor:", error);
+        return <div>Falha ao carregar os dados do fornecedor.</div>;
+    }
+
+    return supplier && (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
             <div className="flex flex-col items-center justify-center md:justify-between gap-4 md:flex-row md:flex-wrap mb-4">
                 <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">Detalhes do Fornecedor</h1>

@@ -12,7 +12,7 @@ import { ClassFromApi } from ".."; // Ajuste o caminho se necessário
 import { fetcher } from "@/utils/fetcher";
 import { Class, Student, StudentClass } from "@prisma/client";
 import Image from "next/image";
-import notFound from "@/assets/images/not-found.avif";
+import notFound from "@/assets/images/not-found.png";
 import { FaSearch } from "react-icons/fa";
 import { StudentFromApi } from "../../(students)/StudentFromApi";
 

@@ -1,28 +1,10 @@
-import { auth } from "@/auth";
 import FormsOfReceiptView from "@/components/(financial)/(payment-method)/([id])";
 import Breadcrumps from "@/components/ui/Breadcrumps";
-import InfoTerm from "@/components/ui/Infoterm";
-import { SimpleGrid } from "@mantine/core";
-import { FormsOfReceipt } from "@/components/(financial)/(payment-method)";
 
 export default async function FormsOfReceiptPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
 
-    const session = await auth();
-
-    const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session?.user.tenancyId}/forms-of-receipt/${id}`,
-        { headers: { "Accept": "application/json" } }
-    );
-
-    if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`Backend returned ${res.status}: ${text}`);
-    }
-
-    const formsOfReceipt: FormsOfReceipt = await res.json();
-
-    return session?.user.tenancyId && (
+    return (
         <main>
             <Breadcrumps
                 items={["Início", "Financeiro", "Formas de Recebimento"]}
@@ -36,7 +18,7 @@ export default async function FormsOfReceiptPage({ params }: { params: Promise<{
                     { label: "Relatórios", href: "/system/financial/reports" },
                 ]} />
             <br />
-            <FormsOfReceiptView formsOfReceipt={formsOfReceipt} tenancyId={session?.user.tenancyId} />
+            <FormsOfReceiptView id={id} />
         </main>
     );
 }

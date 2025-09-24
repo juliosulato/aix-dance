@@ -15,6 +15,7 @@ import { fetcher } from '@/utils/fetcher';
 import { RiMoneyDollarCircleFill } from 'react-icons/ri';
 import NewStudentContractModal from './new';
 import { StudentFromApi } from '../StudentFromApi';
+import { useSession } from 'next-auth/react';
 
 // --- Validação com Zod (sem alterações) ---
 const saleFormSchema = z.object({
@@ -50,14 +51,12 @@ type CartItem = {
     isEnrollmentFee?: boolean;
 };
 
-// --- Tipagem para a resposta da API de assinaturas ---
-type SubscriptionWithPlan = Subscription & {
-    plan: Plan;
-};
-
 
 // --- Componente Principal do PDV ---
-export default function PointOfSale({ tenancyId, studentId: preselectedStudentId }: { tenancyId: string, studentId?: string }) {
+export default function PointOfSale({ studentId: preselectedStudentId }: { studentId?: string }) {
+    const session = useSession();
+    const tenancyId = session.data?.user.tenancyId || "";
+    
     // --- Hooks de data fetching ---
     const { data: tenancy } = useSWR<Tenancy>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}`, fetcher);
     const { data: plans } = useSWR<Plan[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/plans`, fetcher);
@@ -183,7 +182,7 @@ export default function PointOfSale({ tenancyId, studentId: preselectedStudentId
         if (paymentFields.length > 0) {
             // Divide de forma igualitária
             const baseValue = Math.floor((finalTotal / paymentFields.length) * 100) / 100; // 2 casas decimais
-            let remainder = finalTotal - baseValue * paymentFields.length;
+            const remainder = finalTotal - baseValue * paymentFields.length;
 
             paymentFields.forEach((field, index) => {
                 let value = baseValue;

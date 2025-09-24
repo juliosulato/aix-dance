@@ -6,7 +6,6 @@ import ConfirmationModal from "../ui/ConfirmationModal";
 import { notifications } from "@mantine/notifications";
 import NewClassAttendance from "./newClassAttendance";
 import { useState } from "react";
-import { Session } from "next-auth";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 import dayjs from "dayjs";
@@ -14,15 +13,18 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import Breadcrumps from "../ui/Breadcrumps";
+import { useSession } from "next-auth/react";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 
-export default function ClassDetails({ session, classId }: { session: Session, classId: string }) {
+export default function ClassDetails({ classId }: { classId: string }) {
     const [isOpened, setIsOpened] = useState(false);
     const [attendanceToEdit, setAttendanceToEdit] = useState(null);
     const [deleteModal, setDeleteModal] = useState<{ open: boolean, id: string | null }>({ open: false, id: null });
     const [deleteLoading, setDeleteLoading] = useState(false);
+
+    const session = useSession().data;
 
     const { data: classData, isLoading, mutate } = useSWR<ClassFromApi>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session?.user.tenancyId}/classes/${classId}`, fetcher);
 
@@ -65,7 +67,7 @@ export default function ClassDetails({ session, classId }: { session: Session, c
         if (!deleteModal.id) return;
         setDeleteLoading(true);
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.user.tenancyId}/class-attendances/${deleteModal.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session?.user.tenancyId}/class-attendances/${deleteModal.id}`, {
                 method: "DELETE",
             });
             if (!res.ok) throw new Error("Erro ao deletar");
@@ -76,6 +78,7 @@ export default function ClassDetails({ session, classId }: { session: Session, c
             });
             // Aqui você pode revalidar o SWR ou forçar um refresh
         } catch (e) {
+            console.error(e);
             notifications.show({
                 title: "Erro",
                 message: "Não foi possível deletar a lista de chamada.",
@@ -87,6 +90,10 @@ export default function ClassDetails({ session, classId }: { session: Session, c
             setDeleteModal({ open: false, id: null });
         }
     };
+
+    if (!session) {
+        return <p>Você precisa estar autenticado para acessar esta página.</p>;
+    }
 
     return (
         <>
@@ -173,5 +180,5 @@ export default function ClassDetails({ session, classId }: { session: Session, c
             </section>
 
         </>
-    )
+    );
 }

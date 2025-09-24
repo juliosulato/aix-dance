@@ -30,7 +30,7 @@ export default function DocumentInput({ value: controlledValue, onChange, ...pro
     setLabel(doc.label);
     setMask(doc.mask || '');
     setValue(controlledValue || '');
-  }, [session]);
+  }, [controlledValue, session]);
 
   return (
     <Flex gap="0" align="flex-end">

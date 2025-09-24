@@ -115,7 +115,7 @@ export default function SignContractView({ contract, ipAddress, location }: Prop
                     <form onSubmit={handleSubmit(handleSignContract)} className="flex flex-col gap-4">
                         <Divider my="md" label="Confirmação de Assinatura" labelPosition="center" />
                         <Text size="sm" ta="center" c="dimmed">
-                            Para validar a assinatura, por favor, preencha os campos abaixo. Ao clicar em "Assinar Contrato", você concorda com todos os termos e condições descritos acima.
+                            Para validar a assinatura, por favor, preencha os campos abaixo. Ao clicar em &quot;Assinar Contrato&quot;, você concorda com todos os termos e condições descritos acima.
                         </Text>
                         <Controller
                             name="fullName"

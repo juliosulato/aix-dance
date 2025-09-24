@@ -18,7 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import Address from "../../../AddressForm";
 import { KeyedMutator } from "swr";
-import { CreateStudentInput, getCreateStudentSchema } from "@/schemas/academic/student.schema";
+import { CreateStudentInput, createStudentSchema } from "@/schemas/academic/student.schema";
 import { StudentFromApi } from "../StudentFromApi";
 
 dayjs.extend(customParseFormat);
@@ -38,7 +38,6 @@ function NewStudent({ opened, onClose, mutate }: Props) {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
 
-  const createStudentSchema = getCreateStudentSchema();
 
   const { control, register, handleSubmit, watch, formState: { errors }, reset } = useForm<CreateStudentInput>({
     resolver: zodResolver(createStudentSchema),

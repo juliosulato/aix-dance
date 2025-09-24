@@ -18,8 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import Address from "../../../AddressForm";
 import { KeyedMutator } from "swr";
-import { Address as AddressPrisma, Student, StudentGuardian } from "@prisma/client";
-import { CreateStudentInput, getCreateStudentSchema } from "@/schemas/academic/student.schema";
+import { UpdateStudentInput, updateStudentSchema } from "@/schemas/academic/student.schema";
 import { StudentFromApi } from "../StudentFromApi";
 
 dayjs.extend(customParseFormat);
@@ -41,10 +40,9 @@ function UpdateStudent({ opened, onClose, mutate, student }: Props) {
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
   const [visible, setVisible] = useState(false);
 
-  const createStudentSchema = getCreateStudentSchema();
 
-  const { control, register, handleSubmit, watch, formState: { errors }, reset } = useForm<CreateStudentInput>({
-    resolver: zodResolver(createStudentSchema),
+  const { control, register, handleSubmit, watch, formState: { errors }, reset } = useForm<UpdateStudentInput>({
+    resolver: zodResolver(updateStudentSchema),
     defaultValues: {
       guardian: [],
       healthProblems: "",
@@ -89,7 +87,7 @@ useEffect(() => {
 }, [student, reset]);
 
 
-  async function createStudent(data: CreateStudentInput) {
+  async function createStudent(data: UpdateStudentInput) {
     if (!sessionData?.user.tenancyId) {
       notifications.show({ color: "red", message: "Sessão inválida" });
       return;

@@ -9,7 +9,7 @@ import { notifications } from "@mantine/notifications";
 import useSWR, { KeyedMutator } from "swr";
 import { fetcher } from "@/utils/fetcher";
 import Image from "next/image";
-import notFound from "@/assets/images/not-found.avif";
+import notFound from "@/assets/images/not-found.png";
 import { FaSearch } from "react-icons/fa";
 import { Student } from "@prisma/client";
 import z from "zod";

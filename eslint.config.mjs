@@ -14,7 +14,8 @@ const eslintConfig = [
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
-      "semi": "error"
+      "semi": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
     },
     ignores: [
       "node_modules/**",

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { fetcher } from "@/utils/fetcher";
@@ -17,8 +18,7 @@ import 'dayjs/locale/es';
 import 'dayjs/locale/en';
 import NewTeacher from "./modals/NewTeacher";
 import UpdateTeacher, { TeacherFromApi } from "./modals/UpdateTeacher";
-import toggleUserActive from "./toggleUserActive";
-import { Teacher } from "@prisma/client";
+import { RemunerationType, Teacher } from "@prisma/client";
 
 interface MenuItemProps {
     teacher: TeacherFromApi;
@@ -80,8 +80,7 @@ export default function AllTeachersData() {
         }
 
         try {
-            // Supondo que a função de delete seja adaptada para desativar usuários
-            // await deactivateUsers(finalIdsToDelete, tenancyId, t, mutate as any);
+            await deleteUsers(finalIdsToDelete, tenancyId, mutate as any);
             mutate();
         } catch (error) {
             console.error("Falha ao desativar professores:", error);
@@ -108,9 +107,6 @@ export default function AllTeachersData() {
                     </Menu.Item>
                     <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(teacher)}>
                         {"Excluir"}
-                    </Menu.Item>
-                    <Menu.Item color={teacher.active ? "red" : "green"} leftSection={<GrUpdate size={14} />} onClick={() => toggleUserActive(teacher, sessionData?.user.tenancyId || "")}>
-                        {teacher.active ? "Desativar" : "Ativar"}
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
@@ -140,7 +136,7 @@ export default function AllTeachersData() {
     const d = teachers?.map((teacher) => ({
         ...teacher,
         fullName: teacher.firstName + " " + teacher.lastName
-    }))
+    }));
 
     return (
         <>
@@ -173,7 +169,7 @@ export default function AllTeachersData() {
                         key: "teacher",
                         label: "Tipo Remuneração",
                         sortable: false,
-                        render: (teacher) => teacher?.remunerationType || "-"
+                        render: (teacher: any) => (teacher?.remunerationType as RemunerationType) === "HOURLY" ? "Hora-Aula" : "Salário Fixo"
                     },
                     {
                         key: "teacher",
@@ -208,7 +204,7 @@ export default function AllTeachersData() {
                                     <Tooltip label={"Inativo"} color="red">
                                         <div className={`w-4 h-4 rounded-full bg-red-500`}></div>
                                     </Tooltip>
-                                )
+                                );
                             }
                         }
                     }

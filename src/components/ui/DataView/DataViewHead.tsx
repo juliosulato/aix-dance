@@ -9,8 +9,6 @@ import { KeyedMutator } from "swr";
 import { FaFilter, FaPrint } from "react-icons/fa"; // Adicionado FaPrint
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
-import "dayjs/locale/es";
-import "dayjs/locale/en";
 
 interface DataViewProps<T> {
     pageTitle: string;

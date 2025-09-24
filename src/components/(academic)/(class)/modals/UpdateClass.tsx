@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button, LoadingOverlay, Modal, Stepper } from "@mantine/core";
 import 'dayjs/locale/pt-br';
@@ -114,11 +114,12 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
             });
 
             if (!resp.ok) throw new Error("Erro ao atualizar turma");
-            notifications.show({ message: "Texto", color: "green" });
+            notifications.show({ message: "Turma atualizada com sucesso", color: "green" });
             mutate();
             onClose();
         } catch (err) {
-            notifications.show({ color: "red", message: "Texto" });
+            console.error(err);
+            notifications.show({ color: "red", message: "Erro ao atualizar turma" });
         } finally {
             setVisible(false);
         }
@@ -159,7 +160,7 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
             </Modal>
             <LoadingOverlay visible={visible} zIndex={9999} overlayProps={{ radius: 'sm', blur: 2 }} loaderProps={{ color: 'violet', type: 'dots' }} pos="fixed" h="100vh" w="100vw"/>
         </>
-    )
+    );
 }
 
 export default UpdateClass;

@@ -1,4 +1,4 @@
-import { Table, Checkbox, Group, Flex, ScrollArea, UnstyledButton, Text } from "@mantine/core";
+import { Table, Checkbox, Group, Flex, UnstyledButton } from "@mantine/core";
 import { Column, SortConfig } from ".";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -152,7 +152,7 @@ export default function DataViewTable<T>({
                                                     ? col.render(value, item)
                                                     : typeof value === "string" || typeof value === "number" || typeof value === "boolean"
                                                         ? value
-                                                        : JSON.stringify(value)}
+                                                        : value ? JSON.stringify(value ) : ""}
                                             </Table.Td>
                                         );
                                     })}

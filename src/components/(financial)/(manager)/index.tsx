@@ -17,7 +17,7 @@ import 'dayjs/locale/en';
 import 'dayjs/locale/es';
 import NewBill from "./modals/NewBill";
 import UpdateBill from "./modals/UpdateBill";
-import { Bank, Bill, CategoryBill, FormsOfReceipt, Sale, Supplier } from "@prisma/client";
+import { Bank, Bill, CategoryBill, FormsOfReceipt, RecurrenceType, Sale, Supplier } from "@prisma/client";
 import { StatusTextToBadge } from "@/utils/statusTextToBadge";
 import { FaCalendarAlt } from "react-icons/fa";
 import PayBill from "./modals/PayBill";
@@ -149,7 +149,7 @@ export default function AllBillsData() {
                     </Menu.Item>
                     <Menu.Item leftSection={<RiMoneyDollarCircleLine size={14} />} onClick={() => {
                         setOpenPayBill(true);
-                        setSelectedBill(bill)
+                        setSelectedBill(bill);
                     }}>
                         <span>{"Pagar"}</span>
                     </Menu.Item>
@@ -249,7 +249,31 @@ export default function AllBillsData() {
                     {
                         key: "recurrence",
                         label: "Recorrência",
-                        render: (rec) => rec
+                        render: (rec: RecurrenceType) => {
+                            switch(rec) {
+                                case "MONTHLY":
+                                    return "Mensal";
+                                    break;
+                                case "ANNUAL":
+                                    return "Anual";
+                                    break;
+                                case "BIMONTHLY":
+                                    return "Bimestral";
+                                    break;
+                                case "QUARTERLY":
+                                    return "Trimestral";
+                                    break;
+                                case "SEMIANNUAL":
+                                    return "Semestral";
+                                    break;
+                                case "NONE":
+                                    return "";
+                                break;
+                                default:
+                                    return "";
+                                    break;
+                            }
+                        }
                     },
                     {
                         key: "status",

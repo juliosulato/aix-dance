@@ -2,18 +2,10 @@ import { Gender, RemunerationType, UserRole } from "@prisma/client";
 import { z } from "zod";
 import dayjs from "dayjs";
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { addressSchema } from "./address.schema";
 
 dayjs.extend(customParseFormat);
 
-const addressSchema = z.object({
-  postalCode: z.string().min(1, { message: "CEP é obrigatório" }),
-  publicPlace: z.string().min(1, { message: "Logradouro é obrigatória" }),
-  number: z.string().optional(),
-  complement: z.string().optional(),
-  neighborhood: z.string().min(1, { message: "Bairro é obrigatório" }),
-  city: z.string().min(1, { message: "Cidade é obrigatória" }),
-  state: z.string().min(1, { message: "Estado é obrigatório" }),
-});
 
 const teacherSchema = z.object({
   cellPhoneNumber: z.string().optional(),

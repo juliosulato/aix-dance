@@ -5,6 +5,7 @@ const baseBillSchema = z.object({
   type: z.enum(BillType, {
     message: 'Tipo de conta é obrigatório',
   }),
+  complement: z.string().optional(),
   description: z.string().optional(),
   amount: z.coerce.number({
     message: 'Valor é obrigatório',

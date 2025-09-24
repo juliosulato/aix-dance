@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
 import { useState } from "react";
 import dayjs from "dayjs";
-import 'dayjs/locale/pt-br';
-import 'dayjs/locale/en';
-import 'dayjs/locale/es';
+import "dayjs/locale/pt-br";
+import "dayjs/locale/en";
+import "dayjs/locale/es";
 import AvatarUpload from "@/components/avatarUpload";
 import PersonalData from "./personalData";
 import Checkboxies from "./checkboxies";
@@ -18,7 +18,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import Address from "../../../AddressForm";
 import { KeyedMutator } from "swr";
-import { CreateStudentInput, createStudentSchema } from "@/schemas/academic/student.schema";
+import {
+  CreateStudentInput,
+  createStudentSchema,
+} from "@/schemas/academic/student.schema";
 import { StudentFromApi } from "../StudentFromApi";
 
 dayjs.extend(customParseFormat);
@@ -29,17 +32,20 @@ type Props = {
   mutate: KeyedMutator<StudentFromApi>;
 };
 
-
 function NewStudent({ opened, onClose, mutate }: Props) {
-
-
   const { data: sessionData, status } = useSession();
 
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
 
-
-  const { control, register, handleSubmit, watch, formState: { errors }, reset } = useForm<CreateStudentInput>({
+  const {
+    control,
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    reset,
+  } = useForm<CreateStudentInput>({
     resolver: zodResolver(createStudentSchema),
     defaultValues: {
       guardian: [],
@@ -49,12 +55,11 @@ function NewStudent({ opened, onClose, mutate }: Props) {
     },
   });
 
-
   const handleClose = () => {
     onClose();
-    reset()
+    reset();
   };
-  
+
   const guardians = watch("guardian");
 
   async function createStudent(data: CreateStudentInput) {
@@ -63,26 +68,27 @@ function NewStudent({ opened, onClose, mutate }: Props) {
       return;
     }
 
-
     setVisible(true);
     try {
       const payload = {
         ...data,
-        image: avatarUrl
+        image: avatarUrl,
       };
 
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/students`, {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/students`,
+        {
+          method: "POST",
+          body: JSON.stringify(payload),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to update plan.");
 
       notifications.show({
-        message: "Texto",
-        color: "green"
+        message: "Aluno criado com sucesso",
+        color: "green",
       });
       setAvatarUrl(null);
       reset();
@@ -91,9 +97,9 @@ function NewStudent({ opened, onClose, mutate }: Props) {
     } catch (error) {
       console.error(error);
       notifications.show({
-        title: "Texto",
-        message: "Texto",
-        color: "red"
+        title: "Algo deu errado",
+        message: "Não foi possível criar o aluno.",
+        color: "red",
       });
     } finally {
       setVisible(false);
@@ -104,10 +110,10 @@ function NewStudent({ opened, onClose, mutate }: Props) {
     console.log("Erros de validação:", errors);
   };
 
-    if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>Sessão inválida</div>;
+  if (status === "loading") return <LoadingOverlay visible />;
+  if (status !== "authenticated") return <div>Sessão inválida</div>;
 
-    return (
+  return (
     <>
       <Modal
         opened={opened}
@@ -116,14 +122,24 @@ function NewStudent({ opened, onClose, mutate }: Props) {
         size="auto"
         radius="lg"
         centered
-        classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}
+        classNames={{
+          title: "!font-semibold",
+          header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300",
+        }}
         className="!relative"
       >
-        <form onSubmit={handleSubmit(createStudent, onError)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw] lg:p-6">
+        <form
+          onSubmit={handleSubmit(createStudent, onError)}
+          className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw] lg:p-6"
+        >
           <AvatarUpload onUploadComplete={setAvatarUrl} />
-          <PersonalData control={control as any} register={register as any} errors={errors} />
+          <PersonalData
+            control={control as any}
+            register={register as any}
+            errors={errors}
+          />
           <Address register={register} errors={errors} />
-          <Checkboxies   control={control as any} errors={errors} />
+          <Checkboxies control={control as any} errors={errors} />
           {guardians && guardians.length > 0 && (
             <Guardians control={control as any} errors={errors} />
           )}
@@ -137,13 +153,12 @@ function NewStudent({ opened, onClose, mutate }: Props) {
             {"Salvar"}
           </Button>
         </form>
-
       </Modal>
       <LoadingOverlay
         visible={visible}
         zIndex={9999}
-        overlayProps={{ radius: 'sm', blur: 2 }}
-        loaderProps={{ color: 'violet', type: 'dots' }}
+        overlayProps={{ radius: "sm", blur: 2 }}
+        loaderProps={{ color: "violet", type: "dots" }}
         pos="fixed"
         h="100vh"
         w="100vw"

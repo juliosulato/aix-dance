@@ -24,7 +24,7 @@ export function BankSelect<T extends FieldValues>({ control, errors, name, label
             control={control}
             render={({ field }) => (
                 <Select
-                    label={label || "Texto"}
+                    label={label || "Banco"}
                     data={banks?.map((bank) => ({ label: bank.name, value: bank.id })) || []}
                     value={field.value}
                     onChange={field.onChange}

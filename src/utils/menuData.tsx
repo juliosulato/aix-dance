@@ -39,7 +39,7 @@ const useMenuData = () => {
       label: "Início",
       subitems: [
         // { icon: <AiOutlineDashboard />, label: "Dashboard", href: "/system/dashboard" },
-        { icon: <FiCalendar />, label: "Grade de Aulas", href: "/system/class-schedule" },
+        { icon: <FiCalendar />, label: "Grade de Aulas", href: "/system/home/class-schedule" },
         // { icon: <MdOutlineViewAgenda />, label: "Agenda", href: "/system/calendar" },
         // { icon: <IoExtensionPuzzleOutline />, label: "Integrações", href: "/system/integracoes" },
         // { icon: <IoMdHelpCircleOutline />, label: "Ajuda", href: "/system/help" },

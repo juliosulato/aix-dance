@@ -126,6 +126,13 @@ export default function BasicInformations({ control, errors, register }: Props) 
                 {...register("description")}
                 className="md:col-span-2 lg:col-span-3"
             />
+
+            <TextInput
+                label={"Complemento"}
+                error={errors.complement?.message}
+                {...register("complement")}
+                className="md:col-span-2 lg:col-span-3"
+            />
         </div>
     );
 }

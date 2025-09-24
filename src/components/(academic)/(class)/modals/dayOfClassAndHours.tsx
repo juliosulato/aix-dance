@@ -3,8 +3,15 @@
 import { ActionIcon, Checkbox, CloseIcon, Tooltip } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { IoAdd } from "react-icons/io5";
-import { Control, FieldErrors, UseFormSetValue, WatchInternal } from "react-hook-form";
-import { CreateClassInput, UpdateClassInput } from "@/schemas/academic/class.schema";
+import {
+  FieldErrors,
+  UseFormSetValue,
+  WatchInternal,
+} from "react-hook-form";
+import {
+  CreateClassInput,
+  UpdateClassInput,
+} from "@/schemas/academic/class.schema";
 
 type TimeRange = { from: string; to: string };
 type DaySchedules = CreateClassInput["schedules"];
@@ -22,19 +29,22 @@ export default function DayOfClassesAndHours({
   watch,
 }: Props) {
   const days: { key: DayKey; label: string }[] = [
-    { key: "sunday", label: "Texto" },
-    { key: "monday", label: "Texto" },
-    { key: "tuesday", label: "Texto" },
-    { key: "wednesday", label: "Texto" },
-    { key: "thursday", label: "Texto" },
-    { key: "friday", label: "Texto" },
-    { key: "saturday", label: "Texto" },
+    { key: "sunday", label: "Domingo" },
+    { key: "monday", label: "Segunda-feira" },
+    { key: "tuesday", label: "Terça-feira" },
+    { key: "wednesday", label: "Quarta-feira" },
+    { key: "thursday", label: "Quinta-feira" },
+    { key: "friday", label: "Sexta-feira" },
+    { key: "saturday", label: "Sábado" },
   ];
 
   const schedules = watch("schedules");
 
   const handleCheckbox = (dayKey: DayKey, checked: boolean) => {
-    setValue(`schedules.${dayKey}.enabled`, checked, { shouldValidate: true, shouldDirty: true });
+    setValue(`schedules.${dayKey}.enabled`, checked, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
   };
 
   const handleChange = (
@@ -44,7 +54,10 @@ export default function DayOfClassesAndHours({
     value: string
   ) => {
     // Usando o caminho completo para a atualização
-    setValue(`schedules.${dayKey}.ranges.${index}.${field}`, value, { shouldValidate: true, shouldDirty: true });
+    setValue(`schedules.${dayKey}.ranges.${index}.${field}`, value, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
   };
 
   const handleAddRange = (dayKey: DayKey) => {
@@ -70,78 +83,96 @@ export default function DayOfClassesAndHours({
     <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col">
       <h2 className="text-lg font-bold">{"Dias e Horários"}</h2>
       {errors.schedules && !errors.schedules.root && (
-          <p className="text-sm text-red-500 mt-1">{errors.schedules.message}</p>
+        <p className="text-sm text-red-500 mt-1">{errors.schedules.message}</p>
       )}
       <br />
       <div className="flex flex-col gap-4 w-full">
         {days.map((day) => (
           <div key={day.key} className="flex flex-col gap-2">
-            {schedules?.[day.key]?.ranges.map((range: TimeRange, index: number) => (
-              <div
-                key={index}
-                className="flex flex-row flex-wrap gap-4 md:grid md:grid-cols-[1fr__auto__1fr] justify-center items-center"
-              >
-                {index === 0 ? (
-                  <Checkbox
-                    label={day.label}
-                    id={day.key}
-                    checked={schedules?.[day.key]?.enabled || false}
-                    onChange={(e) =>
-                      handleCheckbox(day.key, e.currentTarget.checked)
-                    }
-                  />
-                ) : (
-                  <div />
-                )}
+            {schedules?.[day.key]?.ranges.map(
+              (range: TimeRange, index: number) => (
+                <div
+                  key={index}
+                  className="flex flex-row flex-wrap gap-4 md:grid md:grid-cols-[1fr__auto__1fr] justify-center items-center"
+                >
+                  {index === 0 ? (
+                    <Checkbox
+                      label={day.label}
+                      id={day.key}
+                      checked={schedules?.[day.key]?.enabled || false}
+                      onChange={(e) =>
+                        handleCheckbox(day.key, e.currentTarget.checked)
+                      }
+                    />
+                  ) : (
+                    <div />
+                  )}
 
-                <div className="flex flex-row gap-3 justify-center items-center">
-                  <span>{"De"}</span>
-                  <TimeInput
-                    value={range.from}
-                    disabled={!schedules?.[day.key]?.enabled}
-                    onChange={(event) =>
-                      handleChange(day.key, index, "from", event.currentTarget.value)
-                    }
-                    // Exibe a mensagem de erro específica para este campo
-                    error={errors.schedules?.[day.key]?.ranges?.[index]?.from?.message}
-                  />
-                  <span>{"Até"}</span>
-                  <TimeInput
-                    value={range.to}
-                    disabled={!schedules?.[day.key]?.enabled}
-                    onChange={(event) =>
-                      handleChange(day.key, index, "to", event.currentTarget.value)
-                    }
-                     // Exibe a mensagem de erro específica para este campo
-                    error={errors.schedules?.[day.key]?.ranges?.[index]?.to?.message}
-                  />
-                </div>
+                  <div className="flex flex-row gap-3 justify-center items-center">
+                    <span>{"De"}</span>
+                    <TimeInput
+                      value={range.from}
+                      disabled={!schedules?.[day.key]?.enabled}
+                      onChange={(event) =>
+                        handleChange(
+                          day.key,
+                          index,
+                          "from",
+                          event.currentTarget.value
+                        )
+                      }
+                      // Exibe a mensagem de erro específica para este campo
+                      error={
+                        errors.schedules?.[day.key]?.ranges?.[index]?.from
+                          ?.message
+                      }
+                    />
+                    <span>{"Até"}</span>
+                    <TimeInput
+                      value={range.to}
+                      disabled={!schedules?.[day.key]?.enabled}
+                      onChange={(event) =>
+                        handleChange(
+                          day.key,
+                          index,
+                          "to",
+                          event.currentTarget.value
+                        )
+                      }
+                      // Exibe a mensagem de erro específica para este campo
+                      error={
+                        errors.schedules?.[day.key]?.ranges?.[index]?.to
+                          ?.message
+                      }
+                    />
+                  </div>
 
-                <div className="justify-self-end flex gap-2">
+                  <div className="justify-self-end flex gap-2">
                     {schedules?.[day.key]?.ranges.length > 1 && (
                       <Tooltip color="#7439FA" label="Excluir">
-                      <ActionIcon
-                        color="gray"
-                        onClick={() => handleRemoveRange(day.key, index)}
-                      >
-                        <CloseIcon />
-                      </ActionIcon>
-                    </Tooltip>
-                  )}
-                  {index === schedules?.[day.key]?.ranges.length - 1 && (
-                    <Tooltip color="#7439FA" label="Adicionar">
-                      <ActionIcon
-                        color="gray"
-                        onClick={() => handleAddRange(day.key)}
-                        disabled={!schedules?.[day.key]?.enabled}
-                      >
-                        <IoAdd />
-                      </ActionIcon>
-                    </Tooltip>
-                  )}
+                        <ActionIcon
+                          color="gray"
+                          onClick={() => handleRemoveRange(day.key, index)}
+                        >
+                          <CloseIcon />
+                        </ActionIcon>
+                      </Tooltip>
+                    )}
+                    {index === schedules?.[day.key]?.ranges.length - 1 && (
+                      <Tooltip color="#7439FA" label="Adicionar">
+                        <ActionIcon
+                          color="gray"
+                          onClick={() => handleAddRange(day.key)}
+                          disabled={!schedules?.[day.key]?.enabled}
+                        >
+                          <IoAdd />
+                        </ActionIcon>
+                      </Tooltip>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
         ))}
       </div>

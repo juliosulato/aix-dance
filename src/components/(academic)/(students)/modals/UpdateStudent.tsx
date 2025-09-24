@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
 import { useEffect, useState } from "react";
@@ -111,7 +111,7 @@ useEffect(() => {
       if (!response.ok) throw new Error("Failed to update plan.");
 
       notifications.show({
-        message: "Texto",
+        message: "Aluno atualizado com sucesso",
         color: "green"
       });
       setAvatarUrl(undefined);
@@ -121,8 +121,8 @@ useEffect(() => {
     } catch (error) {
       console.error(error);
       notifications.show({
-        title: "Texto",
-        message: "Texto",
+        title: "Algo deu errado",
+        message: "Não foi possível atualizar o aluno.",
         color: "red"
       });
     } finally {

@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { Button, Checkbox, NumberInput, Select, Table, Textarea, Tooltip, ActionIcon } from "@mantine/core";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
-import dayjs from "dayjs";
-import 'dayjs/locale/pt-br';
-import 'dayjs/locale/en';
-import 'dayjs/locale/es';
 import { BiHelpCircle } from "react-icons/bi";
 import { FaTrash } from "react-icons/fa";
 import { Control, Controller, FieldErrors, useFieldArray, useWatch } from "react-hook-form";
@@ -28,8 +24,8 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
     const [comission, setComission] = useState<boolean>(false);
 
     const contractTypeData = [
-        { value: RemunerationType.HOURLY, label: "Texto" },
-        { value: RemunerationType.FIXED, label: "Texto" },
+        { value: RemunerationType.HOURLY, label: "Hora-Aula" },
+        { value: RemunerationType.FIXED, label: "Fixo" },
     ];
 
     const handleAddRange = () => {

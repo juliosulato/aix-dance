@@ -12,229 +12,280 @@ import { GrUpdate } from "react-icons/gr";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import DataView from "@/components/ui/DataView";
 
-import dayjs from "dayjs";
-import 'dayjs/locale/pt-br';
-import 'dayjs/locale/es';
-import 'dayjs/locale/en';
 import NewPlan from "./modals/NewPlan";
 import UpdatePlan from "./modals/UpdatePlan";
 
 interface MenuItemProps {
-    plans: Plan;
-    onUpdateClick: (b: Plan) => void;
-    onDeleteClick: (b: Plan) => void;
+  plans: Plan;
+  onUpdateClick: (b: Plan) => void;
+  onDeleteClick: (b: Plan) => void;
 }
 
 interface MenuItemsProps {
-    selectedIds: string[];
-    onBulkDeleteClick: (ids: string[]) => void;
+  selectedIds: string[];
+  onBulkDeleteClick: (ids: string[]) => void;
 }
 
 export default function AllPlansData() {
+  const { data: sessionData, status } = useSession();
 
-    const { data: sessionData, status } = useSession();
+  const [openNew, setOpenNew] = useState<boolean>(false);
+  const [openUpdate, setOpenUpdate] = useState<boolean>(false);
+  const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
+  const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-    const [openNew, setOpenNew] = useState<boolean>(false);
-    const [openUpdate, setOpenUpdate] = useState<boolean>(false);
-    const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
-    const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
-    const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
-    const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const {
+    data: categoryGroups,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR<Plan[]>(
+    () =>
+      sessionData?.user?.tenancyId
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/plans`
+        : null,
+    fetcher
+  );
 
-    const { data: categoryGroups, error, isLoading, mutate } = useSWR<Plan[]>(
-        () => sessionData?.user?.tenancyId
-            ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/plans`
-            : null,
-        fetcher
-    );
+  const handleUpdateClick = (plan: Plan) => {
+    setSelectedPlan(plan);
+    setOpenUpdate(true);
+  };
 
-    const handleUpdateClick = (plan: Plan) => {
-        setSelectedPlan(plan);
-        setOpenUpdate(true);
-    };
+  const handleDeleteClick = (plan: Plan) => {
+    setSelectedPlan(plan);
+    setIdsToDelete([]);
+    setConfirmModalOpen(true);
+  };
 
-    const handleDeleteClick = (plan: Plan) => {
-        setSelectedPlan(plan);
-        setIdsToDelete([]);
-        setConfirmModalOpen(true);
-    };
+  const handleBulkDeleteClick = (ids: string[]) => {
+    setIdsToDelete(ids);
+    setSelectedPlan(null);
+    setConfirmModalOpen(true);
+  };
 
-    const handleBulkDeleteClick = (ids: string[]) => {
-        setIdsToDelete(ids);
-        setSelectedPlan(null);
-        setConfirmModalOpen(true);
-    };
+  const handleDeleteConfirm = async () => {
+    setIsDeleting(true);
+    const tenancyId = sessionData?.user?.tenancyId;
+    if (!tenancyId) return;
 
-    const handleDeleteConfirm = async () => {
-        setIsDeleting(true);
-        const tenancyId = sessionData?.user?.tenancyId;
-        if (!tenancyId) return;
+    const finalIdsToDelete =
+      idsToDelete.length > 0
+        ? idsToDelete
+        : selectedPlan
+        ? [selectedPlan.id]
+        : [];
 
-        const finalIdsToDelete = idsToDelete.length > 0 ? idsToDelete : (selectedPlan ? [selectedPlan.id] : []);
-
-        if (finalIdsToDelete.length === 0) {
-            setIsDeleting(false);
-            setConfirmModalOpen(false);
-            return;
-        }
-
-        try {
-            await deletePlans(finalIdsToDelete, tenancyId, mutate as any);
-        } catch (error) {
-            console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);
-        } finally {
-            setIsDeleting(false);
-            setConfirmModalOpen(false);
-            setSelectedPlan(null);
-            setIdsToDelete([]);
-        }
-    };
-
-    const MenuItem = ({ plans, onUpdateClick, onDeleteClick }: MenuItemProps) => (
-        <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-            <Menu shadow="md" width={200} withinPortal>
-                <Menu.Target>
-                    <ActionIcon variant="light" color="gray" radius={"md"}>
-                        <BiDotsVerticalRounded />
-                    </ActionIcon>
-                </Menu.Target>
-                <Menu.Dropdown>
-                    <Menu.Label>{"Ações"}</Menu.Label>
-                    <Menu.Item leftSection={<GrUpdate size={14} />} onClick={() => onUpdateClick(plans)}>
-                        {"Editar"}
-                    </Menu.Item>
-                    <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(plans)}>
-                        {"Excluir"}
-                    </Menu.Item>
-                </Menu.Dropdown>
-            </Menu>
-        </div>
-    );
-
-    const MenuItems = ({ selectedIds, onBulkDeleteClick }: MenuItemsProps) => (
-        <Menu shadow="md" width={200} withinPortal>
-            <Menu.Target>
-                <ActionIcon variant="light" color="gray" radius={"md"}>
-                    <BiDotsVerticalRounded />
-                </ActionIcon>
-            </Menu.Target>
-            <Menu.Dropdown>
-                <Menu.Label>{"Ações em Massa"}</Menu.Label>
-                <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
-                   Deletar {selectedIds.length} selecionado(s)
-                </Menu.Item>
-            </Menu.Dropdown>
-        </Menu>
-    );
-    
-    const renderCicle = (val: PlanType) => {
-        switch (val) {
-            case "MONTHLY":
-                return "Texto";
-                break;
-            case "SEMMONTLY":
-                return "Quinzenal";
-            break;
-            case "BI_MONTHLY":
-                return "Bimestral";
-            break;
-            case "QUARTERLY":
-                return "Trimestral";
-            break;
-            case "BI_ANNUAL":
-                return "Semestral";
-            break;
-            case "ANNUAL":
-                return "Anual";
-            break;
-            default: 
-                return "";
-            break;
-        }
+    if (finalIdsToDelete.length === 0) {
+      setIsDeleting(false);
+      setConfirmModalOpen(false);
+      return;
     }
 
-    if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Acesso não autorizado"}</div>;
-    if (error) return <p>{"Erro ao carregar os planos."}</p>;
+    try {
+      await deletePlans(finalIdsToDelete, tenancyId, mutate as any);
+    } catch (error) {
+      console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);
+    } finally {
+      setIsDeleting(false);
+      setConfirmModalOpen(false);
+      setSelectedPlan(null);
+      setIdsToDelete([]);
+    }
+  };
 
+  const MenuItem = ({ plans, onUpdateClick, onDeleteClick }: MenuItemProps) => (
+    <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+      <Menu shadow="md" width={200} withinPortal>
+        <Menu.Target>
+          <ActionIcon variant="light" color="gray" radius={"md"}>
+            <BiDotsVerticalRounded />
+          </ActionIcon>
+        </Menu.Target>
+        <Menu.Dropdown>
+          <Menu.Label>{"Ações"}</Menu.Label>
+          <Menu.Item
+            leftSection={<GrUpdate size={14} />}
+            onClick={() => onUpdateClick(plans)}
+          >
+            {"Editar"}
+          </Menu.Item>
+          <Menu.Item
+            color="red"
+            leftSection={<BiTrash size={14} />}
+            onClick={() => onDeleteClick(plans)}
+          >
+            {"Excluir"}
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
+    </div>
+  );
 
-    return (
-        <>
-            <DataView<Plan>
-                data={categoryGroups || []}
-                openNewModal={{
-                    func: () => setOpenNew(true),
-                    label: "Novo Plano"
-                }}
-                baseUrl="/system/academic/plans/"
-                mutate={mutate}
-                pageTitle={"Planos"}
-                searchbarPlaceholder={"Pesquisar planos..."}
-                columns={[
-                    { key: "name", label: "Nome", sortable: true },
-                    {
-                        key: "amount", label: "Valor",
-                        render: (value) => value ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value) : '-',
-                        sortable: true
-                    },
-                    {
-                        key: "frequency", label: "Frequência",
-                        sortable: true,
-                        render: (value) => `${value} ${"parcelas"}`
-                    },
-                     {
-                        key: "type", label: "Tipo",
-                        sortable: true,
-                        render: (value) => renderCicle(value)
-                    }
-                ]}
-                RenderRowMenu={(item) => <MenuItem plans={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
-                RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
-                renderCard={(item) => (
-                    <>
-                        <div className="flex flex-row justify-between items-start">
-                            <Text fw={500} size="lg">{item.name}</Text>
-                            <MenuItem plans={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />
-                        </div>
-                        <div className="flex flex-row justify-between items-start">
-                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(item.amount))}
-                            <span><strong>{"Tipo"}:</strong> {renderCicle(item.type)}</span>
-                        </div>
-                    </>
-                )}
-            />
+  const MenuItems = ({ selectedIds, onBulkDeleteClick }: MenuItemsProps) => (
+    <Menu shadow="md" width={200} withinPortal>
+      <Menu.Target>
+        <ActionIcon variant="light" color="gray" radius={"md"}>
+          <BiDotsVerticalRounded />
+        </ActionIcon>
+      </Menu.Target>
+      <Menu.Dropdown>
+        <Menu.Label>{"Ações em Massa"}</Menu.Label>
+        <Menu.Item
+          color="red"
+          leftSection={<BiTrash size={14} />}
+          onClick={() => onBulkDeleteClick(selectedIds)}
+        >
+          Deletar {selectedIds.length} selecionado(s)
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
+  );
 
-            <NewPlan opened={openNew} onClose={() => setOpenNew(false)} mutate={mutate as any} />
+  const renderCicle = (val: PlanType) => {
+    switch (val) {
+      case "MONTHLY":
+        return "Mensal";
+        break;
+      case "SEMMONTLY":
+        return "Quinzenal";
+        break;
+      case "BI_MONTHLY":
+        return "Bimestral";
+        break;
+      case "QUARTERLY":
+        return "Trimestral";
+        break;
+      case "BI_ANNUAL":
+        return "Semestral";
+        break;
+      case "ANNUAL":
+        return "Anual";
+        break;
+      default:
+        return "";
+        break;
+    }
+  };
 
-            {selectedPlan && (
-                <UpdatePlan
-                    opened={openUpdate}
-                    onClose={() => {
-                        setOpenUpdate(false);
-                        setSelectedPlan(null);
-                    }}
-                    plan={selectedPlan}
-                    mutate={mutate as any}
-                />
-            )}
+  if (status === "loading" || isLoading) return <LoadingOverlay visible />;
+  if (status !== "authenticated") return <div>{"Acesso não autorizado"}</div>;
+  if (error) return <p>{"Erro ao carregar os planos."}</p>;
 
-            <ConfirmationModal
-                opened={isConfirmModalOpen}
-                onClose={() => setConfirmModalOpen(false)}
-                onConfirm={handleDeleteConfirm}
-                title={"Confirmar Exclusão"}
-                confirmLabel={"Excluir"}
-                cancelLabel={"Cancelar"}
-                loading={isDeleting}
-            >
-                {idsToDelete.length > 0 ? (
-                    `Tem certeza que deseja desativar estes ${idsToDelete.length} planos?`
-                ) : (
-                    `Tem certeza que deseja desativar este plano?`  
-                )}
-                <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Essa ação não pode ser desfeita."}</Text>
-            </ConfirmationModal>
-        </>
-    );
+  return (
+    <>
+      <DataView<Plan>
+        data={categoryGroups || []}
+        openNewModal={{
+          func: () => setOpenNew(true),
+          label: "Novo Plano",
+        }}
+        baseUrl="/system/academic/plans/"
+        mutate={mutate}
+        pageTitle={"Planos"}
+        searchbarPlaceholder={"Pesquisar planos..."}
+        columns={[
+          { key: "name", label: "Nome", sortable: true },
+          {
+            key: "amount",
+            label: "Valor",
+            render: (value) =>
+              value
+                ? new Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  }).format(value)
+                : "-",
+            sortable: true,
+          },
+          {
+            key: "frequency",
+            label: "Frequência",
+            sortable: true,
+            render: (value) => `${value} ${"parcelas"}`,
+          },
+          {
+            key: "type",
+            label: "Tipo",
+            sortable: true,
+            render: (value) => renderCicle(value),
+          },
+        ]}
+        RenderRowMenu={(item) => (
+          <MenuItem
+            plans={item}
+            onUpdateClick={handleUpdateClick}
+            onDeleteClick={handleDeleteClick}
+          />
+        )}
+        RenderAllRowsMenu={(selectedIds) => (
+          <MenuItems
+            selectedIds={selectedIds}
+            onBulkDeleteClick={handleBulkDeleteClick}
+          />
+        )}
+        renderCard={(item) => (
+          <>
+            <div className="flex flex-row justify-between items-start">
+              <Text fw={500} size="lg">
+                {item.name}
+              </Text>
+              <MenuItem
+                plans={item}
+                onUpdateClick={handleUpdateClick}
+                onDeleteClick={handleDeleteClick}
+              />
+            </div>
+            <div className="flex flex-row justify-between items-start">
+              {new Intl.NumberFormat("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              }).format(Number(item.amount))}
+              <span>
+                <strong>{"Tipo"}:</strong> {renderCicle(item.type)}
+              </span>
+            </div>
+          </>
+        )}
+      />
+
+      <NewPlan
+        opened={openNew}
+        onClose={() => setOpenNew(false)}
+        mutate={mutate as any}
+      />
+
+      {selectedPlan && (
+        <UpdatePlan
+          opened={openUpdate}
+          onClose={() => {
+            setOpenUpdate(false);
+            setSelectedPlan(null);
+          }}
+          plan={selectedPlan}
+          mutate={mutate as any}
+        />
+      )}
+
+      <ConfirmationModal
+        opened={isConfirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        title={"Confirmar Exclusão"}
+        confirmLabel={"Excluir"}
+        cancelLabel={"Cancelar"}
+        loading={isDeleting}
+      >
+        {idsToDelete.length > 0
+          ? `Tem certeza que deseja desativar estes ${idsToDelete.length} planos?`
+          : `Tem certeza que deseja desativar este plano?`}
+        <br />
+        <Text component="span" c="red" size="sm" fw={500} mt="md">
+          {"Essa ação não pode ser desfeita."}
+        </Text>
+      </ConfirmationModal>
+    </>
+  );
 }

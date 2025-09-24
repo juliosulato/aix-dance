@@ -5,7 +5,10 @@ import { useSession } from "next-auth/react";
 
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
-import { UpdateFormsOfReceiptInput, updateFormsOfReceiptSchema } from "@/schemas/financial/forms-receipt.schema";
+import {
+  UpdateFormsOfReceiptInput,
+  updateFormsOfReceiptSchema,
+} from "@/schemas/financial/forms-receipt.schema";
 import { FormsOfReceipt } from "..";
 import { KeyedMutator } from "swr";
 import FormsOfReceipt__BasicInformations from "./basic-informations";
@@ -19,20 +22,32 @@ type Props = {
   mutate: () => void | KeyedMutator<FormsOfReceipt[]>;
 };
 
-export default function UpdateFormsOfReceipt({ mutate, formsOfReceipt, opened, onClose, onSuccess }: Props) {
+export default function UpdateFormsOfReceipt({
+  mutate,
+  formsOfReceipt,
+  opened,
+  onClose,
+  onSuccess,
+}: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
   // Usamos o schema estático
 
-  const { control, handleSubmit, formState: { errors }, register, reset } =
-    useForm<UpdateFormsOfReceiptInput>({
-      resolver: zodResolver(updateFormsOfReceiptSchema) as any,
-      defaultValues: { // inicial vazio
-        name: undefined,
-        operator: undefined,
-        fees: [],
-      },
-    });
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    register,
+    reset,
+  } = useForm<UpdateFormsOfReceiptInput>({
+    resolver: zodResolver(updateFormsOfReceiptSchema) as any,
+    defaultValues: {
+      // inicial vazio
+      name: undefined,
+      operator: undefined,
+      fees: [],
+    },
+  });
 
   // 👉 Atualiza os valores do formulário sempre que mudar o `formsOfReceipt`
   useEffect(() => {
@@ -55,7 +70,7 @@ export default function UpdateFormsOfReceipt({ mutate, formsOfReceipt, opened, o
 
   async function updateFormsOfReceipt(data: UpdateFormsOfReceiptInput) {
     if (!sessionData?.user.tenancyId) {
-      notifications.show({ color: "red", message: "Sessão Inválida"});
+      notifications.show({ color: "red", message: "Sessão Inválida" });
       return;
     }
     setIsLoading(true);
@@ -69,13 +84,16 @@ export default function UpdateFormsOfReceipt({ mutate, formsOfReceipt, opened, o
         }
       );
       if (!response.ok) throw new Error("Failed to update forms of receipt");
-      notifications.show({ message: "Texto", color: "green" });
+      notifications.show({
+        message: "Forma de recebimento atualizada com sucesso",
+        color: "green",
+      });
       if (onSuccess) onSuccess();
       onClose();
-      mutate()
+      mutate();
     } catch (error) {
       console.error(error);
-      notifications.show({ message: "Texto", color: "red" });
+      notifications.show({ message: "Falha ao atualizar forma de recebimento", color: "red" });
     } finally {
       setIsLoading(false);
     }
@@ -99,8 +117,15 @@ export default function UpdateFormsOfReceipt({ mutate, formsOfReceipt, opened, o
         className="flex flex-col gap-4"
       >
         <LoadingOverlay visible={isLoading} />
-        <FormsOfReceipt__BasicInformations register={register} errors={errors} />
-        <FormsOfReceipt__Fees control={control} register={register} errors={errors} />
+        <FormsOfReceipt__BasicInformations
+          register={register}
+          errors={errors}
+        />
+        <FormsOfReceipt__Fees
+          control={control}
+          register={register}
+          errors={errors}
+        />
         <Button
           type="submit"
           loading={isLoading}

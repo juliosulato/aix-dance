@@ -80,13 +80,13 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
                 throw new Error("Failed to create bill");
             }
 
-            notifications.show({ message: "Texto", color: "green" });
+            notifications.show({ message: "Conta criada com sucesso", color: "green" });
             reset();
             onClose();
             mutate();
         } catch (error) {
             console.error(error);
-            notifications.show({ message: "Texto", color: "red" });
+            notifications.show({ message: "Falha ao criar conta", color: "red" });
         } finally {
             setIsLoading(false);
         }

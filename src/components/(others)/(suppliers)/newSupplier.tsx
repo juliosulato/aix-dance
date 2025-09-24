@@ -29,7 +29,7 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
     const handleClose = () => {
         onClose();
         reset();
-    }
+    };
 
     const { data: sessionData } = useSession();
 

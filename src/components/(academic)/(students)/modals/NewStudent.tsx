@@ -106,14 +106,14 @@ function NewStudent({ opened, onClose, mutate }: Props) {
   };
 
     if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Texto"}</div>;
+    if (status !== "authenticated") return <div>Sessão inválida</div>;
 
     return (
     <>
       <Modal
         opened={opened}
         onClose={handleClose}
-        title={"Texto"}
+        title={"Novo Estudante"}
         size="auto"
         radius="lg"
         centered

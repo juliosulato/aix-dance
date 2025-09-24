@@ -64,7 +64,7 @@ export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
 
     async function handleUpdateBill(data: UpdateBillInput) {
         if (!sessionData?.user.tenancyId || !bill) {
-            notifications.show({ color: "red", message: g("errors.invalidSession") });
+            notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
 
@@ -84,12 +84,12 @@ export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
                 throw new Error(errorData.message || "Failed to update bill");
             }
 
-            notifications.show({ message: "Texto", color: "green" });
+            notifications.show({ message: "Conta atualizada com sucesso.", color: "green" });
             onClose();
             mutate(); // Revalida o cache do SWR
         } catch (error: any) {
             console.error(error);
-            notifications.show({ message: error.message || "Texto", color: "red" });
+            notifications.show({ message: error.message || "Erro ao atualizar a conta.", color: "red" });
         } finally {
             setIsLoading(false);
         }
@@ -98,8 +98,8 @@ export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
     const handleFormErrors = (err: any) => {
         console.warn("Validation errors:", err);
         notifications.show({
-            title: g("errors.validationTitle"),
-            message: g("errors.validationMessage"),
+            title: "Erro de validação",
+            message: "Verifique os dados informados",
             color: 'yellow'
         });
     };
@@ -111,7 +111,7 @@ export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
         <Modal
             opened={opened}
             onClose={onClose}
-            title={"Texto"}
+            title="Editar Conta"
             size="xl"
             radius="lg"
             centered
@@ -125,11 +125,11 @@ export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
                         {isSeries ? (
                             <div className="text-center p-4 bg-gray-50 rounded-lg">
                                 <FaEdit className="mx-auto text-gray-400 text-2xl mb-2" />
-                                <Text size="sm" c="dimmed">{"Texto"}</Text>
+                                <Text size="sm" c="dimmed">Esta conta faz parte de uma série. Escolha como deseja aplicar as alterações.</Text>
                             </div>
                         ) : (
                             <div>
-                                <h2 className="text-lg font-semibold mb-2">{"Texto"}</h2>
+                                <h2 className="text-lg font-semibold mb-2">Opções de Pagamento</h2>
                                 <CashOrInstallments control={control as any} errors={errors as any} register={register as any} setValue={setValue as any} watch={watch as any}  />
                             </div>
                         )}
@@ -139,13 +139,13 @@ export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
                 <div className="flex items-center justify-between pt-6">
                     {isSeries && (
                         <div>
-                            <Text size="sm" fw={500} mb={4}>{g("financial.bills.modals.applyTo.label")}</Text>
+                            <Text size="sm" fw={500} mb={4}>Aplicar alterações</Text>
                             <SegmentedControl
                                 value={updateScope}
                                 onChange={(value) => setUpdateScope(value as 'ONE' | 'ALL_FUTURE')}
                                 data={[
-                                    { label: g("financial.bills.modals.applyTo.one"), value: 'ONE' },
-                                    { label: g("financial.bills.modals.applyTo.allFuture"), value: 'ALL_FUTURE' },
+                                    { label: "Apenas esta conta", value: 'ONE' },
+                                    { label: "Esta e todas as futuras", value: 'ALL_FUTURE' },
                                 ]}
                                 color="#7439FA"
                             />
@@ -160,7 +160,7 @@ export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
                         loading={isLoading}
                         className="!text-sm !font-medium tracking-wider ml-auto"
                     >
-                        {g("forms.submit")}
+                        Salvar
                     </Button>
                 </div>
             </form>

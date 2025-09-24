@@ -12,10 +12,6 @@ import { GrUpdate } from "react-icons/gr";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import DataView from "@/components/ui/DataView";
 
-import dayjs from "dayjs";
-import 'dayjs/locale/pt-br';
-import 'dayjs/locale/es';
-import 'dayjs/locale/en';
 import NewClass from "./modals/NewClass";
 import UpdateClass from "./modals/UpdateClass";
 
@@ -145,8 +141,8 @@ export default function AllClassesData() {
     );
     
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Texto"}</div>;
-    if (error) return <p>{"Texto"}</p>;
+    if (status !== "authenticated") return <div>{"Não autenticado"}</div>;
+    if (error) return <p>{"Erro"}</p>;
 
     return (
         <>
@@ -154,17 +150,17 @@ export default function AllClassesData() {
                 data={classes || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: "Texto"
+                    label: "Nova Turma"
                 }}
                 baseUrl="/system/academic/classes/"
                 mutate={mutate}
                 pageTitle={"Turmas"}
-                searchbarPlaceholder={"Texto"}
+                searchbarPlaceholder={"Busque por nome da turma, professor, modalidade..."}
                 columns={[
-                    { key: "name", label: "Texto", sortable: true },
-                    { key: "modality", label: "Texto", render: (modality) => modality?.name || '-', sortable: true },
-                    { key: "teacher", label: "Texto", sortable: true, render: (teacher) => teacher ? `${teacher.firstName} ${teacher.lastName}` : '-' },
-                    { key: "studentClasses", label: "Texto", sortable: true, render: (studentClasses: ClassFromApi["studentClasses"]) => studentClasses.length }
+                    { key: "name", label: "Nome", sortable: true },
+                    { key: "modality", label: "Modalidade", render: (modality) => modality?.name || '-', sortable: true },
+                    { key: "teacher", label: "Professor", sortable: true, render: (teacher) => teacher ? `${teacher.firstName} ${teacher.lastName}` : '-' },
+                    { key: "studentClasses", label: "Alunos", sortable: true, render: (studentClasses: ClassFromApi["studentClasses"]) => studentClasses.length }
                 ]}
                 RenderRowMenu={(item) => <MenuItem classItem={item} onUpdateClick={handleUpdateClick} onArchiveClick={handleArchiveClick} />}
                 RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkArchiveClick={handleBulkArchiveClick} />}
@@ -175,9 +171,9 @@ export default function AllClassesData() {
                             <MenuItem classItem={item} onUpdateClick={handleUpdateClick} onArchiveClick={handleArchiveClick} />
                         </div>
                         <div className="flex flex-col gap-2 mt-2">
-                           <Text size="sm"><strong>{"Texto"}:</strong> {item.modality?.name || '-'}</Text>
-                           <Text size="sm"><strong>{"Texto"}:</strong> {item.teacher ? `${item.teacher.firstName} ${item.teacher.lastName}` : '-'}</Text>
-                           <Text size="sm"><strong>{"Texto"}:</strong> {item.studentClasses.length ?? 0}</Text>
+                           <Text size="sm"><strong>{"Modalidade"}:</strong> {item.modality?.name || '-'}</Text>
+                           <Text size="sm"><strong>{"Professor"}:</strong> {item.teacher ? `${item.teacher.firstName} ${item.teacher.lastName}` : '-'}</Text>
+                           <Text size="sm"><strong>{"Alunos"}:</strong> {item.studentClasses.length ?? 0}</Text>
                         </div>
                     </>
                 )}
@@ -198,8 +194,8 @@ export default function AllClassesData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleArchiveConfirm}
-                title={"Texto"}
-                confirmLabel={"Texto"}
+                title={"Confirmar Arquivamento"}
+                confirmLabel={"Arquivar"}
                 cancelLabel={"Cancelar"}
                 loading={isArchiving}
             >
@@ -209,7 +205,7 @@ export default function AllClassesData() {
                     <span>Tem certeza que deseja arquivar a turma <strong>{selectedClass?.name}</strong>?</span>
                 )}
                 <br />
-                <Text component="span" c="orange" size="sm" fw={500} mt="md">{"Texto"}</Text>
+                <Text component="span" c="orange" size="sm" fw={500} mt="md">T</Text>
             </ConfirmationModal>
         </>
     );

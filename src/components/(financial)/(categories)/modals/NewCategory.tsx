@@ -31,7 +31,7 @@ export default function NewCategoryBill({ opened, onClose, mutate }: Props) {
 
     async function createCategoryBill(data: CreateCategoryBillInput) {
         if (!sessionData?.user.tenancyId) {
-            notifications.show({ color: "red", message: g("general.errors.invalidSession") });
+            notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
 
@@ -77,8 +77,8 @@ export default function NewCategoryBill({ opened, onClose, mutate }: Props) {
 
     const handleFormErrors = () => {
         notifications.show({
-            title: g("general.errors.validationTitle"),
-            message: g("general.errors.validationMessage"),
+            title: "Erro de validação",
+            message: "Verifique os dados informados",
             color: 'yellow'
         });
     };
@@ -87,7 +87,7 @@ export default function NewCategoryBill({ opened, onClose, mutate }: Props) {
         <Modal
             opened={opened}
             onClose={onClose}
-            title={"Texto"}
+            title="Nova Categoria"
             size="lg"
             radius="lg"
             centered
@@ -111,7 +111,7 @@ export default function NewCategoryBill({ opened, onClose, mutate }: Props) {
                     loading={isLoading}
                     className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
                 >
-                    {g("forms.submit")}
+                    Salvar
                 </Button>
             </form>
         </Modal>

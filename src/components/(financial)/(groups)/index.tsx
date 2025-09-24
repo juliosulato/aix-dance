@@ -12,10 +12,7 @@ import { GrUpdate } from "react-icons/gr";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import DataView from "@/components/ui/DataView";
 
-import dayjs from "dayjs";
-import 'dayjs/locale/pt-br';
-import 'dayjs/locale/en';
-import 'dayjs/locale/es';
+// dayjs imports removed (not used in this component)
 import NewCategoryGroup from "./NewGroup";
 import UpdateCategoryGroup from "./UpdateGroup";
 
@@ -79,7 +76,7 @@ export default function AllCategoryGroupsData() {
         }
 
         try {
-            await deleteCategoryGroups(finalIdsToDelete, tenancyId, t, mutate as any);
+            await deleteCategoryGroups(finalIdsToDelete, tenancyId, mutate as any);
             mutate();
         } catch (error) {
             console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);
@@ -120,19 +117,17 @@ export default function AllCategoryGroupsData() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{"Texto"}</Menu.Label>
+                <Menu.Label>{"Ações em Massa"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
-                    {t("general.actions.deleteMany", {
-                        items: selectedIds.length
-                    })}
+                    {"Excluir selecionados"}
                 </Menu.Item>
             </Menu.Dropdown>
         </Menu>
     );
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Texto"}</div>;
-    if (error) return <p>{"Texto"}</p>;
+    if (status !== "authenticated") return <div>Sessão inválida</div>;
+    if (error) return <p>{"Erro inesperado"}</p>;
 
 
     return (
@@ -142,14 +137,14 @@ export default function AllCategoryGroupsData() {
                 data={categoryGroups || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: "Texto"
+                    label: "Novo Grupo"
                 }}
                 baseUrl="/system/financial/groups/"
                 mutate={mutate}
-                pageTitle={"Texto"}
-                searchbarPlaceholder={"Texto"}
+                pageTitle={"Grupos de Categorias"}
+                searchbarPlaceholder={"Pesquisar grupos..."}
                 columns={[
-                    { key: "name", label: "Texto" },
+                    { key: "name", label: "Nome" },
                 ]}
                 RenderRowMenu={(item) => <MenuItem categoryGroup={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
                 RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
@@ -181,22 +176,18 @@ export default function AllCategoryGroupsData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={"Texto"}
-                confirmLabel={"Texto"}
-                cancelLabel={"Texto"}
+                title={"Confirmar Exclusão"}
+                confirmLabel={"Excluir"}
+                cancelLabel={"Cancelar"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
-                    t("financial.category-groups.modals.confirmModal.textArray",
-                        { groups: idsToDelete.length }
-                    )
+                    `Tem certeza que deseja excluir os ${idsToDelete.length} grupos de categorias selecionados?`
                 ) : (
-                    t("financial.category-groups.modals.confirmModal.text", {
-                        group: selectedCategoryGroup?.name || ""
-                    })
+                    `Tem certeza que deseja excluir o grupo de categorias ${selectedCategoryGroup?.name || ""}?`
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Texto"}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">Aviso: essa operação é irreversível.</Text>
             </ConfirmationModal>
         </>
     );

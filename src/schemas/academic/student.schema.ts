@@ -13,7 +13,7 @@ export const createStudentSchema = z.object({
     dateOfBirth: z.string().min(1, { message: "Data de nascimento é obrigatória" }),
     phoneNumber: z.string().optional(),
     documentOfIdentity: z.string().optional(),
-    email: z.string().email({ message: "Email inválido" }),
+    email: z.email({ message: "Email inválido" }),
     howDidYouMeetUs: z.string().optional(),
     instagramUser: z.string().optional(),
 
@@ -37,7 +37,7 @@ export const createStudentSchema = z.object({
     guardian: z.array(z.object({
         firstName: z.string().min(1, { message: "Nome do responsável é obrigatório" }),
         lastName: z.string().min(1, { message: "Sobrenome do responsável é obrigatório" }),
-        email: z.string().email({ message: "Email inválido" }).optional().or(z.literal('')),
+        email: z.email({ message: "Email inválido" }).optional().or(z.literal('')),
         cellPhoneNumber: z.string().min(1, { message: "Celular do responsável é obrigatório" }),
         relationship: z.string().optional(),
         phoneNumber: z.string().optional(),
@@ -47,9 +47,5 @@ export const createStudentSchema = z.object({
 
 export const updateStudentSchema = createStudentSchema.partial();
 
-// Manter compatibilidade com código existente
-export const getCreateStudentSchema = (t?: (key: string) => string) => createStudentSchema;
-export const getUpdateStudentSchema = (t?: (key: string) => string) => updateStudentSchema;
-
-export type CreateStudentInput = z.infer<ReturnType<typeof getCreateStudentSchema>>;
-export type UpdateStudentInput = z.infer<ReturnType<typeof getUpdateStudentSchema>>;
+export type CreateStudentInput = z.infer<typeof createStudentSchema>;
+export type UpdateStudentInput = z.infer<typeof updateStudentSchema>;

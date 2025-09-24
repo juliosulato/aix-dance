@@ -22,7 +22,7 @@ export default function Breadcrumps({ menu, items }: Props) {
                 <div className="flex items-center justify-center w-4 h-4 bg-primary text-white rounded-full">
                     <HiOutlineChevronLeft />
                 </div>
-                <span>{"Texto"}</span>
+                <span>{"Voltar"}</span>
             </button>
             <Menu position="bottom-end" shadow="md" withArrow>
                 <Menu.Target>

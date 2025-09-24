@@ -1,19 +1,17 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { CategoryGroup } from "@prisma/client";
-import { Translations } from "@/types/translations";
 
 async function deleteModalities(
     items: CategoryGroup | string[],
     tenancyId: string,
-    t: Translations,
     mutate?: KeyedMutator<CategoryGroup[]>,
 ) {
     const isArray = Array.isArray(items);
     const idsToDelete = isArray ? items : [items.id];
 
     if (idsToDelete.length === 0) {
-        notifications.show({ message: t("settings.modalities.delete.errors.noLength"), color: "red" });
+        notifications.show({ message: "Nenhuma forma de pagamento selecionada.", color: "red" });
         return;
     }
 
@@ -26,7 +24,7 @@ async function deleteModalities(
         }
     );
 
-    notifications.show({ title: t("settings.modalities.delete.notifications.wait.title"), message:t("settings.modalities.delete.notifications.wait.message"), color: "yellow" });
+    notifications.show({ title: "Aguarde...", message: "Excluindo formas de pagamento...", color: "yellow" });
 
     try {
         const response = await fetch(apiUrl, {
@@ -42,10 +40,10 @@ async function deleteModalities(
         }
 
         notifications.clean();
-        notifications.show({ message: t("settings.modalities.delete.notifications.success"), color: "green" });
+        notifications.show({ message: "Modalidades excluídas com sucesso", color: "green" });
         
     } catch (error) {
-        notifications.show({ message: t("settings.modalities.delete.errors.internalError"), color: "red" });
+        notifications.show({ message: "Erro interno do sistema", color: "red" });
         mutate && mutate();
     }
 }

@@ -44,7 +44,7 @@ export default function BillView({ bill, tenancyId }: { bill: BillFromApi, tenan
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-6">
             <div className="flex flex-col md:flex-row md:flex-wrap gap-4 justify-between items-center mb-4">
-                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{"Texto"}</h1>
+                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">Detalhes da Conta</h1>
                 <div className="flex gap-4 md:gap-6">
                     <button className="text-red-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setConfirmModalOpen(true)}>
                         <FaTrash />
@@ -57,14 +57,14 @@ export default function BillView({ bill, tenancyId }: { bill: BillFromApi, tenan
                     {bill.status !== "PAID" && (
                         <button className="text-green-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setOpenPayBill(true)}>
                             <RiMoneyDollarCircleLine />
-                            <span>{"Texto"}</span>
+                            <span>{"Pagar"}</span>
                         </button>
                     )}
                 </div>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                <InfoTerm label={"Texto"} icon={<FaFileInvoiceDollar />}>
+                <InfoTerm label={"Descrição"} icon={<FaFileInvoiceDollar />}>
                     {bill.description}
                 </InfoTerm>
                 <InfoTerm label={"Status"}>
@@ -90,13 +90,13 @@ export default function BillView({ bill, tenancyId }: { bill: BillFromApi, tenan
                 <InfoTerm label={"Forma de Pagamento"} icon={<FaCreditCard />}>
                     {bill.formsOfReceipt?.name}
                 </InfoTerm>
-                <InfoTerm label={"Texto"} icon={<FaUniversity />}>
+                <InfoTerm label={"Banco"} icon={<FaUniversity />}>
                     {bill.bank?.name}
                 </InfoTerm>
 
                 {bill.status === "PAID" && (
                     <>
-                        <InfoTerm label={"Texto"} icon={<FaReceipt />}>
+                        <InfoTerm label={"Valor Pago"} icon={<FaReceipt />}>
                             {formatCurrency(bill.amountPaid)}
                         </InfoTerm>
                         <InfoTerm label={"Data de Pagamento"} icon={<FaCalendarAlt />}>
@@ -160,8 +160,8 @@ export default function BillView({ bill, tenancyId }: { bill: BillFromApi, tenan
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDelete}
-                title={"Texto"}
-                confirmLabel={"Texto"}
+                title={"Confirmar Exclusão"}
+                confirmLabel={"Excluir"}
                 cancelLabel={"Cancelar"}
                 loading={isDeleting}
             >

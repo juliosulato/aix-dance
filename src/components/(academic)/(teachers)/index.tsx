@@ -125,7 +125,7 @@ export default function AllTeachersData() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{"Texto"}</Menu.Label>
+                <Menu.Label>{"Ações em Massa"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
                     {"Excluir selecionados"}
                 </Menu.Item>
@@ -134,8 +134,8 @@ export default function AllTeachersData() {
     );
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Texto"}</div>;
-    if (error) return <p>{"Texto"}</p>;
+    if (status !== "authenticated") return <div>Sessão inválida</div>;
+    if (error) return <p>{"Erro inesperado"}</p>;
 
     const d = teachers?.map((teacher) => ({
         ...teacher,
@@ -148,12 +148,12 @@ export default function AllTeachersData() {
                 data={d || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: "Texto"
+                    label: "Novo Professor"
                 }}
                 baseUrl="/system/academic/teachers/"
                 mutate={mutate as any}
                 pageTitle={"Professores"}
-                searchbarPlaceholder={"Texto"}
+                searchbarPlaceholder={"Pesquisar professores..."}
                 columns={[
                     {
                         key: "image", label: "", sortable: false,
@@ -171,7 +171,7 @@ export default function AllTeachersData() {
                     },
                     {
                         key: "teacher",
-                        label: "Texto",
+                        label: "Tipo Remuneração",
                         sortable: false,
                         render: (teacher) => teacher?.remunerationType || "-"
                     },
@@ -183,7 +183,7 @@ export default function AllTeachersData() {
                     },
                     {
                         key: "teacher",
-                        label: "Texto",
+                        label: "Valor Base",
                         sortable: false,
                         render: (teacher: Teacher) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(teacher.baseAmount)) || "-"
                     },
@@ -195,17 +195,17 @@ export default function AllTeachersData() {
                     },
                     {
                         key: "active",
-                        label: "Texto",
+                        label: "Ativo",
                         render: (active) => {
                             if (active) {
                                 return (
-                                    <Tooltip label={"Texto"} color="green">
+                                    <Tooltip label={"Ativo"} color="green">
                                         <div className={`w-4 h-4 rounded-full bg-green-500`}></div>
                                     </Tooltip>
                                 );
                             } else {
                                 return (
-                                    <Tooltip label={"Texto"} color="red">
+                                    <Tooltip label={"Inativo"} color="red">
                                         <div className={`w-4 h-4 rounded-full bg-red-500`}></div>
                                     </Tooltip>
                                 )
@@ -240,7 +240,7 @@ export default function AllTeachersData() {
                         </div>
                         <div className="mt-2 border-gray-200">
                             <div className="flex items-center gap-2 mb-2">
-                                <Text size="sm" fw={500} className="w-28">{"Texto"}:</Text>
+                                <Text size="sm" fw={500} className="w-28">{"Tipo"}:</Text>
                                 <Text size="sm" c="dimmed">
                                     {item.teacher?.remunerationType || "-"}
                                 </Text>
@@ -282,7 +282,7 @@ export default function AllTeachersData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={"Texto"}
+                title={"Excluir Professor"}
                 confirmLabel={"Excluir"}
                 cancelLabel={"Cancelar"}
                 loading={isDeleting}
@@ -293,7 +293,7 @@ export default function AllTeachersData() {
                     `Tem certeza que deseja excluir o professor ${selectedTeacher?.firstName + " " + selectedTeacher?.lastName || ""}?`
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Texto"}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Atenção: esta ação é irreversível."}</Text>
             </ConfirmationModal>
         </>
     );

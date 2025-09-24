@@ -23,7 +23,7 @@ export default function StudentsView({ student, tenancyId }: { student: StudentF
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            await deleteStudents([student.id], tenancyId, t);
+            await deleteStudents([student.id], tenancyId);
             window.location.replace("/system/academic/students");
         } catch (error) {
             console.error("Falha ao excluir o estudante:", error);
@@ -34,13 +34,13 @@ export default function StudentsView({ student, tenancyId }: { student: StudentF
 
     const router = useRouter();
     const searchParams = useSearchParams();
-    const currentTab = searchParams.ge"Texto" || "general";
+    const currentTab = searchParams.get("tab") || "general";
 
     const [tab, setTab] = useState(currentTab);
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
             <div className="flex flex-col items-center justify-center md:justify-between gap-4 md:flex-row md:flex-wrap mb-4">
-                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{"Texto"}</h1>
+                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{`${student.firstName} ${student.lastName}`}</h1>
                 <div className="flex gap-4 md:gap-6">
                     <button className="text-red-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setConfirmModalOpen(true)}>
                         <FaTrash />
@@ -103,9 +103,7 @@ export default function StudentsView({ student, tenancyId }: { student: StudentF
                 confirmColor="red"
                 loading={isDeleting}
             >
-                {t("academic.students.modals.confirmModal.text", {
-                    student: student?.firstName + " " + student?.lastName || ""
-                })}
+                {`Tem certeza que deseja excluir o estudante ${student?.firstName || ""} ${student?.lastName || ""}?`}
             </ConfirmationModal>
         </div>
     );

@@ -45,7 +45,7 @@ export default function UpdateCategoryBill({ opened, onClose, mutate, category }
 
     async function createCategoryBill(data: UpdateCategoryBillInput) {
         if (!sessionData?.user.tenancyId) {
-            notifications.show({ color: "red", message: g("general.errors.invalidSession") });
+            notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
 
@@ -78,8 +78,8 @@ export default function UpdateCategoryBill({ opened, onClose, mutate, category }
         } catch (error: any) {
             console.error("ERROR", error);
                 notifications.show({
-                    title: g("general.errors.title"),
-                    message: g("general.errors.unexpected"),
+                    title: "Erro",
+                    message: "Erro inesperado",
                     color: "red"
                 });
         } finally {
@@ -89,8 +89,8 @@ export default function UpdateCategoryBill({ opened, onClose, mutate, category }
 
     const handleFormErrors = () => {
         notifications.show({
-            title: g("general.errors.validationTitle"),
-            message: g("general.errors.validationMessage"),
+            title: "Erro de validação",
+            message: "Verifique os dados informados",
             color: 'yellow'
         });
     };
@@ -99,7 +99,7 @@ export default function UpdateCategoryBill({ opened, onClose, mutate, category }
         <Modal
             opened={opened}
             onClose={onClose}
-            title={"Texto"}
+            title="Editar Categoria"
             size="lg"
             radius="lg"
             centered
@@ -123,7 +123,7 @@ export default function UpdateCategoryBill({ opened, onClose, mutate, category }
                     loading={isLoading}
                     className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
                 >
-                    {g("forms.submit")}
+                    Salvar
                 </Button>
             </form>
         </Modal>

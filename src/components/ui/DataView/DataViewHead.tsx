@@ -89,7 +89,7 @@ export default function DataViewHead<T>({
                             radius="lg"
                             className="!text-sm !font-medium tracking-wider w-full md:w-fit"
                         >
-                            {"Aplicar Filtros"}
+                            {"Imprimir"}
                         </Button>
                     )}
 

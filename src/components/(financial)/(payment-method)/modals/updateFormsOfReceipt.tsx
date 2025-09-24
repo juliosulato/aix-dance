@@ -55,7 +55,7 @@ export default function UpdateFormsOfReceipt({ mutate, formsOfReceipt, opened, o
 
   async function updateFormsOfReceipt(data: UpdateFormsOfReceiptInput) {
     if (!sessionData?.user.tenancyId) {
-      notifications.show({ color: "red", message: g("errors.invalidSession") });
+      notifications.show({ color: "red", message: "Sessão Inválida"});
       return;
     }
     setIsLoading(true);
@@ -85,7 +85,7 @@ export default function UpdateFormsOfReceipt({ mutate, formsOfReceipt, opened, o
     <Modal
       opened={opened}
       onClose={onClose}
-      title={"Texto"}
+      title={"Atualizar Forma de Recebimento"}
       size="xl"
       radius="lg"
       centered
@@ -109,7 +109,7 @@ export default function UpdateFormsOfReceipt({ mutate, formsOfReceipt, opened, o
           size="md"
           className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
         >
-          {g("forms.submit")}
+          Salvar
         </Button>
       </form>
     </Modal>

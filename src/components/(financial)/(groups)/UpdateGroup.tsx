@@ -40,7 +40,7 @@ export default function UpdateCategoryGroup({ opened, onClose, categoryGroups, m
 
     async function updateCategoryGroup(data: UpdateCategoryGroupInput) {
         if (!sessionData?.user.tenancyId) {
-            notifications.show({ color: "red", message: g("errors.invalidSession") });
+            notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
 
@@ -55,7 +55,7 @@ export default function UpdateCategoryGroup({ opened, onClose, categoryGroups, m
             if (!response.ok) throw new Error("Failed to create category group");
 
             notifications.show({
-                message: "Texto",
+                message: "Grupo atualizado com sucesso.",
                 color: "green"
             });
             reset();
@@ -64,8 +64,8 @@ export default function UpdateCategoryGroup({ opened, onClose, categoryGroups, m
         } catch (error) {
             console.error(error);
             notifications.show({
-                title: g("general.errors.title"),
-                message: g("general.errors.unexpected"),
+                title: "Erro",
+                message: "Erro inesperado",
                 color: "red"
             });
         } finally {
@@ -75,8 +75,8 @@ export default function UpdateCategoryGroup({ opened, onClose, categoryGroups, m
 
     const handleFormErrors = () => {
         notifications.show({
-            title: g("general.errors.validationTitle"),
-            message: g("general.errors.validationMessage"),
+            title: "Erro de validação",
+            message: "Verifique os dados informados",
             color: 'yellow'
         });
     };
@@ -85,7 +85,7 @@ export default function UpdateCategoryGroup({ opened, onClose, categoryGroups, m
         <Modal
             opened={opened}
             onClose={onClose}
-            title={"Texto"}
+            title="Editar Grupo"
             size="md"
             radius="lg"
             centered
@@ -94,8 +94,8 @@ export default function UpdateCategoryGroup({ opened, onClose, categoryGroups, m
             <form onSubmit={handleSubmit(updateCategoryGroup, handleFormErrors)} className="flex flex-col gap-4">
                 <LoadingOverlay visible={isLoading} />
                 <TextInput
-                    label={"Texto"}
-                    placeholder={"Texto"}
+                    label={"Nome"}
+                    placeholder={"Digite Aqui"}
                     {...register("name")}
                     error={errors.name?.message}
                     required
@@ -109,7 +109,7 @@ export default function UpdateCategoryGroup({ opened, onClose, categoryGroups, m
                     loading={isLoading}
                     className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
                 >
-                    {g("forms.submit")}
+                    Salvar
                 </Button>
             </form>
         </Modal>

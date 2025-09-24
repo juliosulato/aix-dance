@@ -53,7 +53,7 @@ export default function SaleView({ saleId, tenancyId }: { saleId: string, tenanc
     }
 
     if (error || !sale) {
-        return <div className="text-center text-red-500">{"Texto"}</div>;
+        return <div className="text-center text-red-500">{"Erro ao carregar os dados da venda"}</div>;
     }
 
     const mainBill = sale.bills.find(b => !b.parentId);
@@ -73,17 +73,17 @@ export default function SaleView({ saleId, tenancyId }: { saleId: string, tenanc
 
             {/* --- Informações Gerais --- */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                <InfoTerm label={"Texto"} icon={<FaUser />} href={`/system/academic/students/${sale.studentId}`}>
+                <InfoTerm label={"Aluno"} icon={<FaUser />} href={`/system/academic/students/${sale.studentId}`}>
                     {sale.student.firstName} {sale.student.lastName}
                 </InfoTerm>
-                <InfoTerm label={"Texto"} icon={<FaFileInvoiceDollar />}>
+                <InfoTerm label={"Valor Total"} icon={<FaFileInvoiceDollar />}>
                     {formatCurrency(sale.totalAmount as any)}
                 </InfoTerm>
             </div>
 
             {/* --- Itens da Venda --- */}
             <div>
-                <Divider my="lg" label={"Texto"} labelPosition="center" />
+                <Divider my="lg" label={"Itens da Venda"} labelPosition="center" />
                 <div className="flex flex-col gap-3 mt-4">
                     {sale.items.map(item => (
                         <div key={item.id} className="p-3 bg-gray-50 rounded-lg flex justify-between items-center">
@@ -105,7 +105,7 @@ export default function SaleView({ saleId, tenancyId }: { saleId: string, tenanc
             {/* --- Pagamentos Realizados --- */}
             {payments.length > 0 && (
                 <div>
-                    <Divider my="lg" label={"Texto"} labelPosition="center" />
+                    <Divider my="lg" label={"Pagamentos Realizados"} labelPosition="center" />
                     <div className="flex flex-col gap-3 mt-4">
                         {payments.map(payment => (
                              <Link href={`/system/financial/manager/${payment.id}`} key={payment.id} className="p-3 bg-gray-50 hover:bg-violet-50 rounded-lg transition-colors flex justify-between items-center">

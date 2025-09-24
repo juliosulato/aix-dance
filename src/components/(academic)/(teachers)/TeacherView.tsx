@@ -57,7 +57,7 @@ export default function TeacherView({ teacher, tenancyId }: { teacher: TeacherFr
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
             <div className="flex flex-col items-center justify-center md:justify-between gap-4 md:flex-row md:flex-wrap mb-4">
-                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{"Texto"}</h1>
+                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{"Professor"}</h1>
                 <div className="flex gap-4 md:gap-6">
                     <button className="text-red-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setConfirmModalOpen(true)}>
                         <FaTrash />
@@ -69,13 +69,13 @@ export default function TeacherView({ teacher, tenancyId }: { teacher: TeacherFr
                     </button>
                     <button className="text-primary flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setOpenUpdateAccessData(true)}>
                         <FaEdit />
-                        <span>{"Texto"}</span>
+                        <span>{"Editar"}</span>
                     </button>
                 </div>
             </div>
 
             {/* Seção de Informações Pessoais */}
-            <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 mb-2">{"Texto"}</h2>
+            <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 mb-2">{"Informações Pessoais"}</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <InfoTerm label={"Primeiro Nome"} children={teacher.firstName} />
                 <InfoTerm label={"Sobrenome"} children={teacher.lastName} />
@@ -89,14 +89,14 @@ export default function TeacherView({ teacher, tenancyId }: { teacher: TeacherFr
             </div>
 
              {/* Seção de Endereço */}
-            <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{"Texto"}</h2>
+            <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{"Endereço"}</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={"Texto"} children={addressData?.publicPlace || "-"} />
-                <InfoTerm label={"Texto"} children={addressData?.number || "-"} />
-                <InfoTerm label={"Texto"} children={addressData?.complement || "-"} />
-                <InfoTerm label={"Texto"} children={addressData?.neighborhood || "-"} />
-                <InfoTerm label={"Texto"} children={addressData?.city || "-"} />
-                <InfoTerm label={"Texto"} children={addressData?.state || "-"} />
+                <InfoTerm label={"Logradouro"} children={addressData?.publicPlace || "-"} />
+                <InfoTerm label={"Número"} children={addressData?.number || "-"} />
+                <InfoTerm label={"Complemento"} children={addressData?.complement || "-"} />
+                <InfoTerm label={"Bairro"} children={addressData?.neighborhood || "-"} />
+                <InfoTerm label={"Cidade"} children={addressData?.city || "-"} />
+                <InfoTerm label={"Estado"} children={addressData?.state || "-"} />
                 <InfoTerm label={"CEP"} children={addressData?.zipCode || "-"} />
             </div>
 
@@ -113,13 +113,13 @@ export default function TeacherView({ teacher, tenancyId }: { teacher: TeacherFr
              {/* Seção de Comissões */}
              {teacherData?.comissionTiers && teacherData.comissionTiers.length > 0 && (
                  <>
-                    <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{"Texto"}</h2>
+                    <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{"Comissões"}</h2>
                     <div className="grid gap-4 md:grid-cols-1">
                         {teacherData.comissionTiers.map((tier, index) => (
                            <div key={index} className="grid grid-cols-3 gap-4 p-2 border-b">
-                               <InfoTerm label={"Texto"} children={`${tier.minStudents} alunos`} />
-                               <InfoTerm label={"Texto"} children={`${tier.maxStudents} alunos`} />
-                               <InfoTerm label={"Texto"} children={`R$ ${Number(tier.comission).toFixed(2).replace(/\./g, ",")}`} />
+                               <InfoTerm label={"Mínimo de Alunos"} children={`${tier.minStudents} alunos`} />
+                               <InfoTerm label={"Máximo de Alunos"} children={`${tier.maxStudents} alunos`} />
+                               <InfoTerm label={"Comissão"} children={`R$ ${Number(tier.comission).toFixed(2).replace(/\./g, ",")}`} />
                            </div>
                         ))}
                     </div>
@@ -134,8 +134,8 @@ export default function TeacherView({ teacher, tenancyId }: { teacher: TeacherFr
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDelete}
-                title={"Texto"}
-                confirmLabel={"Excluir"}
+                title={"Desativar Professor"}
+                confirmLabel={"Desativar"}
                 cancelLabel={"Cancelar"}
                 confirmColor="red"
                 loading={isDeleting}

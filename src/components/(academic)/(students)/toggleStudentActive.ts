@@ -1,17 +1,15 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { Translations } from "@/types/translations";
 import { StudentFromApi } from "./StudentFromApi";
 
 async function toggleStudentActive(
   item: StudentFromApi,
   tenancyId: string,
-  t: Translations,
   mutate?: KeyedMutator<StudentFromApi[]>
 ) {
   if (!item) {
     notifications.show({
-      message: t("academic.students.toggle.errors.noStudent"),
+      message: "Aluno não encontrado.",
       color: "red",
     });
     return;
@@ -30,8 +28,8 @@ async function toggleStudentActive(
     ));
 
   notifications.show({
-    title: t("academic.students.toggle.notifications.wait.title"),
-    message: t("academic.students.toggle.notifications.wait.message"),
+    title: "Aguarde",
+    message: "Atualizando status do aluno...",
     color: "yellow",
   });
 
@@ -50,12 +48,12 @@ async function toggleStudentActive(
 
     notifications.clean();
     notifications.show({
-      message: t("academic.students.toggle.notifications.success"),
+      message: item.active ? "Aluno desativado com sucesso." : "Aluno ativado com sucesso.",
       color: "green",
     });
   } catch (error) {
     notifications.show({
-      message: t("academic.students.toggle.errors.internalError"),
+      message: "Erro interno ao atualizar o aluno.",
       color: "red",
     });
     // Reverte em caso de erro

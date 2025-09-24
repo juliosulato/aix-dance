@@ -123,7 +123,7 @@ export default function FormsOfReceiptsView() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{"Texto"}</Menu.Label>
+                <Menu.Label>{"Ações em Massa"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
                      {"Excluir selecionados"}
                 </Menu.Item>
@@ -133,8 +133,8 @@ export default function FormsOfReceiptsView() {
 
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Texto"}</div>;
-    if (error) return <p>{"Texto"}</p>;
+    if (status !== "authenticated") return <div>Sessão inválida</div>;
+    if (error) return <p>{"Erro inesperado"}</p>;
 
     return (
         <>
@@ -146,11 +146,11 @@ export default function FormsOfReceiptsView() {
                 }}
                 baseUrl="/system/financial/forms-of-receipt/"
                 mutate={mutate}
-                pageTitle={"Texto"}
-                searchbarPlaceholder={"Texto"}
+                pageTitle={"Formas de Recebimento"}
+                searchbarPlaceholder={"Pesquisar meios de recebimento..."}
                 columns={[
-                    { key: "name", label: "Texto" },
-                    { key: "operator", label: "Texto" },
+                    { key: "name", label: "Nome" },
+                    { key: "operator", label: "Operador" },
                 ]}
                 RenderRowMenu={(item) => <MenuItem formsOfReceipt={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
                 RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
@@ -161,7 +161,7 @@ export default function FormsOfReceiptsView() {
                             <MenuItem formsOfReceipt={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />
                         </div>
                         <div className="flex flex-col mt-4">
-                            {item.operator && <Text size="sm" c="dimmed">{"Texto"} {item.operator}</Text>}
+                            {item.operator && <Text size="sm" c="dimmed">{"Operador:"} {item.operator}</Text>}
                             <Text size="xs" c="dimmed" mt="sm">
                                 {"Criado em:"} {dayjs(item.createdAt).format("DD/MM/YYYY")}
                             </Text>
@@ -188,9 +188,9 @@ export default function FormsOfReceiptsView() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={"Texto"}
-                confirmLabel={"Texto"}
-                cancelLabel={"Texto"}
+                title={"Excluir Forma de Recebimento"}
+                confirmLabel={"Excluir"}
+                cancelLabel={"Cancelar"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
@@ -199,7 +199,7 @@ export default function FormsOfReceiptsView() {
                     `Tem certeza que deseja excluir o método de pagamento selecionado?`
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Texto"}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Atenção: esta ação é irreversível."}</Text>
             </ConfirmationModal>
         </>
     );

@@ -59,7 +59,7 @@ export default function UpdateBankAccount({ opened, onClose, bankAccount, mutate
 
     async function createBank(data: UpdateBankInput) {
         if (!sessionData?.user.tenancyId) {
-            notifications.show({ color: "red", message: g("errors.invalidSession") });
+            notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
 
@@ -86,8 +86,8 @@ export default function UpdateBankAccount({ opened, onClose, bankAccount, mutate
         } catch (error) {
             console.error(error);
             notifications.show({
-                title: g("general.errors.title"),
-                message: g("general.errors.unexpected"),
+                title: "Erro",
+                message: "Erro inesperado",
                 color: "red"
             });
         } finally {
@@ -99,8 +99,8 @@ export default function UpdateBankAccount({ opened, onClose, bankAccount, mutate
     const handleFormErrors = (errors: any) => {
         console.warn("Validation errors:", errors);
         notifications.show({
-            title: g("general.errors.validationTitle"),
-            message: g("general.errors.validationMessage"),
+            title: "Erro de validação",
+            message: "Verifique os dados informados",
             color: 'yellow'
         });
     };
@@ -110,7 +110,7 @@ export default function UpdateBankAccount({ opened, onClose, bankAccount, mutate
             <Modal
                 opened={opened}
                 onClose={onClose}
-                title={"Texto"}
+                title="Editar Conta Bancária"
                 size="lg"
                 radius="lg"
                 centered
@@ -126,7 +126,7 @@ export default function UpdateBankAccount({ opened, onClose, bankAccount, mutate
                         className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
                         loading={isLoading}
                     >
-                        {g("forms.submit")}
+                        Salvar
                     </Button>
                 </form>
             </Modal>

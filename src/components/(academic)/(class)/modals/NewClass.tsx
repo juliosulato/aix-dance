@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
-import { CreateClassInput, getCreateClassSchema } from "@/schemas/academic/class.schema";
+import { CreateClassInput, createClassSchema } from "@/schemas/academic/class.schema";
 import { DayOfWeek } from "@prisma/client";
 import { KeyedMutator } from "swr";
 
@@ -25,10 +25,10 @@ function NewClass({ opened, onClose, mutate }: Props) {
     const [active, setActive] = useState(0);
     const [visible, setVisible] = useState(false);
 
-    const createClassSchema = getCreateClassSchema(t);
+    const classSchema = createClassSchema;
 
     const { control, handleSubmit, formState: { errors }, watch, reset, setValue, trigger } = useForm<CreateClassInput>({
-        resolver: zodResolver(createClassSchema),
+        resolver: zodResolver(classSchema),
         defaultValues: {
             online: false,
             students: [],
@@ -109,10 +109,10 @@ function NewClass({ opened, onClose, mutate }: Props) {
 
     return (
         <>
-            <Modal opened={opened} onClose={onClose} title={"Texto"} size="auto" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
+            <Modal opened={opened} onClose={onClose} title={"Criar Turma"} size="auto" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
                 <form onSubmit={handleSubmit(createClass)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 w-full lg:w-[60vw] lg:p-6" >
                     <Stepper active={active} onStepClick={setActive}>
-                        <Stepper.Step label={"Texto"} >
+                        <Stepper.Step label={"Sobre a Turma"} >
                             <div className="flex flex-col gap-4">
                                 <AboutOfClass control={control as any} errors={errors} tenancyId={sessionData.user.tenancyId} />
                                 <DayOfClassesAndHours 
@@ -125,7 +125,7 @@ function NewClass({ opened, onClose, mutate }: Props) {
                                 </div>
                             </div>
                         </Stepper.Step>
-                        <Stepper.Step label={"Texto"} >
+                        <Stepper.Step label={"Alunos"} >
                             <div className="flex flex-col gap-4">
                                 <NewClass__Students control={control as any} errors={errors} tenancyId={sessionData.user.tenancyId} />
                                 <div className="flex justify-between">
@@ -134,7 +134,7 @@ function NewClass({ opened, onClose, mutate }: Props) {
                                 </div>
                             </div>
                         </Stepper.Step>
-                        <Stepper.Step label={"Texto"}>
+                        <Stepper.Step label={"Resumo"}>
                             <div className="flex flex-col gap-4">
                                 <NewClass__Resume control={control as any} tenancyId={sessionData.user.tenancyId} />
                                 <div className="flex justify-between">

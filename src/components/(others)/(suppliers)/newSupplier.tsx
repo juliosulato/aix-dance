@@ -35,7 +35,7 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
 
     async function handleCreateSupplier(data: CreateSupplierInput) {
         if (!sessionData?.user.tenancyId) {
-            notifications.show({ color: "red", message: "Texto" });
+            notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
 
@@ -50,7 +50,7 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
             if (!response.ok) throw new Error("Failed to create supplier");
 
             notifications.show({
-                message: "Texto",
+                message: "Fornecedor criado com sucesso.",
                 color: "green"
             });
 
@@ -60,7 +60,7 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
         } catch (error) {
             console.error(error);
             notifications.show({
-                message: "Texto",
+                message: "Falha ao criar fornecedor.",
                 color: "red"
             });
         } finally {
@@ -70,8 +70,8 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
 
     const handleFormErrors = () => {
         notifications.show({
-            title: "Texto",
-            message: "Texto",
+            title: "Erro de validação",
+            message: "Por favor verifique os campos do formulário.",
             color: 'yellow'
         });
     };
@@ -80,7 +80,7 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
         <Modal
             opened={opened}
             onClose={handleClose}
-            title={"Texto"}
+            title={"Novo Fornecedor"}
             size="xl"
             radius="lg"
             centered
@@ -88,32 +88,32 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
         >
             <form onSubmit={handleSubmit(handleCreateSupplier, handleFormErrors)} className="flex flex-col gap-4">
                 <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
-                    <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{"Texto"}</h2>
+                    <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{"Informações do Fornecedor"}</h2>
 
                     <TextInput
                         {...register("name")}
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label={"Nome"}
+                        placeholder={"Nome do fornecedor"}
                         error={errors?.name?.message}
                         required
                     />
                     <TextInput
                         {...register("corporateReason")}
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label={"Razão Social"}
+                        placeholder={"Razão social (se aplicável)"}
                         error={errors?.corporateReason?.message}
                     />
 
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:col-span-3 lg:cols-span-4 3xl:col-span-5">
                         <TextInput
                             {...register("documentType")}
-                            label={"Texto"}
-                            placeholder={"Texto"}
+                            label={"Tipo de Documento"}
+                            placeholder={"CPF/CNPJ"}
                             error={errors?.documentType?.message}
                         />
                         <TextInput
                             {...register("document")}
-                            label={"Texto"}
+                            label={"Documento"}
                             error={errors?.document?.message}
                         />
                     </div>

@@ -14,7 +14,7 @@ export default function Teacher__AccessData({ control, errors, watch }: Props) {
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2">
-            <h2 className="text-lg font-bold md:col-span-2">{"Texto"}</h2>
+            <h2 className="text-lg font-bold md:col-span-2">{"Dados de Acesso"}</h2>
             <TextInput
                 prefix="@"
                 label={"Email"}
@@ -30,7 +30,7 @@ export default function Teacher__AccessData({ control, errors, watch }: Props) {
                     <PasswordInput
                         {...field}
                         required
-                        label={"Texto"}
+                        label={"Senha"}
                         error={errors.password?.message}
                     />
                 )}
@@ -43,7 +43,7 @@ export default function Teacher__AccessData({ control, errors, watch }: Props) {
                     <PasswordInput
                         {...field}
                         required
-                        label={"Texto"}
+                        label={"Confirmar Senha"}
                         error={errors.confirmPassword?.message}
                     />
                 )}

@@ -1,29 +1,25 @@
 // Início
 import { GrHomeRounded } from "react-icons/gr";
-import { AiOutlineDashboard } from "react-icons/ai";
-import { MdOutlineBusinessCenter, MdOutlineViewAgenda, MdPayment } from "react-icons/md";
+import { MdOutlineBusinessCenter, MdPayment } from "react-icons/md";
 import { FiCalendar } from "react-icons/fi";
-import { IoMdHelpCircleOutline } from "react-icons/io";
 import { IoExtensionPuzzleOutline } from "react-icons/io5";
 
 // CRM
-import { LuBrain, LuMap, LuMessageCircleMore, LuGraduationCap, LuChartSpline, LuSchool } from "react-icons/lu";
+import { LuGraduationCap } from "react-icons/lu";
 
 // Acadêmico
 import { FaRegUser, FaChalkboardTeacher } from "react-icons/fa";
 import { MdGroups } from "react-icons/md";
 
 // Eventos
-import { TbCalendarEvent, TbReportMoney, TbBuildingBank, TbCategory2, TbContract } from "react-icons/tb";
+import { TbReportMoney, TbBuildingBank, TbContract } from "react-icons/tb";
 
 // Financeiro
-import { MdOutlineSpaceDashboard, MdOutlineCategory } from "react-icons/md";
+import { MdOutlineCategory } from "react-icons/md";
 import { PiMoneyWavy } from "react-icons/pi";
 
 // Estoque
-import { FiInbox } from "react-icons/fi";
 import { BsBox } from "react-icons/bs";
-import { MdBookmarkBorder } from "react-icons/md";
 
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 

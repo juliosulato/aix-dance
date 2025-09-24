@@ -29,15 +29,15 @@ export default function NewClass__AboutOfClass({ control, errors, tenancyId }: P
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <h2 className="text-lg font-bold md:col-span-full">{"Texto"}</h2>
+            <h2 className="text-lg font-bold md:col-span-full">Informações da Turma</h2>
             
             <Controller
                 name="name"
                 control={control}
                 render={({ field }) => (
                     <TextInput
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label="Nome da turma"
+                        placeholder="Digite o nome da turma"
                         {...field}
                         error={errors.name?.message}
                         required
@@ -51,8 +51,8 @@ export default function NewClass__AboutOfClass({ control, errors, tenancyId }: P
                 render={({ field }) => (
                     <div className="flex flex-col gap-1">
                         <Select
-                            label={"Texto"}
-                            placeholder={"Texto"}
+                            label="Modalidade"
+                            placeholder="Selecione a modalidade"
                             data={modalityOptions}
                             {...field}
                             error={errors.modalityId?.message}
@@ -60,7 +60,7 @@ export default function NewClass__AboutOfClass({ control, errors, tenancyId }: P
                             searchable
                             nothingFoundMessage={"Nada encontrado..."}
                         />
-                        <p className="text-xs text-neutral-500">{"Texto"} <Link className="text-primary underline" href={"/system/academic/modalities"}>{g("appShell.navbar.academic.modalities")}</Link></p>
+                        <p className="text-xs text-neutral-500">Não encontrou a modalidade? <Link className="text-primary underline" href={"/system/academic/modalities"}>Criar nova modalidade</Link></p>
                     </div>
                 )}
             />
@@ -70,7 +70,7 @@ export default function NewClass__AboutOfClass({ control, errors, tenancyId }: P
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={"Texto"}
+                        label="Professor"
                         data={teacherOptions}
                         {...field}
                         error={errors.teacherId?.message}
@@ -86,14 +86,14 @@ export default function NewClass__AboutOfClass({ control, errors, tenancyId }: P
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label="Professor assistente"
+                        placeholder="Selecione um professor assistente (opcional)"
                         data={teacherOptions}
                         {...field}
                         error={errors.assistantId?.message}
                         searchable
                         clearable
-                        nothingFoundMessage={g("general.boolean.notFound")}
+                        nothingFoundMessage="Nada encontrado"
                     />
                 )}
             />
@@ -105,7 +105,7 @@ export default function NewClass__AboutOfClass({ control, errors, tenancyId }: P
                     <Checkbox
                         checked={field.value || false}
                         onChange={(event) => field.onChange(event.currentTarget.checked)}
-                        label={"Texto"}
+                        label="Turma online"
                         className="md:col-span-full mt-4"
                     />
                 )}

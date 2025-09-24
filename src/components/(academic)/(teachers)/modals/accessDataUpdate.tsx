@@ -89,10 +89,10 @@ function UpdateTeacherAccessData({ opened, onClose, user, mutate }: Props) {
 
     return (
         <>
-            <Modal opened={opened} onClose={onClose} title={"Texto"} size="auto" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
+            <Modal opened={opened} onClose={onClose} title={"Dados de Acesso"} size="auto" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
                 <form onSubmit={handleSubmit(updateTeacher)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw] lg:p-6">
                     <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2">
-                        <h2 className="text-lg font-bold md:col-span-2">{"Texto"}</h2>
+                        <h2 className="text-lg font-bold md:col-span-2">{"Dados de Acesso"}</h2>
                         <TextInput
                             prefix="@"
                             label={"E-mail de acesso"}
@@ -107,7 +107,7 @@ function UpdateTeacherAccessData({ opened, onClose, user, mutate }: Props) {
                             render={({ field }) => (
                                 <PasswordInput
                                     {...field}
-                                    label={"Texto"}
+                                    label={"Senha"}
                                     error={errors.password?.message}
                                 />
                             )}
@@ -119,12 +119,12 @@ function UpdateTeacherAccessData({ opened, onClose, user, mutate }: Props) {
                             render={({ field }) => (
                                 <PasswordInput
                                     {...field}
-                                    label={"Texto"}
+                                    label={"Confirmar Senha"}
                                     error={errors.confirmPassword?.message}
                                 />
                             )}
                         />
-                        <p className="text-neutral-400 underline">{"Texto"}</p>
+                        <p className="text-neutral-400 underline">{"Deixar em branco para manter a senha atual"}</p>
                     </div>
                     <Button
                         type="submit"

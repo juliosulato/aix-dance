@@ -79,7 +79,7 @@ export default function AllCategoryData() {
         }
 
         try {
-            await deleteCategoryGroups(finalIdsToDelete, tenancyId, t, mutate as any);
+            await deleteCategoryGroups(finalIdsToDelete, tenancyId, mutate as any);
             mutate();
         } catch (error) {
             console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);
@@ -120,19 +120,17 @@ export default function AllCategoryData() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{"Texto"}</Menu.Label>
+                <Menu.Label>{"Ações em Massa"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
-                    {t("general.actions.deleteMany", {
-                        items: selectedIds.length
-                    })}
+                    Deletar {selectedIds.length} selecionados
                 </Menu.Item>
             </Menu.Dropdown>
         </Menu>
     );
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Texto"}</div>;
-    if (error) return <p>{"Texto"}</p>;
+    if (status !== "authenticated") return <div>Sessão inválida</div>;
+    if (error) return <p>{"Erro inesperado"}</p>;
 
 
     return (
@@ -142,14 +140,14 @@ export default function AllCategoryData() {
                 data={categoryGroups || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: "Texto"
+                    label: "Nova Categoria"
                 }}
                 baseUrl="/system/financial/categories/"
                 mutate={mutate}
                 pageTitle={"Categorias"}
-                searchbarPlaceholder={"Texto"}
+                searchbarPlaceholder={"Procurar categorias..."}
                 columns={[
-                    { key: "name", label: "Texto" },
+                    { key: "name", label: "Nome" },
                 ]}
                 RenderRowMenu={(item) => <MenuItem categoryGroup={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
                 RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
@@ -181,22 +179,18 @@ export default function AllCategoryData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={"Texto"}
-                confirmLabel={"Texto"}
-                cancelLabel={"Texto"}
+                title={"Confirmar Exclusão"}
+                confirmLabel={"Excluir"}
+                cancelLabel={"Cancelar"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
-                    t("financial.categories.modals.confirmModal.textArray",
-                        { categories: idsToDelete.length }
-                    )
+                    `Tem certeza que deseja excluir ${idsToDelete.length} categoria$        {idsToDelete.length > 1 ? 's' : ''}?`
                 ) : (
-                    t("financial.categories.modals.confirmModal.text", {
-                        category: selectedCategory?.name || ""
-                    })
+                    `Tem certeza que deseja excluir a categoria "${selectedCategory?.name || ''}"?`
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Texto"}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Essa ação é irreversível."}</Text>
             </ConfirmationModal>
         </>
     );

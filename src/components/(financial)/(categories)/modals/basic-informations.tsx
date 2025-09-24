@@ -27,8 +27,7 @@ export default function Category__BasicInformations({ control, errors, register,
     return (
         <div className="rounded-xl grid grid-cols-1 md:grid-cols-2 gap-4">
             <TextInput
-                label={"Texto"}
-                placeholder={"Texto"}
+                label={"Nome"}
                 {...register("name")}
                 error={errors.name?.message}
                 required
@@ -41,11 +40,11 @@ export default function Category__BasicInformations({ control, errors, register,
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label={"Natureza"}
+                        placeholder={"Selecione a natureza"}
                         data={[
-                            { label: t('fields.nature.enums.revenue'), value: BillNature.REVENUE },
-                            { label: t('fields.nature.enums.expense'), value: BillNature.EXPENSE },
+                            { label: "Receita", value: BillNature.REVENUE },
+                            { label: "Despesa", value: BillNature.EXPENSE },
                         ]}
                         {...field}
                         error={errors.nature?.message}
@@ -59,11 +58,11 @@ export default function Category__BasicInformations({ control, errors, register,
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label={"Tipo"}
+                        placeholder={"Selecione o tipo"}
                         data={[
-                            { label: t('fields.type.enums.fixed'), value: BillCategoryType.FIXED },
-                            { label: t('fields.type.enums.variable'), value: BillCategoryType.VARIABLE },
+                            { label: "Fixo", value: BillCategoryType.FIXED },
+                            { label: "Variável", value: BillCategoryType.VARIABLE },
                         ]}
                         {...field}
                         error={errors.type?.message}
@@ -77,8 +76,8 @@ export default function Category__BasicInformations({ control, errors, register,
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label={"Grupo"}
+                        placeholder={"Selecione o grupo"}
                         data={groups?.map(g => ({ label: g.name, value: g.id })) || []}
                         {...field}
                         error={errors.groupId?.message}
@@ -96,8 +95,8 @@ export default function Category__BasicInformations({ control, errors, register,
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label={"Categoria Pai"}
+                        placeholder={"Selecione a categoria pai"}
                         data={parentCategories?.map(p => ({ label: p.name, value: p.id })) || []}
                         {...field}
                         error={errors.parentId?.message}

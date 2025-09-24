@@ -25,41 +25,41 @@ export default function Address<T extends FieldValues>({ errors, register, field
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
-            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{f("title")}</h2>
+            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">Endereço</h2>
 
             {/* Os campos agora são registrados dinamicamente usando o fieldPath */}
             <TextInput
-                label={f("zipCode.label")}
+                label={"CEP"}
                 {...register(`${fieldPath}.zipCode` as any)}
                 error={getError("zipCode")}
             />
             <TextInput
-                label={f("publicPlace.label")}
+                label={"Logradouro"}
                 {...register(`${fieldPath}.publicPlace` as any)}
                 error={getError("publicPlace")}
             />
             <TextInput
-                label={f("number.label")}
+                label={"Número"}
                 {...register(`${fieldPath}.number` as any)}
                 error={getError("number")}
             />
             <TextInput
-                label={f("complement.label")}
+                label={"Complemento"}
                 {...register(`${fieldPath}.complement` as any)}
                 error={getError("complement")}
             />
             <TextInput
-                label={f("neighborhood.label")}
+                label={"Bairro"}
                 {...register(`${fieldPath}.neighborhood` as any)}
                 error={getError("neighborhood")}
             />
             <TextInput
-                label={f("city.label")}
+                label={"Cidade"}
                 {...register(`${fieldPath}.city` as any)}
                 error={getError("city")}
             />
             <TextInput
-                label={f("state.label")}
+                label={"Estado"}
                 {...register(`${fieldPath}.state` as any)}
                 error={getError("state")}
             />

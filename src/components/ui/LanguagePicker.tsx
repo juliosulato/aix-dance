@@ -18,14 +18,14 @@ export function LanguagePicker() {
     const pathname = usePathname();
     const [opened, setOpened] = useState(false);
 
-    const currentLocale = pathname.spli"Texto"[1];
+    const currentLocale = pathname.split("/")[1];
     const defaultSelected = data.find(item => item.value === currentLocale) || data[0];
 
     const [selected, setSelected] = useState(defaultSelected);
 
     const handleChange = (item: (typeof data)[0]) => {
         setSelected(item);
-        const segments = pathname.spli"Texto";
+    const segments = pathname.split("/");
         segments[1] = item.value;
         router.push(segments.join("/"));
     };

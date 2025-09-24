@@ -38,7 +38,7 @@ export default function UpdateModalities({ opened, onClose, mutate, modality }: 
 
     async function createModality(data: UpdateModalityInput) {
         if (!sessionData?.user.tenancyId) {
-            notifications.show({ color: "red", message: g("general.errors.invalidSession") });
+            notifications.show({ color: "red", message: "Sessão Inválida" });
             return;
         }
 
@@ -54,7 +54,7 @@ export default function UpdateModalities({ opened, onClose, mutate, modality }: 
 
             if (responseData.code) {
                 notifications.show({
-                    message: "Texto",
+                    message: "Ocorreu um problema ao atualizar a modalidade.",
                     color: "yellow"
                 });
             }
@@ -62,7 +62,7 @@ export default function UpdateModalities({ opened, onClose, mutate, modality }: 
             if (!response.ok) throw new Error("Failed to update modality");
 
             notifications.show({
-                message: "Texto",
+                message: "Modalidade atualizada com sucesso.",
                 color: "green"
             });
             reset();
@@ -73,7 +73,7 @@ export default function UpdateModalities({ opened, onClose, mutate, modality }: 
 
             if (error?.code == "MODALITY_ALREADY_EXISTS") {
                 notifications.show({
-                    message: "Texto",
+                    message: "Já existe uma modalidade com esse nome.",
                     color: "yellow"
                 });
             }
@@ -84,8 +84,7 @@ export default function UpdateModalities({ opened, onClose, mutate, modality }: 
 
     const handleFormErrors = () => {
         notifications.show({
-            title: g("general.errors.validationTitle"),
-            message: g("general.errors.validationMessage"),
+            message: "Erro de validação.",
             color: 'yellow'
         });
     };
@@ -94,7 +93,7 @@ export default function UpdateModalities({ opened, onClose, mutate, modality }: 
         <Modal
             opened={opened}
             onClose={onClose}
-            title={"Texto"}
+            title={"Atualizar Modalidade"}
             size="lg"
             radius="lg"
             centered
@@ -103,8 +102,8 @@ export default function UpdateModalities({ opened, onClose, mutate, modality }: 
             <form onSubmit={handleSubmit(createModality, handleFormErrors)} className="flex flex-col gap-4">
                 <LoadingOverlay visible={isLoading} />
                 <TextInput
-                    label={"Texto"}
-                    placeholder={"Texto"}
+                    label={"Nome da Modalidade"}
+                    placeholder={"Ex: Ballet, Jazz, Ritmos"}
                     {...register("name")}
                     error={errors.name?.message}
                     required
@@ -119,7 +118,7 @@ export default function UpdateModalities({ opened, onClose, mutate, modality }: 
                     loading={isLoading}
                     className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
                 >
-                    {g("forms.submit")}
+                    Salvar
                 </Button>
             </form>
         </Modal>

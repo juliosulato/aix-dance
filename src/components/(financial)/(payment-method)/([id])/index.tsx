@@ -1,7 +1,6 @@
 "use client";
 
 import InfoTerm from "@/components/ui/Infoterm";
-import { SimpleGrid } from "@mantine/core";
 import { FormsOfReceipt } from "..";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import deleteFormsOfReceipt from "../deleteFormsOfReceipt";
@@ -29,7 +28,7 @@ export default function FormsOfReceiptView({ formsOfReceipt, tenancyId }: { form
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
             <div className="flex flex-col items-center justify-center md:justify-between gap-4 md:flex-row md:flex-wrap mb-4">
-                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{"Texto"}</h1>
+                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">Detalhes da Forma de Recebimento</h1>
                 <div className="flex gap-4 md:gap-6">
                     <button className="text-red-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setConfirmModalOpen(true)}>
                         <FaTrash />
@@ -43,16 +42,16 @@ export default function FormsOfReceiptView({ formsOfReceipt, tenancyId }: { form
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={"Texto"} children={formsOfReceipt.name} />
-                <InfoTerm label={"Texto"} children={formsOfReceipt.operator} />
-                {formsOfReceipt.fees.length > 0 && <h2 className="md:col-span-2 lg:col-span-3 font-bold text-xl my-4">{"Texto"}</h2>}
+                <InfoTerm label={"Nome"}>{formsOfReceipt.name}</InfoTerm>
+                <InfoTerm label={"Operadora"}>{formsOfReceipt.operator}</InfoTerm>
+                {formsOfReceipt.fees.length > 0 && <h2 className="md:col-span-2 lg:col-span-3 font-bold text-xl my-4">Taxas</h2>}
                 {formsOfReceipt.fees.map((fee) => (
                      <div className="grid gap-4 md:grid-cols-2 md:col-span-2 lg:col-span-3" key={fee.id}>
-                        <InfoTerm label={"Texto"} children={fee.minInstallments} />
-                        <InfoTerm label={"Texto"} children={fee.maxInstallments} />
-                        <InfoTerm label={"Texto"} children={`${fee.feePercentage.toFixed(2).replace(/\./g, ",")}%`} />
-                        <InfoTerm label={"Texto"} children={`${fee.receiveInDays}`} />
-                        <InfoTerm label={"Texto"} children={fee.customerInterest ? "Texto" : "Texto"} />
+                        <InfoTerm label={"Mínimo de Parcelas"}>{fee.minInstallments}</InfoTerm>
+                        <InfoTerm label={"Máximo de Parcelas"}>{fee.maxInstallments}</InfoTerm>
+                        <InfoTerm label={"Percentual"}>{`${fee.feePercentage.toFixed(2).replace(/\./g, ",")}%`}</InfoTerm>
+                        <InfoTerm label={"Recebe em (dias)"}>{`${fee.receiveInDays}`}</InfoTerm>
+                        <InfoTerm label={"Juros ao Cliente"}>{fee.customerInterest ? "Sim" : "Não"}</InfoTerm>
                     </div>
                 ))}
             </div>

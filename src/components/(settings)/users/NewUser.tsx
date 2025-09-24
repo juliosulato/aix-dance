@@ -47,13 +47,13 @@ function NewUser({ opened, onClose, mutate }: Props) {
 
     const { data: sessionData, status } = useSession();
     if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Texto"}</div>;
+    if (status !== "authenticated") return <div>Sessão inválida</div>;
 
     async function createUser(data: CreateUserInput) {
-        if (!sessionData?.user.tenancyId) {
-            notifications.show({ color: "red", message: "Texto" });
-            return;
-        }
+            if (!sessionData?.user.tenancyId) {
+                notifications.show({ color: "red", message: "Sessão inválida. Tente novamente." });
+                return;
+            }
 
         setVisible(true);
 
@@ -70,21 +70,21 @@ function NewUser({ opened, onClose, mutate }: Props) {
             if (!resp.ok) {
                 const data = await resp.json();
                 if (data?.code == "USER_EXISTS") {
-                    notifications.show({
-                        message: "Texto",
-                        color: "yellow"
-                    });
+                        notifications.show({
+                            message: "Já existe um usuário com esse e-mail.",
+                            color: "yellow"
+                        });
                     return;
                 } else {
                     throw new Error("Erro ao criar usuário");
                 }
             }
 
-            notifications.show({ message: "Texto", color: "green" });
+                notifications.show({ message: "Usuário criado com sucesso.", color: "green" });
             handleClose();
             mutate();
         } catch (err: any) {
-            notifications.show({ color: "red", message: "Texto" });
+                notifications.show({ color: "red", message: "Falha ao criar usuário. Tente novamente." });
         } finally {
             setVisible(false);
         }
@@ -95,7 +95,7 @@ function NewUser({ opened, onClose, mutate }: Props) {
             <Modal
                 opened={opened}
                 onClose={handleClose}
-                title={"Texto"}
+                    title={"Novo Usuário"}
                 size="xl"
                 radius="lg"
                 centered
@@ -111,21 +111,21 @@ function NewUser({ opened, onClose, mutate }: Props) {
                         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2">
                             <TextInput
                                 label={"Primeiro Nome"}
-                                placeholder={"Texto"}
+                                    placeholder={"Ex: Maria"}
                                 required
                                 {...register("firstName")}
                                 error={errors.firstName?.message}
                             />
                             <TextInput
                                 label={"Sobrenome"}
-                                placeholder={"Texto"}
+                                    placeholder={"Ex: Silva"}
                                 required
                                 {...register("lastName")}
                                 error={errors.lastName?.message}
                             />
                             <TextInput
                                 label={"E-mail"}
-                                placeholder={"Texto"}
+                                    placeholder={"usuario@exemplo.com"}
                                 required
                                 className="md:col-span-2"
                                 {...register("email")}
@@ -137,10 +137,10 @@ function NewUser({ opened, onClose, mutate }: Props) {
                                 name="password"
                                 render={({ field }) => (
                                     <PasswordInput
-                                        {...field}
-                                        required
-                                        label={"Texto"}
-                                        error={errors.password?.message}
+                                            {...field}
+                                            required
+                                            label={"Senha"}
+                                            error={errors.password?.message}
                                     />
                                 )}
                             />
@@ -150,10 +150,10 @@ function NewUser({ opened, onClose, mutate }: Props) {
                                 name="confirmPassword"
                                 render={({ field }) => (
                                     <PasswordInput
-                                        {...field}
-                                        required
-                                        label={"Texto"}
-                                        error={errors.confirmPassword?.message}
+                                            {...field}
+                                            required
+                                            label={"Confirme a senha"}
+                                            error={errors.confirmPassword?.message}
                                     />
                                 )}
                             />
@@ -162,15 +162,15 @@ function NewUser({ opened, onClose, mutate }: Props) {
                                 control={control}
                                 name="role"
                                 render={({ field }) => (
-                                    <Select
-                                        {...field}
-                                        label={"Texto"}
-                                        data={[
-                                            { value: "ADMIN", label: "Texto" },
-                                            { value: "STAFF", label: "Texto" },
-                                        ]}
-                                        required
-                                    />
+                                        <Select
+                                            {...field}
+                                            label={"Função"}
+                                            data={[
+                                                { value: "ADMIN", label: "Administrador" },
+                                                { value: "STAFF", label: "Funcionário" },
+                                            ]}
+                                            required
+                                        />
                                 )}
                             />
 

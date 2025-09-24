@@ -18,7 +18,7 @@ export default function SupplierView({ supplier, tenancyId }: { supplier: Suppli
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            await deleteSuppliers([supplier.id], tenancyId, t);
+            await deleteSuppliers([supplier.id], tenancyId);
             window.location.replace("/system/suppliers");
         } catch (error) {
             console.error("Falha ao excluir o fornecedor:", error);
@@ -30,7 +30,7 @@ export default function SupplierView({ supplier, tenancyId }: { supplier: Suppli
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
             <div className="flex flex-col items-center justify-center md:justify-between gap-4 md:flex-row md:flex-wrap mb-4">
-                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{"Texto"}</h1>
+                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">Detalhes do Fornecedor</h1>
                 <div className="flex gap-4 md:gap-6">
                     <button className="text-red-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setConfirmModalOpen(true)}>
                         <FaTrash />
@@ -44,21 +44,21 @@ export default function SupplierView({ supplier, tenancyId }: { supplier: Suppli
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={"Texto"} children={supplier.name} />
-                <InfoTerm label={"Texto"} children={supplier.corporateReason} />
-                <InfoTerm label={"Texto"} children={supplier.document} />
-                <InfoTerm label={"Texto"} children={supplier.documentType} />
-                <InfoTerm label={"Telefone"} children={supplier.phoneNumber} />
-                <InfoTerm label={"Celular"} children={supplier.cellPhoneNumber} />
-                <InfoTerm label={"E-mail"} children={supplier.email} />
-                <Divider className="md:col-span-2 lg:col-span-3" label={"Texto"} labelPosition="center" />
-                <InfoTerm label={"Texto"} children={`${supplier.address.publicPlace}`} />
-                <InfoTerm label={"Texto"} children={supplier.address.neighborhood} />
-                <InfoTerm label={"Texto"} children={supplier.address.complement} />
-                <InfoTerm label={"Texto"} children={supplier.address.number} />
-                <InfoTerm label={"Texto"} children={supplier.address.city} />
-                <InfoTerm label={"Texto"} children={supplier.address.state} />
-                <InfoTerm label={"Texto"} children={supplier.address.zipCode} />
+                <InfoTerm label={"Nome"}>{supplier.name}</InfoTerm>
+                <InfoTerm label={"Razão Social"}>{supplier.corporateReason}</InfoTerm>
+                <InfoTerm label={"Documento"}>{supplier.document}</InfoTerm>
+                <InfoTerm label={"Tipo de Documento"}>{supplier.documentType}</InfoTerm>
+                <InfoTerm label={"Telefone"}>{supplier.phoneNumber}</InfoTerm>
+                <InfoTerm label={"Celular"}>{supplier.cellPhoneNumber}</InfoTerm>
+                <InfoTerm label={"E-mail"}>{supplier.email}</InfoTerm>
+                <Divider className="md:col-span-2 lg:col-span-3" label={"Endereço"} labelPosition="center" />
+                <InfoTerm label={"Logradouro"}>{`${supplier.address.publicPlace}`}</InfoTerm>
+                <InfoTerm label={"Bairro"}>{supplier.address.neighborhood}</InfoTerm>
+                <InfoTerm label={"Complemento"}>{supplier.address.complement}</InfoTerm>
+                <InfoTerm label={"Número"}>{supplier.address.number}</InfoTerm>
+                <InfoTerm label={"Cidade"}>{supplier.address.city}</InfoTerm>
+                <InfoTerm label={"Estado"}>{supplier.address.state}</InfoTerm>
+                <InfoTerm label={"CEP"}>{supplier.address.zipCode}</InfoTerm>
             </div>
 
             <UpdateSupplier supplier={supplier} onClose={() => setOpenUpdate(false)} opened={openUpdate} mutate={() => window.location.reload() as any} />
@@ -71,9 +71,7 @@ export default function SupplierView({ supplier, tenancyId }: { supplier: Suppli
                 confirmColor="red"
                 loading={isDeleting}
             >
-                {t("suppliers.confirmModal.text", {
-                    supplier: supplier?.name || ""
-                })}
+                {`Deseja excluir o fornecedor ${supplier?.name || ""}? Esta ação não pode ser desfeita.`}
             </ConfirmationModal>
         </div>
     );

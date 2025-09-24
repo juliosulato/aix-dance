@@ -22,7 +22,7 @@ function NewStudent__Guardians({ control, errors }: Props) {
 
   return (
     <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col gap-4">
-      <h2 className="text-lg font-bold">{"Texto"}</h2>
+      <h2 className="text-lg font-bold">{"Responsáveis"}</h2>
       <Button
         onClick={() =>
           append({
@@ -41,14 +41,14 @@ function NewStudent__Guardians({ control, errors }: Props) {
         size="lg"
         className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
       >
-        {"Texto"}
+        {"Adicionar Responsável"}
       </Button>
 
       {fields.map((field, index) => (
         <div key={field.id} className={`grid md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 gap-4 md:gap-6 py-6 ${index > 0 && "border-t border-t-neutral-300"}`}>
          <div className="flex flex-row flex-wrap justify-between items-center md:col-span-2 lg:col-span-3 3xl:col-span-4">
            <h2 className="text-base font-bold ">
-            {"Texto"} {index + 1}
+            {"Responsável"} {index + 1}
           </h2>
           <ActionIcon
             type="button"

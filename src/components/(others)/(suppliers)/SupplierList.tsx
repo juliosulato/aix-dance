@@ -10,10 +10,7 @@ import { GrUpdate } from "react-icons/gr";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import DataView from "@/components/ui/DataView";
 
-import dayjs from "dayjs";
-import 'dayjs/locale/pt-br';
-import 'dayjs/locale/en';
-import 'dayjs/locale/es';
+// dayjs imports removed (not used in this component)
 import deleteSuppliers from "./delete";
 import NewSupplier from "./newSupplier";
 import UpdateSupplier from "./UpdateSupplier";
@@ -79,7 +76,7 @@ export default function AllSuppliersData() {
         }
 
         try {
-            await deleteSuppliers(finalIdsToDelete, tenancyId, t, mutate as any);
+            await deleteSuppliers(finalIdsToDelete, tenancyId, mutate as any);
             mutate();
         } catch (error) {
             console.error("Falha ao excluir o(s) fornecedores:", error);
@@ -120,19 +117,17 @@ export default function AllSuppliersData() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{"Texto"}</Menu.Label>
+                <Menu.Label>{"Ações em Massa"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
-                    {t("general.actions.deleteMany", {
-                        items: selectedIds.length
-                    })}
+                    {"Excluir selecionados"}
                 </Menu.Item>
             </Menu.Dropdown>
         </Menu>
     );
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Texto"}</div>;
-    if (error) return <p>{"Texto"}</p>;
+    if (status !== "authenticated") return <div>Sessão inválida</div>;
+    if (error) return <p>{"Erro inesperado"}</p>;
 
 
     return (
@@ -141,19 +136,19 @@ export default function AllSuppliersData() {
                 data={categoryGroups || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: "Texto"
+                    label: "Novo Fornecedor"
                 }}
                 baseUrl="/system/others/suppliers/"
                 mutate={mutate}
-                pageTitle={"Texto"}
-                searchbarPlaceholder={"Texto"}
+                pageTitle={"Fornecedores"}
+                searchbarPlaceholder={"Pesquisar fornecedores..."}
                 columns={[
-                    { key: "name", label: "Texto" },
-                    { key: "corporateReason", label: "Texto" },
+                    { key: "name", label: "Nome" },
+                    { key: "corporateReason", label: "Razão Social" },
                     { key: "email", label: "E-mail" },
                     { key: "cellPhoneNumber", label: "Celular" },
                     { key: "phoneNumber", label: "Telefone" },
-                    { key: "document", label: "Texto" }
+                    { key: "document", label: "Documento" }
                 ]}
                 RenderRowMenu={(item) => <MenuItem categoryGroup={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
                 RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
@@ -164,10 +159,10 @@ export default function AllSuppliersData() {
                             <MenuItem categoryGroup={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />
                         </div>
                         <div className="flex flex-col gap-1">
-                            {item.corporateReason && <span><strong>{"Texto"}:</strong> {item.corporateReason}</span>}
+                            {item.corporateReason && <span><strong>{"Razão Social"}:</strong> {item.corporateReason}</span>}
                             {item.email && <span><strong>{"E-mail"}:</strong> {item.email}</span>}
                             {item.phoneNumber && <span><strong>{"Telefone"}:</strong> {item.phoneNumber}</span>}
-                            {item.document && <span><strong>{"Texto"}:</strong> {item.document}</span>}
+                            {item.document && <span><strong>{"Documento"}:</strong> {item.document}</span>}
                         </div>
                     </>
                 )}
@@ -191,22 +186,18 @@ export default function AllSuppliersData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={"Texto"}
-                confirmLabel={"Texto"}
-                cancelLabel={"Texto"}
+                title={"Confirmar Exclusão"}
+                confirmLabel={"Excluir"}
+                cancelLabel={"Cancelar"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
-                    t("suppliers.confirmModal.textArray",
-                        { suppliers: idsToDelete.length }
-                    )
+                    `Tem certeza que deseja excluir os ${idsToDelete.length} fornecedores selecionados?`
                 ) : (
-                    t("suppliers.confirmModal.text", {
-                        supplier: selectedSupplier?.name || ""
-                    })
+                    `Tem certeza que deseja excluir o fornecedor ${selectedSupplier?.name || ""}?`
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Texto"}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">Nenhum fornecedor encontrado.</Text>
             </ConfirmationModal>
         </>
     );

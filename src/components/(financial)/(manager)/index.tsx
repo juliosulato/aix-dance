@@ -151,7 +151,7 @@ export default function AllBillsData() {
                         setOpenPayBill(true);
                         setSelectedBill(bill)
                     }}>
-                        <span>{"Texto"}</span>
+                        <span>{"Pagar"}</span>
                     </Menu.Item>
                     <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(bill)}>
                         {"Excluir"}
@@ -169,7 +169,7 @@ export default function AllBillsData() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{"Texto"}</Menu.Label>
+                <Menu.Label>{"Ações em Massa"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
                     {"Excluir selecionados"}
                 </Menu.Item>
@@ -178,8 +178,8 @@ export default function AllBillsData() {
     );
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Texto"}</div>;
-    if (error) return <p>{"Texto"}</p>;
+    if (status !== "authenticated") return <div>Sessão inválida</div>;
+    if (error) return <p>{"Erro inesperado"}</p>;
 
     return (
         <>
@@ -187,8 +187,8 @@ export default function AllBillsData() {
                 data={filteredBills}
                 baseUrl="/system/financial/manager/"
                 mutate={mutate}
-                pageTitle={`${"Texto"}`}
-                searchbarPlaceholder={"Texto"}
+                pageTitle={`${"Contas"}`}
+                searchbarPlaceholder={"Pesquisar contas..."}
                 dateFilterOptions={[
                     { key: 'dueDate', label: 'Data de Vencimento' },
                     { key: 'createdAt', label: 'Data de Criação' },
@@ -196,25 +196,25 @@ export default function AllBillsData() {
                 columns={[
                     {
                         key: "complement",
-                        label: "Texto",
+                        label: "Complemento",
                         render: (value) => value ? value : "",
                         sortable: true
                     },
                     {
                         key: "amount",
-                        label: "Texto",
+                        label: "Valor",
                         render: (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value),
                         sortable: true
                     },
                     {
                         key: "amountPaid",
-                        label: "Texto",
+                        label: "Pago",
                         render: (value) => value ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value) : '-',
                         sortable: true
                     },
                     {
                         key: "installmentNumber",
-                        label: "Texto",
+                        label: "Parcela",
                         render: (value) => value ? <span className="text-primary">{value}</span> : <span className="text-primary">1</span>,
                         sortable: true
                     },
@@ -236,24 +236,24 @@ export default function AllBillsData() {
                     },
                     {
                         key: "category",
-                        label: "Texto",
+                        label: "Categoria",
                         render: (category) => category?.name || '-',
                         sortable: true
                     },
                     {
                         key: "formsOfReceipt",
-                        label: "Texto",
+                        label: "Forma de Recebimento",
                         render: (formsOfReceipt) => formsOfReceipt?.name || '-',
                         sortable: true
                     },
                     {
                         key: "recurrence",
-                        label: "Texto",
+                        label: "Recorrência",
                         render: (rec) => rec
                     },
                     {
                         key: "status",
-                        label: "Texto",
+                        label: "Status",
                         render: (st) => StatusTextToBadge(st, true)
                     },
                 ]}
@@ -267,10 +267,10 @@ export default function AllBillsData() {
                         >
                             <Tabs.List>
                                 <Tabs.Tab value="payable">
-                                    {"Texto"}
+                                    {"A Pagar"}
                                 </Tabs.Tab>
                                 <Tabs.Tab value="receivable">
-                                    {"Texto"}
+                                    {"A Receber"}
                                 </Tabs.Tab>
                             </Tabs.List>
                         </Tabs>
@@ -284,7 +284,7 @@ export default function AllBillsData() {
                                 rightSection={<IoAdd />}
                                 onClick={() => setOpenNew(true)}
                             >
-                                {"Texto"}
+                                {"Nova Conta"}
                             </Button>
                         )}
                     </>
@@ -353,13 +353,13 @@ export default function AllBillsData() {
                 />
             )}
 
-            <ConfirmationModal
+                <ConfirmationModal
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={"Texto"}
-                confirmLabel={"Texto"}
-                cancelLabel={"Texto"}
+                title={"Confirmar Exclusão"}
+                confirmLabel={"Excluir"}
+                cancelLabel={"Cancelar"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
@@ -368,7 +368,7 @@ export default function AllBillsData() {
                     `Tem certeza que deseja excluir a conta com vencimento em ${dayjs(selectedBill?.dueDate).format("DD/MM/YYYY") || ""}?`
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Texto"}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">Aviso: ação irreversível.</Text>
             </ConfirmationModal>
         </>
     );

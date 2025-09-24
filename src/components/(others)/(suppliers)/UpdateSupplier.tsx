@@ -32,13 +32,13 @@ export default function UpdateSupplier({ opened, onClose, mutate, supplier }: Pr
             document: supplier.document ?? undefined,
             documentType: supplier.documentType ?? undefined,
             address: {
-                city: supplier.address.city ?? undefined,   
-                publicPlace: supplier.address.publicPlace ?? undefined,   
-                complement: supplier.address.complement ?? undefined,   
-                neighborhood: supplier.address.neighborhood ?? undefined,   
-                number: supplier.address.number ?? undefined,   
-                zipCode: supplier.address.zipCode ?? undefined,   
-                state: supplier.address.state ?? undefined,   
+                city: supplier?.address?.city ?? undefined,
+                publicPlace: supplier?.address?.publicPlace ?? undefined,
+                complement: supplier?.address?.complement ?? undefined,
+                neighborhood: supplier?.address?.neighborhood ?? undefined,
+                number: supplier?.address?.number ?? undefined,
+                zipCode: supplier?.address?.zipCode ?? undefined,
+                state: supplier?.address?.state ?? undefined,
             },
         }
     });
@@ -53,7 +53,7 @@ export default function UpdateSupplier({ opened, onClose, mutate, supplier }: Pr
 
     async function handleUpdateSupplier(data: UpdateSupplierInput) {
         if (!sessionData?.user.tenancyId) {
-            notifications.show({ color: "red", message: "Texto" });
+            notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
 
@@ -68,7 +68,7 @@ export default function UpdateSupplier({ opened, onClose, mutate, supplier }: Pr
             if (!response.ok) throw new Error("Failed to create supplier");
 
             notifications.show({
-                message: "Texto",
+                message: "Fornecedor atualizado com sucesso.",
                 color: "green"
             });
 
@@ -78,7 +78,7 @@ export default function UpdateSupplier({ opened, onClose, mutate, supplier }: Pr
         } catch (error) {
             console.error(error);
             notifications.show({
-                message: "Texto",
+                message: "Erro ao atualizar o fornecedor.",
                 color: "red"
             });
         } finally {
@@ -88,8 +88,8 @@ export default function UpdateSupplier({ opened, onClose, mutate, supplier }: Pr
 
     const handleFormErrors = () => {
         notifications.show({
-            title: "Texto",
-            message: "Texto",
+            title: "Erro de validação",
+            message: "Verifique os dados informados",
             color: 'yellow'
         });
     };
@@ -98,7 +98,7 @@ export default function UpdateSupplier({ opened, onClose, mutate, supplier }: Pr
         <Modal
             opened={opened}
             onClose={handleClose}
-            title={"Texto"}
+            title={"Atualizar Fornecedor"}
             size="xl"
             radius="lg"
             centered
@@ -106,31 +106,31 @@ export default function UpdateSupplier({ opened, onClose, mutate, supplier }: Pr
         >
             <form onSubmit={handleSubmit(handleUpdateSupplier, handleFormErrors)} className="flex flex-col gap-4">
                 <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
-                    <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{"Texto"}</h2>
+                    <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{"Informações da Empresa"}</h2>
 
                     <TextInput
                         {...register("name")}
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label={"Nome"}
+                        placeholder={"Digite Aqui"}
                         error={errors?.name?.message}
                         required
                     />
                     <TextInput
                         {...register("corporateReason")}
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label={"Razão Social"}
+                        placeholder={"Digite Aqui"}
                         error={errors?.corporateReason?.message}
                     />
                     <TextInput
                         {...register("documentType")}
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label={"Tipo de Documento"}
+                        placeholder={"Digite Aqui"}
                         error={errors?.documentType?.message}
                     />
                     <TextInput
                         {...register("document")}
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label={"Documento"}
+                        placeholder={"Digite Aqui"}
                         error={errors?.document?.message}
                     />
 

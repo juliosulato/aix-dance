@@ -51,7 +51,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
                     <Menu position="bottom-end">
                         <Menu.Target>
-                            <Tooltip label={t('header.quickAccess.label')} color="violet">
+                            <Tooltip label={"Ações rápidas"} color="violet">
                                 <ActionIcon size="42px" radius="lg" variant="light" color="gray" >
                                     <IoIosAddCircleOutline className="text-2xl" />
                                 </ActionIcon>
@@ -59,19 +59,19 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         </Menu.Target>
                         <Menu.Dropdown >
                             <Menu.Item leftSection={<LuBrain />}>
-                                {t('header.quickAccess.newLead')}
+                                {"Novo Lead"}
                             </Menu.Item>
                             <Menu.Item leftSection={<FaRegUser />}>
-                                {t('header.quickAccess.newStudent')}
+                                {"Novo Aluno"}
                             </Menu.Item>
                             <Menu.Item leftSection={<MdGroups />}>
-                                {t('header.quickAccess.newClass')}
+                                {"Nova Turma"}
                             </Menu.Item>
                             <Menu.Item leftSection={<PiMoneyWavy />}>
-                                {t('header.quickAccess.newPayBill')}
+                                {"Nova Cobrança"}
                             </Menu.Item>
                             <Menu.Item leftSection={<TbCalendarEvent />}>
-                                {t('header.quickAccess.newEvent')}
+                                {"Novo Evento"}
                             </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
@@ -86,10 +86,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         </Menu.Target>
                         <Menu.Dropdown>
                             <Menu.Item leftSection={<FaRegUser />}>
-                                {"Texto"}
+                                {"Meu Perfil"}
                             </Menu.Item>
                             <Menu.Item leftSection={<LuLogOut />} onClick={() => signOut({ redirect: true, redirectTo: "/auth/signin" })}>
-                                {"Texto"}
+                                {"Sair"}
                             </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
@@ -146,7 +146,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         <NavLink
                             color="violet"
                             leftSection={<TbSettings />}
-                            label={"Texto"}
+                            label={"Configurações"}
                             active={pathname === "/settings"}
                             onClick={() => setActiveMain(activeMain === "/settings" ? null : "/settings")}
                             opened={activeMain === "/settings"}
@@ -179,8 +179,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         <NavLink
                             color="violet"
                             leftSection={<BiSupport />}
-                            label={"Texto"}
-                            href="https://wa.me/5514981834361?text=Olá!%20Gostaria%20de%20ajuda%20com%20o%20AIX Dance."
+                            label={"Suporte"}
+                            href="https://wa.me/5514981834361?text=Ol%C3%A1!%20Gostaria%20de%20ajuda%20com%20o%20AIX%20Dance."
                             target="_blank"
                             active={pathname === "/support"}
                             className={`rounded-full !py-3 transition-all duration-300 ease-in !px-5 !justify-start `}

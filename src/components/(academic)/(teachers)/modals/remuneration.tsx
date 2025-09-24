@@ -40,7 +40,7 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
-            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{"Texto"}</h2>
+            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{"Remuneração"}</h2>
 
             <Controller
                 name="teacher.remunerationType"
@@ -48,8 +48,8 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
                 defaultValue={RemunerationType.HOURLY}
                 render={({ field }) => (
                     <Select
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label={"Tipo de Contrato"}
+                        placeholder={"Selecione o tipo de contrato"}
                         data={contractTypeData}
                         value={field.value}
                         onChange={field.onChange}
@@ -64,7 +64,7 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
                 render={({ field }) => (
                      <NumberInput
                         {...field}
-                        label={remunerationType === "HOURLY" ? "Texto" : "Texto"}
+                        label={remunerationType === "HOURLY" ? "Valor por Hora" : "Valor Fixo"}
                         leftSection={<RiMoneyDollarCircleLine size={18} />}
                         allowDecimal
                         decimalSeparator=","
@@ -81,7 +81,7 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
                 render={({ field }) => (
                     <NumberInput
                         {...field}
-                        label={"Texto"}
+                        label={"Dia de Pagamento"}
                         min={1} max={31}
                         error={errors.teacher?.paymentDay?.message}
                     />
@@ -93,7 +93,7 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
                 name="teacher.paymentData"
                 control={control}
                 render={({ field }) => (
-                    <Textarea {...field} label={"Texto"} className="md:col-span-2 lg:col-span-3 3xl:col-span-4" />
+                    <Textarea {...field} label={"Dados de Pagamento"} className="md:col-span-2 lg:col-span-3 3xl:col-span-4" />
                 )}
             />
             
@@ -101,20 +101,20 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
                 name="teacher.observations"
                 control={control}
                 render={({ field }) => (
-                     <Textarea {...field} label={"Texto"} className="md:col-span-2 lg:col-span-3 3xl:col-span-4" />
+                     <Textarea {...field} label={"Observações"} className="md:col-span-2 lg:col-span-3 3xl:col-span-4" />
                 )}
             />
             
             <div className="flex gap-4 flex-wrap md:col-span-2 lg:col-span-3 3xl:col-span-4">
                 <div className="flex items-center gap-1">
-                     <Checkbox label={"Texto"} checked={presenceBonus} onChange={(ev) => setPresenceBonus(ev.target.checked)} />
-                     <Tooltip label={"Texto"} color="violet" arrowOffset={50} arrowPosition="center" arrowRadius={3} arrowSize={5} position="bottom-end" multiline w={220}>
+                     <Checkbox label={"Bônus de Presença"} checked={presenceBonus} onChange={(ev) => setPresenceBonus(ev.target.checked)} />
+                     <Tooltip label={"Define um valor extra que o professor recebe por dar todas as aulas. Útil para comissionamento."} color="violet" arrowOffset={50} arrowPosition="center" arrowRadius={3} arrowSize={5} position="bottom-end" multiline w={220}>
                          <BiHelpCircle size={18} className="cursor-pointer hover:text-primary" />
                      </Tooltip>
                 </div>
                 <div className="flex items-center gap-1">
-                     <Checkbox label={"Texto"} checked={comission} onChange={(ev) => setComission(ev.target.checked)} />
-                     <Tooltip label={"Texto"} color="violet" arrowOffset={50} arrowPosition="center" arrowRadius={3} arrowSize={5} position="bottom-end" multiline w={220}>
+                     <Checkbox label={"Bônus por Comissão"} checked={comission} onChange={(ev) => setComission(ev.target.checked)} />
+                     <Tooltip label={"Cria faixas de comissão baseadas no número de alunos presentes na aula"} color="violet" arrowOffset={50} arrowPosition="center" arrowRadius={3} arrowSize={5} position="bottom-end" multiline w={220}>
                          <BiHelpCircle size={18} className="cursor-pointer hover:text-primary" />
                      </Tooltip>
                 </div>
@@ -122,14 +122,14 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
 
             {presenceBonus && (
                 <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col gap-4 md:col-span-2 lg:col-span-3 3xl:col-span-4">
-                    <h2 className="text-lg font-bold">{"Texto"}</h2>
+                    <h2 className="text-lg font-bold">{"Bônus de Presença"}</h2>
                     <Controller
                         name="teacher.bonusForPresenceAmount"
                         control={control}
                         render={({ field }) => (
                             <NumberInput
                                 {...field}
-                                label={"Texto"}
+                                label={"Valor do Bônus"}
                                 leftSection={<RiMoneyDollarCircleLine size={18} />}
                                 allowDecimal
                                 decimalSeparator=","
@@ -145,11 +145,11 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
                         render={({ field }) => (
                             <div className="flex items-center gap-1">
                                 <Checkbox
-                                    label={"Texto"}
+                                    label={"Perde o Bônus se Ausente"}
                                     checked={field.value}
                                     onChange={(event) => field.onChange(event.currentTarget.checked)}
                                 />
-                                <Tooltip label={"Texto"} color="violet" arrowOffset={50} arrowPosition="center" arrowRadius={3} arrowSize={5} position="bottom-end" multiline w={220}>
+                                <Tooltip label={"Define se o professor perde o bônus de presença quando está ausente."} color="violet" arrowOffset={50} arrowPosition="center" arrowRadius={3} arrowSize={5} position="bottom-end" multiline w={220}>
                                     <BiHelpCircle size={18} className="cursor-pointer hover:text-primary" />
                                 </Tooltip>
                             </div>
@@ -161,18 +161,18 @@ export default function Teacher__Remuneration({ control, errors }: Props) {
             {comission && (
                 <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col gap-4 md:col-span-2 lg:col-span-3 3xl:col-span-4">
                     <div className="flex justify-between items-center">
-                        <h2 className="text-lg font-bold">{"Texto"}</h2>
+                        <h2 className="text-lg font-bold">{"Faixas de Comissão"}</h2>
                         <Button type="button" color="#7439FA" radius="lg" size="sm" onClick={handleAddRange}>
-                            {"Texto"}
+                            {"Adicionar Faixa"}
                         </Button>
                     </div>
                     <div>
                         <Table classNames={{ table: "!border !border-neutral-300 " }}>
                             <Table.Thead>
                                 <Table.Tr>
-                                    <Table.Th>{"Texto"}</Table.Th>
-                                    <Table.Th>{"Texto"}</Table.Th>
-                                    <Table.Th>{"Texto"}</Table.Th>
+                                    <Table.Th>{"Min. Alunos"}</Table.Th>
+                                    <Table.Th>{"Max. Alunos"}</Table.Th>
+                                    <Table.Th>{"Comissão"}</Table.Th>
                                     <Table.Th>Ações</Table.Th>
                                 </Table.Tr>
                             </Table.Thead>

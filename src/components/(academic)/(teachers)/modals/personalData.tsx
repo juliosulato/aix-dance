@@ -22,21 +22,21 @@ export default function Teacher__PersonalData({ control, errors, register }: Pro
     const [gender, setGender] = useState<Gender | null>(null);
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
-            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{"Texto"}</h2>
+            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">Dados Pessoais</h2>
             
             <TextInput
-                label={g("firstName.label")}
+                label={"Nome"}
                 required
                 {...register("firstName")}
                 error={errors.firstName?.message}
-                placeholder={g("firstName.placeholder")}
+                placeholder={"Digite o nome"}
             />
             <TextInput
-                label={g("lastName.label")}
+                label={"Sobrenome"}
                 error={errors.lastName?.message}
                 {...register("lastName")}
                 required
-                placeholder={g("lastName.placeholder")}
+                placeholder={"Digite o sobrenome"}
             />
             
             {/* Campos de professor agora com o prefixo 'teacher.' */}
@@ -45,7 +45,7 @@ export default function Teacher__PersonalData({ control, errors, register }: Pro
                 control={control}
                 render={({ field }) => (
                     <PhoneInput
-                        label={g("cellPhoneNumber.label")}
+                        label={"Celular"}
                         onChange={field.onChange}
                         value={field.value || ''}
                         error={errors.teacher?.cellPhoneNumber?.message}
@@ -57,7 +57,7 @@ export default function Teacher__PersonalData({ control, errors, register }: Pro
                 control={control}
                 render={({ field }) => (
                     <PhoneInput
-                        label={g("phoneNumber.label")}
+                        label={"Telefone"}
                         onChange={field.onChange}
                         value={field.value || ''}
                         error={errors.teacher?.phoneNumber?.message}
@@ -65,12 +65,12 @@ export default function Teacher__PersonalData({ control, errors, register }: Pro
                 )}
             />
             <TextInput
-                label={g("email.label")}
+                label={"E-mail"}
                 {...register("email")}
                 required
                 error={errors.email?.message}
                 type="email"
-                placeholder={g("email.placeholder")}
+                placeholder={"seu@email.com"}
             />
              <Controller
                 name="teacher.dateOfBirth"
@@ -78,11 +78,11 @@ export default function Teacher__PersonalData({ control, errors, register }: Pro
                 render={({ field }) => (
                     <InputBase
                         component={IMaskInput}
-                        mask={g("dateOfBirth.mask")}
+                        mask={"00/00/0000"}
                         required
                         value={field.value || ""}
-                        label={g("dateOfBirth.label")}
-                        placeholder={g("dateOfBirth.placeholder")}
+                        label={"Data de Nascimento"}
+                        placeholder={"dd/mm/aaaa"}
                         error={errors.teacher?.dateOfBirth?.message}
                         onAccept={(val: string) => field.onChange(val)}
                     />
@@ -112,8 +112,8 @@ export default function Teacher__PersonalData({ control, errors, register }: Pro
                             field.onChange(ev);
                             setGender(ev as Gender);
                         }}
-                        label={g("gender.label")}
-                        placeholder={g("gender.placeholder")}
+                        label={"Gênero"}
+                        placeholder={"Selecione o gênero"}
                         required
                         data={[
                             { label: "Mulher", value: Gender.FEMALE },
@@ -127,23 +127,23 @@ export default function Teacher__PersonalData({ control, errors, register }: Pro
             />
             {gender && (gender === Gender.NON_BINARY || gender === Gender.OTHER) && (
                 <TextInput
-                    label={g("pronoun.label")}
-                    placeholder={g("pronoun.placeholder")}
+                    label={"Pronome"}
+                    placeholder={"Ex.: elu, ele, ela"}
                     {...register("teacher.pronoun")}
                     error={errors.teacher?.pronoun?.message}
                 />
             )}
 
             <TextInput
-                label={g("instagramUser.label")}
-                placeholder={g("instagramUser.placeholder")}
+                label={"Usuário do Instagram"}
+                placeholder={"nome_de_usuario"}
                 {...register("teacher.instagramUser")}
                 error={errors?.teacher?.instagramUser?.message}
             />
 
             <TextInput
-                label={"Texto"}
-                placeholder={"Texto"}
+                label={"Registro profissional"}
+                placeholder={"Registro/CREA/CRM, etc."}
                 className="md:col-span-2 lg:col-span-3 3xl:col-span-4"
                 {...register("teacher.professionalRegister")}
             />

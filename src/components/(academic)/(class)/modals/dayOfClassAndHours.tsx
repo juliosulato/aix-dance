@@ -68,7 +68,7 @@ export default function DayOfClassesAndHours({
 
   return (
     <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col">
-      <h2 className="text-lg font-bold">{"Texto"}</h2>
+      <h2 className="text-lg font-bold">{"Dias e Horários"}</h2>
       {errors.schedules && !errors.schedules.root && (
           <p className="text-sm text-red-500 mt-1">{errors.schedules.message}</p>
       )}
@@ -95,7 +95,7 @@ export default function DayOfClassesAndHours({
                 )}
 
                 <div className="flex flex-row gap-3 justify-center items-center">
-                  <span>{"Texto"}</span>
+                  <span>{"De"}</span>
                   <TimeInput
                     value={range.from}
                     disabled={!schedules?.[day.key]?.enabled}
@@ -105,7 +105,7 @@ export default function DayOfClassesAndHours({
                     // Exibe a mensagem de erro específica para este campo
                     error={errors.schedules?.[day.key]?.ranges?.[index]?.from?.message}
                   />
-                  <span>{"Texto"}</span>
+                  <span>{"Até"}</span>
                   <TimeInput
                     value={range.to}
                     disabled={!schedules?.[day.key]?.enabled}
@@ -118,8 +118,8 @@ export default function DayOfClassesAndHours({
                 </div>
 
                 <div className="justify-self-end flex gap-2">
-                  {schedules?.[day.key]?.ranges.length > 1 && (
-                    <Tooltip color="#7439FA" label={g("general.actions.delete")}>
+                    {schedules?.[day.key]?.ranges.length > 1 && (
+                      <Tooltip color="#7439FA" label="Excluir">
                       <ActionIcon
                         color="gray"
                         onClick={() => handleRemoveRange(day.key, index)}
@@ -129,7 +129,7 @@ export default function DayOfClassesAndHours({
                     </Tooltip>
                   )}
                   {index === schedules?.[day.key]?.ranges.length - 1 && (
-                    <Tooltip color="#7439FA" label={g("general.actions.add")}>
+                    <Tooltip color="#7439FA" label="Adicionar">
                       <ActionIcon
                         color="gray"
                         onClick={() => handleAddRange(day.key)}

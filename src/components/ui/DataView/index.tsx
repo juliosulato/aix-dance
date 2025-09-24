@@ -316,7 +316,7 @@ export default function DataView<T>({
                     <Grid.Col span={{ base: 12, md: 4 }}>
                         <Select
                             value={rowsPerPage}
-                            label={"Texto"}
+                            label={"Linhas por página"}
                             onChange={value => {
                                 setRowsPerPage(value || '12');
                                 setPage(1);

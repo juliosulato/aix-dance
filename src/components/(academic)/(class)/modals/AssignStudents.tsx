@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
-import { EnrollStudentsInput, getEnrollStudentsSchema } from "@/schemas/academic/class.schema";
+import { EnrollStudentsInput, enrollStudentsSchema } from "@/schemas/academic/class.schema";
 import useSWR, { KeyedMutator } from "swr";
 import { ClassFromApi } from ".."; // Ajuste o caminho se necessário
 import { fetcher } from "@/utils/fetcher";
@@ -32,7 +32,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
     const [visible, setVisible] = useState(false);
     const { data: sessionData, status } = useSession();
 
-    const enrollSchema = getEnrollStudentsSchema(t);
+    const enrollSchema = enrollStudentsSchema;
 
     const { control, handleSubmit, formState: { errors }, reset, setValue } = useForm<EnrollStudentsInput>({
         resolver: zodResolver(enrollSchema),
@@ -205,7 +205,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
         }
 
         if (promises.length === 0) {
-            notifications.show({ message: "Texto" });
+            notifications.show({ message: "Erro ao processar solicitação" });
             onClose();
             setVisible(false);
             return;
@@ -216,12 +216,12 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
             const hasError = responses.some((res) => !res.ok);
             if (hasError) throw new Error("Uma ou mais operações falharam.");
 
-            notifications.show({ message: "Texto", color: "green" });
+            notifications.show({ message: "Estudantes atribuídos com sucesso", color: "green" });
             await mutate();
             handleClose();
         } catch (err) {
             console.error(err);
-            notifications.show({ color: "red", message: "Texto" });
+            notifications.show({ color: "red", message: "Erro ao atribuir estudantes" });
         } finally {
             setVisible(false);
         }
@@ -271,7 +271,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
 
     return (
         <>
-            <Modal opened={opened} onClose={handleClose} title={"Texto"} size="lg" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
+            <Modal opened={opened} onClose={handleClose} title={"Atribuir Estudantes"} size="lg" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
                 <form onSubmit={handleSubmit(handleAssignStudents)} className="flex flex-col gap-4 md:gap-6 p-4">
                     <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col gap-4">
                         <Controller
@@ -279,8 +279,8 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
                             control={control}
                             render={({ field }) => (
                                 <MultiSelect
-                                    label={formStepsT("fields.students.label")}
-                                    placeholder={formStepsT("fields.students.placeholder")}
+                                    label="Estudantes"
+                                    placeholder="Selecione os estudantes"
                                     data={studentOptions}
                                     {...field}
                                     searchable
@@ -295,9 +295,9 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
                         <div className="p-4 border border-neutral-300 rounded-2xl flex flex-col gap-4 min-h-[200px]">
                             {studentsSelected.length === 0 ? (
                                 <div className="flex flex-col gap-3 items-center justify-center text-center m-auto">
-                                    <Image src={notFound} alt={"Texto"} className="max-w-[150px]" />
-                                    <h3 className="text-xl text-primary font-bold">{"Texto"}</h3>
-                                    <p className="max-w-xs text-neutral-500">{"Texto"}</p>
+                                    <Image src={notFound} alt="Nenhum estudante encontrado" className="max-w-[150px]" />
+                                    <h3 className="text-xl text-primary font-bold">Nenhum estudante encontrado</h3>
+                                    <p className="max-w-xs text-neutral-500">Não encontramos estudantes disponíveis para esta turma.</p>
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -315,8 +315,8 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
                         </div>
                     </div>
                     <div className="flex justify-end gap-4 mt-4">
-                        <Button variant="default" onClick={handleClose} radius="lg" size="md">{rootT("general.actions.cancel")}</Button>
-                        <Button type="submit" color="#7439FA" radius="lg" size="md">{rootT("forms.submit")}</Button>
+                        <Button variant="default" onClick={handleClose} radius="lg" size="md">Cancelar</Button>
+                        <Button type="submit" color="#7439FA" radius="lg" size="md">Salvar</Button>
                     </div>
                 </form>
             </Modal>

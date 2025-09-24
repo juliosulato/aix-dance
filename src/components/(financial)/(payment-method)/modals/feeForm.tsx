@@ -22,7 +22,7 @@ export default function FormsOfReceipt__Fees({
   return (
     <div className="p-4 border border-neutral-300 rounded-xl flex flex-col gap-4">
       <div className="flex flex-col gap-2 md:gap-4 md:flex-row justify-between items-center">
-        <h2 className="text-lg font-bold">{"Texto"}</h2>
+        <h2 className="text-lg font-bold">Taxas</h2>
         <Button
           size="xs"
           variant="light"
@@ -38,7 +38,7 @@ export default function FormsOfReceipt__Fees({
             })
           }
         >
-          {"Texto"}
+          {"Adicionar Taxa"}
         </Button>
       </div>
       {fields.map((field, index) => (
@@ -61,7 +61,7 @@ export default function FormsOfReceipt__Fees({
             render={({ field }) => (
               <NumberInput
                 {...field}
-                label={"Texto"}
+                label={"Mínimo de Parcelas"}
                 placeholder="1"
                 error={errors.fees?.[index]?.minInstallments?.message}
               />
@@ -75,7 +75,7 @@ export default function FormsOfReceipt__Fees({
             render={({ field }) => (
               <NumberInput
                 {...field}
-                label={"Texto"}
+                label={"Máximo de Parcelas"}
                 placeholder="12"
                 error={errors.fees?.[index]?.maxInstallments?.message}
               />
@@ -89,7 +89,7 @@ export default function FormsOfReceipt__Fees({
             render={({ field }) => (
               <NumberInput
                 {...field}
-                label={"Texto"}
+                label={"Percentual (%)"}
                 placeholder="2.99"
                 decimalScale={2}
                 fixedDecimalScale
@@ -106,7 +106,7 @@ export default function FormsOfReceipt__Fees({
             render={({ field }) => (
               <NumberInput
                 {...field}
-                label={"Texto"}
+                label={"Recebe em (dias)"}
                 placeholder="30"
                 error={errors.fees?.[index]?.receiveInDays?.message}
               />
@@ -115,7 +115,7 @@ export default function FormsOfReceipt__Fees({
 
           {/* customerInterest pode usar register */}
           <Checkbox
-            label={"Texto"}
+            label={"Juros ao cliente"}
             {...register(`fees.${index}.customerInterest`)}
             className="col-span-2 md:col-span-3 self-center mt-2"
           />

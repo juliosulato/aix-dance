@@ -1,32 +1,27 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { Supplier } from "@prisma/client";
-import { Translations } from "@/types/translations";
 
 async function deleteSuppliers(
     items: Supplier | string[],
     tenancyId: string,
-    t: Translations,
     mutate?: KeyedMutator<Supplier[]>,
 ) {
     const isArray = Array.isArray(items);
     const idsToDelete = isArray ? items : [items.id];
 
     if (idsToDelete.length === 0) {
-        notifications.show({ message: t("suppliers.delete.errors.noLength"), color: "red" });
+        notifications.show({ message: "Selecione pelo menos um fornecedor para excluir.", color: "red" });
         return;
     }
 
     const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/suppliers`;
 
-    mutate && await mutate(
-        (currentData) => currentData?.filter(pm => !idsToDelete.includes(pm.id)) || [],
-        {
-            revalidate: false,
-        }
-    );
+    if (mutate) {
+        mutate();
+    }
 
-    notifications.show({ title: t("suppliers.delete.notifications.wait.title"), message:t("suppliers.delete.notifications.wait.message"), color: "yellow" });
+    notifications.show({ title: "Aguarde", message: "Processando exclusão...", color: "yellow" });
 
     try {
         const response = await fetch(apiUrl, {
@@ -42,11 +37,14 @@ async function deleteSuppliers(
         }
 
         notifications.clean();
-        notifications.show({ message: t("suppliers.delete.notifications.success"), color: "green" });
-        
+        notifications.show({ message: "Fornecedor excluído com sucesso.", color: "green" });
+
     } catch (error) {
-        notifications.show({ message: t("suppliers.delete.errors.internalError"), color: "red" });
-        mutate && mutate();
+        console.error("Erro ao excluir os itens:", error);
+        notifications.show({ message: "Erro interno ao excluir os itens.", color: "red" });
+        if (mutate) {
+            mutate();
+        }
     }
 }
 

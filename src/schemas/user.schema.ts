@@ -7,7 +7,7 @@ dayjs.extend(customParseFormat);
 
 const addressSchema = z.object({
   postalCode: z.string().min(1, { message: "CEP é obrigatório" }),
-  street: z.string().min(1, { message: "Rua é obrigatória" }),
+  publicPlace: z.string().min(1, { message: "Logradouro é obrigatória" }),
   number: z.string().optional(),
   complement: z.string().optional(),
   neighborhood: z.string().min(1, { message: "Bairro é obrigatório" }),

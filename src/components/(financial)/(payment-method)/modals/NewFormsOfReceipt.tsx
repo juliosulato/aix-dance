@@ -32,7 +32,7 @@ export default function NewFormsOfReceipt({ opened, onClose, onSuccess, mutate }
 
     async function createFormsOfReceipt(data: CreateFormsOfReceiptInput) {
         if (!sessionData?.user.tenancyId) {
-            notifications.show({ color: "red", message: g("errors.invalidSession") });
+            notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
         setIsLoading(true);
@@ -59,20 +59,19 @@ export default function NewFormsOfReceipt({ opened, onClose, onSuccess, mutate }
     const handleFormErrors = (err: any) => {
         console.warn("Validation errors:", err)
         notifications.show({
-            title: g("general.errors.validationTitle"),
-            message: g("general.errors.validationMessage"),
+            message: "Erro de validação.",
             color: 'yellow'
         });
     };
 
     return (
-        <Modal opened={opened} onClose={onClose} title={"Texto"} size="xl" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 !mb-4 border-b border-b-neutral-300" }}>
+        <Modal opened={opened} onClose={onClose} title={"Novo Método de Recebimento"} size="xl" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 !mb-4 border-b border-b-neutral-300" }}>
             <form onSubmit={handleSubmit(createFormsOfReceipt, handleFormErrors)} className="flex flex-col gap-4">
                 <LoadingOverlay visible={isLoading} />
                 <FormsOfReceipt__BasicInformations register={register as any} errors={errors} />
                 <FormsOfReceipt__Fees control={control as any} register={register as any} errors={errors} />
                 <Button type="submit" color="#7439FA" radius="lg" size="md" loading={isLoading} className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto">
-                    {g("forms.submit")}
+                    Salvar
                 </Button>
             </form>
         </Modal>

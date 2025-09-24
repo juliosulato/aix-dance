@@ -1,32 +1,27 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { CategoryGroup } from "@prisma/client";
-import { Translations } from "@/types/translations";
 
 async function deleteCategoryGroups(
     items: CategoryGroup | string[],
     tenancyId: string,
-    t: Translations,
     mutate?: KeyedMutator<CategoryGroup[]>,
 ) {
     const isArray = Array.isArray(items);
     const idsToDelete = isArray ? items : [items.id];
 
     if (idsToDelete.length === 0) {
-        notifications.show({ message: t("financial.category-groups.delete.errors.noLength"), color: "red" });
+        notifications.show({ message: "Nenhum item selecionado para exclusão.", color: "red" });
         return;
     }
 
     const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/category-groups`;
 
-    mutate && await mutate(
-        (currentData) => currentData?.filter(pm => !idsToDelete.includes(pm.id)) || [],
-        {
-            revalidate: false,
-        }
-    );
+    if (mutate) {
+        mutate();
+    }
 
-    notifications.show({ title: t("financial.category-groups.delete.notifications.wait.title"), message:t("financial.category-groups.delete.notifications.wait.message"), color: "yellow" });
+    notifications.show({ title: "Aguarde", message: "Processando exclusão...", color: "yellow" });
 
     try {
         const response = await fetch(apiUrl, {
@@ -41,13 +36,14 @@ async function deleteCategoryGroups(
             throw new Error('Falha ao deletar os itens na API.');
         }
 
-        notifications.clean();
-        notifications.show({ message: t("financial.category-groups.delete.notifications.success"), color: "green" });
-        
+    notifications.clean();
     } catch (error) {
-        notifications.show({ message: t("financial.category-groups.delete.errors.internalError"), color: "red" });
-        mutate && mutate();
+        console.error("Erro ao excluir os itens:", error);
+        notifications.show({ message: "Erro interno ao excluir os itens.", color: "red" });
+        if (mutate) {
+            mutate();
+        }
     }
-}
+};
 
 export default deleteCategoryGroups;

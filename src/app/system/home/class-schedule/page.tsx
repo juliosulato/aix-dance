@@ -30,7 +30,7 @@ const modalityColors: Record<string, string> = {
   "Jazz": "#dc2626", // Vermelho
   "Contemporâneo": "#ea580c", // Laranja
   "Sapateado": "#0891b2", // Azul
-  "Street Dance": "#7c2d12", // Marrom
+  "publicPlace Dance": "#7c2d12", // Marrom
   "Dança de Salão": "#be185d", // Rosa
   "Flamenco": "#991b1b", // Vermelho escuro
   "default": "#6b7280", // Cinza para modalidades não mapeadas

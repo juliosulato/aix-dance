@@ -1,19 +1,17 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { CategoryGroup } from "@prisma/client";
-import { Translations } from "@/types/translations";
 
 async function deleteCategoryGroups(
     items: CategoryGroup | string[],
     tenancyId: string,
-    t: Translations,
     mutate?: KeyedMutator<CategoryGroup[]>,
 ) {
     const isArray = Array.isArray(items);
     const idsToDelete = isArray ? items : [items.id];
 
     if (idsToDelete.length === 0) {
-        notifications.show({ message: t("financial.categories.delete.errors.noLength"), color: "red" });
+        notifications.show({ message: "Nenhum item selecionado para exclusão.", color: "red" });
         return;
     }
 
@@ -26,7 +24,7 @@ async function deleteCategoryGroups(
         }
     );
 
-    notifications.show({ title: t("financial.categories.delete.notifications.wait.title"), message:t("financial.categories.delete.notifications.wait.message"), color: "yellow" });
+    notifications.show({ title: "Aguarde", message: "Excluindo item(s)...", color: "yellow" });
 
     try {
         const response = await fetch(apiUrl, {
@@ -42,10 +40,10 @@ async function deleteCategoryGroups(
         }
 
         notifications.clean();
-        notifications.show({ message: t("financial.categories.delete.notifications.success"), color: "green" });
+        notifications.show({ message: "Itens excluídos com sucesso.", color: "green" });
         
     } catch (error) {
-        notifications.show({ message: t("financial.categories.delete.errors.internalError"), color: "red" });
+        notifications.show({ message: "Erro interno ao excluir os itens.", color: "red" });
         mutate && mutate();
     }
 }

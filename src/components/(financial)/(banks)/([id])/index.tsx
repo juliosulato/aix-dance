@@ -15,7 +15,7 @@ export default function BanksView({ bank, tenancyId }: { bank: Bank, tenancyId: 
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            await deleteBanks([bank.id], tenancyId, t);
+            await deleteBanks([bank.id], tenancyId);
             window.location.replace("/system/financial/bank-accounts");
         } catch (error) {
             console.error("Falha ao excluir a forma de pagamento:", error);
@@ -28,7 +28,7 @@ export default function BanksView({ bank, tenancyId }: { bank: Bank, tenancyId: 
     return (
         <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
             <div className="flex flex-col items-center justify-center md:justify-between gap-4 md:flex-row md:flex-wrap mb-4">
-                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{"Texto"}</h1>
+                <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">Conta Bancária</h1>
                 <div className="flex gap-4 md:gap-6">
                     <button className="text-red-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition" onClick={() => setConfirmModalOpen(true)}>
                         <FaTrash />
@@ -42,12 +42,12 @@ export default function BanksView({ bank, tenancyId }: { bank: Bank, tenancyId: 
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={"Texto"} children={bank.name} />
-                <InfoTerm label={"Texto"} children={bank.agency} />
-                <InfoTerm label={"Texto"} children={bank.account} />
-                <InfoTerm label={"Texto"} children={Number(bank.maintenanceFeeAmount || 0)?.toFixed(2).replace(/\./g, ",")} />
-                <InfoTerm label={"Texto"} children={Number(bank.maintenanceFeeDue)} />
-                <InfoTerm label={"Texto"} children={bank.description} className="md:col-span-2 lg:col-span-3 mt-5" />
+                <InfoTerm label={"Nome"} children={bank.name} />
+                <InfoTerm label={"Agência"} children={bank.agency} />
+                <InfoTerm label={"Conta"} children={bank.account} />
+                <InfoTerm label={"Taxa de Manutenção (R$)"} children={Number(bank.maintenanceFeeAmount || 0)?.toFixed(2).replace(/\./g, ",")} />
+                <InfoTerm label={"Vencimento da Taxa"} children={Number(bank.maintenanceFeeDue)} />
+                <InfoTerm label={"Descrição"} children={bank.description} className="md:col-span-2 lg:col-span-3 mt-5" />
             </div>
 
             <UpdateBankAccount bankAccount={bank} onClose={() => setOpenUpdate(false)} opened={openUpdate} mutate={() => window.location.reload()} />
@@ -60,9 +60,7 @@ export default function BanksView({ bank, tenancyId }: { bank: Bank, tenancyId: 
                 confirmColor="red"
                 loading={isDeleting}
             >
-                { t("financial.banks.modals.confirmModal.text", {
-                        bank: bank?.name || ""
-                    })}
+                { `Tem certeza que deseja excluir a conta bancária "${bank?.name || ""}"? Esta ação não pode ser desfeita.` }
             </ConfirmationModal>
         </div>
     );

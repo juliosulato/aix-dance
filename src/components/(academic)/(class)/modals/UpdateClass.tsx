@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
-import { UpdateClassInput, getUpdateClassSchema } from "@/schemas/academic/class.schema";
+import { UpdateClassInput, updateClassSchema } from "@/schemas/academic/class.schema";
 import { DayOfWeek } from "@prisma/client";
 import { KeyedMutator } from "swr";
 import { ClassFromApi } from "..";
@@ -53,10 +53,10 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
     const [active, setActive] = useState(0);
     const [visible, setVisible] = useState(false);
 
-    const updateClassSchema = getUpdateClassSchema(t);
+    const classSchema = updateClassSchema;
 
     const { control, handleSubmit, formState: { errors }, watch, reset, trigger, setValue } = useForm<UpdateClassInput>({
-        resolver: zodResolver(updateClassSchema),
+        resolver: zodResolver(classSchema),
     });
 
     useEffect(() => {
@@ -126,17 +126,17 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
 
     return (
         <>
-            <Modal opened={opened} onClose={onClose} title={"Texto"} size="auto" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
+            <Modal opened={opened} onClose={onClose} title={"Atualizar Turma"} size="auto" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
                 <form onSubmit={handleSubmit(updateClass)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 w-full lg:w-[60vw] lg:p-6" >
                     <Stepper active={active} onStepClick={setActive}>
-                        <Stepper.Step label={"Texto"} >
+                        <Stepper.Step label={"Sobre a Turma"} >
                            <div className="flex flex-col gap-4">
                                 <AboutOfClass control={control} errors={errors} tenancyId={sessionData.user.tenancyId} />
                                 <DayOfClassesAndHours setValue={setValue} watch={watch}  errors={errors} />
                                 <div className="flex justify-end"><Button type="button" color="#7439FA" radius={"lg"} size="lg" onClick={handleNextStep}>{"Próximo"}</Button></div>
                             </div>
                         </Stepper.Step>
-                        <Stepper.Step label={"Texto"} >
+                        <Stepper.Step label={"Alunos"} >
                             <div className="flex flex-col gap-4">
                                 <NewClass__Students control={control} errors={errors} tenancyId={sessionData.user.tenancyId} />
                                 <div className="flex justify-between">
@@ -145,7 +145,7 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
                                 </div>
                             </div>
                         </Stepper.Step>
-                        <Stepper.Step label={"Texto"}>
+                        <Stepper.Step label={"Resumo"}>
                             <div className="flex flex-col gap-4">
                                 <NewClass__Resume control={control as any} tenancyId={sessionData.user.tenancyId} />
                                 <div className="flex justify-between">

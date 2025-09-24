@@ -45,7 +45,7 @@ export default function NewBankAccount({ opened, onClose }: Props) {
 
     async function createBank(data: CreateBankInput) {
         if (!sessionData?.user.tenancyId) {
-            notifications.show({ color: "red", message: g("general.errors.invalidSession") });
+            notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
 
@@ -72,8 +72,8 @@ export default function NewBankAccount({ opened, onClose }: Props) {
         } catch (error) {
             console.error(error);
             notifications.show({
-                title: g("general.errors.title"),
-                message: g("general.errors.unexpected"),
+                title: "Erro",
+                message: "Erro inesperado",
                 color: "red"
             });
         } finally {
@@ -84,8 +84,8 @@ export default function NewBankAccount({ opened, onClose }: Props) {
     const handleFormErrors = (errors: any) => {
         console.warn("Validation errors:", errors);
         notifications.show({
-            title: g("general.errors.validationTitle"),
-            message: g("general.errors.validationMessage"),
+            title: "Erro de validação",
+            message: "Verifique os dados informados",
             color: 'yellow'
         });
     };
@@ -95,7 +95,7 @@ export default function NewBankAccount({ opened, onClose }: Props) {
             <Modal
                 opened={opened}
                 onClose={onClose}
-                title={"Texto"}
+                title="Nova Conta Bancária"
                 size="lg"
                 radius="lg"
                 centered
@@ -111,7 +111,7 @@ export default function NewBankAccount({ opened, onClose }: Props) {
                         className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
                         loading={isLoading}
                     >
-                        {g("forms.submit")}
+                        Salvar
                     </Button>
                 </form>
             </Modal>

@@ -63,7 +63,7 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
 
     async function handlePayBill(data: PayBillInput) {
         if (!sessionData?.user.tenancyId || !bill) {
-            notifications.show({ color: "red", message: g("general.errors.invalidSession") });
+            notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
 
@@ -87,12 +87,12 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                 throw new Error(errorData.message || "Failed to update bill");
             }
 
-            notifications.show({ message: "Texto", color: "green" });
+            notifications.show({ message: "Conta paga com sucesso", color: "green" });
             onClose();
             mutate(); // Revalida o cache do SWR
         } catch (error: any) {
             console.error(error);
-            notifications.show({ message: error.message || "Texto", color: "red" });
+            notifications.show({ message: error.message || "Erro ao pagar conta", color: "red" });
         } finally {
             setIsLoading(false);
         }
@@ -101,8 +101,8 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
     const handleFormErrors = (err: any) => {
         console.warn("Validation errors:", err);
         notifications.show({
-            title: g("general.errors.validationTitle"),
-            message: g("general.errors.validationMessage"),
+            title: "Erro de validação",
+            message: "Verifique os dados informados",
             color: 'yellow'
         });
     };
@@ -111,7 +111,7 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
         <Modal
             opened={opened}
             onClose={onClose}
-            title={"Texto"}
+            title="Pagar Conta"
             size="lg" // Tamanho menor, pois são poucos campos
             radius="lg"
             centered
@@ -126,7 +126,7 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                             control={control}
                             render={({ field }) => (
                                 <DateInput
-                                    label={"Texto"}
+                                    label="Data de pagamento"
                                     value={field.value}
                                     onChange={(date) => {
                                         if (!date) {
@@ -148,7 +148,7 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                             control={control}
                             render={({ field }) => (
                                 <NumberInput
-                                    label={"Texto"}
+                                    label="Valor pago"
                                     value={field.value}
                                     onChange={field.onChange}
                                     error={errors.amountPaid?.message}
@@ -167,12 +167,12 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                             control={control}
                             render={({ field }) => (
                                 <Select
-                                    label={"Texto"}
+                                    label="Status"
                                     data={[
-                                        { value: BillStatus.PAID, label: "Texto" },
-                                        { value: BillStatus.PENDING, label: "Texto" },
-                                        { value: BillStatus.OVERDUE, label: "Texto" },
-                                        { value: BillStatus.CANCELLED, label: "Texto" },
+                                        { value: BillStatus.PAID, label: "Pago" },
+                                        { value: BillStatus.PENDING, label: "Pendente" },
+                                        { value: BillStatus.OVERDUE, label: "Vencido" },
+                                        { value: BillStatus.CANCELLED, label: "Cancelado" },
                                     ]}
                                     value={field.value}
                                     onChange={field.onChange}
@@ -189,14 +189,14 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                             name="bankId"
                             render={({ field }) => (
                                 <Select
-                                    label={"Texto"}
+                                    label="Banco"
                                     value={field.value}
                                     onChange={field.onChange}
                                     error={errors.bankId?.message}
                                     searchable
                                     clearable
                                     data={banks?.map((bank) => ({ label: bank.name, value: bank.id })) || []}
-                                    placeholder={"Texto"}
+                                    placeholder="Selecione o banco"
                                     className="md:col-span-2"
                                 />
                             )}
@@ -213,7 +213,7 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                         loading={isLoading}
                         className="!text-sm !font-medium tracking-wider"
                     >
-                        {g("forms.submit")}
+                        Pagar
                     </Button>
                 </div>
             </form>

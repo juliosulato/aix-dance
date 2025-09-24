@@ -91,7 +91,7 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
                         setOpenPayBill(true);
                         setSelectedBill(bill)
                     }}>
-                        <span>{"Texto"}</span>
+                        <span>{"Pagar"}</span>
                     </Menu.Item>
                     <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(bill)}>
                         {"Excluir"}
@@ -123,10 +123,10 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
             <div className="bg-neutral-100 p-4 md:p-6 lg:p-8 rounded-2xl border-neutral-200 border mt-4 md:mt-6">
                 <DataView<typeof bills[0]>
                     data={bills}
-                    
+
                     baseUrl="/system/financial/manager/"
-                    pageTitle={`${"Texto"}`}
-                    searchbarPlaceholder={"Texto"}
+                    pageTitle={`${"Gerenciador Financeiro"}`}
+                    searchbarPlaceholder={"Buscar fatura por descrição, valor, status..."}
                     dateFilterOptions={[
                         { key: 'dueDate', label: 'Data de Vencimento' },
                         { key: 'createdAt', label: 'Data de Criação' },
@@ -134,25 +134,25 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
                     columns={[
                         {
                             key: "complement",
-                            label: "Texto",
+                            label: "Complemento",
                             render: (value) => value ? value : "",
                             sortable: true
                         },
                         {
                             key: "amount",
-                            label: "Texto",
+                            label: "Valor",
                             render: (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value),
                             sortable: true
                         },
                         {
                             key: "amountPaid",
-                            label: "Texto",
+                            label: "Valor Pago",
                             render: (value) => value ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value) : '-',
                             sortable: true
                         },
                         {
                             key: "installmentNumber",
-                            label: "Texto",
+                            label: "Parcela",
                             render: (value) => value ? <span className="text-primary">{value}</span> : <span className="text-primary">1</span>,
                             sortable: true
                         },

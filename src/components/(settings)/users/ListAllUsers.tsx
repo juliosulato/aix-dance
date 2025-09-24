@@ -86,7 +86,7 @@ export default function AllUsersData() {
         try {
             if (users?.length === 1) {
                 return notifications.show({
-                    message: "Texto",
+                    message: "Não é possível excluir o último usuário.",
                     color: "red",
                 });
             }
@@ -138,8 +138,8 @@ export default function AllUsersData() {
 
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Texto"}</div>;
-    if (error) return <p>{"Texto"}</p>;
+    if (status !== "authenticated") return <div>Sessão inválida</div>;
+    if (error) return <p>{"Erro inesperado"}</p>;
 
 
     return (
@@ -148,12 +148,12 @@ export default function AllUsersData() {
                 data={d || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: "Texto"
+                    label: "Novo Usuário"
                 }}
                 baseUrl=""
                 mutate={mutate as any}
                 pageTitle={"Usuários"}
-                searchbarPlaceholder={"Texto"}
+                searchbarPlaceholder={"Pesquisar usuários por nome, e-mail..."}
                 columns={[
                     {
                         key: "image", label: "", sortable: false,
@@ -171,13 +171,13 @@ export default function AllUsersData() {
                     },
                     {
                         key: "role",
-                        label: "Texto",
+                        label: "Função",
                         sortable: true,
                         render: (val) => {
                             if (val === "ADMIN") {
-                                return "Texto";
+                                return "Administrador";
                             } else if (val === "STAFF") {
-                                return "Texto";
+                                return "Funcionário";
                             } else {
                                 return val;
                             }
@@ -229,7 +229,7 @@ export default function AllUsersData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={"Texto"}
+                title={"Confirmação"}
                 confirmLabel={"Excluir"}
                 cancelLabel={"Cancelar"}
                 loading={isDeleting}
@@ -240,7 +240,7 @@ export default function AllUsersData() {
                     `Tem certeza que deseja excluir o usuário selecionado?`
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Texto"}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Essa ação não pode ser desfeita."}</Text>
             </ConfirmationModal>
         </>
     );

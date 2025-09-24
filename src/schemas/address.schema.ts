@@ -12,7 +12,5 @@ export const addressSchema = z.object({
 });
 
 // Manter compatibilidade com código existente
-export const getAddressSchema = (t?: (key: string) => string) => addressSchema;
-
 export type CreateAddressInput = z.infer<typeof addressSchema>;
 export type UpdateAddressInput = Partial<CreateAddressInput>;

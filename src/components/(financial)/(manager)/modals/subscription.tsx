@@ -3,7 +3,7 @@ import { NumberInput, Select } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { RecurrenceType } from "@prisma/client";
 import { Control, Controller, FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
-import { localesMap } from "@/utils/locales";
+// localesMap import removed
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 import "dayjs/locale/es";
@@ -31,11 +31,11 @@ export default function Subscription({ control, errors, watch }: Props) {
                 name="recurrence"
                 render={({ field }) => (
                     <Select
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label={"Recorrência"}
+                        placeholder={"Selecione a recorrência"}
                         required
                         data={recurrenceTypes.map(type => ({
-                            label: t(`fields.subscription.frequency.recurrenceTypes.${type}`),
+                            label: type.toLowerCase(),
                             value: type,
                         }))}
                         value={field.value as RecurrenceType | undefined}
@@ -51,7 +51,7 @@ export default function Subscription({ control, errors, watch }: Props) {
                 name="dueDate"
                 render={({ field }) => (
                     <DateInput
-                        label={"Texto"}
+                        label={"Data de Vencimento"}
                         locale={"pt-br"}
                         onChange={(date) => {
                             if (!date) {
@@ -61,8 +61,8 @@ export default function Subscription({ control, errors, watch }: Props) {
                             const newDate = dayjs(date).hour(12).minute(0).second(0).toDate();
                             field.onChange(newDate);
                         }} value={field.value ? new Date(field.value) : null}
-                        error={errors?.dueDate?.message}
-                        valueFormat={"Texto"}
+                        error={(errors as any)?.dueDate?.message}
+                        valueFormat={"DD/MM/YYYY"}
                         required
                     />
                 )}
@@ -73,11 +73,11 @@ export default function Subscription({ control, errors, watch }: Props) {
                 name="endCondition"
                 render={({ field }) => (
                     <Select
-                        label={"Texto"}
+                        label={"Condição de Término"}
                         data={[
-                            { label: "Texto", value: "noDateSet" },
-                            { label: "Texto", value: "chooseData" },
-                            { label: "Texto", value: "numberOfCharges" }
+                            { label: "Sem data de término", value: "noDateSet" },
+                            { label: "Escolher data", value: "chooseData" },
+                            { label: "Número de cobranças", value: "numberOfCharges" }
                         ]}
                         value={field.value as "noDateSet" | "chooseData" | "numberOfCharges" | undefined}
                         onChange={field.onChange}
@@ -87,13 +87,13 @@ export default function Subscription({ control, errors, watch }: Props) {
             />
 
             {/* Conditional Fields based on endCondition */}
-            {endCondition === 'chooseData' && (
+            {(endCondition as any) === 'chooseData' && (
                 <Controller
                     control={control}
                     name="recurrenceEndDate"
                     render={({ field }) => (
                         <DateInput
-                            label={"Texto"}
+                            label={"Data de Término"}
                             locale={"pt-br"}
                             onChange={(date) => {
                                 if (!date) {
@@ -104,7 +104,7 @@ export default function Subscription({ control, errors, watch }: Props) {
                                 field.onChange(newDate);
                             }} value={field.value ? new Date(field.value as Date) : null}
                             error={(errors as any)['recurrenceEndDate']?.message}
-                            valueFormat={"Texto"}
+                            valueFormat={"DD/MM/YYYY"}
                             required
                         />
                     )}
@@ -117,8 +117,8 @@ export default function Subscription({ control, errors, watch }: Props) {
                     name="recurrenceCount"
                     render={({ field }) => (
                         <NumberInput
-                            label={"Texto"}
-                            suffix={` ${"Texto"}`}
+                            label={"Quantidade de cobranças"}
+                            suffix={` ${"cobranças"}`}
                             value={field.value as number | undefined}
                             onChange={(val) => field.onChange(Number(val))}
                             min={1}

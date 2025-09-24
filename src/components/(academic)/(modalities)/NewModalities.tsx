@@ -29,7 +29,7 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
 
     async function createModality(data: CreateModalityInput) {
         if (!sessionData?.user.tenancyId) {
-            notifications.show({ color: "red", message: g("general.errors.invalidSession") });
+            notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
 
@@ -45,7 +45,7 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
 
             if (responseData.code) {
                 notifications.show({
-                    message: "Texto",
+                    message: "Ocorreu um problema ao criar a modalidade.",
                     color: "yellow"
                 });
             }
@@ -53,7 +53,7 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
             if (!response.ok) throw new Error("Failed to create modality");
 
             notifications.show({
-                message: "Texto",
+                message: "Modalidade criada com sucesso.",
                 color: "green"
             });
             reset();
@@ -64,7 +64,7 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
 
             if (error?.code == "MODALITY_ALREADY_EXISTS") {
                 notifications.show({
-                    message: "Texto",
+                    message: "Já existe uma modalidade com esse nome.",
                     color: "yellow"
                 });
             }
@@ -75,8 +75,7 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
 
     const handleFormErrors = () => {
         notifications.show({
-            title: g("general.errors.validationTitle"),
-            message: g("general.errors.validationMessage"),
+            message: "Erro de validação",
             color: 'yellow'
         });
     };
@@ -85,7 +84,7 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
         <Modal
             opened={opened}
             onClose={onClose}
-            title={"Texto"}
+            title={"Nova Modalidade"}
             size="lg"
             radius="lg"
             centered
@@ -94,8 +93,8 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
             <form onSubmit={handleSubmit(createModality, handleFormErrors)} className="flex flex-col gap-4">
                 <LoadingOverlay visible={isLoading} />
                 <TextInput
-                    label={"Texto"}
-                    placeholder={"Texto"}
+                    label={"Nome da Modalidade"}
+                    placeholder={"Ex: Ballet, Jazz, Ritmos"}
                     {...register("name")}
                     error={errors.name?.message}
                     required
@@ -110,7 +109,7 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
                     loading={isLoading}
                     className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
                 >
-                    {g("forms.submit")}
+                    Salvar
                 </Button>
             </form>
         </Modal>

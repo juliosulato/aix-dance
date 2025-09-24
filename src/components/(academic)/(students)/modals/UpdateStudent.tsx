@@ -137,14 +137,14 @@ useEffect(() => {
   };
 
     if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Texto"}</div>;
+    if (status !== "authenticated") return <div>Sessão inválida</div>;
 
     return (
     <>
       <Modal
         opened={opened}
         onClose={onClose}
-        title={"Texto"}
+        title={"Atualizar Aluno"}
         size="auto"
         radius="lg"
         centered

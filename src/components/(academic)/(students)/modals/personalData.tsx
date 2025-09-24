@@ -21,19 +21,19 @@ function NewStudent__PersonalData({ control, register, errors }: Props) {
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
-            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{"Texto"}</h2>
+            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{"Informações Pessoais"}</h2>
 
             <TextInput
-                label={g("firstName.label")}
-                placeholder={g("firstName.placeholder")}
+                label={"Primeiro Nome"}
+                placeholder={"Digite o primeiro nome"}
                 required
 
                 error={errors.firstName?.message}
                 {...register("firstName")}
             />
             <TextInput
-                label={g("lastName.label")}
-                placeholder={g("lastName.placeholder")}
+                label={"Sobrenome"}
+                placeholder={"Digite o sobrenome"}
                 required
 
                 error={errors.lastName?.message}
@@ -45,7 +45,7 @@ function NewStudent__PersonalData({ control, register, errors }: Props) {
                 control={control}
                 render={({ field }) => (
                     <PhoneInput
-                        label={g("cellPhoneNumber.label")}
+                        label={"Celular"}
                         required
                         error={errors.cellPhoneNumber?.message}
                         value={field.value}
@@ -60,7 +60,7 @@ function NewStudent__PersonalData({ control, register, errors }: Props) {
                 control={control}
                 render={({ field }) => (
                     <PhoneInput
-                        label={g("phoneNumber.label")}
+                        label={"Telefone"}
                         error={errors.phoneNumber?.message}
                         value={field.value}
                         onChange={field.onChange}
@@ -70,8 +70,8 @@ function NewStudent__PersonalData({ control, register, errors }: Props) {
             />
 
             <TextInput
-                label={g("email.label")}
-                placeholder={g("email.placeholder")}
+                label={"Email"}
+                placeholder={"Digite o email"}
                 required
 
                 type="email"
@@ -85,10 +85,10 @@ function NewStudent__PersonalData({ control, register, errors }: Props) {
                 render={({ field }) => (
                     <InputBase
                         component={IMaskInput}
-                        mask={g("dateOfBirth.mask")}
+                        mask={"00/00/0000"}
                         required
                         value={field.value || ""}
-                        label={g("dateOfBirth.label")}
+                        label={"Data de Nascimento"}
                         error={errors.dateOfBirth?.message}
                         onAccept={(val: string) => field.onChange(val)}
                     />
@@ -112,8 +112,8 @@ function NewStudent__PersonalData({ control, register, errors }: Props) {
                 render={({ field }) => (
 
                     <Select
-                        label={g("gender.label")}
-                        placeholder={g("gender.placeholder")}
+                        label={"Gênero"}
+                        placeholder={"Selecione o gênero"}
                         data={[
                             { label: "Mulher", value: Gender.FEMALE },
                             { label: "Homem", value: Gender.MALE },
@@ -134,8 +134,8 @@ function NewStudent__PersonalData({ control, register, errors }: Props) {
 
             {gender && (gender === Gender.NON_BINARY || gender === Gender.OTHER) && (
                 <TextInput
-                    label={g("pronoun.label")}
-                    placeholder={g("pronoun.placeholder")}
+                    label={"Pronome"}
+                    placeholder={"Digite o pronome"}
                     {...register("pronoun")}
                     error={errors.pronoun?.message}
                 />
@@ -146,8 +146,7 @@ function NewStudent__PersonalData({ control, register, errors }: Props) {
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label={"Como nos conheceu?"}
                         data={[
                             { label: "Instagram", value: "instagram" },
                             { label: "Facebook", value: "facebook" },
@@ -165,12 +164,19 @@ function NewStudent__PersonalData({ control, register, errors }: Props) {
 
 
             <TextInput
-                label={g("instagramUser.label")}
-                placeholder={g("instagramUser.placeholder")}
+                label={"Instagram"}
+                placeholder={"Digite o usuário do Instagram"}
                 leftSection={<FiAtSign/>}
                 {...register("instagramUser")}
                 error={errors.instagramUser?.message}
             />
+                <TextInput
+                    label={"Usuário do Instagram"}
+                    placeholder={"nome_de_usuario"}
+                    leftSection={<FiAtSign/>}
+                    {...register("instagramUser")}
+                    error={errors.instagramUser?.message}
+                />
         </div>
     );
 }

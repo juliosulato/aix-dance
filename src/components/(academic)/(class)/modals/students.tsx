@@ -72,14 +72,14 @@ export default function Class__Students({ control, errors, tenancyId }: Props) {
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col gap-4">
-            <h2 className="text-lg font-bold">{"Texto"}</h2>
+            <h2 className="text-lg font-bold">{"Alunos"}</h2>
             <Controller
                 name="students"
                 control={control}
                 render={({ field }) => (
                     <MultiSelect
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label={"Alunos"}
+                        placeholder={"Selecione os alunos"}
                         data={studentOptions}
                         {...field}
                         searchable
@@ -95,8 +95,8 @@ export default function Class__Students({ control, errors, tenancyId }: Props) {
                 {studentsSelected.length === 0 ? (
                     <div className="flex flex-col gap-3 items-center justify-center text-center">
                         <Image src={notFound} alt="Nenhum aluno selecionado" className="max-w-[150px]" />
-                        <h3 className="text-xl text-primary font-bold">{"Texto"}</h3>
-                        <p className="max-w-xs text-neutral-500">{"Texto"}</p>
+                        <h3 className="text-xl text-primary font-bold">{"Ooops... você ainda não selecionou nenhum aluno"}</h3>
+                        <p className="max-w-xs text-neutral-500">{"Selecione alunos para continuar"}</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

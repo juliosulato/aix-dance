@@ -78,7 +78,7 @@ export default function AllBanksData() {
         }
 
         try {
-            await deleteBanks(finalIdsToDelete, tenancyId, {}, mutate);
+            await deleteBanks(finalIdsToDelete, tenancyId, mutate);
             mutate();
         } catch (error) {
             console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);
@@ -128,8 +128,8 @@ export default function AllBanksData() {
     );
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Texto"}</div>;
-    if (error) return <p>{"Texto"}</p>;
+    if (status !== "authenticated") return <div>Sessão inválida</div>;
+    if (error) return <p>{"Erro inesperado"}</p>;
 
 
     return (
@@ -138,19 +138,19 @@ export default function AllBanksData() {
                 data={banks || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: "Texto"
+                    label: "Nova Conta"
                 }}
                 baseUrl="/system/financial/bank-accounts/"
                 mutate={mutate}
-                pageTitle={"Texto"}
-                searchbarPlaceholder={"Texto"}
+                pageTitle={"Contas Bancárias"}
+                searchbarPlaceholder={"Pesquisar contas..."}
                 columns={[
-                    { key: "name", label: "Texto" },
-                    { key: "agency", label: "Texto" },
-                    { key: "account", label: "Texto" },
-                    { key: "code", label: "Texto" },
-                    { key: "maintenanceFeeAmount", label: "Texto" },
-                    { key: "maintenanceFeeDue", label: "Texto" },
+                    { key: "name", label: "Nome" },
+                    { key: "agency", label: "Agência" },
+                    { key: "account", label: "Conta" },
+                    { key: "code", label: "Código" },
+                    { key: "maintenanceFeeAmount", label: "Taxa (R$)" },
+                    { key: "maintenanceFeeDue", label: "Venc." },
                 ]}
                 RenderRowMenu={(item) => <MenuItem bankAccount={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
                 RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
@@ -187,9 +187,9 @@ export default function AllBanksData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={"Texto"}
-                confirmLabel={"Texto"}
-                cancelLabel={"Texto"}
+                title={"Confirmar Exclusão"}
+                confirmLabel={"Excluir"}
+                cancelLabel={"Cancelar"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (

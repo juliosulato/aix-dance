@@ -41,7 +41,7 @@ export default function VariableSuggestions() {
     // Função para copiar texto para a área de transferência.
     // Usando `document.execCommand` para maior compatibilidade em iframes.
     const copyToClipboard = (text: string) => {
-        const textArea = document.createElemen"Texto";
+        const textArea = document.createElement('textarea');
         textArea.value = text;
         textArea.style.position = "fixed"; // Previne rolagem da página.
         textArea.style.left = "-9999px";
@@ -50,13 +50,13 @@ export default function VariableSuggestions() {
         try {
             document.execCommand('copy');
             notifications.show({
-                message: t("academic.student-contracts.variables.copied", { variable: text }),
+                message: `Variável copiada: ${text}`,
                 color: 'green',
             });
         } catch (err) {
             console.error('Falha ao copiar texto: ', err);
             notifications.show({
-                message: "Texto",
+                message: "Falha ao copiar para a área de transferência.",
                 color: 'red',
             });
         }
@@ -65,14 +65,23 @@ export default function VariableSuggestions() {
 
     return (
         <div className="p-4 border rounded-lg bg-neutral-50 h-full">
-            <h3 className="font-semibold text-gray-800 mb-2">{"Texto"}</h3>
+            <h3 className="font-semibold text-gray-800 mb-2">{"Variáveis Disponíveis"}</h3>
             <p className="text-sm text-gray-600 mb-4">
-                {"Texto"}
+                {"Clique em uma variável para copiá-la e colar no modelo de venda."}
             </p>
             <div className="space-y-4">
                 {variableGroups.map(({ groupKey, variables }) => (
                     <div key={groupKey}>
-                        <h4 className="font-medium text-sm text-gray-900 mb-2">{t(`academic.student-contracts.variables.groups.${groupKey}`)}</h4>
+                        <h4 className="font-medium text-sm text-gray-900 mb-2">{(() => {
+                            switch(groupKey) {
+                                case 'student': return 'Aluno';
+                                case 'guardian': return 'Responsável';
+                                case 'tenancy': return 'Empresa';
+                                case 'plan': return 'Plano';
+                                case 'general': return 'Geral';
+                                default: return groupKey;
+                            }
+                        })()}</h4>
                         <div className="flex flex-wrap gap-2">
                             {variables.map(variable => (
                                 <button
@@ -80,7 +89,7 @@ export default function VariableSuggestions() {
                                     type="button"
                                     onClick={() => copyToClipboard(variable)}
                                     className="bg-purple-100 text-purple-800 text-xs font-mono py-1 px-2 rounded-md hover:bg-purple-200 transition-colors"
-                                    title={"Texto"}
+                                    title={"Copiar variável"}
                                 >
                                     {variable}
                                 </button>

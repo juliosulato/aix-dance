@@ -51,7 +51,7 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
         } else if (value === 'subscription') {
             setValue('paymentMode', 'SUBSCRIPTION');
             // Set default values for the subscription tab when switched to
-            setValue('endCondition', 'noDateSet');
+            // setValue('endCondition', 'endDate'); // Default para subscription
         }
     };
 
@@ -60,7 +60,7 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
     // The 'data' parameter is now correctly typed as CreateBillInput, resolving the error.
     async function createBill(data: CreateBillInput) {
         if (!sessionData?.user.tenancyId) {
-            notifications.show({ color: "red", message: g("errors.invalidSession") });
+            notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
 
@@ -95,8 +95,8 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
     const handleFormErrors = (err: any) => {
         console.warn("Validation errors:", err);
         notifications.show({
-            title: g("errors.validationTitle"),
-            message: g("errors.validationMessage"),
+            title: "Erro de validação",
+            message: "Verifique os dados informados",
             color: 'yellow'
         });
     };
@@ -107,7 +107,7 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
         <Modal
             opened={opened}
             onClose={onClose}
-            title={"Texto"}
+            title="Nova Conta"
             size="xl"
             radius="lg"
             centered
@@ -120,11 +120,11 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
                         <BasicInformations  {...formControlProps as any}/>
                         
                         <div>
-                            <h2 className="text-lg font-semibold mb-2">{"Texto"}</h2>
+                            <h2 className="text-lg font-semibold mb-2">Opções de Pagamento</h2>
                             <Tabs value={activeTab} onChange={handleTabChange} color="#7439FA" variant="pills" radius="lg" classNames={{ tab: "!p-4 md:!px-6 !font-semibold"}}>
                                 <Tabs.List>
-                                    <Tabs.Tab value="cash-or-installments">{"Texto"}</Tabs.Tab>
-                                    <Tabs.Tab value="subscription">{"Texto"}</Tabs.Tab>
+                                    <Tabs.Tab value="cash-or-installments">Pagamento à vista / Parcelado</Tabs.Tab>
+                                    <Tabs.Tab value="subscription">Assinatura / Recorrência</Tabs.Tab>
                                 </Tabs.List>
 
                                 <Tabs.Panel value="cash-or-installments" pt="xs">
@@ -148,7 +148,7 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
                         loading={isLoading}
                         className="!text-sm !font-medium tracking-wider"
                     >
-                        {g("forms.submit")}
+                        Salvar
                     </Button>
                 </div>
             </form>

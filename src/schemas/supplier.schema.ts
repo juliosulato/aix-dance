@@ -1,21 +1,13 @@
 import { z } from 'zod';
+import { addressSchema } from './address.schema';
 
-const addressSchema = z.object({
-  postalCode: z.string().min(1, { message: "CEP é obrigatório" }),
-  street: z.string().min(1, { message: "Rua é obrigatória" }),
-  number: z.string().optional(),
-  complement: z.string().optional(),
-  neighborhood: z.string().min(1, { message: "Bairro é obrigatório" }),
-  city: z.string().min(1, { message: "Cidade é obrigatória" }),
-  state: z.string().min(1, { message: "Estado é obrigatório" }),
-});
 
 const createSupplierSchema = z.object({
   name: z.string().min(1, { message: "O nome é obrigatório" }),
   corporateReason: z.string().optional(),
   documentType: z.string().optional(),
   document: z.string().optional(),
-  email: z.string().email({ message: "E-mail inválido" }).optional(),
+  email: z.email({ message: "E-mail inválido" }).optional(),
   phoneNumber: z.string().optional(),
   cellPhoneNumber: z.string().optional(),
   address: addressSchema.optional(),

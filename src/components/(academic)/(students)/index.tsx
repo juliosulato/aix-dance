@@ -132,8 +132,8 @@ export default function AllStudentsData() {
 
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Texto"}</div>;
-    if (error) return <p>{"Texto"}</p>;
+    if (status !== "authenticated") return <div>Sessão inválida</div>;
+    if (error) return <p>{"Erro inesperado"}</p>;
 
 
     return (
@@ -142,7 +142,7 @@ export default function AllStudentsData() {
                 data={students?.map((student) => ({ ...student, fullName: `${student.firstName} ${student.lastName}`})) || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: "Texto"
+                    label: "Novo Aluno"
                 }}
                 baseUrl="/system/academic/students/"
                 mutate={mutate as any}
@@ -162,7 +162,7 @@ export default function AllStudentsData() {
                         }
                     },
                     {
-                        key: "fullName", label: "Texto",
+                        key: "fullName", label: "Nome",
                         sortable: true
                     },
                     {
@@ -176,19 +176,19 @@ export default function AllStudentsData() {
                             }
                         }
                     },
-                     {
-                        key: "subscriptions", label: "Texto",
+                    {
+                        key: "subscriptions", label: "Plano",
                         sortable: true,
                         render: (val: StudentFromApi["subscriptions"]) => val?.[0]?.plan?.name || JSON.stringify(val)
                     },
                     {
-                        key: "documentOfIdentity", label: "Texto",
+                        key: "documentOfIdentity", label: "Documento",
                         sortable: true,
                     },
                     {
-                        key: "canLeaveAlone", label: "Texto",
+                        key: "canLeaveAlone", label: "Pode sair sozinho?",
                         sortable: true,
-                        render: (val) => val ? "Texto" : "Texto"
+                        render: (val) => val ? "Sim" : "Não"
                     },
                     {
                         key: "attendanceAverage",
@@ -206,23 +206,23 @@ export default function AllStudentsData() {
                         }
                     },
                     {
-                        key: "cellPhoneNumber", label: "Texto",
+                        key: "cellPhoneNumber", label: "Telefone",
                         sortable: true,
                         render: (value) => <a href={`https://wa.me/${value.replace(/\D/g, "")}`}>{value}</a>
                     },
                     {
                         key: "active",
-                        label: "Texto",
+                        label: "Status",
                         render: (active) => {
                             if (active) {
                                 return (
-                                    <Tooltip label={"Texto"} color="green">
+                                    <Tooltip label={"Ativo"} color="green">
                                         <div className={`w-4 h-4 rounded-full bg-green-500`}></div>
                                     </Tooltip>
                                 );
                             } else {
                                 return (
-                                    <Tooltip label={"Texto"} color="red">
+                                    <Tooltip label={"Inativo"} color="red">
                                         <div className={`w-4 h-4 rounded-full bg-red-500`}></div>
                                     </Tooltip>
                                 )
@@ -304,13 +304,13 @@ export default function AllStudentsData() {
                                 {(() => {
                                     if (item.active) {
                                         return (
-                                            <Tooltip label={"Texto"} color="green">
+                                            <Tooltip label={"Ativo"} color="green">
                                                 <div className={`w-4 h-4 rounded-full bg-green-500`}></div>
                                             </Tooltip>
                                         );
                                     } else {
                                         return (
-                                            <Tooltip label={"Texto"} color="red">
+                                            <Tooltip label={"Inativo"} color="red">
                                                 <div className={`w-4 h-4 rounded-full bg-red-500`}></div>
                                             </Tooltip>
                                         )
@@ -340,8 +340,8 @@ export default function AllStudentsData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={"Texto"}
-                confirmLabel={"Texto"}
+                title={"Confirmação de Exclusão"}
+                confirmLabel={"Excluir"}
                 cancelLabel={"Cancelar"}
                 loading={isDeleting}
             >

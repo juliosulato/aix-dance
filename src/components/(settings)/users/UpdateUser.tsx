@@ -53,25 +53,25 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
         setVisible(true);
 
         if (data.prevPassword === "" && (data.password !== "" || data.confirmPassword !== "")) {
-            notifications.show({ color: "red", message: "Texto" });
+            notifications.show({ color: "red", message: "Para alterar a senha informe a senha atual." });
             setVisible(false);
             return;
         }
 
         if (data.password === "" && data.confirmPassword !== "") {
-            notifications.show({ color: "red", message: "Texto" });
+            notifications.show({ color: "red", message: "Preencha a nova senha antes de confirmar." });
             setVisible(false);
             return;
         }
 
         if (data.password !== "" && data.confirmPassword === "") {
-            notifications.show({ color: "red", message: "Texto" });
+            notifications.show({ color: "red", message: "Confirme a nova senha." });
             setVisible(false);
             return;
         }
 
         if (data.password !== data.confirmPassword) {
-            notifications.show({ color: "red", message: "Texto" });
+            notifications.show({ color: "red", message: "As senhas não coincidem." });
             setVisible(false);
             return;
         }
@@ -89,18 +89,18 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
             if (!resp.ok) {
                 const error = await resp.json();
                 if (error?.code === "INVALID_PASSWORD") {
-                    notifications.show({ color: "red", message: "Texto" });
+                    notifications.show({ color: "red", message: "Senha atual inválida." });
                 } else {
                     throw new Error("Erro ao atualizar usuário");
                 }
                 return;
             }
 
-            notifications.show({ message: "Texto", color: "green" });
+            notifications.show({ message: "Usuário atualizado com sucesso.", color: "green" });
             handleClose();
             mutate();
         } catch (err: any) {
-            notifications.show({ color: "red", message: "Texto" });
+            notifications.show({ color: "red", message: "Falha ao atualizar usuário. Tente novamente." });
         } finally {
             setVisible(false);
         }
@@ -111,7 +111,7 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
             <Modal
                 opened={opened}
                 onClose={handleClose}
-                title={"Texto"}
+                title={"Editar Usuário"}
                 size="xl"
                 radius="lg"
                 centered
@@ -127,21 +127,21 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
                         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2">
                             <TextInput
                                 label={"Primeiro Nome"}
-                                placeholder={"Texto"}
+                                placeholder={"Ex: Maria"}
                                 required
                                 {...register("firstName")}
                                 error={errors.firstName?.message}
                             />
                             <TextInput
                                 label={"Sobrenome"}
-                                placeholder={"Texto"}
+                                placeholder={"Ex: Silva"}
                                 required
                                 {...register("lastName")}
                                 error={errors.lastName?.message}
                             />
                             <TextInput
                                 label={"E-mail"}
-                                placeholder={"Texto"}
+                                placeholder={"usuario@exemplo.com"}
                                 required
                                 className="md:col-span-2"
                                 {...register("email")}
@@ -154,10 +154,10 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
                                 render={({ field }) => (
                                     <Select
                                         {...field}
-                                        label={"Texto"}
+                                        label={"Função"}
                                         data={[
-                                            { value: "ADMIN", label: "Texto" },
-                                            { value: "STAFF", label: "Texto" },
+                                            { value: "ADMIN", label: "Administrador" },
+                                            { value: "STAFF", label: "Funcionário" },
                                         ]}
                                         required
                                     />
@@ -173,7 +173,7 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
                                 render={({ field }) => (
                                     <PasswordInput
                                         {...field}
-                                        label={"Texto"}
+                                        label={"Senha atual"}
                                         error={errors.prevPassword?.message}
                                     />
                                 )}
@@ -184,7 +184,7 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
                                 render={({ field }) => (
                                     <PasswordInput
                                         {...field}
-                                        label={"Texto"}
+                                        label={"Nova senha"}
                                         error={errors.password?.message}
                                     />
                                 )}
@@ -195,7 +195,7 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
                                 render={({ field }) => (
                                     <PasswordInput
                                         {...field}
-                                        label={"Texto"}
+                                        label={"Confirme a nova senha"}
                                         error={errors.confirmPassword?.message}
                                     />
                                 )}
@@ -211,7 +211,7 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
                         fullWidth={false}
                         className="!text-sm !font-medium tracking-wider w-full md!w-fit ml-auto"
                     >
-                        {"Texto"}
+                        {"Salvar"}
                     </Button>
                 </form>
             </Modal>

@@ -79,7 +79,7 @@ export default function AllModalityData() {
         }
 
         try {
-            await deleteModality(finalIdsToDelete, tenancyId, t, mutate as any);
+            await deleteModality(finalIdsToDelete, tenancyId, mutate as any);
             mutate();
         } catch (error) {
             console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);
@@ -120,19 +120,17 @@ export default function AllModalityData() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{"Texto"}</Menu.Label>
+                <Menu.Label>{"Ações em Massa"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
-                    {t("general.actions.deleteMany", {
-                        items: selectedIds.length
-                    })}
+                    Excluir {selectedIds.length} Modalidades
                 </Menu.Item>
             </Menu.Dropdown>
         </Menu>
     );
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Texto"}</div>;
-    if (error) return <p>{"Texto"}</p>;
+    if (status !== "authenticated") return <div>Sessão inválida</div>;
+    if (error) return <p>{"Erro inesperado"}</p>;
 
 
     return (
@@ -142,14 +140,14 @@ export default function AllModalityData() {
                 data={modalities || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: "Texto"
+                    label: "Nova Modalidade"
                 }}
                 baseUrl="/system/financial/modalities/"
                 mutate={mutate}
-                pageTitle={"Texto"}
-                searchbarPlaceholder={"Texto"}
+                pageTitle={"Modalidades"}
+                searchbarPlaceholder={"Pesquisar modalidades..."}
                 columns={[
-                    { key: "name", label: "Texto" },
+                    { key: "name", label: "Nome" },
                 ]}
                 RenderRowMenu={(item) => <MenuItem categoryGroup={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
                 RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
@@ -181,22 +179,18 @@ export default function AllModalityData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={"Texto"}
-                confirmLabel={"Texto"}
-                cancelLabel={"Texto"}
+                title={"Excluir Modalidade"}
+                confirmLabel={"Excluir"}
+                cancelLabel={"Cancelar"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
-                    t("academic.modalities.modals.confirmModal.textArray",
-                        { modalities: idsToDelete.length }
-                    )
-                ) : (
-                    t("academic.modalities.modals.confirmModal.text", {
-                        modality: selectedModality?.name || ""
-                    })
-                )}
+                        `Tem certeza que deseja excluir as ${idsToDelete.length} modalidades selecionadas?`
+                    ) : (
+                    `Tem certeza que deseja excluir a modalidade "${selectedModality?.name || ""}"?`    
+                )}  
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Texto"}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Atenção: esta ação é irreversível."}</Text>
             </ConfirmationModal>
         </>
     );

@@ -1,8 +1,7 @@
 import { CreateBillInput } from "@/schemas/financial/bill.schema";
 import { fetcher } from "@/utils/fetcher";
 import { NumberInput, Select, TextInput } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
-import { Bank, CategoryBill, FormsOfReceipt, PaymentMethod, Supplier } from "@prisma/client";
+import { Bank, CategoryBill, PaymentMethod, Supplier } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { Control, Controller, FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
@@ -26,13 +25,13 @@ export default function BasicInformations({ control, errors, register }: Props) 
 
     return (
         <div className="border border-neutral-300 p-4 md:p-6 rounded-xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <h2 className="text-lg font-semibold col-span-full">{"Texto"}</h2>
+            <h2 className="text-lg font-semibold col-span-full">Informações Básicas</h2>
             <Controller
                 name="amount"
                 control={control}
                 render={({ field }) => (
                     <NumberInput
-                        label={"Texto"}
+                        label={"Valor"}
                         allowDecimal
                         decimalSeparator=","
                         required
@@ -51,7 +50,7 @@ export default function BasicInformations({ control, errors, register }: Props) 
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={"Texto"}
+                        label={"Banco"}
                         data={banks?.map((bank) => ({
                             label: bank.name, value: bank.id
                         })) || []}
@@ -68,7 +67,7 @@ export default function BasicInformations({ control, errors, register }: Props) 
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={"Texto"}
+                        label={"Fornecedor"}
                         data={suppliers?.map((supplier) => ({
                             label: supplier.name, value: supplier.id
                         })) || []}
@@ -85,7 +84,7 @@ export default function BasicInformations({ control, errors, register }: Props) 
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={"Texto"}
+                        label={"Forma de Pagamento"}
                         data={[
                             { label: "Dinheiro", value: PaymentMethod.CASH },
                             { label: "Cartão de Crédito", value: PaymentMethod.CREDIT_CARD },
@@ -108,7 +107,7 @@ export default function BasicInformations({ control, errors, register }: Props) 
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={"Texto"}
+                        label={"Categoria"}
                         data={categories?.map((category) => ({
                             label: category.name, value: category.id
                         })) || []}
@@ -122,7 +121,7 @@ export default function BasicInformations({ control, errors, register }: Props) 
             />
 
             <TextInput
-                label={"Texto"}
+                label={"Descrição"}
                 error={errors.description?.message}
                 {...register("description")}
                 className="md:col-span-2 lg:col-span-3"

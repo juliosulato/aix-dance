@@ -45,7 +45,7 @@ const dayScheduleSchema = z.object({
 });
 
 // Schema principal do formulário
-const createClassSchema = z.object({
+export const createClassSchema = z.object({
     name: z.string().min(1, { message: "Nome da turma é obrigatório" }),
     modalityId: z.string().min(1, { message: "Modalidade é obrigatória" }),
     teacherId: z.string().min(1, { message: "Professor é obrigatório" }),

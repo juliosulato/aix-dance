@@ -27,7 +27,7 @@ export default function StudentClassView({ student }: { student: StudentFromApi 
 
   const [openAssign, setOpenAssign] = useState(false);
 
-  if (status !== "authenticated") return <div>{"Texto"}</div>;
+  if (status !== "authenticated") return <div>{"Sessão inválida"}</div>;
 
   const activeClassLength = student.classes.filter((c: any) => c.status == "ACTIVE").length;
 

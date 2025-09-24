@@ -44,7 +44,7 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
 
     const { data: sessionData, status } = useSession();
     if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Texto"}</div>;
+    if (status !== "authenticated") return <div>Sessão inválida</div>;
 
     async function createPlan(data: CreatePlanInput) {
         if (!sessionData?.user.tenancyId) {
@@ -68,7 +68,7 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
             if (!response.ok) throw new Error("Failed to update plan.");
 
             notifications.show({
-                message: "Texto",
+                message: "Plano criado com sucesso!",
                 color: "green"
             });
             reset();
@@ -77,8 +77,7 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
         } catch (error) {
             console.error(error);
             notifications.show({
-                title: g("general.errors.title"),
-                message: g("general.errors.unexpected"),
+                message:"Erro interno. Tente novamente.",
                 color: "red"
             });
         } finally {
@@ -93,7 +92,7 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
             <Modal
                 opened={opened}
                 onClose={onClose}
-                title={"Texto"}
+                title={"Novo Plano"}
                 size="auto"
                 radius="lg"
                 centered
@@ -110,7 +109,7 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
                         fullWidth={false}
                         className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
                     >
-                        {g("forms.submit")}
+                       Salvar
                     </Button>
                 </form>
             </Modal>

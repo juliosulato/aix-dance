@@ -39,7 +39,7 @@ export default function Plan__BasicInformations({ control, errors, register, ten
     
     if (error) {
         console.error(error);
-        notifications.show({ title: g("general.errors.title"), message: g("general.errors.contract-models"), color: "red" })
+        notifications.show({ title: "Erro", message: "Falha ao carregar modelos de contrato.", color: "red" })
     }
 
 
@@ -51,11 +51,11 @@ export default function Plan__BasicInformations({ control, errors, register, ten
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
-            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{"Texto"}</h2>
+            <h2 className="text-lg font-bold md:col-span-2 lg:col-span-3 3xl:col-span-4">{"Informações Básicas"}</h2>
 
             <TextInput
-                label={"Texto"}
-                placeholder={"Texto"}
+                label={"Nome do Plano"}
+                placeholder={"Digite o nome do plano"}
                 {...register("name")}
                 error={errors.name?.message}
                 required
@@ -67,11 +67,11 @@ export default function Plan__BasicInformations({ control, errors, register, ten
                 control={control}
                 render={({ field }) => (
                     <NumberInput
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label={"Frequência"}
+                        placeholder={"Quantas parcelas"}
                         min={1}
                         allowDecimal={false}
-                        suffix={"Texto"}
+                        suffix={"x"}
                         required
                         withAsterisk
                         value={field.value}
@@ -85,7 +85,7 @@ export default function Plan__BasicInformations({ control, errors, register, ten
                 control={control}
                 render={({ field }) => (
                     <NumberInput
-                        label={"Texto"}
+                        label={"Valor (R$)"}
                         allowDecimal
                         decimalSeparator=","
                         required
@@ -103,16 +103,16 @@ export default function Plan__BasicInformations({ control, errors, register, ten
                 control={control}
                 render={({ field }) => (
                     <Select
-                        label={"Texto"}
-                        placeholder={"Texto"}
+                        label={"Tipo de Ciclo"}
+                        placeholder={"Selecione o tipo de ciclo"}
                         required
                         data={[
-                            { label: "Texto", value: PlanType.SEMMONTLY },
-                            { label: "Texto", value: PlanType.MONTHLY },
-                            { label: "Texto", value: PlanType.BI_MONTHLY },
-                            { label: "Texto", value: PlanType.QUARTERLY },
-                            { label: "Texto", value: PlanType.BI_ANNUAL },
-                            { label: "Texto", value: PlanType.ANNUAL },
+                            { label: "Quinzenal", value: PlanType.SEMMONTLY },
+                            { label: "Mensal", value: PlanType.MONTHLY },
+                            { label: "Bimestral", value: PlanType.BI_MONTHLY },
+                            { label: "Trimestral", value: PlanType.QUARTERLY },
+                            { label: "Semestral", value: PlanType.BI_ANNUAL },
+                            { label: "Anual", value: PlanType.ANNUAL },
                         ]}
                         classNames={{ dropdown: "!z-[1000]" }}
                         className="md:col-span-2 lg:col-span-3 3xl:col-span-4"

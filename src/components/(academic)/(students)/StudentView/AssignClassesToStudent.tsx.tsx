@@ -158,7 +158,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
     }
 
     if (promises.length === 0) {
-      notifications.show({ message: "Texto" });
+      notifications.show({ message: "Nenhuma alteração detectada." });
       onClose();
       setVisible(false);
       return;
@@ -169,12 +169,12 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
       const hasError = responses.some((res) => !res.ok);
       if (hasError) throw new Error("Erro ao salvar");
 
-      notifications.show({ message: "Texto", color: "green" });
+      notifications.show({ message: "Matrículas atualizadas com sucesso.", color: "green" });
       await mutate();
       onClose();
     } catch (err) {
       console.error(err);
-      notifications.show({ message: "Texto", color: "red" });
+      notifications.show({ message: "Erro ao atualizar matrículas.", color: "red" });
     } finally {
       setVisible(false);
     }
@@ -187,7 +187,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
       <Modal
         opened={opened}
         onClose={onClose}
-        title={t("title", { name: student.firstName })}
+        title={`Designar turmas para ${student.firstName}`}
         size="lg"
         radius="lg"
         centered
@@ -209,7 +209,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
             control={control}
             render={({ field }) => (
               <MultiSelect
-                label={"Texto"}
+                label={"Turmas"}
                 data={classOptions}
                 {...field}
                 searchable
@@ -222,10 +222,10 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
           />
 
           <div className="p-4 border border-neutral-300 rounded-xl flex flex-col gap-2">
-            {selectedClassIds.length === 0 ? (
+                {selectedClassIds.length === 0 ? (
               <div className="flex flex-col items-center justify-center gap-2 text-neutral-500">
                 <Image src={notFound} alt="no-classes" className="max-w-[150px]" />
-                <Text>{"Texto"}</Text>
+                <Text>{"Nenhuma turma selecionada"}</Text>
               </div>
             ) : (
               selectedClassIds.map((classId) => {
@@ -244,10 +244,10 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
 
           <div className="flex justify-end gap-4 mt-4">
             <Button variant="default" onClick={onClose}>
-              {rootT("general.actions.cancel")}
+              Cancelar
             </Button>
             <Button type="submit" color="violet" disabled={student.active === false}>
-              {student.active === false ? "Ação Bloqueada" : rootT("forms.submit")}
+              {student.active === false ? "Ação Bloqueada" : "Salvar"}
             </Button>
           </div>
         </form>

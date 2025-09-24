@@ -141,13 +141,13 @@ function Checkboxies({ control, errors }: Props) {
 
   // Memoizar labels para evitar re-renders
   const labels = useMemo(() => ({
-    healthProblems: "Texto",
-    medicalAdvice: "Texto",
-    painOrDiscomfort: "Texto",
-    textarea: "Texto",
-    canLeaveAlone: "Texto",
-    haveGuardian: "Texto",
-  }), [t]);
+    healthProblems: "Problemas de saúde",
+    medicalAdvice: "Possui orientação médica?",
+    painOrDiscomfort: "Dores ou desconfortos",
+    textarea: "Descreva com detalhes",
+    canLeaveAlone: "Pode ficar desacompanhado",
+    haveGuardian: "Possui responsável/legal",
+  }), []);
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">

@@ -126,13 +126,13 @@ export default function ClassView({ classData, tenancyId }: { classData: ClassVi
             </div>
 
             {/* --- SEÇÃO DE DIAS E HORÁRIOS --- */}
-            <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{"Texto"}</h2>
+            <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{"Dias e Horários"}</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <ScheduleSummary days={classData.days} />
             </div>
 
             {/* --- SEÇÃO DE ALUNOS ATIVOS --- */}
-            <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{"Texto"}</h2>
+            <h2 className="text-lg font-semibold border-b border-b-neutral-300 pb-2 my-4">{"Alunos Ativos"}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {classData.studentClasses?.some((link: any) => link.status === "ACTIVE") ? (
                     classData.studentClasses.map((link: any) => (
@@ -147,14 +147,14 @@ export default function ClassView({ classData, tenancyId }: { classData: ClassVi
                         )
                     ))
                 ) : (
-                    <Text className="text-neutral-500 md:col-span-full">{"Texto"}</Text>
+                    <Text className="text-neutral-500 md:col-span-full">{"Nenhum aluno ativo nesta turma"}</Text>
                 )}
             </div>
             
             {/* --- SEÇÃO DE ALUNOS INATIVOS (só aparece se houver algum) --- */}
             {classData.studentClasses?.some((link: any) => link.status === "INACTIVE") && (
                 <>
-                    <Divider label={"Texto"} labelPosition="center" my="md" />
+                    <Divider label={"Alunos Inativos"} labelPosition="center" my="md" />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {classData.studentClasses.map((link: any) => (
                             link.status === "INACTIVE" && (
@@ -178,7 +178,7 @@ export default function ClassView({ classData, tenancyId }: { classData: ClassVi
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleArchive}
-                title={"Texto"}
+                title={"Arquivar Turma"}
                 confirmLabel={"Arquivar"}
                 cancelLabel={"Cancelar"}
                 confirmColor="orange"
@@ -186,7 +186,7 @@ export default function ClassView({ classData, tenancyId }: { classData: ClassVi
             >
                 Você tem certeza que deseja arquivar a turma <strong>{classData?.name}</strong>?
                 <br />
-                <Text component="span" c="orange" size="sm" fw={500} mt="md">{"Texto"}</Text>
+                <Text component="span" c="orange" size="sm" fw={500} mt="md">{"Atenção: esta ação não pode ser desfeita."}</Text>
             </ConfirmationModal>
         </div>
     );

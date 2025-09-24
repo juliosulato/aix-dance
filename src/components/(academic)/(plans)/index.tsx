@@ -79,8 +79,7 @@ export default function AllPlansData() {
         }
 
         try {
-            await deletePlans(finalIdsToDelete, tenancyId, t, mutate as any);
-            mutate();
+            await deletePlans(finalIdsToDelete, tenancyId, mutate as any);
         } catch (error) {
             console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);
         } finally {
@@ -120,11 +119,9 @@ export default function AllPlansData() {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Label>{"Texto"}</Menu.Label>
+                <Menu.Label>{"Ações em Massa"}</Menu.Label>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
-                    {t("general.actions.deleteMany", {
-                        items: selectedIds.length
-                    })}
+                   Deletar {selectedIds.length} selecionado(s)
                 </Menu.Item>
             </Menu.Dropdown>
         </Menu>
@@ -136,19 +133,19 @@ export default function AllPlansData() {
                 return "Texto";
                 break;
             case "SEMMONTLY":
-                return "Texto";
+                return "Quinzenal";
             break;
             case "BI_MONTHLY":
-                return "Texto";
+                return "Bimestral";
             break;
             case "QUARTERLY":
-                return "Texto";
+                return "Trimestral";
             break;
             case "BI_ANNUAL":
-                return "Texto";
+                return "Semestral";
             break;
             case "ANNUAL":
-                return "Texto";
+                return "Anual";
             break;
             default: 
                 return "";
@@ -157,8 +154,8 @@ export default function AllPlansData() {
     }
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>{"Texto"}</div>;
-    if (error) return <p>{"Texto"}</p>;
+    if (status !== "authenticated") return <div>{"Acesso não autorizado"}</div>;
+    if (error) return <p>{"Erro ao carregar os planos."}</p>;
 
 
     return (
@@ -167,26 +164,26 @@ export default function AllPlansData() {
                 data={categoryGroups || []}
                 openNewModal={{
                     func: () => setOpenNew(true),
-                    label: "Texto"
+                    label: "Novo Plano"
                 }}
                 baseUrl="/system/academic/plans/"
                 mutate={mutate}
                 pageTitle={"Planos"}
-                searchbarPlaceholder={"Texto"}
+                searchbarPlaceholder={"Pesquisar planos..."}
                 columns={[
-                    { key: "name", label: "Texto", sortable: true },
+                    { key: "name", label: "Nome", sortable: true },
                     {
-                        key: "amount", label: "Texto",
+                        key: "amount", label: "Valor",
                         render: (value) => value ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value) : '-',
                         sortable: true
                     },
                     {
-                        key: "frequency", label: "Texto",
+                        key: "frequency", label: "Frequência",
                         sortable: true,
-                        render: (value) => `${value} ${"Texto"}`
+                        render: (value) => `${value} ${"parcelas"}`
                     },
                      {
-                        key: "type", label: "Texto",
+                        key: "type", label: "Tipo",
                         sortable: true,
                         render: (value) => renderCicle(value)
                     }
@@ -201,7 +198,7 @@ export default function AllPlansData() {
                         </div>
                         <div className="flex flex-row justify-between items-start">
                             {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(item.amount))}
-                            <span><strong>{"Texto"}:</strong> {renderCicle(item.type)}</span>
+                            <span><strong>{"Tipo"}:</strong> {renderCicle(item.type)}</span>
                         </div>
                     </>
                 )}
@@ -225,22 +222,18 @@ export default function AllPlansData() {
                 opened={isConfirmModalOpen}
                 onClose={() => setConfirmModalOpen(false)}
                 onConfirm={handleDeleteConfirm}
-                title={"Texto"}
-                confirmLabel={"Texto"}
-                cancelLabel={"Texto"}
+                title={"Confirmar Exclusão"}
+                confirmLabel={"Excluir"}
+                cancelLabel={"Cancelar"}
                 loading={isDeleting}
             >
                 {idsToDelete.length > 0 ? (
-                    t("academic.plans.modals.confirmModal.textArray",
-                        { plans: idsToDelete.length }
-                    )
+                    `Tem certeza que deseja desativar estes ${idsToDelete.length} planos?`
                 ) : (
-                    t("academic.plans.modals.confirmModal.text", {
-                        plan: selectedPlan?.name || ""
-                    })
+                    `Tem certeza que deseja desativar este plano?`  
                 )}
                 <br />
-                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Texto"}</Text>
+                <Text component="span" c="red" size="sm" fw={500} mt="md">{"Essa ação não pode ser desfeita."}</Text>
             </ConfirmationModal>
         </>
     );

@@ -17,11 +17,11 @@ export default function BankAccount__BasicInformations({ control, errors, regist
 
     return (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <h2 className="text-lg font-bold md:col-span-2">{"Texto"}</h2>
+            <h2 className="text-lg font-bold md:col-span-2">{"Informações Básicas"}</h2>
 
             <TextInput
-                label={"Texto"}
-                placeholder={"Texto"}
+                label={"Nome"}
+                placeholder={"Digite o nome"}
                 {...register("name")}
                 error={errors.name?.message}
                 required
@@ -31,24 +31,24 @@ export default function BankAccount__BasicInformations({ control, errors, regist
             />
 
             <TextInput
-                label={"Texto"}
-                placeholder={"Texto"}
+                label={"Código do Banco"}
+                placeholder={"Digite o código do banco"}
                 {...register("code")}
                 error={errors.code?.message}
                 classNames={{ input: "!border-transparent !rounded-none !border-b !border-b-neutral-300" }}
             />
 
             <TextInput
-                label={"Texto"}
-                placeholder={"Texto"}
+                label={"Agência"}
+                placeholder={"Digite a agência"}
                 {...register("agency")}
                 error={errors.agency?.message}
                 classNames={{ input: "!border-transparent !rounded-none !border-b !border-b-neutral-300" }}
             />
 
             <TextInput
-                label={"Texto"}
-                placeholder={"Texto"}
+                label={"Conta"}
+                placeholder={"Digite a conta"}
                 {...register("account")}
                 error={errors.account?.message}
                 className="md:col-span-2"
@@ -61,7 +61,7 @@ export default function BankAccount__BasicInformations({ control, errors, regist
                 render={({ field }) => (
                     <NumberInput
                         {...field}
-                        label={"Texto"}
+                        label={"Taxa de Manutenção"}
                         placeholder="0,00"
                         allowDecimal
                         decimalSeparator=","
@@ -84,7 +84,7 @@ export default function BankAccount__BasicInformations({ control, errors, regist
                         allowDecimal={false}
                         placeholder="5"
                         {...field}
-                        label={"Texto"}
+                        label={"Dia de Vencimento da Taxa de Manutenção"}
                         error={errors.maintenanceFeeDue?.message}
                         classNames={{ input: "!border-transparent !rounded-none !border-b !border-b-neutral-300" }}
                     />
@@ -92,8 +92,7 @@ export default function BankAccount__BasicInformations({ control, errors, regist
             />
 
             <TextInput
-                label={"Texto"}
-                placeholder={"Texto"}
+                label={"Descrição"}
                 {...register("description")}
                 error={errors.description?.message}
                 className="md:col-span-2"

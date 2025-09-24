@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, Button, LoadingOverlay, Modal, MultiSelect, Text, Alert } from "@mantine/core";
+import { Button, LoadingOverlay, Modal, MultiSelect, Text, Alert } from "@mantine/core";
 import { useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
@@ -11,7 +11,6 @@ import { fetcher } from "@/utils/fetcher";
 import Image from "next/image";
 import notFound from "@/assets/images/not-found.png";
 import { FaSearch } from "react-icons/fa";
-import { Student } from "@prisma/client";
 import z from "zod";
 import { StudentFromApi } from "../StudentFromApi";
 

@@ -19,6 +19,7 @@ interface ContractWithRelations extends StudentContract {
         firstName: string;
         lastName: string;
         tenancy: Tenancy;
+        id: string
     };
 }
 
@@ -56,6 +57,13 @@ export default function SignContractView({ contract, ipAddress, location }: Prop
                 const errorData = await response.json();
                 throw new Error(errorData.error || 'Falha ao assinar o contrato.');
             }
+
+            await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${contract.student.tenancy.id}/students/${contract.student.id}/history`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ description: `Contrato assinado por ${data.fullName}` })
+            });
+
 
             notifications.show({
                 title: 'Sucesso!',

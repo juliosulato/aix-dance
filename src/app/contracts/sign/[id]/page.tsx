@@ -1,21 +1,10 @@
 import { notFound } from "next/navigation";
 import SignContractView from "./SignContractView";
-import { StudentContract } from "@prisma/client";
 import { Suspense } from "react";
 import { Loader, Center } from "@mantine/core";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers"; // Importamos a função 'headers' do Next.js
 
-// A interface para os dados continua a mesma
-interface ContractWithRelations extends StudentContract {
-    student: {
-        firstName: string;
-        lastName: string;
-        tenancy: {
-            name: string;
-        }
-    };
-}
 
 export default async function SignContractPage({ params }: { params: { id: string } }) {
     const { id } = await params;
@@ -34,7 +23,8 @@ export default async function SignContractPage({ params }: { params: { id: strin
                 select: {
                     firstName: true,
                     lastName: true,
-                    tenancy:true
+                    tenancy:true,
+                    id: true
                 }
             },
         }

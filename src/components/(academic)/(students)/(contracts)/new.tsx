@@ -118,7 +118,7 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
                     }),
                     headers: { "Content-Type": "application/json" },
                 }
-            )
+            );
 
 
             if (!response.ok) {

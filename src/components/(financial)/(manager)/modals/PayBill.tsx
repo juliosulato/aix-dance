@@ -13,8 +13,6 @@ import dayjs from "dayjs";
 import { payBillSchema, PayBillInput } from "@/schemas/financial/bill.schema";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { DateInput } from "@mantine/dates";
-import z from "zod";
-import { BankSelect } from "../../(banks)/BankSelect";
 import { fetcher } from "@/utils/fetcher";
 
 // Tipagem para os dados que vêm do Zod schema

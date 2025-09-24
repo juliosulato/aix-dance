@@ -58,7 +58,7 @@ export default function GeneralStudentsView({
         <InfoTerm label={"Telefone"}>{student.phoneNumber}</InfoTerm>
         <InfoTerm label={"Email"}>{student.email}</InfoTerm>
         <InfoTerm label={"Data de Nascimento"}>
-          {dayjs(student.dateOfBirth).format("")}
+          {dayjs(student.dateOfBirth).format("DD/MM/YYYY")}
         </InfoTerm>
         <InfoTerm label={"Documento de Identidade"}>
           {student.documentOfIdentity}

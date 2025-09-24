@@ -6,7 +6,19 @@ model Bill {
     amountPaid  Decimal?
     dueDate     DateTime
     paymentDate DateTime?
+    expectedReceiveDate DateTime?
     status      BillStatus
+
+    feeAmount   Decimal?
+    netAmount   Decimal?
+    // Penalty / multa accounting
+    originalAmount    Decimal?   // value before penalty or manual adjustments
+    penaltyAmount     Decimal?   // explicit amount of penalty applied
+    penaltyApplied    Boolean    @default(false)
+    penaltyExempted   Boolean    @default(false)
+    penaltyExemptedBy String?
+    penaltyExemptedAt DateTime?
+    penaltyExemptedReason String?
 
     installments      Int     @default(1)
     installmentNumber String?
@@ -38,6 +50,7 @@ model Bill {
     formsOfReceiptId String?
     formsOfReceipt   FormsOfReceipt? @relation(fields: [formsOfReceiptId], references: [id])
 
+    paymentMethodId String?
     paymentMethod   PaymentMethod?  @default(CASH)
     
     bankId String?
@@ -50,6 +63,8 @@ model Bill {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    notifications Notification[]
 
     @@schema("financial")
 }
@@ -71,7 +86,7 @@ model Sale {
   studentId String
   
   totalAmount Decimal
-  discountPercentage Float @default(0)
+  discountPercentage Float
   
   items     SaleItem[]
   bills     Bill[]
@@ -113,6 +128,7 @@ enum BillType {
 enum BillStatus {
     PENDING
     PAID
+    AWAITING_RECEIPT
     OVERDUE
     CANCELLED
 

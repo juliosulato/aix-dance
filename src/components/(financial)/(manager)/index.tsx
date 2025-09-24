@@ -76,18 +76,41 @@ export default function AllBillsData() {
 
     const allBills = useMemo(() => {
         if (!parentBills) return [];
-        return parentBills.flatMap(parent => {
+        const flat = parentBills.flatMap(parent => {
             const totalInstallments = (parent.children?.length || 0) + 1;
             const enhancedParent = { ...parent, totalInstallments };
             const enhancedChildren = parent.children?.map(child => ({ ...child, totalInstallments })) || [];
             return [enhancedParent, ...enhancedChildren];
+        });
+
+        // Sort by requested business order: OVERDUE, AWAITING_RECEIPT, PENDING, PAID, CANCELLED
+        const statusOrder: Record<string, number> = {
+            OVERDUE: 0,
+            AWAITING_RECEIPT: 1,
+            PENDING: 2,
+            PAID: 3,
+            CANCELLED: 4,
+        };
+
+        return flat.sort((a, b) => {
+            const aOrder = statusOrder[String(a.status)] ?? 99;
+            const bOrder = statusOrder[String(b.status)] ?? 99;
+            if (aOrder !== bOrder) return aOrder - bOrder;
+            // Same status: sort by dueDate ascending
+            return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
         });
     }, [parentBills]);
 
     const filteredBills = useMemo(() => {
         if (!allBills) return [];
         if (!activeTab) return allBills;
-        return allBills.filter(bill => bill.type.toLowerCase() === activeTab);
+        // Defensive: normalize both sides (trim + lowercase) because backend
+        // values may contain different casing or accidental spaces.
+        return allBills.filter(bill => {
+            const billType = bill?.type ? String(bill.type).trim().toLowerCase() : '';
+            const target = String(activeTab).trim().toLowerCase();
+            return billType === target;
+        });
     }, [allBills, activeTab]);
 
 

@@ -13,7 +13,8 @@ export function StatusTextToBadge(
         "PENDING": "Pendente",
         "OVERDUE": "Em atraso",
         "CANCELLED": "Cancelado",
-        "PAID": "Pago"
+        "PAID": "Pago",
+        "AWAITING_RECEIPT": "Aguardando recebimento",
     };
 
     switch (status) {
@@ -33,6 +34,14 @@ export function StatusTextToBadge(
                 </Tooltip>
             ) : (
                 <div className={`${classes} bg-red-500`}></div>
+            );
+        case "AWAITING_RECEIPT":
+            return tooltip ? (
+                <Tooltip label={statusLabels.AWAITING_RECEIPT} color="orange">
+                    <div className={`${classes} bg-sky-500`}></div>
+                </Tooltip>
+            ) : (
+                <div className={`${classes} bg-sky-500`}></div>
             );
         case "CANCELLED":
             return tooltip ? (

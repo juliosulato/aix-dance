@@ -7,7 +7,7 @@ import { PiPasswordLight } from "react-icons/pi";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { FormEvent, useEffect, useState } from "react";
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { notifications } from '@mantine/notifications';
 import { loginWithCredentials } from "@/actions/auth";
@@ -18,6 +18,15 @@ export default function Login() {
 
     const [error, setError] = useState<string>("");
     const router = useRouter();
+
+    const session = useSession();
+
+    useEffect(() => {
+        if (session.status === "authenticated") {
+            router.push("/system/");
+        }
+    }
+    , [session.status, router]);
 
     const handleLoginWithCredentials = async (ev: FormEvent) => {
         ev.preventDefault();
@@ -41,7 +50,7 @@ export default function Login() {
             const result = await loginWithCredentials(formData);
 
             if (result.success) {
-                notifications.show({ title: "Login realizado com sucesso!", message: "Estamos te redirecionando para o sistema...", color: "green", withBorder: true, radius: "lg", position: "bottom-center", autoClose: 3000 })
+                notifications.show({ title: "Login realizado com sucesso!", message: "Estamos te redirecionando para o sistema...", color: "green", withBorder: true, radius: "lg", position: "bottom-center", autoClose: 3000 });
                 router.push("/system/");
             } else {
                 setError((result as any).error);
@@ -67,7 +76,7 @@ export default function Login() {
 
     useEffect(() => {
         if (error) {
-            notifications.show({ title: "Erro ao realizar login.", message: error, color: "red", withBorder: true, radius: "lg", position: "bottom-center", autoClose: 500 })
+            notifications.show({ title: "Erro ao realizar login.", message: error, color: "red", withBorder: true, radius: "lg", position: "bottom-center", autoClose: 500 });
         }
     }, [error]);
 

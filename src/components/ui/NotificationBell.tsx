@@ -17,7 +17,7 @@ export default function NotificationBell() {
       <HoverCard.Target>
         <ActionIcon size="42px" variant="light" color="gray">
           {unreadCount > 0 ? (
-            <Badge color="red" size="sm" style={{ position: "absolute", top: 6, right: 6 }}>{unreadCount}</Badge>
+            <Badge color="red" size="sm" style={{ position: "absolute", top: 0, right: 0 }}>{unreadCount}</Badge>
           ) : null}
           <IoNotificationsOutline className="text-2xl" />
         </ActionIcon>

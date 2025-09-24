@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import { useForm, Controller, useFieldArray, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import useSWR from 'swr';
@@ -118,7 +118,39 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
     const removeFromCart = (cartId: string) => setCart(prev => prev.filter(item => item.cartId !== cartId));
     const cartSubtotal = useMemo(() => cart.reduce((total, item) => total + item.amount, 0), [cart]);
     const discountAmount = useMemo(() => (cartSubtotal * discountPercentage) / 100, [cartSubtotal, discountPercentage]);
-    const finalTotal = useMemo(() => cartSubtotal - discountAmount, [cartSubtotal, discountAmount]);
+    const baseTotal = useMemo(() => cartSubtotal - discountAmount, [cartSubtotal, discountAmount]);
+
+    // surcharge: total of fees that are configured as customerInterest for the
+    // selected payments. Calculated client-side to show the operator the final
+    // amount the customer will be charged. We subscribe to payments using
+    // useWatch so recalculation happens immediately when payments/forms change.
+    const paymentsWatch = useWatch({ control, name: 'payments' }) as any[] | undefined;
+    const surchargeTotal = useMemo(() => {
+        if (!formsOfReceipt) return 0;
+        const payments: any[] = paymentsWatch || [];
+        // Avoid circular calculation: compute surcharge over the baseTotal
+        // (cart subtotal minus discount) split evenly among payments.
+        const count = payments.length || 1;
+        // Distribute baseTotal across payments (two decimals, remainder to last)
+        const baseShare = Math.floor((baseTotal / count) * 100) / 100;
+        const remainder = Number((baseTotal - baseShare * count).toFixed(2));
+
+        let s = 0;
+        for (let i = 0; i < count; i++) {
+            const p = payments[i] || { formsOfReceiptId: undefined, installments: 1 };
+            const assignedBase = i === count - 1 ? Number((baseShare + remainder).toFixed(2)) : baseShare;
+            const f = formsOfReceipt.find(fr => fr.id === p.formsOfReceiptId) as any;
+            if (!f) continue;
+            const feeRow = Array.isArray(f.fees) ? f.fees.find((rr: any) => (p.installments ?? 1) >= rr.minInstallments && (p.installments ?? 1) <= rr.maxInstallments) : null;
+            if (feeRow && feeRow.customerInterest) {
+                const feeAmount = Number(((feeRow.feePercentage / 100) * assignedBase).toFixed(2));
+                s += feeAmount;
+            }
+        }
+        return Number(s.toFixed(2));
+    }, [formsOfReceipt, paymentsWatch, baseTotal]);
+
+    const finalTotal = useMemo(() => baseTotal + surchargeTotal, [baseTotal, surchargeTotal]);
 
     // --- Hooks para verificar plano ativo e plano no carrinho ---
     const activeStudentSubscription = useMemo(() => {
@@ -216,6 +248,10 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
             unitAmount: item.amount,
             contractHtmlContent: item.contractHtmlContent,
         }));
+
+        if (surchargeTotal > 0) {
+            itemsPayload.push({ planId: undefined, description: 'Taxa (repassada ao cliente)', quantity: 1, unitAmount: surchargeTotal, contractHtmlContent: null });
+        }
 
         const payload = {
             ...data,
@@ -370,7 +406,22 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
 
                                                     <div className='grid grid-cols-1 md:grid-cols-2 lg:col-span-3 items-center justify-center gap-2'>
                                                         <Controller name={`payments.${index}.formsOfReceiptId`} control={control} render={({ field }) => (<Select data={formsOfReceipt?.map(p => ({ value: p.id, label: p.name })) || []} value={field.value} onChange={field.onChange} placeholder="Forma de pagamento" label="Forma de pagamento" size="md" radius="md" />)} />
-                                                        <Controller name={`payments.${index}.installments`} control={control} render={({ field }) => (<NumberInput min={1} value={field.value} onChange={e => field.onChange(Number(e) || 1)} placeholder="Parc." label="Parc." size="md" radius="md" />)} />
+                                                        <Controller name={`payments.${index}.installments`} control={control} render={({ field }) => {
+                                                            // determine selected formsOfReceipt fees to set min/max
+                                                            const selectedForm = formsOfReceipt?.find(f => f.id === (watch(`payments.${index}.formsOfReceiptId`) as string)) as any;
+                                                            const feesArray = Array.isArray(selectedForm?.fees) ? selectedForm.fees : [];
+                                                            const feeRow = feesArray.find((fr: any) => field.value >= fr.minInstallments && field.value <= fr.maxInstallments) || feesArray[0];
+                                                            const min = feeRow?.minInstallments ?? 1;
+                                                            const max = feeRow?.maxInstallments ?? 1;
+                                                            return (
+                                                                <div>
+                                                                    <NumberInput min={min} max={max} value={field.value} onChange={e => field.onChange(Number(e) || min)} placeholder="Parc." label="Parc." size="md" radius="md" />
+                                                                    {feesArray.length > 0 && (
+                                                                        <div className="text-xs text-gray-500 mt-1">Parcela: mínimo {min} - máximo {max}</div>
+                                                                    )}
+                                                                </div>
+                                                            );
+                                                        }} />
                                                         <Controller name={`payments.${index}.amount`} control={control} render={({ field }) => (<NumberInput allowDecimal decimalSeparator=',' min={0} value={field.value}
                                                             onChange={(val) => field.onChange(val)}
                                                             placeholder="Valor" label="Valor" prefix='R$ ' size="md" leftSection={<RiMoneyDollarCircleFill />} radius="md" />)} />

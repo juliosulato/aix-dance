@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import dayjs from "dayjs";
-import { FaCalendarAlt, FaRegClock } from "react-icons/fa";
+import { FaCalendarAlt } from "react-icons/fa";
 import { StudentFromApi } from "../StudentFromApi";
 import DataView from "@/components/ui/DataView";
-import { ActionIcon, Badge, Box, Button, Divider, Flex, Menu, Text } from "@mantine/core";
+import { ActionIcon, Badge, Box, Divider, Flex, Menu, Text, Modal, Button } from "@mantine/core";
 import { StatusTextToBadge } from "@/utils/statusTextToBadge";
 import 'dayjs/locale/pt-br';
 import 'dayjs/locale/en';
@@ -11,10 +12,10 @@ import { useState } from "react";
 import deleteBills from "@/components/(financial)/(manager)/delete";
 import { BiDotsVerticalRounded, BiTrash } from "react-icons/bi";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
+import { notifications } from "@mantine/notifications";
 
 interface MenuItemProps {
     bill: StudentFromApi["bills"][0];
-    onUpdateClick: (b: StudentFromApi["bills"][0]) => void;
     onDeleteClick: (b: StudentFromApi["bills"][0]) => void;
 }
 
@@ -24,21 +25,26 @@ interface MenuItemsProps {
 }
 
 export default function StudentBillsView({ student }: { student: StudentFromApi }) {
-    const bills = student.bills.sort((a, b) => a.status === "OVERDUE" ? -1 : 1 || dayjs(b.dueDate).diff(dayjs(a.dueDate)));
+    const bills = [...student.bills].sort((a, b) => {
+        const statusOrder: Record<string, number> = {
+            OVERDUE: 0,
+            AWAITING_RECEIPT: 1,
+            PENDING: 2,
+            PAID: 3,
+            CANCELLED: 4,
+        };
+        const aOrder = statusOrder[String(a.status)] ?? 99;
+        const bOrder = statusOrder[String(b.status)] ?? 99;
+        if (aOrder !== bOrder) return aOrder - bOrder;
+        return dayjs(a.dueDate).diff(dayjs(b.dueDate));
+    });
 
-    const [openUpdate, setOpenUpdate] = useState<boolean>(false);
-    const [openPayBill, setOpenPayBill] = useState<boolean>(false);
-    const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
+    const [, setOpenPayBill] = useState<boolean>(false);
+    const [, setConfirmModalOpen] = useState<boolean>(false);
     const [selectedBill, setSelectedBill] = useState<StudentFromApi["bills"][0] | null>(null);
     const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
-    const [isDeleting, setIsDeleting] = useState<boolean>(false);
-
-
-
-    const handleUpdateClick = (bill: StudentFromApi["bills"][0]) => {
-        setSelectedBill(bill);
-        setOpenUpdate(true);
-    };
+    const [, setIsDeleting] = useState<boolean>(false);
+    const [, setIsExempting] = useState<boolean>(false);
 
     const handleDeleteClick = (bill: StudentFromApi["bills"][0]) => {
         setSelectedBill(bill);
@@ -78,7 +84,76 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
         }
     };
 
-    const MenuItem = ({ bill, onUpdateClick, onDeleteClick }: MenuItemProps) => (
+    const exemptPenalty = async (ids: string[]) => {
+        setIsExempting(true);
+        const tenancyId = student.tenancyId;
+        if (!tenancyId) {
+            setIsExempting(false);
+            alert('Tenancy ID ausente.');
+            return;
+        }
+
+        try {
+            const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/bills/exempt-penalty`;
+            const res = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ids })
+            });
+
+            if (!res.ok) {
+                const text = await res.text();
+                throw new Error(text || 'Erro ao isentar multa');
+            }
+
+            const data = await res.json();
+            // mostra um resumo do que foi atualizado antes de recarregar
+            const msg = `Isenção concluída. Faturas atualizadas: ${data.updatedCount || 0}.`;
+
+            notifications.show({
+                title: 'Isenção de Multa',
+                message: msg,
+                color: 'green',
+                autoClose: 8000,
+            });
+        } catch (error: any) {
+            console.error('Falha ao isentar multa:', error);
+            alert('Falha ao isentar multa: ' + (error?.message || error));
+        } finally {
+            setIsExempting(false);
+        }
+    };
+
+    // Funções de isenção agora chamam o endpoint e exibem o relatório retornado
+    const handleExemptClick = async (bill: StudentFromApi["bills"][0]) => {
+        const hasPenalty = Boolean(bill.penaltyAmount && bill.penaltyAmount > 0);
+        if (!hasPenalty) {
+            const proceed = window.confirm('Nenhuma multa aparente nesta cobrança. Deseja prosseguir mesmo assim?');
+            if (!proceed) return;
+        } else {
+            const ok = window.confirm('Confirma isentar a multa desta cobrança?');
+            if (!ok) return;
+        }
+
+        await exemptPenalty([bill.id]);
+    };
+
+    const handleBulkExemptClick = async (ids: string[]) => {
+        if (!ids || ids.length === 0) return;
+        const selectedBills = student.bills.filter(b => ids.includes(b.id));
+        const anyWithPenalty = selectedBills.some(b => Boolean(b.penaltyAmount && b.penaltyAmount > 0));
+        if (!anyWithPenalty) {
+            const proceed = window.confirm('Nenhuma das cobranças selecionadas possui multa aparente. Deseja prosseguir mesmo assim?');
+            if (!proceed) return;
+        } else {
+            const ok = window.confirm(`Confirma isentar a multa de ${ids.length} cobrança(ões)?`);
+            if (!ok) return;
+        }
+
+        await exemptPenalty(ids);
+    };
+
+    const MenuItem = ({ bill, onDeleteClick }: MenuItemProps) => (
         <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
             <Menu shadow="md" width={200} withinPortal>
                 <Menu.Target>
@@ -89,9 +164,12 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
                 <Menu.Dropdown>
                     <Menu.Item leftSection={<RiMoneyDollarCircleLine size={14} />} onClick={() => {
                         setOpenPayBill(true);
-                        setSelectedBill(bill)
+                        setSelectedBill(bill);
                     }}>
                         <span>{"Pagar"}</span>
+                    </Menu.Item>
+                    <Menu.Item leftSection={<RiMoneyDollarCircleLine size={14} />} onClick={async () => await handleExemptClick(bill)}>
+                        <span>{"Isentar Multa"}</span>
                     </Menu.Item>
                     <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(bill)}>
                         {"Excluir"}
@@ -110,6 +188,9 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
             </Menu.Target>
             <Menu.Dropdown>
                 <Menu.Label>{"Ações"}</Menu.Label>
+                <Menu.Item leftSection={<RiMoneyDollarCircleLine size={14} />} onClick={() => handleBulkExemptClick(selectedIds)}>
+                    {`Isentar multa de ${selectedIds.length} item${selectedIds.length > 1 ? 's' : ''}`}
+                </Menu.Item>
                 <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
                     {`Excluir ${selectedIds.length} item${selectedIds.length > 1 ? 's' : ''}`}
                 </Menu.Item>
@@ -145,6 +226,30 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
                             sortable: true
                         },
                         {
+                            key: "originalAmount",
+                            label: "Valor Original",
+                            render: (value, row) => row.originalAmount ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(row.originalAmount)) : '-',
+                            sortable: false
+                        },
+                        {
+                            key: "penaltyAmount",
+                            label: "Multa",
+                            render: (value, row) => row.penaltyAmount ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(row.penaltyAmount)) : '-',
+                            sortable: false
+                        },
+                        {
+                            key: "originalAmount",
+                            label: "Valor Original",
+                            render: (value, row) => row.originalAmount ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(row.originalAmount) : '-',
+                            sortable: false
+                        },
+                        {
+                            key: "penaltyAmount",
+                            label: "Multa",
+                            render: (value, row) => row.penaltyAmount ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(row.penaltyAmount) : '-',
+                            sortable: false
+                        },
+                        {
                             key: "amountPaid",
                             label: "Valor Pago",
                             render: (value) => value ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value) : '-',
@@ -177,7 +282,7 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
                             })
                         },
                     ]}
-                    RenderRowMenu={(item) => <MenuItem bill={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />}
+                    RenderRowMenu={(item) => <MenuItem bill={item} onDeleteClick={handleDeleteClick} />}
                     RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
                     renderCard={(item) => (
                         <Box className="flex flex-col h-full">
@@ -188,7 +293,7 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
                                     'OVERDUE': 'Atrasado',
                                     'CANCELLED': 'Cancelado'
                                 })}
-                                <MenuItem bill={item} onUpdateClick={handleUpdateClick} onDeleteClick={handleDeleteClick} />
+                                        <MenuItem bill={item} onDeleteClick={handleDeleteClick} />
                             </Flex>
 
                             <Divider my="xs" />
@@ -216,6 +321,5 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
                 />
             </div>
         </>
-
-    )
+    );
 }

@@ -18,11 +18,14 @@ model User {
 
   accounts Account[]
   sessions Session[]
+  userActionHistories UserActionHistory[]
 
   active    Boolean  @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  notifications Notification[]
 
   @@schema("users")
 }

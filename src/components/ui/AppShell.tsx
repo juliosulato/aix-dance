@@ -19,7 +19,9 @@ import { PiMoneyWavy } from "react-icons/pi";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
     const [activeMain, setActiveMain] = useState<number | string | null>(null);
-    const [mobileOpened, { toggle: toggleMobile }] = useDisclosure(false);
+    // mobileOpened represents whether the navbar is collapsed on mobile.
+    // Start as true so the mobile navbar is closed by default.
+    const [mobileOpened, { toggle: toggleMobile }] = useDisclosure(true);
     const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(false);
     const pathname = usePathname();
     const menuData = useMenuData();
@@ -44,7 +46,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 </div>
 
                 <div className="flex items-center justify-end gap-2 h-full px-4 md:px-6 w-full">
-                    <Burger opened={mobileOpened} onClick={toggleMobile} hiddenFrom="xl" size="sm" />
+                    {/* Burger shows opened when the menu is visible, so invert here to match collapsed state */}
+                    <Burger opened={!mobileOpened} onClick={toggleMobile} hiddenFrom="xl" size="sm" />
 
 
 

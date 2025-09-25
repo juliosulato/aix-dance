@@ -8,7 +8,6 @@ export const metadata: Metadata = {
 };
 
 export default async function LoginPage() {
-
   return (
     <main className="relative flex flex-col gap-4 md:h-screen xl:overflow-hidden">
       <Image

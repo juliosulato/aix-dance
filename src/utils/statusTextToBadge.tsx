@@ -37,7 +37,7 @@ export function StatusTextToBadge(
             );
         case "AWAITING_RECEIPT":
             return tooltip ? (
-                <Tooltip label={statusLabels.AWAITING_RECEIPT} color="orange">
+                <Tooltip label={statusLabels.AWAITING_RECEIPT} color="#06A0CB">
                     <div className={`${classes} bg-sky-500`}></div>
                 </Tooltip>
             ) : (

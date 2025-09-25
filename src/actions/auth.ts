@@ -10,7 +10,7 @@ export async function loginWithCredentials(formData: FormData) {
     const remember = formData.get("remember") === "on";
 
     try {
-        let user = await prisma.user.findFirst({
+        const user = await prisma.user.findFirst({
                 where: {
                     email: userInput
                 }
@@ -32,7 +32,7 @@ export async function loginWithCredentials(formData: FormData) {
         }
 
         await signIn("credentials", {
-            emal: userInput,
+            email: userInput,
             password: password,
             remember,
             redirect: false,

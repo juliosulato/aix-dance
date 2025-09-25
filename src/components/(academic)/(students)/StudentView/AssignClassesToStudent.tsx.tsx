@@ -186,7 +186,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
       <Modal
         opened={opened}
         onClose={onClose}
-        title={`Designar turmas para ${student.firstName}`}
+        title={`Atribuir turmas para ${student.firstName}`}
         size="lg"
         radius="lg"
         centered

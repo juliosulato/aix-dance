@@ -84,9 +84,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                             </Button>
                         </Menu.Target>
                         <Menu.Dropdown>
-                            <Menu.Item leftSection={<FaRegUser />}>
+                            {/* <Menu.Item leftSection={<FaRegUser />}>
                                 {"Meu Perfil"}
-                            </Menu.Item>
+                            </Menu.Item> */}
                             <Menu.Item leftSection={<LuLogOut />} onClick={() => signOut({ redirect: true, redirectTo: "/auth/signin" })}>
                                 {"Sair"}
                             </Menu.Item>
@@ -152,7 +152,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                             className={`rounded-full !py-3 transition-all duration-300 ease-in !px-5 !justify-start `}
                             rightSection={<HiOutlineChevronRight size={12} className="mantine-rotate-rtl" />}
                         >
-                            <NavLink
+                            {/* <NavLink
                                 color="violet"
                                 variant="subtle"
                                 leftSection={<LuBrain />}
@@ -161,7 +161,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                                 className="rounded-full !px-5 !py-3 transition-all duration-300 ease-in"
                                 classNames={{ section: "text-xl" }}
                                 active={pathname === "/system/settings/company"}
-                            />
+                            /> */}
                             <NavLink
                                 color="violet"
                                 variant="subtle"

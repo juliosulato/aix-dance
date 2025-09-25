@@ -48,7 +48,7 @@ const dayScheduleSchema = z.object({
 export const createClassSchema = z.object({
     name: z.string().min(1, { message: "Nome da turma é obrigatório" }),
     modalityId: z.string().min(1, { message: "Modalidade é obrigatória" }),
-    teacherId: z.string().min(1, { message: "Professor é obrigatório" }),
+    teacherId: z.string({ error: "Professor é obrigatório"}).min(1, { message: "Professor é obrigatório" }),
     assistantId: z.string().optional(),
     online: z.boolean().optional(),
     days: z.array(

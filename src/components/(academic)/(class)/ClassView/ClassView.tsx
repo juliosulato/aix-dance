@@ -148,7 +148,7 @@ export default function ClassView({ id }: { id: string }) {
             onClick={() => setIsOpenAssign(true)}
           >
             <PiStudent />
-            <span>Designar</span>
+            <span>Atribuir</span>
           </button>
         </div>
       </div>

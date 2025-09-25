@@ -14,7 +14,7 @@ import { loginWithCredentials } from "@/actions/auth";
 import { useDisclosure } from "@mantine/hooks";
 
 export default function Login() {
-    const [visible, { toggle }] = useDisclosure(false);
+    const [visible, { open, close }] = useDisclosure(false);
 
     const [error, setError] = useState<string>("");
     const router = useRouter();
@@ -23,14 +23,16 @@ export default function Login() {
 
     useEffect(() => {
         if (session.status === "authenticated") {
-            router.push("/system/");
+            router.push("/system/academic/students");
         }
     }
     , [session.status, router]);
 
     const handleLoginWithCredentials = async (ev: FormEvent) => {
         ev.preventDefault();
-        toggle();
+        // evita múltiplos envios
+        if (visible) return;
+        open();
 
         notifications.show({
             title: "Não saia da página!",
@@ -58,16 +60,17 @@ export default function Login() {
         } catch (err) {
             console.error("Erro no login:", err);
             setError("Erro inesperado. Tente novamente.");
+        } finally {
+            // garante que o overlay seja fechado mesmo em caso de erro
+            close();
         }
-
-        toggle();
     };
 
     const handleSocialLogin = async (provider: "google" | "facebook") => {
         return notifications.show({ message: "Função temporariamente desabilitada.", color: "yellow", withBorder: true, radius: "lg", position: "bottom-center", autoClose: 2000 });
         try {
             await signIn(provider, {
-                redirectTo: "/system/"
+                redirectTo: "/system/academic/students"
             });
         } catch (error) {
             console.error(`Erro no login com ${provider}:`, error);
@@ -135,6 +138,7 @@ export default function Login() {
                     size="xl"
                     fullWidth={false}
                     className="!text-base w-full md:!w-fit"
+                    loading={visible}
                 >Realizar Login</Button>
             </form>
             <p className="text-sm">

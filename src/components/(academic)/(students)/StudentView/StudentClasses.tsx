@@ -20,6 +20,7 @@ export interface ClassFromApi extends Class {
   teacher: User;
   assistant: User | null;
   studentClasses: Student[];
+  classAttendances?: any[];
 }
 
 export default function StudentClassView({
@@ -74,6 +75,20 @@ export default function StudentClassView({
                 ? `Saiu em ${dayjs(row.leftAt).format("DD/MM/YYYY")}`
                 : "Inativo",
           },
+          {
+            key: "attendancePercentage",
+            label: "Frequência",
+            render: (percentage, row) =>
+              typeof percentage === "number"
+                ? (() => {
+                    if (percentage === 0) return "-";
+                    if (percentage < 50) return <span className="text-red-500">{`${percentage}%` + (row.attendanceTotal ? ` (${row.attendancePresent}/${row.attendanceTotal})` : "")}</span>;
+                    if (percentage < 70) return <span className="text-yellow-500">{`${percentage}%` + (row.attendanceTotal ? ` (${row.attendancePresent}/${row.attendanceTotal})` : "")}</span>;
+                    if (percentage < 90) return <span className="text-blue-500">{`${percentage}%` + (row.attendanceTotal ? ` (${row.attendancePresent}/${row.attendanceTotal})` : "")}</span>;
+                    return <span className="text-green-500">{`${percentage}%` + (row.attendanceTotal ? ` (${row.attendancePresent}/${row.attendanceTotal})` : "")}</span>;
+                  })()
+                : "-",
+          },
         ]}
         renderCard={(item) => (
           <>
@@ -85,6 +100,24 @@ export default function StudentClassView({
             <div className="flex flex-col gap-2 mt-2">
               <Text size="sm">
                 <strong>Alunos:</strong> {item.class.studentClasses.length}
+              </Text>
+              <Text size="sm">
+                <strong>Frequência:</strong>{" "}
+                {typeof item.attendancePercentage === "number" ? (
+                  item.attendancePercentage === 0 ? (
+                    "-"
+                  ) : item.attendancePercentage < 50 ? (
+                    <span className="text-red-500">{`${item.attendancePercentage}%` + (item.attendanceTotal ? ` (${item.attendancePresent}/${item.attendanceTotal})` : "")}</span>
+                  ) : item.attendancePercentage < 70 ? (
+                    <span className="text-yellow-500">{`${item.attendancePercentage}%` + (item.attendanceTotal ? ` (${item.attendancePresent}/${item.attendanceTotal})` : "")}</span>
+                  ) : item.attendancePercentage < 90 ? (
+                    <span className="text-blue-500">{`${item.attendancePercentage}%` + (item.attendanceTotal ? ` (${item.attendancePresent}/${item.attendanceTotal})` : "")}</span>
+                  ) : (
+                    <span className="text-green-500">{`${item.attendancePercentage}%` + (item.attendanceTotal ? ` (${item.attendancePresent}/${item.attendanceTotal})` : "")}</span>
+                  )
+                ) : (
+                  "-"
+                )}
               </Text>
               <Text size="sm">
                 <strong>Matriculado em:</strong>{" "}

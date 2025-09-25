@@ -121,7 +121,7 @@ export default function ClassSchedulePage() {
     return { weekDays, tableData };
   };
 
-  // Função para imprimir tabela
+  // Função para Imprimir
   const handleTablePrint = () => {
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
@@ -175,7 +175,7 @@ export default function ClassSchedulePage() {
               variant="filled"
               color="violet"
             >
-              Imprimir Tabela
+              Imprimir
             </Button>
           </Group>
         </Group>

@@ -12,6 +12,7 @@ import { CreateBillInput, createBillSchema } from "@/schemas/financial/bill.sche
 import BasicInformations from "./basic-informations";
 import Subscription from "./subscription";
 import CashOrInstallments from "./cash-or-installments";
+import FileUpload, { UploadedFile } from "@/components/FileUpload";
 import { KeyedMutator } from "swr";
 
 type Props = {
@@ -24,6 +25,7 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
 
     const [isLoading, setIsLoading] = useState(false);
     const [activeTab, setActiveTab] = useState<string | null>('cash-or-installments');
+    const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
     // Usamos o schema estático
 
@@ -80,9 +82,24 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
                 throw new Error("Failed to create bill");
             }
 
+            const createdBill = await response.json();
             notifications.show({ message: "Conta criada com sucesso", color: "green" });
             reset();
             onClose();
+            // Persistir anexos, se houver
+            if (uploadedFiles.length > 0) {
+                try {
+                    for (const f of uploadedFiles) {
+                        await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/bill-attachments`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ url: f.fileUrl, billId: createdBill.id }),
+                        });
+                    }
+                } catch (err) {
+                    console.error('Erro ao salvar anexos', err);
+                }
+            }
             mutate();
         } catch (error) {
             console.error(error);
@@ -118,6 +135,10 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
                 <ScrollArea.Autosize mah="70vh" type="always" p="xs">
                     <div className="space-y-6">
                         <BasicInformations  {...formControlProps as any}/>
+                        <div>
+                            <h3 className="text-sm font-medium mb-2">Anexos</h3>
+                            <FileUpload accept={undefined} multiple onComplete={(files) => setUploadedFiles(files)} />
+                        </div>
                         
                         <div>
                             <h2 className="text-lg font-semibold mb-2">Opções de Pagamento</h2>

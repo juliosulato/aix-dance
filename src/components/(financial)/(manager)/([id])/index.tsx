@@ -19,9 +19,14 @@ import deleteBills from "../delete";
 import UpdateBill from "../modals/UpdateBill";
 import dayjs from "dayjs";
 import { BillFromApi } from "..";
+
+// Local augmentation: the API returns attachments for bills; add a minimal type
+type Attachment = { id: string; url: string; createdAt: string };
+type BillWithAttachments = BillFromApi & { attachments?: Attachment[] };
 import { StatusTextToBadge } from "@/utils/statusTextToBadge";
 import { Divider, Flex, Text } from "@mantine/core";
 import Link from "next/link";
+import { Button } from "@mantine/core";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import PayBill from "../modals/PayBill";
 import { useSession } from "next-auth/react";
@@ -242,6 +247,37 @@ export default function BillView({ id }: { id: string }) {
           dayjs(bill?.dueDate).format("DD/MM/YYYY") || ""
         }?`}
       </ConfirmationModal>
+      {/* Attachments list with download buttons */}
+  {((bill as any) as BillWithAttachments).attachments && ((bill as any) as BillWithAttachments).attachments!.length > 0 && (
+        <div>
+          <Divider my="lg" label="Anexos" labelPosition="center" />
+          <div className="flex flex-col gap-3 mt-4">
+            {((bill as any) as BillWithAttachments).attachments!.map((att: Attachment) => (
+              <div key={att.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <Text size="sm" fw={500}>{att.url.split('/').pop()}</Text>
+                  <Text size="xs" c="dimmed">Anexado em: {dayjs(att.createdAt).format('DD/MM/YYYY HH:mm')}</Text>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="xs" variant="light" onClick={async () => {
+                    try {
+                      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/bill-attachments/${att.id}/url`);
+                      if (!res.ok) throw new Error('Failed to fetch attachment URL');
+                      const data = await res.json();
+                      const url = data.url || att.url;
+                      window.open(url, '_blank');
+                    } catch (e) {
+                      console.error('Download failed', e);
+                      // fallback: open stored URL
+                      window.open(att.url, '_blank');
+                    }
+                  }}>Baixar</Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

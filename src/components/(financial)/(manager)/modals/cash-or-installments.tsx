@@ -1,5 +1,5 @@
 import { CreateBillInput } from "@/schemas/financial/bill.schema";
-import { FileInput, NumberInput } from "@mantine/core";
+import { NumberInput } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import {
   Control,
@@ -9,7 +9,7 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
-import { HiOutlineUpload } from "react-icons/hi";
+// ...existing imports
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 dayjs.locale("pt-BR");
@@ -85,12 +85,7 @@ export default function CashOrInstallments({ control, errors, watch }: Props) {
       />
 
       <div className="md:col-span-2">
-        <FileInput
-          leftSection={<HiOutlineUpload />}
-          label={"Anexos"}
-          placeholder={"Selecione arquivos"}
-          multiple
-        />
+        {/* anexos agora são gerenciados no modal principal (NewBill) via FileUpload */}
       </div>
     </div>
   );

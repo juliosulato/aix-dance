@@ -47,11 +47,20 @@ function AvatarUpload({ defaultUrl, onUploadComplete }: Props) {
 
       const uploadToS3Response = await fetch(uploadUrl, {
         method: 'PUT',
+        mode: 'cors',
+        headers: {
+          // Envia Content-Disposition conforme a assinatura do S3
+          'Content-Disposition': `attachment; filename="${file.name}"`,
+        },
         body: file,
-        headers: { 'Content-Type': file.type },
       });
 
-      if (!uploadToS3Response.ok) throw new Error("Falha no upload para o S3.");
+      if (!uploadToS3Response.ok) {
+        // Loga o corpo da resposta para diagnóstico
+        const errorText = await uploadToS3Response.text();
+        console.error('S3 upload failed:', uploadToS3Response.status, errorText);
+        throw new Error("Falha no upload para o S3.");
+      }
 
       onUploadComplete(fileUrl);
       notifications.show({ color: "green", message: "Avatar enviado com sucesso!" });

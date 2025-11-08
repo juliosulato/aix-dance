@@ -6,7 +6,7 @@ model Tenancy {
     email        String @unique
     phoneNumber  String
 
-    enrollmentFee Decimal? @default(0)
+    enrollmentFee Decimal? @default(0) // NOVO CAMPO: Taxa de Matrícula
 
     language Languages
     timezone String    @default("America/Sao_Paulo")
@@ -30,12 +30,18 @@ model Tenancy {
     categoryGroups CategoryGroup[]
     formsOfReceipts FormsOfReceipt[]
     subscriptions  Subscription[]
-    sales          Sale[]
+    sales Sale[] // NOVO CAMPO: Relação inversa com Vendas
+
+    // Relações com o schema de inventário
+    products Product[] // Relação com produtos
+    productCategories ProductCategory[] // Relação com categorias de produtos
+    orders   Order[]   // Relação com pedidos
+    stockMovements StockMovement[] // Relação com movimentações de estoque
+
 
     createdAt      DateTime        @default(now())
     updatedAt      DateTime        @updatedAt
     lastAccess     DateTime        @updatedAt
-
     @@schema("tenancy")
 }
 
@@ -69,25 +75,28 @@ model Student {
     painOrDiscomfort   String?
     canLeaveAlone      Boolean @default(false)
     active             Boolean @default(true)
+  
 
     classes           StudentClass[]
     attendanceRecords AttendanceRecord[]
     history           StudentHistory[]
-    
-    // Relações com o schema financeiro
     bills             Bill[]
-    subscriptions     Subscription[]
-    sales             Sale[]
     contracts  StudentContract[] // Relação inversa adicionada
 
     address       Address?
     guardian      StudentGuardian[]
-    
+    subscriptions Subscription[]
+
+    sales Sale[]
+    orders Order[] // Encomendas do estudante
+
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@schema("tenancy")
 }
+
 
 model StudentHistory {
     id String @id @default(cuid())
@@ -101,6 +110,7 @@ model StudentHistory {
 
     @@schema("tenancy")
 }
+
 
 model StudentGuardian {
     id                 String  @id @default(cuid())
@@ -141,6 +151,7 @@ model Class {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
     active    Boolean  @default(true)
 
     @@schema("tenancy")
@@ -165,6 +176,7 @@ model StudentClass {
 
     student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
     class   Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+
     status StudentClassStatus @default(ACTIVE)
 
     enrolledAt DateTime  @default(now()) 
@@ -173,6 +185,8 @@ model StudentClass {
     @@unique([studentId, classId])
     @@schema("tenancy")
 }
+
+// NOVO ENUM para o status do aluno na turma
 enum StudentClassStatus {
     ACTIVE   // Aluno está a frequentar a turma
     INACTIVE // Aluno saiu da turma mas pode voltar
@@ -245,7 +259,7 @@ model Plan {
     fineGracePeriod       Int
 
     subscriptions Subscription[]
-    
+
     saleItems     SaleItem[] 
 
     @@schema("tenancy")
@@ -292,6 +306,7 @@ model Subscription {
 
     @@schema("tenancy")
 }
+
 
 enum SubscriptionStatus {
     ACTIVE

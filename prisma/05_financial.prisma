@@ -82,11 +82,21 @@ enum PaymentMethod {
 
 model Sale {
   id        Int    @id @default(autoincrement())
+  saleNumber  String    // Número da venda para controle
   tenancyId String
   studentId String
   
   totalAmount Decimal
   discountPercentage Float
+    // TRANSAÇÃO FINANCEIRA APENAS
+  paidAmount  Decimal   @default(0) // Quanto já foi pago
+  
+  // Tipos de entrega
+  fulfillmentType FulfillmentType @default(IMMEDIATE)
+  
+  // Referência ao pedido (apenas se for entrega futura)
+  orderId     String?   @unique // Link com logística
+  order       Order?    @relation(fields: [orderId], references: [id])
   
   items     SaleItem[]
   bills     Bill[]
@@ -95,27 +105,51 @@ model Sale {
   tenancy   Tenancy   @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
   
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([saleNumber, tenancyId])
   @@schema("financial")
 }
 
 model SaleItem {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   saleId      Int
   
+  type        SaleItemType @default(PLAN) // Tipo do item (plano ou produto)
   description String
   unitAmount  Decimal
-  quantity    Int      @default(1)
+  quantity    Int        @default(1)
+  totalAmount Decimal    // Quantidade * Valor unitário
   
+  // Para planos (matrículas, mensalidades)
   planId      String?  
-  plan        Plan?    @relation(fields: [planId], references: [id])
+  plan        Plan?      @relation(fields: [planId], references: [id], onDelete: SetNull)
   
-  // Futuramente:
-  // productId   String?
-  // product     Product? @relation(fields: [productId], references: [id])
+  // Para produtos físicos
+  productId   String?
+  product     Product?   @relation(fields: [productId], references: [id], onDelete: SetNull)
   
-  sale        Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  // Controle de estoque (apenas para produtos)
+  stockMovements StockMovement[] // Relação inversa com movimentações de estoque
+  
+  sale        Sale       @relation(fields: [saleId], references: [id], onDelete: Cascade)
   
   @@schema("financial")
+}
+
+
+enum FulfillmentType {
+    IMMEDIATE   // Entrega imediata (leva na hora)
+    SCHEDULED   // Entrega agendada (encomenda)
+    
+    @@schema("financial")
+}
+
+enum SaleItemType {
+    PLAN        // Item é um plano (matrícula, mensalidade)
+    PRODUCT     // Item é um produto físico
+    
+    @@schema("financial")
 }
 
 enum BillType {
@@ -129,6 +163,7 @@ enum BillStatus {
     PENDING
     PAID
     AWAITING_RECEIPT
+
     OVERDUE
     CANCELLED
 
@@ -259,4 +294,3 @@ model PaymentFee {
 
     @@schema("financial")
 }
-

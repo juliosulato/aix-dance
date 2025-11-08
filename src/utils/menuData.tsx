@@ -1,7 +1,7 @@
 // Início
 import { GrHomeRounded } from "react-icons/gr";
-import { MdOutlineBusinessCenter, MdPayment } from "react-icons/md";
-import { FiCalendar } from "react-icons/fi";
+import { MdBookmarkBorder, MdOutlineBusinessCenter, MdPayment } from "react-icons/md";
+import { FiCalendar, FiInbox } from "react-icons/fi";
 import { IoExtensionPuzzleOutline } from "react-icons/io5";
 
 // CRM
@@ -88,16 +88,16 @@ const useMenuData = () => {
         // { icon: <LuChartSpline />, label: "Relatórios", href: "/system/financial/reports" },
       ],
     },
-    // {
-    //   icon: <BsBox />,
-    //   label: "Estoque",
-    //   subitems: [
-    //     { icon: <BsBox />, label: "Controle de Estoque", href: "/system/estoque/controle" },
-    //     { icon: <FiInbox />, label: "Encomendas", href: "/system/estoque/encomendas" },
-    //     { icon: <MdBookmarkBorder />, label: "Produtos", href: "/system/estoque/produtos" },
-    //     { icon: <LuChartSpline />, label: "Relatórios", href: "/system/estoque/reports" },
-    //   ],
-    // },
+   {
+     icon: <BsBox />,
+     label: "Estoque",
+     subitems: [
+       { icon: <BsBox />, label: "Controle de Estoque", href: "/system/estoque/controle" },
+       { icon: <FiInbox />, label: "Encomendas", href: "/system/estoque/encomendas" },
+       { icon: <MdBookmarkBorder />, label: "Produtos", href: "/system/estoque/produtos" },
+      //  { icon: <LuChartSpline />, label: "Relatórios", href: "/system/estoque/reports" },
+     ],
+   },
     {
       icon: <IoExtensionPuzzleOutline />,
       label: "Outros",

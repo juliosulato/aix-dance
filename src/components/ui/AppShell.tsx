@@ -5,7 +5,7 @@ import { useDisclosure } from "@mantine/hooks";
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import useMenuData from "@/utils/menuData";
-import { TbCalendarEvent, TbSettings, TbUser } from "react-icons/tb";
+import { TbSettings, TbUser } from "react-icons/tb";
 import { BiSupport } from "react-icons/bi";
 import LogoSVG from "../Logo";
 import { HiOutlineChevronRight, HiOutlineChevronDown } from "react-icons/hi2";
@@ -13,14 +13,10 @@ import { signOut, useSession } from "next-auth/react";
 import NotificationBell from "./NotificationBell";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa";
-import { LuBrain, LuLogOut } from "react-icons/lu";
-import { MdGroups } from "react-icons/md";
-import { PiMoneyWavy } from "react-icons/pi";
+import { LuLogOut } from "react-icons/lu";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
     const [activeMain, setActiveMain] = useState<number | string | null>(null);
-    // mobileOpened represents whether the navbar is collapsed on mobile.
-    // Start as true so the mobile navbar is closed by default.
     const [mobileOpened, { toggle: toggleMobile }] = useDisclosure(true);
     const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(false);
     const pathname = usePathname();
@@ -46,10 +42,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 </div>
 
                 <div className="flex items-center justify-end gap-2 h-full px-4 md:px-6 w-full">
-                    {/* Burger shows opened when the menu is visible, so invert here to match collapsed state */}
                     <Burger opened={!mobileOpened} onClick={toggleMobile} hiddenFrom="xl" size="sm" />
-
-
 
                     <Menu position="bottom-end">
                         <Menu.Target>
@@ -60,13 +53,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                             </Tooltip>
                         </Menu.Target>
                         <Menu.Dropdown >
-                            <Menu.Item leftSection={<LuBrain />}>
+                            {/* <Menu.Item leftSection={<LuBrain />}>
                                 {"Novo Lead"}
-                            </Menu.Item>
+                            </Menu.Item> */}
                             <Menu.Item leftSection={<FaRegUser />}>
                                 {"Novo Aluno"}
                             </Menu.Item>
-                            <Menu.Item leftSection={<MdGroups />}>
+                            <Menu.Item leftSection={<FaRegUser />}>
+                                {"Novo Produto"}
+                            </Menu.Item>
+                            {/* <Menu.Item leftSection={<MdGroups />}>
                                 {"Nova Turma"}
                             </Menu.Item>
                             <Menu.Item leftSection={<PiMoneyWavy />}>
@@ -74,7 +70,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                             </Menu.Item>
                             <Menu.Item leftSection={<TbCalendarEvent />}>
                                 {"Novo Evento"}
-                            </Menu.Item>
+                            </Menu.Item> */}
                         </Menu.Dropdown>
                     </Menu>
 

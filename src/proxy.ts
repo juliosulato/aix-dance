@@ -3,7 +3,7 @@ import NextAuth from "next-auth";
 
 const { auth } = NextAuth(authConfig);
 
-export default auth(async function middleware(req) {
+export default auth(async function proxy(req) {
   const isLoggedIn = !!req.auth;
   const { pathname } = req.nextUrl;
 

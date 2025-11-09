@@ -141,7 +141,7 @@ export default function AllBanksData() {
                     label: "Nova Conta"
                 }}
                 baseUrl="/system/financial/bank-accounts/"
-                mutate={mutate}
+                mutate={mutate as any}
                 pageTitle={"Contas Bancárias"}
                 searchbarPlaceholder={"Pesquisar contas..."}
                 columns={[

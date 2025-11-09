@@ -12,10 +12,6 @@ import { GrUpdate } from "react-icons/gr";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import DataView from "@/components/ui/DataView";
 
-import dayjs from "dayjs";
-import 'dayjs/locale/pt-br';
-import 'dayjs/locale/en';
-import 'dayjs/locale/es';
 import NewCategoryBill from "./modals/NewCategory";
 import UpdateCategoryBill from "./modals/UpdateCategory";
 
@@ -143,7 +139,7 @@ export default function AllCategoryData() {
                     label: "Nova Categoria"
                 }}
                 baseUrl="/system/financial/categories/"
-                mutate={mutate}
+                mutate={mutate as any}
                 pageTitle={"Categorias"}
                 searchbarPlaceholder={"Procurar categorias..."}
                 columns={[

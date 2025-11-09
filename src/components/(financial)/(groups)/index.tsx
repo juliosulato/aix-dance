@@ -140,7 +140,7 @@ export default function AllCategoryGroupsData() {
                     label: "Novo Grupo"
                 }}
                 baseUrl="/system/financial/groups/"
-                mutate={mutate}
+                mutate={mutate as any}
                 pageTitle={"Grupos de Categorias"}
                 searchbarPlaceholder={"Pesquisar grupos..."}
                 columns={[

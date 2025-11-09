@@ -173,7 +173,7 @@ export default function FormsOfReceiptsView() {
           label: "Nova Forma de Recebimento",
         }}
         baseUrl="/system/financial/forms-of-receipt/"
-        mutate={mutate}
+        mutate={mutate as any}
         pageTitle={"Formas de Recebimento"}
         searchbarPlaceholder={"Pesquisar meios de recebimento..."}
         columns={[

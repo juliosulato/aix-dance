@@ -1,5 +1,4 @@
 import Breadcrumps from "@/components/ui/Breadcrumps";
-import { Plan } from "@prisma/client";
 import PlanView from "@/components/(academic)/(plans)/([id])";
 
 export default async function PlanPage({ params }: { params: Promise<{ id: string }> }) {

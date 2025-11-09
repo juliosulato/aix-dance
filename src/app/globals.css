@@ -17,7 +17,7 @@
 }
 
 body {
-  background: var(--background);
+  background: var(--background) !important;
   color: var(--foreground);
   font-family: var(--font-inter);
   font-size: 1rem;

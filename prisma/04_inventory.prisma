@@ -1,6 +1,6 @@
 model Product {
     id          String    @id @default(cuid())
-    sku         String    @unique 
+    sku         Int    @unique 
     name        String
     description String?
     price       Decimal?

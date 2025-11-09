@@ -17,10 +17,23 @@ export type FilterOption = { label: string; value: string; };
 export type Filter<T> = { key: keyof T; label: string; options: FilterOption[]; type: 'select'; };
 export type Column<T> = { key: keyof T; label: string; sortable?: boolean; render?: (value: any, item: T) => React.ReactNode; }
 
+interface PaginationInfo {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+}
+
+interface PaginatedResponse<T> {
+    products: T[];
+    pagination: PaginationInfo;
+}
+
 interface DataViewProps<T> {
     pageTitle: string;
     searchbarPlaceholder: string;
-    data: T[];
+    // data can be either an array or a paginated response from the server
+    data: T[] | PaginatedResponse<T>;
     renderCard: (item: T) => React.ReactNode;
     columns: Column<T>[];
     openNewModal?: { label: string; func: () => void; };
@@ -29,6 +42,9 @@ interface DataViewProps<T> {
     filters?: Filter<T>[];
     dateFilterOptions?: DateFilterOption<T>[];
     mutate?: KeyedMutator<T[]>;
+    // called when user requests a different page / page size in server-side pagination mode
+    // includes optional sort configuration when user orders columns
+    onPageChange?: (page: number, limit: number, sort?: SortConfig<T> | null) => void;
     baseUrl: string;
     disableTable?: boolean;
     renderHead?: () => React.ReactNode;
@@ -51,6 +67,7 @@ export default function DataView<T>({
     filters,
     dateFilterOptions,
     mutate,
+    onPageChange,
     baseUrl,
     disableTable,
     renderHead,
@@ -104,8 +121,12 @@ export default function DataView<T>({
         setPage(1);
     };
 
+    // normalize: accept either array or paginated response
+    const isServerPaginated = !Array.isArray(data);
+    const items: T[] = isServerPaginated ? (data as PaginatedResponse<T>).products : (data as T[]);
+
     const processedData = React.useMemo(() => {
-        let processed = [...data];
+        let processed = [...items];
         if (searchValue) {
             processed = processed.filter(item =>
                 Object.values(item as any).some(value =>
@@ -145,13 +166,26 @@ export default function DataView<T>({
             });
         }
         return processed;
-    }, [data, searchValue, activeFilters, dateFilter, sortConfig]);
+    }, [items, searchValue, activeFilters, dateFilter, sortConfig]);
 
     const itemsPerPage = parseInt(rowsPerPage, 10);
-    const totalPages = Math.ceil(processedData.length / itemsPerPage);
+    const totalCount = isServerPaginated ? (data as PaginatedResponse<T>).pagination.total : processedData.length;
+        const serverPage = isServerPaginated ? (data as PaginatedResponse<T>).pagination.page : activePage; // Use serverPage for pagination control
+        const serverLimit = isServerPaginated ? (data as PaginatedResponse<T>).pagination.limit : itemsPerPage; // Use serverLimit for pagination control
+    const totalPages = isServerPaginated ? (data as PaginatedResponse<T>).pagination.totalPages : Math.ceil(totalCount / itemsPerPage);
     const startIndex = (activePage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const paginatedData = processedData.slice(startIndex, endIndex);
+    const paginatedData = isServerPaginated ? items : processedData.slice(startIndex, endIndex);
+
+    // Adapter matching DataViewTable's expected onSort signature (Dispatch<SetStateAction<SortConfig<T>|null>>)
+    const onSortForTable: React.Dispatch<React.SetStateAction<SortConfig<T> | null>> = (v) => {
+        const newCfg = typeof v === 'function' ? (v as (prev: SortConfig<T>|null) => SortConfig<T>|null)(sortConfig) : v;
+        setSortConfig(newCfg);
+        if (isServerPaginated && typeof onPageChange === 'function') {
+            onPageChange(1, serverLimit, newCfg);
+            setPage(1);
+        }
+    };
 
     // ✨ LÓGICA DE IMPRESSÃO ATUALIZADA (SEM NOVA ABA) ✨
     const handlePrint = () => {
@@ -253,7 +287,7 @@ export default function DataView<T>({
                 onPrint={handlePrint}
             />
 
-            {data.length === 0 && (
+            {items.length === 0 && (
                 <div className="flex flex-col items-center justify-center h-full text-center bg-white gap-4 rounded-2xl shadow-sm p-3 md:p-6">
                     <Image src={notFound} alt="Nada encontrado" className="max-w-[250px]" />
                     <h2 className="font-semibold text-xl md:text-3xl">Ooops... não encontramos nada aqui.</h2>
@@ -273,7 +307,7 @@ export default function DataView<T>({
                 </div>
             )}
 
-            {data.length > 0 && !disableTable && activeView === "table" && (
+            {items.length > 0 && !disableTable && activeView === "table" && (
                 <DataViewTable
                     columns={columns}
                     data={paginatedData}
@@ -283,7 +317,7 @@ export default function DataView<T>({
                     RenderRowMenu={RenderRowMenu}
                     baseUrl={baseUrl}
                     sortConfig={sortConfig}
-                    onSort={setSortConfig}
+            onSort={onSortForTable}
                 />
             )}
 
@@ -295,18 +329,21 @@ export default function DataView<T>({
                 />
             )}
 
-            {processedData.length > 10 && (
+            {(totalCount) > 10 && (
                 <Grid align="center" className="mt-2 md:mt-4 p-4 py-6 md:p-6 lg:py-3 lg:px-6 rounded-3xl bg-white">
                     <Grid.Col span={{ base: 12, md: 4 }}>
                         <Text size="sm" c="dimmed" ta={{ base: 'center', md: 'left' }}>
-                            Mostrando {startIndex + 1}–{Math.min(endIndex, processedData.length)} de {processedData.length}
+                            Mostrando {isServerPaginated ? ((serverPage - 1) * serverLimit) + 1 : startIndex + 1}–{isServerPaginated ? Math.min(serverPage * serverLimit, totalCount) : Math.min(endIndex, processedData.length)} de {totalCount}
                         </Text>
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, md: 4 }}>
                         <Pagination
                             total={totalPages}
-                            value={activePage}
-                            onChange={setPage}
+                            value={isServerPaginated ? serverPage : activePage}
+                            onChange={(p) => {
+                                setPage(p);
+                                if (isServerPaginated && typeof onPageChange === 'function') onPageChange(p, serverLimit);
+                            }}
                             radius="md"
                             size="md"
                             className="justify-center justify-self-center"
@@ -317,8 +354,10 @@ export default function DataView<T>({
                             value={rowsPerPage}
                             label={"Linhas por página"}
                             onChange={value => {
-                                setRowsPerPage(value || '12');
+                                const newLimit = value || '12';
+                                setRowsPerPage(newLimit);
                                 setPage(1);
+                                if (isServerPaginated && typeof onPageChange === 'function') onPageChange(1, parseInt(newLimit, 10));
                             }}
                             data={activeView === "table" ? ['10', '20', '50', '100'] : ['12', '24', '48', '96']}
                             className="ml-auto"

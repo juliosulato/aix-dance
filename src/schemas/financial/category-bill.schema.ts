@@ -9,8 +9,8 @@ export const createCategoryBillSchema = z.object({
   type: z.enum([BillCategoryType.FIXED, BillCategoryType.VARIABLE], {
     message: 'Tipo é obrigatório',
   }),
-  groupId: z.string().cuid2({ message: 'Grupo de categoria inválido' }).optional().nullable(),
-  parentId: z.string().cuid2({ message: 'Categoria pai inválida' }).optional().nullable(),
+  groupId: z.string().optional().nullable(),
+  parentId: z.string().optional().nullable(),
 });
 
 export const updateCategoryBillSchema = createCategoryBillSchema.partial();

@@ -36,17 +36,27 @@ export default function AllPlansData() {
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
+  type Item = Plan;
+  type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
+  type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
+
   const {
     data: categoryGroups,
     error,
     isLoading,
     mutate,
-  } = useSWR<Plan[]>(
+  } = useSWR<Item[] | PaginatedResponseLocal<Item>>(
     () =>
       sessionData?.user?.tenancyId
         ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/plans`
         : null,
-    fetcher
+    async (url: string) => {
+      const res = await fetcher<any>(url);
+      const itemsRaw: Plan[] = Array.isArray(res) ? res : res.plans ?? res.products ?? [];
+      if (Array.isArray(res)) return itemsRaw;
+      const pagination = res.pagination ?? { page: 1, limit: itemsRaw.length || 10, total: itemsRaw.length, totalPages: 1 };
+      return { products: itemsRaw, pagination } as PaginatedResponseLocal<Item>;
+    }
   );
 
   const handleUpdateClick = (plan: Plan) => {
@@ -85,7 +95,7 @@ export default function AllPlansData() {
     }
 
     try {
-      await deletePlans(finalIdsToDelete, tenancyId, mutate as any);
+  await deletePlans(finalIdsToDelete, tenancyId, mutate);
     } catch (error) {
       console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);
     } finally {

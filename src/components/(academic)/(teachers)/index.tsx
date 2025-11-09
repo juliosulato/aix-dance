@@ -42,11 +42,22 @@ export default function AllTeachersData() {
     const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-    const { data: teachers, error, isLoading, mutate } = useSWR<TeacherFromApi[]>(
+    type Item = TeacherFromApi & { fullName: string };
+    type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
+    type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
+
+    const { data: teachers, error, isLoading, mutate } = useSWR<Item[] | PaginatedResponseLocal<Item>>(
         () => sessionData?.user?.tenancyId
             ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/users?role=TEACHER`
             : null,
-        fetcher
+        async (url: string) => {
+            const res = await fetcher<any>(url);
+            const itemsRaw: TeacherFromApi[] = Array.isArray(res) ? res : res.teachers ?? res.users ?? [];
+            const items: Item[] = itemsRaw.map(t => ({ ...t, fullName: t.firstName + " " + t.lastName }));
+            if (Array.isArray(res)) return items;
+            const pagination = res.pagination ?? { page: 1, limit: items.length || 10, total: items.length, totalPages: 1 };
+            return { products: items, pagination } as PaginatedResponseLocal<Item>;
+        }
     );
 
     const handleUpdateClick = (teacher: TeacherFromApi) => {
@@ -133,21 +144,19 @@ export default function AllTeachersData() {
     if (status !== "authenticated") return <div>Sessão inválida</div>;
     if (error) return <p>{"Erro inesperado"}</p>;
 
-    const d = teachers?.map((teacher) => ({
-        ...teacher,
-        fullName: teacher.firstName + " " + teacher.lastName
-    }));
+    // `teachers` is already normalized by the fetcher to either Item[] or PaginatedResponseLocal<Item>
+    const dataForDataView = teachers ?? [];
 
     return (
         <>
             <DataView<TeacherFromApi & { fullName: string; }>
-                data={d || []}
+                data={dataForDataView}
                 openNewModal={{
                     func: () => setOpenNew(true),
                     label: "Novo Professor"
                 }}
                 baseUrl="/system/academic/teachers/"
-                mutate={mutate as any}
+                mutate={mutate}
                 pageTitle={"Professores"}
                 searchbarPlaceholder={"Pesquisar professores..."}
                 columns={[

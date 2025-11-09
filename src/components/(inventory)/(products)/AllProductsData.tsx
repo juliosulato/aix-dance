@@ -210,7 +210,7 @@ export default function AllProductsData() {
             sortable: true,
           },
           {
-            key: "inventory",
+            key: "stock",
             label: "Quantidade",
             sortable: true,
           },
@@ -262,7 +262,7 @@ export default function AllProductsData() {
                 currency: "BRL",
               }).format(Number(item.price))}
               <span>
-                <strong>{"Quantidade"}:</strong> {item.inventory}
+                <strong>{"Quantidade"}:</strong> {item.stock}
               </span>
             </div>
           </>

@@ -15,25 +15,36 @@ type SaleFromApi = Sale & {
     items: SaleItem[];
 };
 
+
 type Props = {
     tenancyId: string;
     studentId: string;
 };
 
 export default function StudentSalesHistory({ tenancyId, studentId }: Props) {
-    const { data: sessionData, status } = useSession();
+    const { status } = useSession();
 
-    const { data: sales, error, isLoading } = useSWR<SaleFromApi[]>(
+    type Item = SaleFromApi;
+    type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
+    type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
+
+    const { data: sales, error, isLoading } = useSWR<Item[] | PaginatedResponseLocal<Item>>(
         () => (tenancyId && studentId)
             ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/sales?studentId=${studentId}`
             : null,
-        fetcher
+        async (url: string) => {
+            const res = await fetcher<any>(url);
+            const itemsRaw: SaleFromApi[] = Array.isArray(res) ? res : res.sales ?? [];
+            if (Array.isArray(res)) return itemsRaw;
+            const pagination = res.pagination ?? { page: 1, limit: itemsRaw.length || 10, total: itemsRaw.length, totalPages: 1 };
+            return { products: itemsRaw, pagination } as PaginatedResponseLocal<Item>;
+        }
     );
 
     if (status === "loading" || isLoading) return <LoadingOverlay visible />;
     if (status !== "authenticated") return <div>Sessão inválida</div>;
     if (error) return <p>Erro ao carregar dados</p>;
-    if (!sales || sales.length === 0) {
+    if (!sales || (Array.isArray(sales) && sales.length === 0) || (!Array.isArray(sales) && sales.products.length === 0)) {
         return (
             <div className="bg-white p-4 md:p-6 lg:p-8 rounded-2xl shadow mt-6">
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">Histórico de Vendas</h2>
@@ -45,7 +56,7 @@ export default function StudentSalesHistory({ tenancyId, studentId }: Props) {
     return (
         <div className="bg-white p-4 md:p-6 lg:p-8 rounded-2xl shadow mt-6">
             <DataView<SaleFromApi>
-                data={sales}
+                data={sales ?? []}
                 pageTitle="Histórico de Vendas"
                 baseUrl="/system/sales"
                 searchbarPlaceholder="Buscar vendas..."

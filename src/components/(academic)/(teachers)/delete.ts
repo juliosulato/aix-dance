@@ -1,14 +1,18 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { Plan } from "@prisma/client";
+import { TeacherFromApi } from "./modals/UpdateTeacher";
 
-async function deleteStudents(
-  items: Plan | string[],
+type Item = TeacherFromApi & { fullName?: string };
+type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
+type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
+
+async function deleteUsers(
+  items: string[] | string,
   tenancyId: string,
-  mutate?: KeyedMutator<Plan[]>
+  mutate?: KeyedMutator<Item[] | PaginatedResponseLocal<Item>>
 ) {
   const isArray = Array.isArray(items);
-  const idsToDelete = isArray ? items : [items.id];
+  const idsToDelete = isArray ? items : [items];
 
   if (idsToDelete.length === 0) {
     notifications.show({
@@ -18,17 +22,24 @@ async function deleteStudents(
     return;
   }
 
-  const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students`;
+  const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/users`;
 
-  // Atualização otimista da UI
-  mutate &&
-    (await mutate(
-      (currentData) =>
-        currentData?.filter((pm) => !idsToDelete.includes(pm.id)) || [],
-      {
-        revalidate: false,
-      }
-    ));
+  // Atualização otimista da UI (suporta array ou paginated response)
+  if (mutate) {
+    await mutate(
+      (currentData: any) => {
+        if (!currentData) return currentData;
+        if (Array.isArray(currentData)) {
+          return currentData.filter((pm) => !idsToDelete.includes(pm.id));
+        }
+        if (currentData.products && Array.isArray(currentData.products)) {
+          return { ...currentData, products: currentData.products.filter((pm: any) => !idsToDelete.includes(pm.id)) };
+        }
+        return currentData;
+      },
+      { revalidate: false }
+    );
+  }
 
   notifications.show({
     title: "Aguarde...",
@@ -46,7 +57,7 @@ async function deleteStudents(
     });
 
     if (!response.ok) {
-      throw new Error("Falha ao excluir os estudantes na API.");
+      throw new Error("Falha ao excluir os usuários na API.");
     }
 
     notifications.clean();
@@ -54,14 +65,15 @@ async function deleteStudents(
       message: "Registros excluídos com sucesso!",
       color: "green",
     });
-  } catch (error) {
+  } catch (err) {
+    console.error(err);
     notifications.show({
       message: "Ocorreu um erro interno. Tente novamente.",
       color: "red",
     });
     // Reverte a UI em caso de erro
-    mutate && mutate();
+    if (mutate) await mutate();
   }
 }
 
-export default deleteStudents;
+export default deleteUsers;

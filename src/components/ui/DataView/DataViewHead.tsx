@@ -10,6 +10,18 @@ import { FaFilter, FaPrint } from "react-icons/fa"; // Adicionado FaPrint
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 
+type PaginationInfo = {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+}
+
+type PaginatedResponse<T> = {
+    products: T[];
+    pagination: PaginationInfo;
+}
+
 interface DataViewProps<T> {
     pageTitle: string;
     searchbarPlaceholder: string;
@@ -26,7 +38,7 @@ interface DataViewProps<T> {
     dateFilterOptions?: DateFilterOption<T>[];
     dateFilter: DateFilter<T> | null;
     onDateFilterChange: React.Dispatch<React.SetStateAction<DateFilter<T> | null>>;
-    mutate?: KeyedMutator<T[]>;
+    mutate?: KeyedMutator<T[] | PaginatedResponse<T>>;
     disableTable?: boolean;
     renderHead?: () => React.ReactNode;
     printable?: boolean; // ✨ NOVA PROPRIEDADE

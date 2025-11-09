@@ -2,10 +2,13 @@ import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { Class } from "@prisma/client";
 
+type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
+type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
+
 async function arquivarTurmas(
   idsParaArquivar: string[],
   tenancyId: string,
-  mutate?: KeyedMutator<Class[]>
+  mutate?: KeyedMutator<Class[] | PaginatedResponseLocal<Class>>
 ) {
   if (idsParaArquivar.length === 0) {
     notifications.show({
@@ -18,14 +21,17 @@ async function arquivarTurmas(
   const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/classes`;
 
   // Atualização otimista da UI: remove as turmas da lista visível
-  mutate &&
-    (await mutate(
-      (dadosAtuais) =>
-        dadosAtuais?.filter((c) => !idsParaArquivar.includes(c.id)) || [],
-      {
-        revalidate: false,
-      }
-    ));
+  if (mutate) {
+    await mutate(
+      (dadosAtuais: any) => {
+        if (!dadosAtuais) return dadosAtuais;
+        if (Array.isArray(dadosAtuais)) return dadosAtuais.filter((c) => !idsParaArquivar.includes(c.id));
+        if (dadosAtuais.products && Array.isArray(dadosAtuais.products)) return { ...dadosAtuais, products: dadosAtuais.products.filter((c: any) => !idsParaArquivar.includes(c.id)) };
+        return dadosAtuais;
+      },
+      { revalidate: false }
+    );
+  }
 
   notifications.show({
     title: "Aguarde",
@@ -59,16 +65,16 @@ async function arquivarTurmas(
       color: "green",
     });
 
-    // Revalida os dados do SWR para garantir consistência, mas não reverte a UI otimista
-    mutate && mutate();
+  // Revalida os dados do SWR para garantir consistência, mas não reverte a UI otimista
+  if (mutate) await mutate();
   } catch (error) {
     console.error("Erro ao arquivar turmas:", error);
     notifications.show({
       message: "Ocorreu um erro interno ao arquivar as turmas.",
       color: "red",
     });
-    // Reverte a UI em caso de erro, trazendo as turmas de volta
-    mutate && mutate();
+  // Reverte a UI em caso de erro, trazendo as turmas de volta
+  if (mutate) await mutate();
   }
 }
 

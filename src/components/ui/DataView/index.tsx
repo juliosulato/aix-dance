@@ -41,7 +41,7 @@ interface DataViewProps<T> {
     RenderAllRowsMenu?: (selectedRows: string[]) => React.ReactNode;
     filters?: Filter<T>[];
     dateFilterOptions?: DateFilterOption<T>[];
-    mutate?: KeyedMutator<T[]>;
+    mutate?: KeyedMutator<T[] | PaginatedResponse<T>>;
     // called when user requests a different page / page size in server-side pagination mode
     // includes optional sort configuration when user orders columns
     onPageChange?: (page: number, limit: number, sort?: SortConfig<T> | null) => void;

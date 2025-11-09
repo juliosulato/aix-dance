@@ -28,6 +28,8 @@ import UpdateStudent from "./modals/UpdateStudent";
 import { Class } from "@prisma/client";
 import { StudentFromApi } from "./StudentFromApi";
 
+
+
 interface MenuItemProps {
   student: StudentFromApi;
   onUpdateClick: (b: StudentFromApi) => void;
@@ -51,17 +53,28 @@ export default function AllStudentsData() {
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
+  type Item = StudentFromApi & { fullName: string };
+  type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
+  type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
+
   const {
     data: students,
     error,
     isLoading,
     mutate,
-  } = useSWR<StudentFromApi[]>(
+  } = useSWR<Item[] | PaginatedResponseLocal<Item>>(
     () =>
       sessionData?.user?.tenancyId
         ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/students`
         : null,
-    fetcher
+    async (url: string) => {
+      const res = await fetcher<any>(url);
+      const itemsRaw: StudentFromApi[] = Array.isArray(res) ? res : res.students ?? [];
+      const items: Item[] = itemsRaw.map((s) => ({ ...s, fullName: `${s.firstName} ${s.lastName}` }));
+      if (Array.isArray(res)) return items;
+      const pagination = res.pagination ?? { page: 1, limit: items.length || 10, total: items.length, totalPages: 1 };
+      return { products: items, pagination } as PaginatedResponseLocal<Item>;
+    }
   );
 
   const handleUpdateClick = (student: StudentFromApi) => {
@@ -173,18 +186,13 @@ export default function AllStudentsData() {
   return (
     <>
       <DataView<StudentFromApi & { fullName: string }>
-        data={
-          students?.map((student) => ({
-            ...student,
-            fullName: `${student.firstName} ${student.lastName}`,
-          })) || []
-        }
+        data={students ?? []}
         openNewModal={{
           func: () => setOpenNew(true),
           label: "Novo Aluno",
         }}
-        baseUrl="/system/academic/students/"
-        mutate={mutate as any}
+    baseUrl="/system/academic/students/"
+    mutate={mutate}
         pageTitle={"Alunos e Matrículas"}
         searchbarPlaceholder={"Procure por nome, CPF ou e-mail do aluno..."}
         columns={[

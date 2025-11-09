@@ -15,17 +15,22 @@ type Props = {
 };
 
 export default function NewClass__AboutOfClass({ control, errors, tenancyId }: Props) {
-    const { data: modalities } = useSWR<Modality[]>(
+    type Paginated<T> = { [k: string]: T[] } & { pagination?: { page: number; limit: number; total: number; totalPages: number } };
+
+    const { data: modalities } = useSWR<Modality[] | Paginated<Modality>>(
         () => tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/modalities` : null,
         fetcher
     );
-    const { data: teachers } = useSWR<User[]>(
+    const { data: teachers } = useSWR<User[] | Paginated<User>>(
         () => tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/users?role=TEACHER` : null,
         fetcher
     );
 
-    const modalityOptions = modalities?.map((m) => ({ label: m.name, value: m.id })) || [];
-    const teacherOptions = teachers?.map((t) => ({ label: `${t.firstName} ${t.lastName}`, value: t.id })) || [];
+    const modalitiesArray: Modality[] = Array.isArray(modalities) ? modalities : (modalities && (modalities.modalities ?? modalities.products ?? modalities.users ?? [])) || [];
+    const teachersArray: User[] = Array.isArray(teachers) ? teachers : (teachers && (teachers.users ?? teachers.products ?? teachers.teachers ?? [])) || [];
+
+    const modalityOptions = modalitiesArray.map((m) => ({ label: m.name, value: m.id })) || [];
+    const teacherOptions = teachersArray.map((t) => ({ label: `${t.firstName} ${t.lastName}`, value: t.id })) || [];
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

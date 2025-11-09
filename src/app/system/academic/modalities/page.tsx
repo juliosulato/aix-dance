@@ -1,4 +1,3 @@
-import AllStudentsData from "@/components/(academic)/(students)";
 import AllModalityData from "@/components/(academic)/(modalities)/AllModalityData";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 

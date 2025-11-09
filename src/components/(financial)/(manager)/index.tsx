@@ -67,12 +67,19 @@ export default function AllBillsData() {
 
     const [activeTab, setActiveTab] = useState<string | null>('payable');
 
-    const { data: parentBills, error, isLoading, mutate } = useSWR<BillFromApi[]>(
+    type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
+    type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
+
+    const { data: parentBillsData, error, isLoading, mutate } = useSWR<BillFromApi[] | PaginatedResponseLocal<BillFromApi>>(
         () => sessionData?.user?.tenancyId
             ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/bills`
             : null,
         fetcher
     );
+
+    const parentBills: BillFromApi[] | undefined = Array.isArray(parentBillsData)
+        ? parentBillsData
+        : (parentBillsData as any)?.products ?? (parentBillsData as any)?.bills ?? undefined;
 
     const allBills = useMemo(() => {
         if (!parentBills) return [];

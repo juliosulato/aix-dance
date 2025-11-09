@@ -1,14 +1,17 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { Plan } from "@prisma/client";
+import { UserFromApi } from "./UserFromApi";
+
+type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
+type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
 
 async function deleteUsers(
-  items: Plan | string[],
+  items: string[] | { id?: string },
   tenancyId: string,
-  mutate?: KeyedMutator<Plan[]>
+  mutate?: KeyedMutator<UserFromApi[] | PaginatedResponseLocal<UserFromApi>>
 ) {
   const isArray = Array.isArray(items);
-  const idsToDelete = isArray ? items : [items.id];
+  const idsToDelete = isArray ? items as string[] : [(items as { id?: string }).id].filter(Boolean) as string[];
 
   if (idsToDelete.length === 0) {
     notifications.show({
@@ -20,7 +23,7 @@ async function deleteUsers(
 
   const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/users`;
 
-  // Atualização otimista da UI
+  // Atualização otimista da UI (simples: revalidate)
   if (mutate) {
     mutate();
   }

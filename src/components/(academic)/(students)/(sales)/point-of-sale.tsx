@@ -59,9 +59,18 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
     
     // --- Hooks de data fetching ---
     const { data: tenancy } = useSWR<Tenancy>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}`, fetcher);
-    const { data: plans } = useSWR<Plan[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/plans`, fetcher);
-    const { data: students } = useSWR<Student[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students`, fetcher);
-    const { data: formsOfReceipt } = useSWR<FormsOfReceipt[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/forms-of-receipt`, fetcher);
+
+    type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
+    type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
+
+    const { data: plansData } = useSWR<Plan[] | PaginatedResponseLocal<Plan>>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/plans`, fetcher);
+    const plans = Array.isArray(plansData) ? plansData : (plansData as any)?.products ?? (plansData as any)?.plans ?? undefined;
+
+    const { data: studentsData } = useSWR<Student[] | PaginatedResponseLocal<Student>>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students`, fetcher);
+    const students = Array.isArray(studentsData) ? studentsData : (studentsData as any)?.products ?? (studentsData as any)?.students ?? undefined;
+
+    const { data: formsOfReceiptData } = useSWR<FormsOfReceipt[] | PaginatedResponseLocal<FormsOfReceipt>>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/forms-of-receipt`, fetcher);
+    const formsOfReceipt = Array.isArray(formsOfReceiptData) ? formsOfReceiptData : (formsOfReceiptData as any)?.products ?? (formsOfReceiptData as any)?.formsOfReceipt ?? undefined;
 
     // --- Estados do Componente ---
     const [searchTerm, setSearchTerm] = useState('');
@@ -87,14 +96,31 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
     // --- Buscar status do aluno selecionado ---
     const selectedStudent = useMemo(() => {
         if (!students || !selectedStudentId) return undefined;
-        return students.find(s => s.id === selectedStudentId);
+        return students.find((s: Student) => s.id === selectedStudentId);
     }, [students, selectedStudentId]);
 
     // --- Lógica de Produtos e Carrinho ---
+    // UUID generator with fallbacks (crypto.randomUUID -> crypto.getRandomValues -> Math.random)
+    const generateId = (): string => {
+        if (typeof crypto !== 'undefined' && typeof (crypto as any).randomUUID === 'function') {
+            try { return (crypto as any).randomUUID(); } catch { /* fallback below */ }
+        }
+        if (typeof crypto !== 'undefined' && typeof (crypto as any).getRandomValues === 'function') {
+            const arr = new Uint8Array(16);
+            (crypto as any).getRandomValues(arr);
+            arr[6] = (arr[6] & 0x0f) | 0x40;
+            arr[8] = (arr[8] & 0x3f) | 0x80;
+            const toHex = (n: number) => n.toString(16).padStart(2, '0');
+            let i = 0;
+            return `${toHex(arr[i++])}${toHex(arr[i++])}${toHex(arr[i++])}${toHex(arr[i++])}-${toHex(arr[i++])}${toHex(arr[i++])}-${toHex(arr[i++])}${toHex(arr[i++])}-${toHex(arr[i++])}${toHex(arr[i++])}-${toHex(arr[i++])}${toHex(arr[i++])}${toHex(arr[i++])}${toHex(arr[i++])}${toHex(arr[i++])}${toHex(arr[i++])}`;
+        }
+        // last resort (not cryptographically secure)
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; const v = c === 'x' ? r : (r & 0x3 | 0x8); return v.toString(16); });
+    };
     const availableProducts = useMemo((): Product[] => {
         const productList: Product[] = [];
         if (tenancy?.enrollmentFee && Number(tenancy.enrollmentFee) > 0) productList.push({ id: 'enrollment-fee', name: 'Taxa de Matrícula', amount: Number(tenancy.enrollmentFee), isPlan: false, isEnrollmentFee: true });
-        if (plans) plans.forEach(plan => productList.push({ id: plan.id, name: plan.name, amount: Number(plan.amount), isPlan: true }));
+    if (plans) plans.forEach((plan: Plan) => productList.push({ id: plan.id, name: plan.name, amount: Number(plan.amount), isPlan: true }));
         return productList;
     }, [tenancy, plans]);
 
@@ -113,7 +139,7 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
             notifications.show({ title: 'Aviso', message: 'A taxa de matrícula já foi adicionada.', color: 'yellow' });
             return;
         }
-        setCart(prev => [...prev, { cartId: crypto.randomUUID(), productId: product.id, name: product.name, amount: product.amount, isPlan: product.isPlan, isEnrollmentFee: product.isEnrollmentFee }]);
+    setCart(prev => [...prev, { cartId: generateId(), productId: product.id, name: product.name, amount: product.amount, isPlan: product.isPlan, isEnrollmentFee: product.isEnrollmentFee }]);
     };
     const removeFromCart = (cartId: string) => setCart(prev => prev.filter(item => item.cartId !== cartId));
     const cartSubtotal = useMemo(() => cart.reduce((total, item) => total + item.amount, 0), [cart]);
@@ -139,7 +165,7 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
         for (let i = 0; i < count; i++) {
             const p = payments[i] || { formsOfReceiptId: undefined, installments: 1 };
             const assignedBase = i === count - 1 ? Number((baseShare + remainder).toFixed(2)) : baseShare;
-            const f = formsOfReceipt.find(fr => fr.id === p.formsOfReceiptId) as any;
+            const f = formsOfReceipt.find((fr: FormsOfReceipt) => fr.id === p.formsOfReceiptId) as any;
             if (!f) continue;
             const feeRow = Array.isArray(f.fees) ? f.fees.find((rr: any) => (p.installments ?? 1) >= rr.minInstallments && (p.installments ?? 1) <= rr.maxInstallments) : null;
             if (feeRow && feeRow.customerInterest) {
@@ -285,7 +311,7 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
         }
     };
 
-    const preselectedStudent = useMemo(() => students?.find(s => s.id === preselectedStudentId), [students, preselectedStudentId]);
+    const preselectedStudent = useMemo(() => students?.find((s: Student) => s.id === preselectedStudentId), [students, preselectedStudentId]);
 
     return (
         <div>
@@ -382,7 +408,7 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
                                                     onChange={e => field.onChange(e || "")}
                                                     searchable
                                                     className="w-full p-2 border border-neutral-300 rounded-md"
-                                                    data={students?.map(s => ({
+                                                    data={students?.map((s: Student) => ({
                                                         label: `${s.firstName} ${s.lastName}`,
                                                         value: s.id
                                                     }))}
@@ -405,10 +431,10 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
                                                     </div>
 
                                                     <div className='grid grid-cols-1 md:grid-cols-2 lg:col-span-3 items-center justify-center gap-2'>
-                                                        <Controller name={`payments.${index}.formsOfReceiptId`} control={control} render={({ field }) => (<Select data={formsOfReceipt?.map(p => ({ value: p.id, label: p.name })) || []} value={field.value} onChange={field.onChange} placeholder="Forma de pagamento" label="Forma de pagamento" size="md" radius="md" />)} />
+                                                        <Controller name={`payments.${index}.formsOfReceiptId`} control={control} render={({ field }) => (<Select data={formsOfReceipt?.map((p: FormsOfReceipt) => ({ value: p.id, label: p.name })) || []} value={field.value} onChange={field.onChange} placeholder="Forma de pagamento" label="Forma de pagamento" size="md" radius="md" />)} />
                                                         <Controller name={`payments.${index}.installments`} control={control} render={({ field }) => {
                                                             // determine selected formsOfReceipt fees to set min/max
-                                                            const selectedForm = formsOfReceipt?.find(f => f.id === (watch(`payments.${index}.formsOfReceiptId`) as string)) as any;
+                                                            const selectedForm = formsOfReceipt?.find((f: FormsOfReceipt) => f.id === (watch(`payments.${index}.formsOfReceiptId`) as string)) as any;
                                                             const feesArray = Array.isArray(selectedForm?.fees) ? selectedForm.fees : [];
                                                             const feeRow = feesArray.find((fr: any) => field.value >= fr.minInstallments && field.value <= fr.maxInstallments) || feesArray[0];
                                                             const min = feeRow?.minInstallments ?? 1;
@@ -451,7 +477,7 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
                     }}
                     studentId={selectedStudentId}
                     onConfirm={handleConfirmContractFromModal}
-                    planContext={plans?.find(p => p.id === currentItemForContract.productId)}
+                    planContext={plans?.find((p: Plan) => p.id === currentItemForContract.productId)}
                 />
             )}
         </div>

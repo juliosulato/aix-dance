@@ -1,30 +1,39 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { CategoryGroup } from "@prisma/client";
+import { Modality } from "@prisma/client";
+
+type Item = Modality;
+type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
+type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
 
 async function deleteModalities(
-    items: CategoryGroup | string[],
+    items: string[] | string,
     tenancyId: string,
-    mutate?: KeyedMutator<CategoryGroup[]>,
+    mutate?: KeyedMutator<Item[] | PaginatedResponseLocal<Item>>,
 ) {
     const isArray = Array.isArray(items);
-    const idsToDelete = isArray ? items : [items.id];
+    const idsToDelete = isArray ? items : [items];
 
     if (idsToDelete.length === 0) {
-        notifications.show({ message: "Nenhuma forma de pagamento selecionada.", color: "red" });
+        notifications.show({ message: "Nenhuma forma selecionada.", color: "red" });
         return;
     }
 
     const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/modalities`;
 
-    mutate && await mutate(
-        (currentData) => currentData?.filter(pm => !idsToDelete.includes(pm.id)) || [],
-        {
-            revalidate: false,
-        }
-    );
+    if (mutate) {
+        await mutate(
+            (currentData: any) => {
+                if (!currentData) return currentData;
+                if (Array.isArray(currentData)) return currentData.filter((pm: any) => !idsToDelete.includes(pm.id));
+                if (currentData.products && Array.isArray(currentData.products)) return { ...currentData, products: currentData.products.filter((pm: any) => !idsToDelete.includes(pm.id)) };
+                return currentData;
+            },
+            { revalidate: false }
+        );
+    }
 
-    notifications.show({ title: "Aguarde...", message: "Excluindo formas de pagamento...", color: "yellow" });
+    notifications.show({ title: "Aguarde...", message: "Excluindo itens...", color: "yellow" });
 
     try {
         const response = await fetch(apiUrl, {
@@ -40,11 +49,11 @@ async function deleteModalities(
         }
 
         notifications.clean();
-        notifications.show({ message: "Modalidades excluídas com sucesso", color: "green" });
-        
-    } catch (error) {
+        notifications.show({ message: "Itens excluídos com sucesso", color: "green" });
+    } catch (err) {
+        console.error(err);
         notifications.show({ message: "Erro interno do sistema", color: "red" });
-        mutate && mutate();
+        if (mutate) await mutate();
     }
 }
 

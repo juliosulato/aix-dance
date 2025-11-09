@@ -43,19 +43,28 @@ export default function AllUsersData() {
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
+  type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
+  type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
+
   const {
-    data: users,
+    data: usersData,
     error,
     isLoading,
     mutate,
-  } = useSWR<UserFromApi[]>(
+  } = useSWR<UserFromApi[] | PaginatedResponseLocal<UserFromApi>>(
     () =>
       sessionData?.user?.tenancyId
         ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/users`
         : null,
     fetcher
   );
-  const d = users
+
+  // Normalize provider shapes: accept array or paginated object (with `products` or `users` key)
+  const usersArray: UserFromApi[] | undefined = Array.isArray(usersData)
+    ? usersData
+    : (usersData as any)?.products ?? (usersData as any)?.users ?? undefined;
+
+  const d = usersArray
     ?.filter((user) => !user.teacher)
     ?.map((user) => ({
       ...user,
@@ -92,7 +101,7 @@ export default function AllUsersData() {
     }
 
     try {
-      if (users?.length === 1) {
+      if (usersArray?.length === 1) {
         return notifications.show({
           message: "Não é possível excluir o último usuário.",
           color: "red",
@@ -162,7 +171,7 @@ export default function AllUsersData() {
           label: "Novo Usuário",
         }}
         baseUrl=""
-        mutate={mutate as any}
+          mutate={mutate as any}
         pageTitle={"Usuários"}
         searchbarPlaceholder={"Pesquisar usuários por nome, e-mail..."}
         columns={[

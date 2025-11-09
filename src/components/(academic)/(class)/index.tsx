@@ -57,18 +57,28 @@ export default function AllClassesData() {
   const [idsToArchive, setIdsToArchive] = useState<string[]>([]); // ATUALIZADO: Nomenclatura
   const [isArchiving, setIsArchiving] = useState<boolean>(false); // ATUALIZADO: Nomenclatura
 
-  // A SWR fetch continua a mesma, pois o backend por default retorna apenas turmas ativas
+  type Item = ClassFromApi;
+  type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
+  type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
+
   const {
     data: classes,
     error,
     isLoading,
     mutate,
-  } = useSWR<ClassFromApi[]>(
+  } = useSWR<Item[] | PaginatedResponseLocal<Item>>(
     () =>
       sessionData?.user?.tenancyId
         ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/classes`
         : null,
-    fetcher
+    async (url: string) => {
+      const res = await fetcher<any>(url);
+      const itemsRaw: ClassFromApi[] = Array.isArray(res) ? res : res.classes ?? [];
+      const items: Item[] = itemsRaw;
+      if (Array.isArray(res)) return items;
+      const pagination = res.pagination ?? { page: 1, limit: items.length || 10, total: items.length, totalPages: 1 };
+      return { products: items, pagination } as PaginatedResponseLocal<Item>;
+    }
   );
 
   const handleUpdateClick = (classItem: ClassFromApi) => {
@@ -189,13 +199,13 @@ export default function AllClassesData() {
   return (
     <>
       <DataView<ClassFromApi>
-        data={classes || []}
+        data={classes ?? []}
         openNewModal={{
           func: () => setOpenNew(true),
           label: "Nova Turma",
         }}
         baseUrl="/system/academic/classes/"
-        mutate={mutate}
+  mutate={mutate}
         pageTitle={"Turmas"}
         searchbarPlaceholder={
           "Busque por nome da turma, professor, modalidade..."

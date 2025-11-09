@@ -2,10 +2,13 @@ import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { BillFromApi } from "./modals/UpdateBill";
 
+type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
+type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
+
 async function deleteBills(
     items: BillFromApi | string[],
     tenancyId: string,
-    mutate?: KeyedMutator<BillFromApi[]>,
+    mutate?: KeyedMutator<BillFromApi[] | PaginatedResponseLocal<BillFromApi>>,
 ) {
     const isArray = Array.isArray(items);
     const idsToDelete = isArray ? items : [items.id];

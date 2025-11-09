@@ -79,7 +79,7 @@ export default function ContractModelView({ id }: { id: string }) {
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {Object.entries(contractModel.variablePresets).map(([key, value]) => (
                             <div key={key} className="p-3 bg-neutral-50 cursor-not-allowed rounded-lg">
-                                <Text size="sm" c="dimmed">{`{{${key}}}`}</Text>
+                                <Text size="sm" c="dimmed">{`{{${key}}}`}{value}</Text>
                             </div>
                         ))}
                     </div>
@@ -101,7 +101,7 @@ export default function ContractModelView({ id }: { id: string }) {
                 confirmColor="red"
                 loading={isDeleting}
             >
-                <Text>Você tem certeza que deseja excluir o modelo "{contractModel?.title || ""}"?</Text>
+                <Text>Você tem certeza que deseja excluir o modelo &quot;{contractModel?.title || ""}&quot;?</Text>
                 <Text c="red" size="sm" fw={500} mt="md">Esta ação é permanente e não poderá ser desfeita.</Text>
             </ConfirmationModal>
         </div>

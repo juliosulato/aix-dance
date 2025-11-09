@@ -96,8 +96,8 @@ export default function ProductView({ id }: { id: string }) {
             currency: "BRL",
           }).format(Number(product?.priceOfCost || 0))}
         </InfoTerm>
-        <InfoTerm label={"Estoque Mínimo"}>{product.inventory}</InfoTerm>
-        <InfoTerm label={"Em Estoque"}>{product.inventory}</InfoTerm>
+        <InfoTerm label={"Estoque Mínimo"}>{product.minStock}</InfoTerm>
+        <InfoTerm label={"Em Estoque"}>{product.stock}</InfoTerm>
         <InfoTerm label={"Categoria"}>{product.category?.name || "-"}</InfoTerm>
         <InfoTerm label={"Fornecedor"}>
           {product.supplier?.name || "-"}

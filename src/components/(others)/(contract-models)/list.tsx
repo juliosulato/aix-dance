@@ -143,7 +143,7 @@ export default function AllContractModelsPage() {
                     func: () => setOpenNew(true),
                     label: "Novo Modelo de Contrato"
                 }}
-                mutate={mutate}
+                mutate={mutate as any}
                 pageTitle="Modelos de Contrato"
                 searchbarPlaceholder="Buscar por título do modelo..."
                 columns={[

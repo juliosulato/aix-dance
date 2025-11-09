@@ -28,7 +28,7 @@ export default function UpdateProduct({ opened, onClose, mutate, product }: Prop
     const { control, handleSubmit, formState: { errors }, register, reset } = useForm<UpdateProductInput>({
         resolver: zodResolver(updateProductSchema),
         defaultValues: {
-            inventory: 0,
+            stock: 0,
             minStock: 1,
             isActive: true
         }
@@ -41,7 +41,7 @@ export default function UpdateProduct({ opened, onClose, mutate, product }: Prop
                 name: product.name ?? undefined,
                 description: product.description ?? undefined,
                 price: product.price !== undefined && product.price !== null ? Number(product.price as any) : undefined,
-                inventory: product.inventory ?? 0,
+                stock: product.stock ?? 0,
                 minStock: product.minStock ?? 1,
                 categoryId: product.categoryId ?? undefined,
                 supplierId: product.supplierId ?? undefined,
@@ -169,7 +169,7 @@ export default function UpdateProduct({ opened, onClose, mutate, product }: Prop
 
                     <Group grow>
                         <Controller
-                            name="inventory"
+                            name="stock"
                             control={control}
                             render={({ field }) => (
                                 <NumberInput
@@ -178,7 +178,7 @@ export default function UpdateProduct({ opened, onClose, mutate, product }: Prop
                                     {...field}
                                     onChange={(val) => field.onChange(val)}
                                     value={field.value as number}
-                                    error={errors.inventory?.message as unknown as string}
+                                    error={errors.stock?.message as unknown as string}
                                 />
                             )}
                         />

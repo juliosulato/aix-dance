@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useForm, Controller, useFieldArray, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import useSWR from 'swr';
 import { Tenancy, Plan, Student, FormsOfReceipt } from '@prisma/client';
+import ProductFromAPI from '@/types/productFromAPI';
 import { FaSearch, FaUser, FaPlusCircle, FaFileAlt, FaRegTrashAlt, FaExclamationTriangle } from 'react-icons/fa';
 import { ActionIcon, Button, NumberInput, Select, TextInput, Alert, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
@@ -66,17 +67,52 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
     const { data: plansData } = useSWR<Plan[] | PaginatedResponseLocal<Plan>>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/plans`, fetcher);
     const plans = Array.isArray(plansData) ? plansData : (plansData as any)?.products ?? (plansData as any)?.plans ?? undefined;
 
-    const { data: studentsData } = useSWR<Student[] | PaginatedResponseLocal<Student>>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students`, fetcher);
-    const students = Array.isArray(studentsData) ? studentsData : (studentsData as any)?.products ?? (studentsData as any)?.students ?? undefined;
-
-    const { data: formsOfReceiptData } = useSWR<FormsOfReceipt[] | PaginatedResponseLocal<FormsOfReceipt>>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/forms-of-receipt`, fetcher);
-    const formsOfReceipt = Array.isArray(formsOfReceiptData) ? formsOfReceiptData : (formsOfReceiptData as any)?.products ?? (formsOfReceiptData as any)?.formsOfReceipt ?? undefined;
-
     // --- Estados do Componente ---
     const [searchTerm, setSearchTerm] = useState('');
     const [cart, setCart] = useState<CartItem[]>([]);
     const [isContractModalOpen, setContractModalOpen] = useState(false);
     const [currentItemForContract, setCurrentItemForContract] = useState<CartItem | null>(null);
+
+    // Paginated products fetch: start with page 1, limit 30 and accumulate as user scrolls
+    const [productPage, setProductPage] = useState<number>(1);
+    const PRODUCT_PAGE_LIMIT = 30;
+    const productsUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/inventory/products?page=${productPage}&limit=${PRODUCT_PAGE_LIMIT}${searchTerm ? `&q=${encodeURIComponent(searchTerm)}` : ''}`;
+
+    const { data: productsData, isLoading: productsLoading } = useSWR<{ products: ProductFromAPI[]; pagination: { page: number; limit: number; total: number; totalPages: number } } | null>(
+        tenancyId ? productsUrl : null,
+        fetcher
+    );
+
+    const [accProducts, setAccProducts] = useState<ProductFromAPI[]>([]);
+    const [totalProductPages, setTotalProductPages] = useState<number>(1);
+
+    // accumulate pages; when searchTerm or tenancyId changes, reset
+    useEffect(() => {
+        setProductPage(1);
+        setAccProducts([]);
+    }, [searchTerm, tenancyId]);
+
+    useEffect(() => {
+        if (!productsData) return;
+        const fetched = productsData.products || [];
+        setTotalProductPages((productsData.pagination && productsData.pagination.totalPages) || 1);
+        setAccProducts(prev => {
+            // if loading first page or search changed, replace
+            if (productPage === 1) return fetched;
+            // append new unique products
+            const existingIds = new Set(prev.map(p => p.id));
+            const toAppend = fetched.filter(p => !existingIds.has(p.id));
+            return [...prev, ...toAppend];
+        });
+    }, [productsData, productPage]);
+
+    const products = accProducts;
+
+    const { data: studentsData } = useSWR<Student[] | PaginatedResponseLocal<Student>>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students`, fetcher);
+    const students = Array.isArray(studentsData) ? studentsData : (studentsData as any)?.products ?? (studentsData as any)?.students ?? undefined;
+
+    const { data: formsOfReceiptData } = useSWR<FormsOfReceipt[] | PaginatedResponseLocal<FormsOfReceipt>>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/forms-of-receipt`, fetcher);
+    const formsOfReceipt = Array.isArray(formsOfReceiptData) ? formsOfReceiptData : (formsOfReceiptData as any)?.products ?? (formsOfReceiptData as any)?.formsOfReceipt ?? undefined;
 
     // --- Lógica do Formulário ---
     const { control, handleSubmit, setValue, watch, formState: { errors, isSubmitting } } = useForm<SaleFormValues>({
@@ -117,14 +153,36 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
         // last resort (not cryptographically secure)
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; const v = c === 'x' ? r : (r & 0x3 | 0x8); return v.toString(16); });
     };
+    const productsContainerRef = useRef<HTMLDivElement | null>(null);
+
     const availableProducts = useMemo((): Product[] => {
         const productList: Product[] = [];
         if (tenancy?.enrollmentFee && Number(tenancy.enrollmentFee) > 0) productList.push({ id: 'enrollment-fee', name: 'Taxa de Matrícula', amount: Number(tenancy.enrollmentFee), isPlan: false, isEnrollmentFee: true });
-    if (plans) plans.forEach((plan: Plan) => productList.push({ id: plan.id, name: plan.name, amount: Number(plan.amount), isPlan: true }));
+
+        if (plans) plans.forEach((plan: Plan) => productList.push({ id: plan.id, name: plan.name, amount: Number(plan.amount), isPlan: true }));
+
+        // Include inventory products (non-plan items) — only active ones
+        if (products) {
+            products.forEach((p: ProductFromAPI) => {
+                if (p.isActive) {
+                    const price = Number((p as any).price ?? 0);
+                    productList.push({ id: p.id, name: p.name, amount: price, isPlan: false });
+                }
+            });
+        }
+
         return productList;
-    }, [tenancy, plans]);
+    }, [tenancy, plans, products]);
 
     const filteredProducts = availableProducts.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const handleProductsScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        const el = e.currentTarget;
+        const distanceToBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+        if (distanceToBottom < 120 && !productsLoading && productPage < totalProductPages) {
+            setProductPage(prev => prev + 1);
+        }
+    };
     const addToCart = (product: Product) => {
         if (product.isPlan && cart.some(item => item.isPlan)) {
             notifications.show({
@@ -321,7 +379,7 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
                 <div className="lg:col-span-3 bg-white p-4 md:p-6 lg:p-8 rounded-2xl shadow">
                     <TextInput placeholder="Buscar por planos ou matrícula..." rightSection={<FaSearch className='text-neutral-400' />} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} size='lg' />
                     <br />
-                    <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-2">
+                    <div ref={productsContainerRef} onScroll={handleProductsScroll} className="space-y-2 max-h-[60vh] overflow-y-auto pr-2">
                         {filteredProducts.map(product => (
                             <div key={product.id} className="flex items-center justify-between p-3 bg-neutral-50 rounded-md border border-neutral-300">
                                 <div>
@@ -339,6 +397,9 @@ export default function PointOfSale({ studentId: preselectedStudentId }: { stude
                                 >Adicionar</Button>
                             </div>
                         ))}
+                        {productsLoading && (
+                            <div className="text-center py-3 text-sm text-gray-500">Carregando mais produtos...</div>
+                        )}
                     </div>
                 </div>
 

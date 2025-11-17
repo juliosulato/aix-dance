@@ -14,7 +14,7 @@ const s3Client = new S3Client({
 
 export async function POST(request: Request) {
     try {
-            const { filename, contentType, size } = await request.json();
+            const { filename, contentType, size, prefix } = await request.json();
 
             if (!filename || !contentType) {
                 return NextResponse.json({ error: "Filename and contentType are required" }, { status: 400 });
@@ -27,8 +27,6 @@ export async function POST(request: Request) {
             }
 
     // Gera um nome de arquivo único para evitar conflitos
-        const { prefix } = await request.json().catch(() => ({}));
-
         const safePrefix = prefix ? `${String(prefix).replace(/[^a-zA-Z0-9_\-\/]/g, "")}/` : "";
         const uniqueKey = `${safePrefix}${randomUUID()}-${filename}`;
 
@@ -41,14 +39,10 @@ export async function POST(request: Request) {
             }
         }
 
-        // Provide ContentDisposition so browser downloads keep original filename
-        const contentDisposition = `attachment; filename="${encodeURIComponent(filename)}"`;
-
         const command = new PutObjectCommand({
             Bucket: process.env.AWS_S3_BUCKET_NAME!,
             Key: uniqueKey,
             ContentType: contentType,
-            ContentDisposition: contentDisposition,
         });
 
         // Gera a URL pré-assinada para o upload (expira em 10 minutos)

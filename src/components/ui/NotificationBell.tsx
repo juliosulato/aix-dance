@@ -15,7 +15,7 @@ export default function NotificationBell() {
   return (
     <HoverCard width={350} shadow="md" position="bottom-end" withinPortal>
       <HoverCard.Target>
-        <ActionIcon size="42px" variant="light" color="gray">
+        <ActionIcon size="42px" radius="lg" variant="light" color="gray">
           {unreadCount > 0 ? (
             <Badge color="red" size="sm" style={{ position: "absolute", top: 0, right: 0 }}>{unreadCount}</Badge>
           ) : null}

@@ -14,6 +14,7 @@ import NotificationBell from "./NotificationBell";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa";
 import { LuLogOut } from "react-icons/lu";
+import { BsBox } from "react-icons/bs";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
     const [activeMain, setActiveMain] = useState<number | string | null>(null);
@@ -59,7 +60,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                             <Menu.Item leftSection={<FaRegUser />}>
                                 {"Novo Aluno"}
                             </Menu.Item>
-                            <Menu.Item leftSection={<FaRegUser />}>
+                            <Menu.Item leftSection={<BsBox />}>
                                 {"Novo Produto"}
                             </Menu.Item>
                             {/* <Menu.Item leftSection={<MdGroups />}>

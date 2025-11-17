@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
-import { Button, LoadingOverlay, Modal, ScrollArea, Tabs } from "@mantine/core";
+import { Button, LoadingOverlay, Modal, Tabs } from "@mantine/core";
 import { Bill, BillStatus, BillType } from "@prisma/client";
 
 import { CreateBillInput, createBillSchema } from "@/schemas/financial/bill.schema";
@@ -132,7 +132,6 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
         >
             <form onSubmit={handleSubmit(createBill, handleFormErrors)}>
                 <LoadingOverlay visible={isLoading} />
-                <ScrollArea.Autosize mah="70vh" type="always" p="xs">
                     <div className="space-y-6">
                         <BasicInformations  {...formControlProps as any}/>
                         <div>
@@ -158,7 +157,6 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
                             </Tabs>
                         </div>
                     </div>
-                </ScrollArea.Autosize>
                 
                 <div className="flex justify-end pt-6">
                     <Button

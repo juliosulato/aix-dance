@@ -313,17 +313,18 @@ export default function PointOfSale({
   }, [tenancy, plans, products]);
 
   const filteredProducts = availableProducts.filter((p) => {
-    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = p.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
     // determine type
     const isPlan = !!p.isPlan;
     const isFee = !!p.isEnrollmentFee;
     const isProduct = !isPlan && !isFee;
 
-    const matchesFilter = (
+    const matchesFilter =
       (isProduct && selectedFilters.includes("products")) ||
       (isPlan && selectedFilters.includes("plans")) ||
-      (isFee && selectedFilters.includes("fee"))
-    );
+      (isFee && selectedFilters.includes("fee"));
 
     return matchesSearch && matchesFilter;
   });
@@ -581,20 +582,31 @@ export default function PointOfSale({
       return;
     }
 
-    const otherIndexes = paymentsWatch.map((_, i) => i).filter((i) => i !== changedIndex);
+    const otherIndexes = paymentsWatch
+      .map((_, i) => i)
+      .filter((i) => i !== changedIndex);
     if (otherIndexes.length === 0) {
       // only one payment — adjust it to finalTotal
       isAdjustingPaymentsRef.current = true;
-      setValue(`payments.${changedIndex}.amount`, Number((Number(paymentsWatch[changedIndex].amount || 0) + diff).toFixed(2)), {
-        shouldValidate: true,
-      });
+      setValue(
+        `payments.${changedIndex}.amount`,
+        Number(
+          (Number(paymentsWatch[changedIndex].amount || 0) + diff).toFixed(2)
+        ),
+        {
+          shouldValidate: true,
+        }
+      );
       prevPaymentsRef.current = paymentsWatch.map((p) => Number(p.amount || 0));
       isAdjustingPaymentsRef.current = false;
       return;
     }
 
     // distribute diff across other payments proportionally to their current amounts
-    const othersTotal = otherIndexes.reduce((s, i) => s + Number(paymentsWatch[i].amount || 0), 0);
+    const othersTotal = otherIndexes.reduce(
+      (s, i) => s + Number(paymentsWatch[i].amount || 0),
+      0
+    );
     isAdjustingPaymentsRef.current = true;
     if (othersTotal > 0.001) {
       for (const i of otherIndexes) {
@@ -608,7 +620,9 @@ export default function PointOfSale({
       const per = Number((diff / otherIndexes.length).toFixed(2));
       for (const i of otherIndexes) {
         const curr = Number(paymentsWatch[i].amount || 0);
-        setValue(`payments.${i}.amount`, Number((curr + per).toFixed(2)), { shouldValidate: true });
+        setValue(`payments.${i}.amount`, Number((curr + per).toFixed(2)), {
+          shouldValidate: true,
+        });
       }
     }
     // delay clearing the flag to allow setValue to propagate
@@ -757,12 +771,14 @@ export default function PointOfSale({
             <Chip.Group
               multiple
               value={selectedFilters}
-              onChange={(val) => setSelectedFilters(Array.isArray(val) ? val : [val])}
+              onChange={(val) =>
+                setSelectedFilters(Array.isArray(val) ? val : [val])
+              }
             >
               <Group gap={"6"}>
                 <Chip value="products">Produtos</Chip>
-              <Chip value="plans">Planos</Chip>
-              <Chip value="fee">Taxa de Matrícula</Chip>
+                <Chip value="plans">Planos</Chip>
+                <Chip value="fee">Taxa de Matrícula</Chip>
               </Group>
             </Chip.Group>
           </div>

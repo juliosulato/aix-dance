@@ -790,19 +790,26 @@ export default function PointOfSale({
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="flex items-center justify-between p-3 bg-neutral-50 rounded-md border border-neutral-300"
+                className="flex items-center justify-between p-3 bg-neutral-50 rounded-md border border-neutral-300 hover:opacity-50 transition"
               >
                 <div>
-                  <p className="font-semibold text-gray-700">{product.name}</p>
+                  <p className="font-semibold text-gray-700">{product.name} |  <span className="inline-block bg-neutral-100 text-neutral-700 py-0.5 rounded-full text-xs font-semibold">
+                      {product.isPlan
+                        ? "PLANO"
+                        : product.isEnrollmentFee
+                        ? "MATRÍCULA"
+                        : "PRODUTO"}
+                    </span></p>
+
                   {product.amount > 0 ? (
-                    <p className="text-sm text-purple-600 font-medium">
+                    <p className="text-sm text-purple-600 font-medium mt-2">
                       {product.amount.toLocaleString("pt-BR", {
                         style: "currency",
                         currency: "BRL",
                       })}
                     </p>
                   ) : (
-                    <p className="text-sm text-red-600 font-medium">
+                    <p className="text-sm text-red-600 font-medium mt-2">
                       Sem preço definido
                     </p>
                   )}
@@ -887,7 +894,12 @@ export default function PointOfSale({
                     <div className="flex justify-between items-start">
                       <div>
                         <p className="font-semibold">{item.name}</p>
-                        <p className="text-gray-600">
+                        <p className="mt-1">
+                          <span className="inline-block bg-neutral-100 text-neutral-700 px-2 py-0.5 rounded-full text-xs font-semibold">
+                            {item.isPlan ? "PLANO" : item.isEnrollmentFee ? "MATRÍCULA" : "PRODUTO"}
+                          </span>
+                        </p>
+                        <p className="text-gray-600 mt-2">
                           {item.amount.toLocaleString("pt-BR", {
                             style: "currency",
                             currency: "BRL",

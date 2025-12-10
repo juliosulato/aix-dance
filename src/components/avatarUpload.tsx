@@ -48,10 +48,8 @@ function AvatarUpload({ defaultUrl, onUploadComplete }: Props) {
 
       const uploadToS3Response = await fetch(uploadUrl, {
         method: 'PUT',
-        mode: 'cors',
         headers: {
-          // Envia Content-Disposition conforme a assinatura do S3
-          'Content-Disposition': `attachment; filename="${file.name}"`,
+          'Content-Type': file.type,
         },
         body: file,
       });

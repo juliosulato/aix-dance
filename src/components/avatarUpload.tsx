@@ -3,6 +3,7 @@ import { ActionIcon, Avatar, Menu, Loader, Modal, Button } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { BsThreeDots } from "react-icons/bs";
 import { BiUpload, BiCamera } from "react-icons/bi";
+import { BsImageAlt } from "react-icons/bs";
 
 type Props = {
   defaultUrl?: string | null;
@@ -121,7 +122,7 @@ function AvatarUpload({ defaultUrl, onUploadComplete }: Props) {
   return (
     <div className="relative">
       <Avatar color="violet" size={80} radius="xl" src={avatarPreview}>
-        {!avatarPreview && "A"}
+        {!avatarPreview && <BsImageAlt size={30} />}
       </Avatar>
 
       {isLoading && <Loader size="sm" pos="absolute" top="50%" left="50%" style={{ transform: 'translate(-50%, -50%)' }} />}

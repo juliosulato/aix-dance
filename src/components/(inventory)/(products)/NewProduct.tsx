@@ -10,6 +10,7 @@ import { KeyedMutator } from "swr";
 import ProductFromAPI from "@/types/productFromAPI";
 import { CreateProductInput, createProductSchema } from "@/schemas/inventory/product.schema";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
+import AvatarUpload from "@/components/avatarUpload";
 
 type Props = {
     opened: boolean;
@@ -21,6 +22,7 @@ export default function NewProduct({ opened, onClose, mutate }: Props) {
 
     
     const [visible, setVisible] = useState(false);
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
 
     const { control, handleSubmit, formState: { errors }, register, reset } = useForm<CreateProductInput>({
         resolver: zodResolver(createProductSchema),
@@ -47,7 +49,10 @@ export default function NewProduct({ opened, onClose, mutate }: Props) {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/products`, {
                 method: "POST",
-                body: JSON.stringify(data),
+                body: JSON.stringify({
+                    ...data,
+                    imageUrl: imageUrl ?? undefined,
+                }),
                 headers: { "Content-Type": "application/json" },
             });
 
@@ -58,6 +63,7 @@ export default function NewProduct({ opened, onClose, mutate }: Props) {
                 color: "green"
             });
             reset();
+            setImageUrl(null);
             mutate();
             onClose();
         } catch (error) {
@@ -86,6 +92,13 @@ export default function NewProduct({ opened, onClose, mutate }: Props) {
                 classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}
             >
                 <form onSubmit={handleSubmit(createProduct, onError)} className="flex flex-col gap-4">
+                    <div>
+                        <label className="text-sm font-medium mb-2 block">Imagem do Produto</label>
+                        <AvatarUpload
+                            defaultUrl={imageUrl}
+                            onUploadComplete={(url) => setImageUrl(url)}
+                        />
+                    </div>
                     <TextInput
                         label="Nome"
                         placeholder="Nome do produto"

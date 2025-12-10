@@ -92,9 +92,8 @@ const useMenuData = () => {
      icon: <BsBox />,
      label: "Estoque",
      subitems: [
-       { icon: <BsBox />, label: "Controle de Estoque", href: "/system/inventory/control" },
-       { icon: <FiInbox />, label: "Encomendas", href: "/system/inventory/orders" },
        { icon: <MdBookmarkBorder />, label: "Produtos", href: "/system/inventory/products" },
+       { icon: <FiInbox />, label: "Encomendas", href: "/system/inventory/orders" },
       //  { icon: <LuChartSpline />, label: "Relatórios", href: "/system/inventory/reports" },
      ],
    },

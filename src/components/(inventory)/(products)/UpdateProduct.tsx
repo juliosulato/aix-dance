@@ -6,6 +6,7 @@ import { notifications } from "@mantine/notifications";
 import { useSession } from "next-auth/react";
 import { useForm, Controller } from "react-hook-form";
 import { useState, useEffect } from "react";
+import ProductImageUpload from "./ProductImageUpload";
 import { KeyedMutator } from "swr";
 import ProductFromAPI from "@/types/productFromAPI";
 import { UpdateProductInput, updateProductSchema } from "@/schemas/inventory/product.schema";
@@ -113,6 +114,14 @@ export default function UpdateProduct({ opened, onClose, mutate, product }: Prop
                 classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}
             >
                 <form onSubmit={handleSubmit(updateProduct, onError)} className="flex flex-col gap-4">
+                    <div>
+                        <label className="text-sm font-medium mb-2 block">Imagem do Produto</label>
+                        <ProductImageUpload
+                            productId={product.id}
+                            initialUrl={(product as any)?.imageUrl ?? undefined}
+                            onUpdated={mutate}
+                        />
+                    </div>
                     <TextInput
                         label="Nome"
                         placeholder="Nome do produto"

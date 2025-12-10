@@ -6,6 +6,7 @@ export const createProductSchema = z.object({
     price: z.number().optional(),
     priceOfCost: z.number().optional(),
     barCode: z.string().optional(),
+    imageUrl: z.string().url().optional(),
     stock: z.number().default(0),
     minStock: z.number().default(1),
     categoryId: z.string().optional(),

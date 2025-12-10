@@ -1,5 +1,5 @@
 import Breadcrumps from "@/components/ui/Breadcrumps";
-import ProductView from "@/components/(inventory)/(products)/view";
+import ProductView from "@/components/(inventory)/(products)/View";
 
 export default async function PlanPage({
   params,

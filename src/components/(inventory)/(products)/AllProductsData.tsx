@@ -15,12 +15,14 @@ import {
 } from "@mantine/core";
 import { BiDotsVerticalRounded, BiTrash } from "react-icons/bi";
 import { GrUpdate } from "react-icons/gr";
+import { FaToggleOn, FaToggleOff } from "react-icons/fa6";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import DataView from "@/components/ui/DataView";
 
 import NewProduct from "./NewProduct";
 import ProductFromAPI from "@/types/productFromAPI";
 import UpdateProduct from "./UpdateProduct";
+import toggleProductActive from "./toggleActive";
 
 interface MenuItemProps {
   products: ProductFromAPI;
@@ -134,6 +136,21 @@ export default function AllProductsData() {
             {"Editar"}
           </Menu.Item>
           <Menu.Item
+            leftSection={products.isActive ? <FaToggleOff size={14} /> : <FaToggleOn size={14} />}
+            onClick={async () => {
+              const tenancyId = sessionData?.user?.tenancyId;
+              if (!tenancyId) return;
+              await toggleProductActive(
+                products.id,
+                tenancyId,
+                !products.isActive,
+                mutate as any
+              );
+            }}
+          >
+            {products.isActive ? "Desativar" : "Ativar"}
+          </Menu.Item>
+          <Menu.Item
             color="red"
             leftSection={<BiTrash size={14} />}
             onClick={() => onDeleteClick(products)}
@@ -209,9 +226,21 @@ export default function AllProductsData() {
                 : "-",
             sortable: true,
           },
+           {
+            key: "priceOfCost",
+            label: "Preço de Custo",
+            render: (value) =>
+              value
+                ? new Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  }).format(value)
+                : "-",
+            sortable: true,
+          },
           {
             key: "stock",
-            label: "Quantidade",
+            label: "Em Estoque",
             sortable: true,
           },
           {

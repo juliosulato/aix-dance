@@ -1,3 +1,4 @@
+import type { Config as DOMPurifyConfig } from 'dompurify';
 import DOMPurify from 'isomorphic-dompurify';
 
 interface SafeHtmlProps {
@@ -23,7 +24,7 @@ export default function SafeHtml({
   allowedAttributes 
 }: SafeHtmlProps) {
   // Default configuration for DOMPurify
-  const config: any = {
+  const config: DOMPurifyConfig = {
     // Allow common formatting tags
     ALLOWED_TAGS: allowedTags || [
       'p', 'br', 'strong', 'em', 'u', 's', 'a', 'ul', 'ol', 'li',
@@ -33,18 +34,12 @@ export default function SafeHtml({
       'img', 'div', 'span', 'hr'
     ],
     // Allow common attributes
-    ALLOWED_ATTR: allowedAttributes || {
-      'a': ['href', 'title', 'target', 'rel'],
-      'img': ['src', 'alt', 'title', 'width', 'height'],
-      'td': ['colspan', 'rowspan'],
-      'th': ['colspan', 'rowspan'],
-      '*': ['class', 'id', 'style'] // Allow class and style on all tags
-    },
+    ALLOWED_ATTR: allowedAttributes ? Object.keys(allowedAttributes) : [
+      'href', 'title', 'target', 'rel', 'src', 'alt', 'width', 'height',
+      'colspan', 'rowspan', 'class', 'id', 'style'
+    ],
     // Ensure links open in new tab for security
     ADD_ATTR: ['target'],
-    // Return a clean string
-    RETURN_DOM: false,
-    RETURN_DOM_FRAGMENT: false,
   };
 
   // Sanitize the HTML
@@ -61,6 +56,6 @@ export default function SafeHtml({
 /**
  * Sanitize HTML string without rendering (useful for processing before saving)
  */
-export function sanitizeHtml(html: string, config?: any): string {
+export function sanitizeHtml(html: string, config?: DOMPurifyConfig): string {
   return DOMPurify.sanitize(html, config);
 }

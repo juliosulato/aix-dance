@@ -2,15 +2,8 @@
 import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-// Validate required environment variables
-const requiredEnvVars = ['AWS_REGION', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_S3_BUCKET_NAME'];
-for (const envVar of requiredEnvVars) {
-  if (!process.env[envVar]) {
-    throw new Error(`Missing required environment variable: ${envVar}`);
-  }
-}
-
 // Single S3 client instance (singleton pattern)
+// Environment variables are validated at app startup via validateServerEnv()
 export const s3Client = new S3Client({
   region: process.env.AWS_REGION!,
   credentials: {

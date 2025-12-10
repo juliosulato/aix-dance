@@ -237,11 +237,10 @@ export default function AllStudentsData() {
             label: "Turmas",
             sortable: true,
             render: (value) => {
-              if (value && Array.isArray(value)) {
-                value.map((c: Class) => c.name).join(", ");
-              } else {
-                return value;
+              if (value && Array.isArray(value) && value.length > 0) {
+                return value.map((c: Class) => c.name).join(", ");
               }
+              return "-";
             },
           },
           {

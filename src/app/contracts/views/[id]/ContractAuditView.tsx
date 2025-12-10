@@ -3,6 +3,7 @@
 import { StudentContract, Tenancy, ContractSignatureLog } from '@prisma/client';
 import { Paper, Text, Divider, Center, Alert, Table, Badge, Title, Group, Button } from '@mantine/core';
 import { FaFileContract, FaUserCheck, FaMapMarkerAlt, FaPrint, FaCalendarCheck } from 'react-icons/fa';
+import SafeHtml from '@/components/ui/SafeHtml';
 
 interface ContractWithAudit extends StudentContract {
     student: {
@@ -93,9 +94,9 @@ export default function ContractAuditView({ contract }: Props) {
                     {/* O ID está no contentor pai */}
                     <div id="printable-contract">
                          {/* Este é o contentor que recebe os estilos da tela (borda, etc.) */}
-                        <div
+                        <SafeHtml
+                            html={contract.htmlContent}
                             className="prose max-w-none p-4 border rounded-lg bg-gray-50 mb-6 max-h-[50vh] overflow-y-auto"
-                            dangerouslySetInnerHTML={{ __html: contract.htmlContent }}
                         />
                     </div>
 

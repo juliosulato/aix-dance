@@ -7,6 +7,7 @@ import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import { ContractModel } from "@prisma/client";
 import deleteContractModels from "./delete";
 import UpdateContractModelModal from "./update";
+import SafeHtml from "@/components/ui/SafeHtml";
 
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
@@ -65,10 +66,9 @@ export default function ContractModelView({ id }: { id: string }) {
 
             <Divider label="Conteúdo do Contrato" labelPosition="center" />
             <div className="border rounded-lg !bg-neutral-50 cursor-not-allowed border-neutral-200 overflow-hidden">
-                <div
-                    ref={contractContentRef}
-                    className="prose max-w-none p-8 "
-                    dangerouslySetInnerHTML={{ __html: contractModel.htmlContent }}
+                <SafeHtml
+                    html={contractModel.htmlContent}
+                    className="prose max-w-none p-8"
                 />
             </div>
 

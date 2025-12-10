@@ -11,6 +11,8 @@ import { SignatureInput, signatureSchema } from '@/schemas/academic/student-cont
 import { IMaskInput } from 'react-imask';
 import dayjs from 'dayjs';
 import "dayjs/locale/pt-br";
+import SafeHtml from '@/components/ui/SafeHtml';
+
 dayjs.locale('pt-br');
 
 // Interface para garantir que os dados relacionados (aluno, tenancy) estão incluídos
@@ -109,9 +111,9 @@ export default function SignContractView({ contract, ipAddress, location }: Prop
                     </p>
                 </div>
 
-                <div
+                <SafeHtml 
+                    html={contract.htmlContent}
                     className="prose max-w-none p-4 border rounded-lg bg-gray-50 mb-6 max-h-[50vh] overflow-y-auto"
-                    dangerouslySetInnerHTML={{ __html: contract.htmlContent }}
                 />
 
                 {isSigned ? (

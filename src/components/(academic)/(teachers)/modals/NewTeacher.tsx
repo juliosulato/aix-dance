@@ -1,8 +1,7 @@
-"use client"
+"use client";
 
 import { Button, LoadingOverlay, Modal, Stepper } from "@mantine/core";
 import Teacher__PersonalData from "./personalData";
-import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
 import 'dayjs/locale/es';
 import 'dayjs/locale/en';
@@ -70,14 +69,12 @@ function NewTeacher({ opened, onClose }: Props) {
                 "teacher.address.city",
                 "teacher.address.state"
             ];
-            // @ts-ignore
             isValid = await trigger(firstStepFields);
         } else if (active === 1) {
             const secondStepFields: (keyof CreateUserInput)[] = [
                 "password",
                 "confirmPassword",
             ];
-             // @ts-ignore
             isValid = await trigger(secondStepFields);
         }
 
@@ -183,6 +180,6 @@ function NewTeacher({ opened, onClose }: Props) {
                 w="100vw"
             />
         </>
-    )
+    );
 }
 export default NewTeacher;

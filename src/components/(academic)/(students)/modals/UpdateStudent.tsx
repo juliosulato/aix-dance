@@ -150,7 +150,7 @@ useEffect(() => {
         className="!relative"
       >
         <form onSubmit={handleSubmit(createStudent, onError)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw] lg:p-6">
-          <AvatarUpload  defaultUrl={avatarUrl} onUploadComplete={setAvatarUrl} />
+          <AvatarUpload  defaultUrl={avatarUrl} onUploadComplete={setAvatarUrl} folder="students/avatars" />
           <PersonalData control={control as any} register={register as any} errors={errors} />
           <Address register={register} errors={errors} />
           <Checkboxies control={control as any} errors={errors} />

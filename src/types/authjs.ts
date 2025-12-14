@@ -12,5 +12,6 @@ declare module "next-auth" {
       role: UserRole;
       teacherId?: string; // Adicionado para professores
     } & DefaultSession["user"];
+    backendToken?: string;
   }
 }

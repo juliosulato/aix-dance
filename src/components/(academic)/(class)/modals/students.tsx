@@ -8,6 +8,7 @@ import { CreateClassInput, UpdateClassInput } from "@/schemas/academic/class.sch
 import { Control, Controller, FieldErrors, useWatch } from "react-hook-form";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
+import { extractItemsFromResponse, PaginatedListResponse } from "@/utils/pagination";
 import { StudentFromApi } from "../../(students)/StudentFromApi";
 
 type Props = {
@@ -17,10 +18,12 @@ type Props = {
 };
 
 export default function Class__Students({ control, errors, tenancyId }: Props) {
-    const { data: allStudents } = useSWR<StudentFromApi[]>(
-        () => tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students` : null,
+    const { data: studentsResponse } = useSWR<StudentFromApi[] | PaginatedListResponse<StudentFromApi>>(
+        () => tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students?limit=500` : null,
         fetcher
     );
+
+    const allStudents = extractItemsFromResponse(studentsResponse);
 
     const studentOptions = allStudents?.filter((student: StudentFromApi) => {
         // 1. Verificar se o aluno está ativo
@@ -68,7 +71,7 @@ export default function Class__Students({ control, errors, tenancyId }: Props) {
         defaultValue: []
     });
 
-    const studentsSelected = allStudents?.filter(s => selectedStudentIds?.includes(s.id)) || [];
+    const studentsSelected = allStudents.filter(s => selectedStudentIds?.includes(s.id)) || [];
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl flex flex-col gap-4">

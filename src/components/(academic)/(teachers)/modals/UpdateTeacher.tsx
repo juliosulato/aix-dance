@@ -131,7 +131,11 @@ function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
                     <Stepper active={active} onStepClick={setActive}>
                         <Stepper.Step>
                             <div className="flex flex-col gap-4">
-                                <AvatarUpload onUploadComplete={(ev) => setAvatar(ev)} defaultUrl={user?.image ?? null}/>
+                                <AvatarUpload
+                                    onUploadComplete={(ev) => setAvatar(ev)}
+                                    defaultUrl={user?.image ?? null}
+                                    folder="teachers/avatars"
+                                />
                                 <Teacher__PersonalData register={register as any} errors={errors} control={control as any} />
                                 <Address register={register as any} errors={errors} fieldPath="teacher.address" />
                                 <div className="flex flex-col md:flex-row items-end justify-end">

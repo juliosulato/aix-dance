@@ -128,7 +128,7 @@ function NewTeacher({ opened, onClose }: Props) {
                     <Stepper active={active} onStepClick={setActive}>
                         <Stepper.Step>
                             <div className="flex flex-col gap-4">
-                                <AvatarUpload onUploadComplete={(ev) => setAvatar(ev)} />
+                                <AvatarUpload onUploadComplete={(ev) => setAvatar(ev)} folder="teachers/avatars" />
                                 <Teacher__PersonalData register={register as any} errors={errors} control={control as any} />
                                 {/* Passando o caminho base para o componente de Endereço */}
                                 <Address register={register as any} errors={errors} fieldPath="teacher.address" />

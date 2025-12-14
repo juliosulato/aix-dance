@@ -4,25 +4,33 @@ import { notifications } from "@mantine/notifications";
 import { BsThreeDots } from "react-icons/bs";
 import { BiUpload, BiCamera } from "react-icons/bi";
 import { BsImageAlt } from "react-icons/bs";
+import { useSession } from "next-auth/react";
 
 type Props = {
   defaultUrl?: string | null;
   onUploadComplete: (url: string) => void;
+  folder?: string;
 }
 
-function AvatarUpload({ defaultUrl, onUploadComplete }: Props) {
+function AvatarUpload({ defaultUrl, onUploadComplete, folder = "avatars" }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(defaultUrl ?? null);
   const [isLoading, setIsLoading] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const { data: session } = useSession();
 
   const handleUploadClick = () => fileInputRef.current?.click();
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+
+    if (!session?.user?.tenancyId) {
+      notifications.show({ color: "red", message: "Sessão inválida para upload." });
+      return;
+    }
 
     if (file.size > 5 * 1024 * 1024) {
       notifications.show({ color: "red", message: "O arquivo é muito grande (máx 5MB)." });
@@ -39,7 +47,7 @@ function AvatarUpload({ defaultUrl, onUploadComplete }: Props) {
       const presignedUrlResponse = await fetch('/api/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename: file.name, contentType: file.type }),
+        body: JSON.stringify({ filename: file.name, contentType: file.type, size: file.size, prefix: folder }),
       });
 
       if (!presignedUrlResponse.ok) throw new Error("Falha ao obter URL para upload.");

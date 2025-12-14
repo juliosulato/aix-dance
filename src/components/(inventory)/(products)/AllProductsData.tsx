@@ -8,6 +8,7 @@ import deleteProducts from "./delete";
 import {
   ActionIcon,
   Badge,
+  Avatar,
   Group,
   LoadingOverlay,
   Menu,
@@ -212,6 +213,24 @@ export default function AllProductsData() {
         pageTitle={"Produtos"}
         searchbarPlaceholder={"Pesquise pelo SKU, nome ou descrição..."}
         columns={[
+          {
+            key: "imageUrl",
+            label: "",
+            sortable: false,
+            render: (_, item) => (
+              item.imageUrl ? (
+                <img
+                  src={item.imageUrl}
+                  alt={item.name}
+                  className="w-12 h-12 rounded-2xl object-cover"
+                />
+              ) : (
+                <Avatar radius="xl" color="violet">
+                  {item.name?.[0] ?? ""}
+                </Avatar>
+              )
+            ),
+          },
           { key: "sku", label: "SKU", sortable: true },
           { key: "name", label: "Nome", sortable: true },
           {
@@ -270,14 +289,27 @@ export default function AllProductsData() {
         )}
         renderCard={(item) => (
           <>
-            <div className="flex flex-row justify-between items-start">
-              <Group>
-                <Text fw={500} size="lg">
-                  {item.name}
-                </Text>
-                <Badge color={item.isActive ? "green" : "red"}>
-                  {item.isActive ? "Ativo" : "Inativo"}
-                </Badge>
+            <div className="flex flex-row justify-between items-start gap-3">
+              <Group gap="sm">
+                {item.imageUrl ? (
+                  <img
+                    src={item.imageUrl}
+                    alt={item.name}
+                    className="w-16 h-16 rounded-2xl object-cover"
+                  />
+                ) : (
+                  <Avatar radius="xl" color="violet">
+                    {item.name?.[0] ?? ""}
+                  </Avatar>
+                )}
+                <div className="flex flex-col">
+                  <Text fw={500} size="lg">
+                    {item.name}
+                  </Text>
+                  <Badge color={item.isActive ? "green" : "red"}>
+                    {item.isActive ? "Ativo" : "Inativo"}
+                  </Badge>
+                </div>
               </Group>
               <MenuItem
                 products={item}

@@ -122,7 +122,7 @@ export default function ProductView({ id }: { id: string }) {
         <div className="flex gap-4 md:gap-6 items-center">
           <ProductImageUpload
             productId={id}
-            initialUrl={(product as any)?.imageUrl ?? undefined}
+            initialUrl={product.imageUrl ?? undefined}
             onUpdated={() => (mutate as any)()}
           />
           <button
@@ -165,7 +165,7 @@ export default function ProductView({ id }: { id: string }) {
           {product.description || "-"}
         </InfoTerm>
         <InfoTerm label={"Código de Barras"} className="md:col-span-2">
-          {product.barcode}
+          {product.barCode || "-"}
         </InfoTerm>
         <InfoTerm label={"Preço"}>
           {new Intl.NumberFormat("pt-BR", {

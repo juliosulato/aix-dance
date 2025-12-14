@@ -25,8 +25,8 @@ interface PaginationInfo {
 }
 
 interface PaginatedResponse<T> {
-    products: T[];
     pagination: PaginationInfo;
+    [key: string]: PaginationInfo | T[] | undefined;
 }
 
 interface DataViewProps<T> {
@@ -34,6 +34,7 @@ interface DataViewProps<T> {
     searchbarPlaceholder: string;
     // data can be either an array or a paginated response from the server
     data: T[] | PaginatedResponse<T>;
+    itemKey?: string;
     renderCard: (item: T) => React.ReactNode;
     columns: Column<T>[];
     openNewModal?: { label: string; func: () => void; };
@@ -57,6 +58,7 @@ import { IoAdd } from "react-icons/io5";
 
 export default function DataView<T>({
     data,
+    itemKey = "products",
     pageTitle,
     renderCard,
     searchbarPlaceholder,
@@ -123,7 +125,11 @@ export default function DataView<T>({
 
     // normalize: accept either array or paginated response
     const isServerPaginated = !Array.isArray(data);
-    const items: T[] = isServerPaginated ? (data as PaginatedResponse<T>).products : (data as T[]);
+    const paginatedResponse = isServerPaginated ? (data as PaginatedResponse<T>) : null;
+    const serverItems = isServerPaginated ? paginatedResponse?.[itemKey] : null;
+    const items: T[] = isServerPaginated
+        ? (Array.isArray(serverItems) ? (serverItems as T[]) : [])
+        : (data as T[]);
 
     const processedData = React.useMemo(() => {
         let processed = [...items];
@@ -169,10 +175,10 @@ export default function DataView<T>({
     }, [items, searchValue, activeFilters, dateFilter, sortConfig]);
 
     const itemsPerPage = parseInt(rowsPerPage, 10);
-    const totalCount = isServerPaginated ? (data as PaginatedResponse<T>).pagination.total : processedData.length;
-        const serverPage = isServerPaginated ? (data as PaginatedResponse<T>).pagination.page : activePage; // Use serverPage for pagination control
-        const serverLimit = isServerPaginated ? (data as PaginatedResponse<T>).pagination.limit : itemsPerPage; // Use serverLimit for pagination control
-    const totalPages = isServerPaginated ? (data as PaginatedResponse<T>).pagination.totalPages : Math.ceil(totalCount / itemsPerPage);
+    const totalCount = isServerPaginated ? (paginatedResponse?.pagination.total ?? items.length) : processedData.length;
+    const serverPage = isServerPaginated ? (paginatedResponse?.pagination.page ?? 1) : activePage; // Use serverPage for pagination control
+    const serverLimit = isServerPaginated ? (paginatedResponse?.pagination.limit ?? itemsPerPage) : itemsPerPage; // Use serverLimit for pagination control
+    const totalPages = isServerPaginated ? (paginatedResponse?.pagination.totalPages ?? Math.ceil(totalCount / (serverLimit || 1))) : Math.ceil(totalCount / itemsPerPage);
     const startIndex = (activePage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const paginatedData = isServerPaginated ? items : processedData.slice(startIndex, endIndex);

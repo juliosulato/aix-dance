@@ -122,7 +122,7 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
             >
                 <form onSubmit={handleSubmit(updateUser)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw] lg:p-6">
                     <div className="flex flex-col gap-4">
-                        <AvatarUpload defaultUrl={avatar} onUploadComplete={setAvatar} />
+                        <AvatarUpload defaultUrl={avatar} onUploadComplete={setAvatar} folder="users/avatars" />
 
                         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2">
                             <TextInput

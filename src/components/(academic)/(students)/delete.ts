@@ -4,7 +4,7 @@ import { Student } from "@prisma/client";
 
 type Item = Student & { fullName?: string };
 type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
-type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
+type PaginatedResponseLocal<T> = { items: T[]; pagination: PaginationInfo };
 
 async function deleteStudents(
   items: string[] | string,
@@ -29,7 +29,12 @@ async function deleteStudents(
       (currentData: any) => {
         if (!currentData) return currentData;
         if (Array.isArray(currentData)) return currentData.filter((pm) => !idsToDelete.includes(pm.id));
-        if (currentData.products && Array.isArray(currentData.products)) return { ...currentData, products: currentData.products.filter((pm: any) => !idsToDelete.includes(pm.id)) };
+        if (currentData.items && Array.isArray(currentData.items)) {
+          return { ...currentData, items: currentData.items.filter((pm: any) => !idsToDelete.includes(pm.id)) };
+        }
+        if ((currentData as any).products && Array.isArray((currentData as any).products)) {
+          return { ...currentData, products: (currentData as any).products.filter((pm: any) => !idsToDelete.includes(pm.id)) };
+        }
         return currentData;
       },
       { revalidate: false }

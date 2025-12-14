@@ -19,6 +19,7 @@ import {
 import useSWR, { KeyedMutator } from "swr";
 import { ClassFromApi } from ".."; // Ajuste o caminho se necessário
 import { fetcher } from "@/utils/fetcher";
+import { extractItemsFromResponse, PaginatedListResponse } from "@/utils/pagination";
 import { Class, Student, StudentClass } from "@prisma/client";
 import Image from "next/image";
 import notFound from "@/assets/images/not-found.png";
@@ -72,12 +73,17 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
   };
 
   // 1. Busca todos os alunos da tenancy para popular o dropdown
-  const { data: allStudents } = useSWR<StudentFromApi[]>(
+  const { data: studentsResponse } = useSWR<StudentFromApi[] | PaginatedListResponse<StudentFromApi>>(
     () =>
       sessionData?.user.tenancyId
-        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/students`
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/students?limit=500`
         : null,
     fetcher
+  );
+
+  const allStudents = useMemo(
+    () => extractItemsFromResponse(studentsResponse),
+    [studentsResponse]
   );
 
   const studentOptions = useMemo(() => {

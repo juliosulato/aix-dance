@@ -49,5 +49,11 @@ export default function ProductImageUpload({ productId, initialUrl, onUpdated }:
   if (status === "loading") return null;
   if (status !== "authenticated") return null;
 
-  return <AvatarUpload defaultUrl={initialUrl ?? null} onUploadComplete={handleUploadComplete} />;
+  return (
+    <AvatarUpload
+      defaultUrl={initialUrl ?? null}
+      onUploadComplete={handleUploadComplete}
+      folder="inventory/products"
+    />
+  );
 }

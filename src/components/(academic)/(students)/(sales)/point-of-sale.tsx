@@ -30,6 +30,7 @@ import { notifications } from "@mantine/notifications";
 
 import { FiShoppingCart } from "react-icons/fi";
 import { fetcher } from "@/utils/fetcher";
+import { extractItemsFromResponse, PaginatedListResponse } from "@/utils/pagination";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import NewStudentContractModal from "./new";
 import { StudentFromApi } from "../StudentFromApi";
@@ -170,17 +171,13 @@ export default function PointOfSale({
 
   const products = accProducts;
 
+  const studentsUrl = tenancyId
+    ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students?limit=500`
+    : null;
   const { data: studentsData } = useSWR<
-    Student[] | PaginatedResponseLocal<Student>
-  >(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students`,
-    fetcher
-  );
-  const students = Array.isArray(studentsData)
-    ? studentsData
-    : (studentsData as any)?.products ??
-      (studentsData as any)?.students ??
-      undefined;
+    Student[] | PaginatedListResponse<Student>
+  >(studentsUrl, fetcher);
+  const students = extractItemsFromResponse(studentsData);
 
   const { data: formsOfReceiptData } = useSWR<
     FormsOfReceipt[] | PaginatedResponseLocal<FormsOfReceipt>

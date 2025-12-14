@@ -126,7 +126,7 @@ function NewUser({ opened, onClose, mutate }: Props) {
           className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw] lg:p-6"
         >
           <div className="flex flex-col gap-4">
-            <AvatarUpload onUploadComplete={setAvatar} />
+            <AvatarUpload onUploadComplete={setAvatar} folder="users/avatars" />
 
             <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2">
               <TextInput

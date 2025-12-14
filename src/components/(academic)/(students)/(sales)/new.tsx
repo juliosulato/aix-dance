@@ -10,6 +10,7 @@ import { ContractModel, ContractStatus, Plan, Student, Tenancy } from '@prisma/c
 import { CreateStudentContractInput, createStudentContractSchema } from '@/schemas/academic/student-contract.schema';
 import useSWR from 'swr';
 import { fetcher } from '@/utils/fetcher';
+import { extractItemsFromResponse, PaginatedListResponse } from '@/utils/pagination';
 import { FaInfoCircle } from 'react-icons/fa';
 import RichText from './StudentContractRichText';
 
@@ -28,7 +29,8 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
     const { data: sessionData } = useSession();
     const tenancyId = sessionData?.user.tenancyId;
 
-    const { data: students } = useSWR<Student[]>(tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students` : null, fetcher);
+    const { data: studentsResponse } = useSWR<Student[] | PaginatedListResponse<Student>>(tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students?limit=500` : null, fetcher);
+    const students = extractItemsFromResponse(studentsResponse);
 
     // Buscar status do aluno selecionado
     const selectedStudent = students?.find(s => s.id === studentId);

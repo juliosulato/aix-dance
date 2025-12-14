@@ -136,7 +136,12 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
                         <BasicInformations  {...formControlProps as any}/>
                         <div>
                             <h3 className="text-sm font-medium mb-2">Anexos</h3>
-                            <FileUpload accept={undefined} multiple onComplete={(files) => setUploadedFiles(files)} />
+                            <FileUpload
+                                accept={undefined}
+                                multiple
+                                uploadPathPrefix="financial/bill-attachments"
+                                onComplete={(files) => setUploadedFiles(files)}
+                            />
                         </div>
                         
                         <div>

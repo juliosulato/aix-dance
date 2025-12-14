@@ -4,6 +4,7 @@ import InfoTerm from "@/components/ui/Infoterm";
 import { Control, useWatch } from "react-hook-form";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
+import { extractItemsFromResponse, PaginatedListResponse } from "@/utils/pagination";
 import { Modality, Student, User } from "@prisma/client";
 import { CreateClassInput } from "@/schemas/academic/class.schema";
 
@@ -54,7 +55,8 @@ export default function NewClass__Resume({ control, tenancyId }: Props) {
     // Busca de dados para "traduzir" IDs em nomes
     const { data: modalities } = useSWR<Modality[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/modalities`, fetcher);
     const { data: teachers } = useSWR<User[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/users?role=TEACHER`, fetcher);
-    const { data: students } = useSWR<Student[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students`, fetcher);
+    const { data: studentsResponse } = useSWR<Student[] | PaginatedListResponse<Student>>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students?limit=500`, fetcher);
+    const students = extractItemsFromResponse(studentsResponse);
 
     const modalityName = modalities?.find(m => m.id === watchedValues.modalityId)?.name || '...';
     const teacherName = teachers?.find(t => t.id === watchedValues.teacherId)?.firstName || '...';

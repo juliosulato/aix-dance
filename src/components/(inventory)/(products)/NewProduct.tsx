@@ -97,6 +97,7 @@ export default function NewProduct({ opened, onClose, mutate }: Props) {
                         <AvatarUpload
                             defaultUrl={imageUrl}
                             onUploadComplete={(url) => setImageUrl(url)}
+                            folder="inventory/products"
                         />
                     </div>
                     <TextInput
@@ -104,6 +105,13 @@ export default function NewProduct({ opened, onClose, mutate }: Props) {
                         placeholder="Nome do produto"
                         {...register('name')}
                         error={errors.name?.message as unknown as string}
+                    />
+
+                    <TextInput
+                        label="Código de Barras"
+                        placeholder="Digite o código de barras"
+                        {...register('barCode')}
+                        error={errors.barCode?.message as unknown as string}
                     />
 
                     <Textarea

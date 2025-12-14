@@ -18,8 +18,8 @@ type PaginationInfo = {
 }
 
 type PaginatedResponse<T> = {
-    products: T[];
     pagination: PaginationInfo;
+    [key: string]: PaginationInfo | T[] | undefined;
 }
 
 interface DataViewProps<T> {

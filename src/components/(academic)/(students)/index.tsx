@@ -50,12 +50,14 @@ export default function AllStudentsData() {
   const [selectedStudent, setSelectedStudent] = useState<StudentFromApi | null>(
     null
   );
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   type Item = StudentFromApi & { fullName: string };
   type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
-  type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
+  type PaginatedResponseLocal<T> = { items: T[]; pagination: PaginationInfo };
 
   const {
     data: students,
@@ -65,15 +67,29 @@ export default function AllStudentsData() {
   } = useSWR<Item[] | PaginatedResponseLocal<Item>>(
     () =>
       sessionData?.user?.tenancyId
-        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/students`
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/students?page=${page}&limit=${limit}`
         : null,
     async (url: string) => {
       const res = await fetcher<any>(url);
-      const itemsRaw: StudentFromApi[] = Array.isArray(res) ? res : res.students ?? [];
-      const items: Item[] = itemsRaw.map((s) => ({ ...s, fullName: `${s.firstName} ${s.lastName}` }));
-      if (Array.isArray(res)) return items;
-      const pagination = res.pagination ?? { page: 1, limit: items.length || 10, total: items.length, totalPages: 1 };
-      return { products: items, pagination } as PaginatedResponseLocal<Item>;
+      const rawItems: StudentFromApi[] = Array.isArray(res)
+        ? res
+        : res.items ?? res.students ?? res.products ?? [];
+      const items: Item[] = rawItems.map((s) => ({ ...s, fullName: `${s.firstName} ${s.lastName}` }));
+
+      if (Array.isArray(res)) {
+        return {
+          items,
+          pagination: {
+            page: 1,
+            limit: items.length || limit,
+            total: items.length,
+            totalPages: 1,
+          },
+        } as PaginatedResponseLocal<Item>;
+      }
+
+      const pagination = res.pagination ?? { page, limit, total: items.length, totalPages: 1 };
+      return { items, pagination } as PaginatedResponseLocal<Item>;
     }
   );
 
@@ -186,13 +202,23 @@ export default function AllStudentsData() {
   return (
     <>
       <DataView<StudentFromApi & { fullName: string }>
-        data={students ?? []}
+        data={
+          students ?? {
+            items: [],
+            pagination: { page, limit, total: 0, totalPages: 0 },
+          }
+        }
+        itemKey="items"
         openNewModal={{
           func: () => setOpenNew(true),
           label: "Novo Aluno",
         }}
-    baseUrl="/system/academic/students/"
-    mutate={mutate}
+        baseUrl="/system/academic/students/"
+        mutate={mutate}
+        onPageChange={(nextPage, nextLimit) => {
+          setPage(nextPage);
+          setLimit(nextLimit);
+        }}
         pageTitle={"Alunos e Matrículas"}
         searchbarPlaceholder={"Procure por nome, CPF ou e-mail do aluno..."}
         columns={[

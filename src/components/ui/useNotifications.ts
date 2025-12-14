@@ -1,5 +1,6 @@
 import { useSession } from "next-auth/react";
 import useSWR from "swr";
+import { fetcher } from "@/utils/fetcher";
 
 export type Notification = {
   id: string;
@@ -13,7 +14,6 @@ export type Notification = {
 
 export function useNotifications(userId?: string) {
   const session = useSession();
-  const fetcher = (url: string) => fetch(url).then(res => res.json());
   const { data, error, mutate, isLoading } = useSWR<Notification[]>(
     userId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data?.user.tenancyId}/notifications/${userId}` : null,
     fetcher,

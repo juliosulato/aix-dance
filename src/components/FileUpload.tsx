@@ -25,7 +25,7 @@ export default function FileUpload({
   multiple = false,
   maxFileSizeBytes = 5 * 1024 * 1024, // default 5MB
   onComplete,
-  uploadPathPrefix,
+  uploadPathPrefix = "uploads",
 }: Props) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [progressMap, setProgressMap] = useState<Record<string, number>>({});

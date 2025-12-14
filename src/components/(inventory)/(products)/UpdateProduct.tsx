@@ -47,6 +47,7 @@ export default function UpdateProduct({ opened, onClose, mutate, product }: Prop
                 categoryId: product.categoryId ?? undefined,
                 supplierId: product.supplierId ?? undefined,
                 isActive: product.isActive ?? true,
+                barCode: product.barCode ?? undefined,
             });
         }
     }, [opened, product, reset]);
@@ -118,7 +119,7 @@ export default function UpdateProduct({ opened, onClose, mutate, product }: Prop
                         <label className="text-sm font-medium mb-2 block">Imagem do Produto</label>
                         <ProductImageUpload
                             productId={product.id}
-                            initialUrl={(product as any)?.imageUrl ?? undefined}
+                            initialUrl={product.imageUrl ?? undefined}
                             onUpdated={mutate}
                         />
                     </div>
@@ -127,6 +128,13 @@ export default function UpdateProduct({ opened, onClose, mutate, product }: Prop
                         placeholder="Nome do produto"
                         {...register('name')}
                         error={errors.name?.message as unknown as string}
+                    />
+
+                    <TextInput
+                        label="Código de Barras"
+                        placeholder="Digite o código de barras"
+                        {...register('barCode')}
+                        error={errors.barCode?.message as unknown as string}
                     />
 
                     <Textarea

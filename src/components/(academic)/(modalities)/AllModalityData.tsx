@@ -180,7 +180,7 @@ export default function AllModalityData() {
           func: () => setOpenNew(true),
           label: "Nova Modalidade",
         }}
-        baseUrl="/system/financial/modalities/"
+        baseUrl="/system/academic/modalities/"
   mutate={mutate}
         onPageChange={(p, l, sort) => {
           setPage(p);

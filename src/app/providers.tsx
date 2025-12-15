@@ -48,11 +48,21 @@ function useAttachBackendTokenToFetch() {
         ? input.toString()
         : input?.url;
 
-      // Add auth when calling backend base URL or relative API paths
+      // Add auth when calling backend base URL or API paths
       const isRelativeApi = typeof targetUrl === "string" && targetUrl.startsWith("/api/");
       const isBackendAbsolute = typeof targetUrl === "string" && BACKEND_BASE_URL && targetUrl.startsWith(BACKEND_BASE_URL);
+      // Handle same-origin absolute URLs like https://dev-aixdance.../api/...
+      const isSameOriginApi = (() => {
+        if (typeof targetUrl !== "string") return false;
+        try {
+          const u = new URL(targetUrl, window.location.href);
+          return u.origin === window.location.origin && u.pathname.startsWith("/api/");
+        } catch {
+          return false;
+        }
+      })();
 
-      if ((isBackendAbsolute || isRelativeApi) && session.backendToken) {
+      if ((isBackendAbsolute || isRelativeApi || isSameOriginApi) && session.backendToken) {
         const headers = new Headers(init?.headers || {});
         if (!headers.has("Authorization")) {
           headers.set("Authorization", `Bearer ${session.backendToken}`);

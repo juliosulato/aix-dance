@@ -7,6 +7,7 @@ const nextConfig = {
     images: {
         qualities: [75, 100]
     },
+    output: "standalone",
     turbopack: {
         // Resolve to the project directory to avoid Next.js inferring the wrong workspace root.
         root: path.resolve(__dirname)

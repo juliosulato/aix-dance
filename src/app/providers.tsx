@@ -26,7 +26,7 @@ function AuthFetchBridge({ children }: { children: React.ReactNode }) {
 
 function useAttachBackendTokenToFetch() {
   const { data: session } = useSession();
-  const originalFetchRef = useRef<typeof window.fetch>();
+  const originalFetchRef = useRef<typeof window.fetch>(window.fetch);
 
   useEffect(() => {
     if (typeof window === "undefined") return;

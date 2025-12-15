@@ -50,7 +50,7 @@ function NewTeacher({ opened, onClose }: Props) {
         let isValid = false;
 
         if (active === 0) {
-            const firstStepFields: (keyof CreateUserInput | `teacher.${string}` | `teacher.address.${string}`)[] = [
+            const firstStepFields = [
                 "firstName",
                 "lastName",
                 "email",
@@ -68,8 +68,8 @@ function NewTeacher({ opened, onClose }: Props) {
                 "teacher.address.zipCode",
                 "teacher.address.city",
                 "teacher.address.state"
-            ];
-            isValid = await trigger(firstStepFields);
+            ] as const;
+            isValid = await trigger(firstStepFields as any);
         } else if (active === 1) {
             const secondStepFields: (keyof CreateUserInput)[] = [
                 "password",

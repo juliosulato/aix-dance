@@ -42,7 +42,7 @@ interface DataViewProps<T> {
     RenderAllRowsMenu?: (selectedRows: string[]) => React.ReactNode;
     filters?: Filter<T>[];
     dateFilterOptions?: DateFilterOption<T>[];
-    mutate?: KeyedMutator<T[] | PaginatedResponse<T>>;
+    mutate?: KeyedMutator<any>;
     // called when user requests a different page / page size in server-side pagination mode
     // includes optional sort configuration when user orders columns
     onPageChange?: (page: number, limit: number, sort?: SortConfig<T> | null) => void;
@@ -127,6 +127,7 @@ export default function DataView<T>({
     const isServerPaginated = !Array.isArray(data);
     const paginatedResponse = isServerPaginated ? (data as PaginatedResponse<T>) : null;
     const serverItems = isServerPaginated ? paginatedResponse?.[itemKey] : null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const items: T[] = isServerPaginated
         ? (Array.isArray(serverItems) ? (serverItems as T[]) : [])
         : (data as T[]);

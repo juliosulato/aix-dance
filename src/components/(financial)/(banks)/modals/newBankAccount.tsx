@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
+import { authedFetch } from "@/utils/authedFetch";
 
 import {
   CreateBankInput,
@@ -66,7 +67,7 @@ export default function NewBankAccount({ opened, onClose }: Props) {
     setIsLoading(true);
 
     try {
-      const response = await fetch(
+      const response = await authedFetch(
         `/api/v1/tenancies/${sessionData.user.tenancyId}/banks`,
         {
           method: "POST",

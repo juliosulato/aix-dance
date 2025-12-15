@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
+import { authedFetch } from "@/utils/authedFetch";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal, TextInput } from "@mantine/core";
 import { KeyedMutator } from "swr";
@@ -44,9 +45,11 @@ export default function UpdateModalities({ opened, onClose, mutate, modality }: 
 
         setIsLoading(true);
         try {
-            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/modalities/${modality.id}`, {
+            const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/modalities/${modality.id}`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify(data),
             });
 

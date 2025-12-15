@@ -75,7 +75,7 @@ export default function UpdateFormsOfReceipt({
     }
     setIsLoading(true);
     try {
-      const response = await fetch(
+      const response = await authedFetch(
         `/api/v1/tenancies/${sessionData.user.tenancyId}/forms-of-receipt/${formsOfReceipt?.id}`,
         {
           method: "PUT",

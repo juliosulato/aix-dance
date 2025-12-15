@@ -42,6 +42,7 @@ export default {
   ],
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 dias - sessão NextAuth expira após 30 dias de inatividade
   },
   callbacks: {
     async jwt({ token, user }: any) {
@@ -72,7 +73,7 @@ export default {
           const secret = new TextEncoder().encode(process.env.AUTH_SECRET);
           session.backendToken = await new SignJWT(payload)
             .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-            .setExpirationTime("4h")
+            .setExpirationTime("1h") // Renova automaticamente a cada requisição
             .sign(secret);
         }
       }

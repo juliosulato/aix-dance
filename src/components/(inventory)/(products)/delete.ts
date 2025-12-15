@@ -1,6 +1,7 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import ProductFromAPI from "@/types/productFromAPI";
+import { authedFetch } from "@/utils/authedFetch";
 
 async function deleteProducts(
   items: ProductFromAPI | string[],
@@ -27,7 +28,7 @@ async function deleteProducts(
   });
 
   try {
-    const response = await fetch(apiUrl, {
+    const response = await authedFetch(apiUrl, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

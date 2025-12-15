@@ -1,6 +1,7 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { Supplier } from "@prisma/client";
+import { authedFetch } from "@/utils/authedFetch";
 
 async function deleteSuppliers(
     items: Supplier | string[],
@@ -24,7 +25,7 @@ async function deleteSuppliers(
     notifications.show({ title: "Aguarde", message: "Processando exclusão...", color: "yellow" });
 
     try {
-        const response = await fetch(apiUrl, {
+        const response = await authedFetch(apiUrl, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

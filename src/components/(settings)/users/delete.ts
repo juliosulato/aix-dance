@@ -1,6 +1,7 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { UserFromApi } from "./UserFromApi";
+import { authedFetch } from "@/utils/authedFetch";
 
 type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
 type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
@@ -35,7 +36,7 @@ async function deleteUsers(
   });
 
   try {
-    const response = await fetch(apiUrl, {
+    const response = await authedFetch(apiUrl, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

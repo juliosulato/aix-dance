@@ -1,6 +1,7 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { CategoryGroup } from "@prisma/client";
+import { authedFetch } from "@/utils/authedFetch";
 
 async function deleteCategoryGroups(
     items: CategoryGroup | string[],
@@ -27,7 +28,7 @@ async function deleteCategoryGroups(
     notifications.show({ title: "Aguarde", message: "Excluindo item(s)...", color: "yellow" });
 
     try {
-        const response = await fetch(apiUrl, {
+        const response = await authedFetch(apiUrl, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

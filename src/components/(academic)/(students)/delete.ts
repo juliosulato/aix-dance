@@ -1,6 +1,7 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { Student } from "@prisma/client";
+import { authedFetch } from "@/utils/authedFetch";
 
 type Item = Student & { fullName?: string };
 type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
@@ -48,7 +49,7 @@ async function deleteStudents(
   });
 
   try {
-    const response = await fetch(apiUrl, {
+    const response = await authedFetch(apiUrl, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

@@ -14,6 +14,7 @@ import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { authedFetch } from "@/utils/authedFetch";
 
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import Address from "../../../AddressForm";
@@ -75,7 +76,7 @@ function NewStudent({ opened, onClose, mutate }: Props) {
         image: avatarUrl,
       };
 
-      const response = await fetch(
+      const response = await authedFetch(
         `/api/v1/tenancies/${sessionData.user.tenancyId}/students`,
         {
           method: "POST",

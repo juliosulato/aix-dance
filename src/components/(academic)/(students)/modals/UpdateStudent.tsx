@@ -14,6 +14,7 @@ import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { authedFetch } from "@/utils/authedFetch";
 
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import Address from "../../../AddressForm";
@@ -102,7 +103,7 @@ useEffect(() => {
       };
 
 
-      const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/students/${student?.id}`, {
+      const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/students/${student?.id}`, {
         method: "PUT",
         body: JSON.stringify(payload),
         headers: { "Content-Type": "application/json" },

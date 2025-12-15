@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
+import { authedFetch } from "@/utils/authedFetch";
 
 export type Notification = {
   id: string;
@@ -21,12 +22,16 @@ export function useNotifications(userId?: string) {
   );
 
   async function markAsRead(id: string) {
-    await fetch(`/api/v1/tenancies/${session.data?.user.tenancyId}/notifications/${id}/read`, { method: "PATCH" });
+    await authedFetch(`/api/v1/tenancies/${session.data?.user.tenancyId}/notifications/${id}/read`, {
+      method: "PATCH",
+    });
     mutate();
   }
 
   async function remove(id: string) {
-    await fetch(`/api/v1/tenancies/${session.data?.user.tenancyId}/notifications/${id}`, { method: "DELETE" });
+    await authedFetch(`/api/v1/tenancies/${session.data?.user.tenancyId}/notifications/${id}`, {
+      method: "DELETE",
+    });
     mutate();
   }
 

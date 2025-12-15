@@ -54,7 +54,7 @@ export default function AllUsersData() {
   } = useSWR<UserFromApi[] | PaginatedResponseLocal<UserFromApi>>(
     () =>
       sessionData?.user?.tenancyId
-        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/users`
+        ? `/api/v1/tenancies/${sessionData.user.tenancyId}/users`
         : null,
     fetcher
   );

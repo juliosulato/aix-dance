@@ -22,7 +22,7 @@ async function deletePlans(
     return;
   }
 
-  const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/plans`;
+  const apiUrl = `/api/v1/tenancies/${tenancyId}/plans`;
 
   // Atualização otimista da UI (suporta array ou paginated response)
   if (mutate) {

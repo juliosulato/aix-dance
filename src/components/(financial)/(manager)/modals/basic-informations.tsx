@@ -19,9 +19,9 @@ type Props = {
 export default function BasicInformations({ control, errors, register }: Props) {
     const session = useSession();
 
-    const { data: suppliers } = useSWR<Supplier[]>(session.data?.user.tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data.user.tenancyId}/suppliers` : null, fetcher);
-    const { data: categories } = useSWR<CategoryBill[]>(session.data?.user.tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data.user.tenancyId}/category-bills` : null, fetcher);
-    const { data: banks } = useSWR<Bank[]>(session.data?.user.tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data.user.tenancyId}/banks` : null, fetcher);
+    const { data: suppliers } = useSWR<Supplier[]>(session.data?.user.tenancyId ? `/api/v1/tenancies/${session.data.user.tenancyId}/suppliers` : null, fetcher);
+    const { data: categories } = useSWR<CategoryBill[]>(session.data?.user.tenancyId ? `/api/v1/tenancies/${session.data.user.tenancyId}/category-bills` : null, fetcher);
+    const { data: banks } = useSWR<Bank[]>(session.data?.user.tenancyId ? `/api/v1/tenancies/${session.data.user.tenancyId}/banks` : null, fetcher);
 
     return (
         <div className="border border-neutral-300 p-4 md:p-6 rounded-xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

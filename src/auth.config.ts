@@ -1,6 +1,6 @@
 import { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { encode } from "next-auth/jwt";
+import { SignJWT } from "jose";
 import { prisma } from "./lib/prisma";
 import { compareHashedPasswords } from "./utils/passwords";
 
@@ -62,12 +62,18 @@ export default {
         session.user.tenancyId = token.tenancyId;
         session.user.country = token.country;
         if (process.env.AUTH_SECRET) {
-          session.backendToken = await encode({
-            token,
-            secret: process.env.AUTH_SECRET,
-            salt: "",
-            maxAge: 60 * 60 * 4,
-          });
+          const payload = {
+            id: token.id,
+            role: token.role,
+            tenancyId: token.tenancyId,
+            email: token.email,
+            country: token.country,
+          } as Record<string, unknown>;
+          const secret = new TextEncoder().encode(process.env.AUTH_SECRET);
+          session.backendToken = await new SignJWT(payload)
+            .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+            .setExpirationTime("4h")
+            .sign(secret);
         }
       }
       return session;

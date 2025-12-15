@@ -42,7 +42,7 @@ export default function AllContractModelsPage() {
     // Busca de dados com SWR
     const { data: contractModels, error, isLoading, mutate } = useSWR<ContractModel[]>(
         () => sessionData?.user?.tenancyId
-            ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/contract-models`
+            ? `/api/v1/tenancies/${sessionData.user.tenancyId}/contract-models`
             : null,
         fetcher
     );

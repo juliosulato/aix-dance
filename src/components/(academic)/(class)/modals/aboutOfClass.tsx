@@ -18,11 +18,11 @@ export default function NewClass__AboutOfClass({ control, errors, tenancyId }: P
     type Paginated<T> = { [k: string]: T[] } & { pagination?: { page: number; limit: number; total: number; totalPages: number } };
 
     const { data: modalities } = useSWR<Modality[] | Paginated<Modality>>(
-        () => tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/modalities` : null,
+        () => tenancyId ? `/api/v1/tenancies/${tenancyId}/modalities` : null,
         fetcher
     );
     const { data: teachers } = useSWR<User[] | Paginated<User>>(
-        () => tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/users?role=TEACHER` : null,
+        () => tenancyId ? `/api/v1/tenancies/${tenancyId}/users?role=TEACHER` : null,
         fetcher
     );
 

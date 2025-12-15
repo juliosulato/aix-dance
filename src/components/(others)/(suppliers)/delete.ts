@@ -15,7 +15,7 @@ async function deleteSuppliers(
         return;
     }
 
-    const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/suppliers`;
+    const apiUrl = `/api/v1/tenancies/${tenancyId}/suppliers`;
 
     if (mutate) {
         mutate();

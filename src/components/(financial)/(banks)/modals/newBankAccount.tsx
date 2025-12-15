@@ -67,7 +67,7 @@ export default function NewBankAccount({ opened, onClose }: Props) {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/banks`,
+        `/api/v1/tenancies/${sessionData.user.tenancyId}/banks`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

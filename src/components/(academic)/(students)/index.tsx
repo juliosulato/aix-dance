@@ -67,7 +67,7 @@ export default function AllStudentsData() {
   } = useSWR<Item[] | PaginatedResponseLocal<Item>>(
     () =>
       sessionData?.user?.tenancyId
-        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/students?page=${page}&limit=${limit}`
+        ? `/api/v1/tenancies/${sessionData.user.tenancyId}/students?page=${page}&limit=${limit}`
         : null,
     async (url: string) => {
       const res = await fetcher<any>(url);

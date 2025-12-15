@@ -9,7 +9,7 @@ export default async function toggleProductActive(
 ) {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/inventory/products/${productId}`,
+      `/api/v1/tenancies/${tenancyId}/inventory/products/${productId}`,
       {
         method: "PUT",
         headers: {

@@ -74,7 +74,7 @@ export default function UpdateProduct({ opened, onClose, mutate, product }: Prop
             // apply schema parse to ensure types/defaults
             const payload = updateProductSchema.parse(data);
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/products/${product.id}`, {
+            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/products/${product.id}`, {
                 method: "PATCH",
                 body: JSON.stringify(payload),
                 headers: { "Content-Type": "application/json" },

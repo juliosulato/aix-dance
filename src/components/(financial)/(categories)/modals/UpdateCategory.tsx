@@ -64,7 +64,7 @@ export default function UpdateCategoryBill({
     setIsLoading(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/category-bills/${category?.id}`,
+        `/api/v1/tenancies/${sessionData.user.tenancyId}/category-bills/${category?.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

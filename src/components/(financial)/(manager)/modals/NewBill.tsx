@@ -70,7 +70,7 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
         try {
             console.log("Submitting data:", data);
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/bills`, {
+            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bills`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
@@ -90,7 +90,7 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
             if (uploadedFiles.length > 0) {
                 try {
                     for (const f of uploadedFiles) {
-                        await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/bill-attachments`, {
+                        await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bill-attachments`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ url: f.fileUrl, billId: createdBill.id }),

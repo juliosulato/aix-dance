@@ -89,7 +89,7 @@ export default function PointOfSale({
 
   // --- Hooks de data fetching ---
   const { data: tenancy } = useSWR<Tenancy>(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}`,
+    `/api/v1/tenancies/${tenancyId}`,
     fetcher
   );
 
@@ -105,7 +105,7 @@ export default function PointOfSale({
   };
 
   const { data: plansData } = useSWR<Plan[] | PaginatedResponseLocal<Plan>>(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/plans`,
+    `/api/v1/tenancies/${tenancyId}/plans`,
     fetcher
   );
   const plans = Array.isArray(plansData)
@@ -130,7 +130,7 @@ export default function PointOfSale({
   const PRODUCT_PAGE_LIMIT = 30;
   const productsUrl = `${
     process.env.NEXT_PUBLIC_BACKEND_URL
-  }${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/inventory/products?page=${productPage}&limit=${PRODUCT_PAGE_LIMIT}${
+  }/api/v1/tenancies/${tenancyId}/inventory/products?page=${productPage}&limit=${PRODUCT_PAGE_LIMIT}${
     searchTerm ? `&q=${encodeURIComponent(searchTerm)}` : ""
   }`;
 
@@ -172,7 +172,7 @@ export default function PointOfSale({
   const products = accProducts;
 
   const studentsUrl = tenancyId
-    ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students?limit=500`
+    ? `/api/v1/tenancies/${tenancyId}/students?limit=500`
     : null;
   const { data: studentsData } = useSWR<
     Student[] | PaginatedListResponse<Student>
@@ -182,7 +182,7 @@ export default function PointOfSale({
   const { data: formsOfReceiptData } = useSWR<
     FormsOfReceipt[] | PaginatedResponseLocal<FormsOfReceipt>
   >(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/forms-of-receipt`,
+    `/api/v1/tenancies/${tenancyId}/forms-of-receipt`,
     fetcher
   );
   const formsOfReceipt = Array.isArray(formsOfReceiptData)
@@ -217,7 +217,7 @@ export default function PointOfSale({
   // --- SWR para buscar as assinaturas do aluno selecionado ---
   const { data: studentSubscriptions } = useSWR<StudentFromApi>(
     selectedStudentId
-      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${selectedStudentId}`
+      ? `/api/v1/tenancies/${tenancyId}/students/${selectedStudentId}`
       : null,
     fetcher
   );
@@ -677,7 +677,7 @@ export default function PointOfSale({
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/sales`,
+        `/api/v1/tenancies/${tenancyId}/sales`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -711,7 +711,7 @@ export default function PointOfSale({
       }
 
       await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${data.studentId}/history`,
+        `/api/v1/tenancies/${tenancyId}/students/${data.studentId}/history`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

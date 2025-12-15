@@ -103,7 +103,7 @@ function NewClass({ opened, onClose, mutate }: Props) {
 
     try {
       const resp = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/classes`,
+        `/api/v1/tenancies/${sessionData.user.tenancyId}/classes`,
         {
           method: "POST",
           body: JSON.stringify(finalData),

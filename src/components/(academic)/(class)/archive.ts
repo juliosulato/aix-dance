@@ -18,7 +18,7 @@ async function arquivarTurmas(
     return;
   }
 
-  const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/classes`;
+  const apiUrl = `/api/v1/tenancies/${tenancyId}/classes`;
 
   // Atualização otimista da UI: remove as turmas da lista visível
   if (mutate) {

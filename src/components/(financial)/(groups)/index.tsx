@@ -40,7 +40,7 @@ export default function AllCategoryGroupsData() {
 
     const { data: categoryGroups, error, isLoading, mutate } = useSWR<CategoryGroup[]>(
         () => sessionData?.user?.tenancyId
-            ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/category-groups`
+            ? `/api/v1/tenancies/${sessionData.user.tenancyId}/category-groups`
             : null,
         fetcher
     );

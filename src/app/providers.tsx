@@ -34,7 +34,7 @@ function useAttachBackendTokenToFetch() {
       originalFetchRef.current = window.fetch.bind(window);
     }
 
-    if (!BACKEND_BASE_URL || !session?.backendToken) {
+    if (!session?.backendToken) {
       if (originalFetchRef.current) {
         window.fetch = originalFetchRef.current;
       }

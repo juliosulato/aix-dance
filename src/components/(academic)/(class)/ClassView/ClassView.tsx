@@ -87,7 +87,7 @@ export default function ClassView({ id }: { id: string }) {
   const tenancyId = session?.data?.user.tenancyId as string;
 
   const { data, error } = useSWR<ClassFromApi>(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/classes/${id}`,
+    `/api/v1/tenancies/${tenancyId}/classes/${id}`,
     fetcher
   );
 

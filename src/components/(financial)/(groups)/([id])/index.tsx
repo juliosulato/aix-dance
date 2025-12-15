@@ -19,7 +19,7 @@ export default function CategoryGroupView({ id }: { id: string }) {
     const tenancyId = session?.data?.user.tenancyId as string;
     
     const { data: categoryGroup, error } = useSWR<CategoryGroup>(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/category-groups/${id}`,
+        `/api/v1/tenancies/${tenancyId}/category-groups/${id}`,
         fetcher
     );
 

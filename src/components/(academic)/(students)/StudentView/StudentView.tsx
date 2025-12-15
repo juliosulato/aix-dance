@@ -23,7 +23,7 @@ export default function StudentsView({ id }: { id: string }) {
   const tenancyId = session?.data?.user.tenancyId as string;
 
   const { data: student, error } = useSWR<StudentFromApi>(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${id}`,
+    `/api/v1/tenancies/${tenancyId}/students/${id}`,
     fetcher
   );
 

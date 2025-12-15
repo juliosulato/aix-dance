@@ -77,7 +77,7 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
         }
 
         try {
-            const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/users/${user.id}`, {
+            const resp = await fetch(`/api/v1/tenancies/${tenancyId}/users/${user.id}`, {
                 method: "PUT",
                 body: JSON.stringify({
                     ...data,

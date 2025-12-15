@@ -7,7 +7,7 @@ export default async function deleteContractModels(
     mutate: MutatorCallback
 ) {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/contract-models`, {
+        const response = await fetch(`/api/v1/tenancies/${tenancyId}/contract-models`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ids }),

@@ -15,7 +15,7 @@ async function deleteFormsOfReceipt(
         return;
     }
 
-    const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/forms-of-receipt`;
+    const apiUrl = `/api/v1/tenancies/${tenancyId}/forms-of-receipt`;
 
     mutate && await mutate(
         (currentData) => currentData?.filter(pm => !idsToDelete.includes(pm.id)) || [],

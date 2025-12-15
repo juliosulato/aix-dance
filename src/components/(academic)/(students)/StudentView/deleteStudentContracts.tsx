@@ -3,7 +3,7 @@ import { FaCheck, FaExclamationTriangle } from "react-icons/fa";
 
 export default async function deleteStudentContracts(ids: string[], tenancyId: string) {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/student-contracts`, {
+        const response = await fetch(`/api/v1/tenancies/${tenancyId}/student-contracts`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ids }),

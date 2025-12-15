@@ -15,18 +15,18 @@ export type Notification = {
 export function useNotifications(userId?: string) {
   const session = useSession();
   const { data, error, mutate, isLoading } = useSWR<Notification[]>(
-    userId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data?.user.tenancyId}/notifications/${userId}` : null,
+    userId ? `/api/v1/tenancies/${session.data?.user.tenancyId}/notifications/${userId}` : null,
     fetcher,
     { refreshInterval: 30000 } // Atualiza a cada 30s
   );
 
   async function markAsRead(id: string) {
-    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data?.user.tenancyId}/notifications/${id}/read`, { method: "PATCH" });
+    await fetch(`/api/v1/tenancies/${session.data?.user.tenancyId}/notifications/${id}/read`, { method: "PATCH" });
     mutate();
   }
 
   async function remove(id: string) {
-    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data?.user.tenancyId}/notifications/${id}`, { method: "DELETE" });
+    await fetch(`/api/v1/tenancies/${session.data?.user.tenancyId}/notifications/${id}`, { method: "DELETE" });
     mutate();
   }
 

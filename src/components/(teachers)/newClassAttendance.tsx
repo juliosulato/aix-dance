@@ -128,8 +128,8 @@ export default function NewClassAttendance({
     };
 
     const url = attendanceToEdit
-      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${studentsClass.tenancyId}/class-attendances/${attendanceToEdit.id}`
-      : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${studentsClass.tenancyId}/class-attendances`;
+      ? `/api/v1/tenancies/${studentsClass.tenancyId}/class-attendances/${attendanceToEdit.id}`
+      : `/api/v1/tenancies/${studentsClass.tenancyId}/class-attendances`;
     const method = attendanceToEdit ? "PUT" : "POST";
 
     await fetch(url, {

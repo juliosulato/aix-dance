@@ -88,7 +88,7 @@ model Student {
     subscriptions Subscription[]
 
     sales Sale[]
-    orders Order[] // Encomendas do estudante
+    orders Order[] // Encomendas do aluno
 
 
     createdAt DateTime @default(now())

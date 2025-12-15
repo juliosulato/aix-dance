@@ -35,7 +35,7 @@ export async function GET(request: Request, { params }: { params: { tenancyId: s
             const key = student.image.split('/').pop();
 
             if (!key) {
-                return student; // Retorna o estudante sem imagem se a URL for malformada
+                return student; // Retorna o aluno sem imagem se a URL for malformada
             }
 
             const command = new GetObjectCommand({

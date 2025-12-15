@@ -119,7 +119,7 @@ function NewStudent({ opened, onClose, mutate }: Props) {
       <Modal
         opened={opened}
         onClose={handleClose}
-        title={"Novo Estudante"}
+        title={"Novo Aluno"}
         size="auto"
         radius="lg"
         centered

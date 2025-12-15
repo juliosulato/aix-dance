@@ -400,11 +400,11 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
                 <div className="flex flex-col gap-3 items-center justify-center text-center m-auto">
                   <Image
                     src={notFound}
-                    alt="Nenhum estudante encontrado"
+                    alt="Nenhum aluno encontrado"
                     className="max-w-[150px]"
                   />
                   <h3 className="text-xl text-primary font-bold">
-                    Nenhum estudante encontrado
+                    Nenhum aluno encontrado
                   </h3>
                   <p className="max-w-xs text-neutral-500">
                     Não encontramos estudantes disponíveis para esta turma.

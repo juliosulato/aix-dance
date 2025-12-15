@@ -3,20 +3,36 @@ import { z } from "zod";
 import dayjs from "dayjs";
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { addressSchema } from "./address.schema";
+import { isValidCpf } from "@/utils/validateCpf";
 
 dayjs.extend(customParseFormat);
+
+const MIN_BIRTH_DATE = dayjs("1900-01-01");
+const MAX_BIRTH_DATE = dayjs();
+
+const parseBirthDate = (value: string) => dayjs(value, ["DD/MM/YYYY", "DD-MM-YYYY", "YYYY-MM-DD"], true);
 
 
 const teacherSchema = z.object({
   cellPhoneNumber: z.string().optional(),
   phoneNumber: z.string().optional(),
-  document: z.string().min(1, "Documento é obrigatório"),
+  document: z.string()
+    .min(1, "Documento é obrigatório")
+    .refine((value) => isValidCpf(value), { message: "CPF inválido" }),
   gender: z.enum(Gender, { error: "Gênero é obrigatório" }),
   pronoun: z.string().optional(),
   instagramUser: z.string().optional(),
   professionalRegister: z.string().optional(),
   address: addressSchema.optional(),
-  dateOfBirth: z.string().transform((arg) => dayjs(arg, "DD-MM-YYYY").format("YYYY-MM-DD")),
+  dateOfBirth: z.string()
+    .refine((value) => {
+      const parsed = parseBirthDate(value);
+      if (!parsed.isValid()) return false;
+      if (parsed.isBefore(MIN_BIRTH_DATE)) return false;
+      if (parsed.isAfter(MAX_BIRTH_DATE)) return false;
+      return true;
+    }, { message: "Data de nascimento inválida" })
+    .transform((value) => parseBirthDate(value).format("YYYY-MM-DD")),
   remunerationType: z.enum(RemunerationType, { error: "Tipo de remuneração é obrigatório" }),
   baseAmount: z.number({ error: "Valor base é obrigatório" }).min(1, "O valor base deve ser no mínimo 1"),
   paymentDay: z.number().int().min(1).max(31).default(5),

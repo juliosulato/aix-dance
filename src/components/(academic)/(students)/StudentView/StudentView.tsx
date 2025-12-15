@@ -36,7 +36,7 @@ export default function StudentsView({ id }: { id: string }) {
       await deleteStudents([student?.id || ""], tenancyId);
       window.location.replace("/system/academic/students");
     } catch (error) {
-      console.error("Falha ao excluir o estudante:", error);
+      console.error("Falha ao excluir o aluno:", error);
       setIsDeleting(false);
       setConfirmModalOpen(false);
     }
@@ -49,8 +49,8 @@ export default function StudentsView({ id }: { id: string }) {
   const [tab, setTab] = useState(currentTab);
 
   if (error) {
-    console.error("Falha ao carregar os dados do estudante:", error);
-    return <div>Falha ao carregar os dados do estudante.</div>;
+    console.error("Falha ao carregar os dados do aluno:", error);
+    return <div>Falha ao carregar os dados do aluno.</div>;
   }
 
   if (!student) {
@@ -138,7 +138,7 @@ export default function StudentsView({ id }: { id: string }) {
         confirmColor="red"
         loading={isDeleting}
       >
-        {`Tem certeza que deseja excluir o estudante ${
+        {`Tem certeza que deseja excluir o aluno ${
           student?.firstName || ""
         } ${student?.lastName || ""}?`}
       </ConfirmationModal>

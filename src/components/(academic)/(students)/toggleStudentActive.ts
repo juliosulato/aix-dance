@@ -44,7 +44,7 @@ async function toggleStudentActive(
     });
 
     if (!response.ok) {
-      throw new Error("Falha ao atualizar o estudante na API.");
+      throw new Error("Falha ao atualizar o aluno na API.");
     }
 
     notifications.clean();

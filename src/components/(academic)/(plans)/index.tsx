@@ -52,7 +52,9 @@ export default function AllPlansData() {
         : null,
     async (url: string) => {
       const res = await fetcher<any>(url);
-      const itemsRaw: Plan[] = Array.isArray(res) ? res : res.plans ?? res.products ?? [];
+      const itemsRaw: Plan[] = Array.isArray(res)
+        ? res
+        : res.plans ?? res.items ?? res.data ?? res.products ?? [];
       if (Array.isArray(res)) return itemsRaw;
       const pagination = res.pagination ?? { page: 1, limit: itemsRaw.length || 10, total: itemsRaw.length, totalPages: 1 };
       return { products: itemsRaw, pagination } as PaginatedResponseLocal<Item>;

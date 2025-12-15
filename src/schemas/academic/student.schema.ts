@@ -1,6 +1,14 @@
 import toTitleCase from '@/utils/toTitleCase';
 import { Gender } from '@prisma/client';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { z } from 'zod';
+import { isValidCpf } from '@/utils/validateCpf';
+
+dayjs.extend(customParseFormat);
+
+const MIN_BIRTH_DATE = dayjs('1900-01-01');
+const MAX_BIRTH_DATE = dayjs();
 
 // Schema simplificado sem dependência de traduções
 export const createStudentSchema = z.object({
@@ -10,9 +18,22 @@ export const createStudentSchema = z.object({
     gender: z.enum(Gender, { message: "Gênero é obrigatório" }),
     cellPhoneNumber: z.string().min(1, { message: "Celular é obrigatório" }),
     pronoun: z.string().optional(),
-    dateOfBirth: z.string().min(1, { message: "Data de nascimento é obrigatória" }),
+    dateOfBirth: z.string()
+        .min(1, { message: "Data de nascimento é obrigatória" })
+        .refine((value) => {
+            const parsed = dayjs(value, 'DD/MM/YYYY', true);
+            if (!parsed.isValid()) return false;
+            if (parsed.isBefore(MIN_BIRTH_DATE)) return false;
+            if (parsed.isAfter(MAX_BIRTH_DATE)) return false;
+            return true;
+        }, { message: "Data de nascimento inválida" }),
     phoneNumber: z.string().optional(),
-    documentOfIdentity: z.string().optional(),
+    documentOfIdentity: z.string().optional().refine((value) => {
+        if (!value) return true;
+        const digits = value.replace(/\D/g, '');
+        if (digits.length === 0) return true; // permanece opcional
+        return isValidCpf(digits);
+    }, { message: "CPF inválido" }),
     email: z.email({ message: "Email inválido" }),
     howDidYouMeetUs: z.string().optional(),
     instagramUser: z.string().optional(),

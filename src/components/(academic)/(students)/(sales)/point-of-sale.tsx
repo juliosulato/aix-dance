@@ -128,9 +128,7 @@ export default function PointOfSale({
   // Paginated products fetch: start with page 1, limit 30 and accumulate as user scrolls
   const [productPage, setProductPage] = useState<number>(1);
   const PRODUCT_PAGE_LIMIT = 30;
-  const productsUrl = `${
-    process.env.NEXT_PUBLIC_BACKEND_URL
-  }${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/inventory/products?page=${productPage}&limit=${PRODUCT_PAGE_LIMIT}${
+  const productsUrl = `/api/v1/tenancies/${tenancyId}/inventory/products?page=${productPage}&limit=${PRODUCT_PAGE_LIMIT}${
     searchTerm ? `&q=${encodeURIComponent(searchTerm)}` : ""
   }`;
 

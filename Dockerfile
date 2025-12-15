@@ -40,7 +40,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 ENV NODE_ENV=production
-ENV NEXT_PUBLIC_BACKEND_URL=https://dev-aixdance-api.mazzaux.com.br
+ENV NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Usuário não-root

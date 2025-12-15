@@ -27,18 +27,12 @@ function AuthFetchBridge({ children }: { children: React.ReactNode }) {
 function useAttachBackendTokenToFetch() {
   const { data: session } = useSession();
   const originalFetchRef = useRef<typeof window.fetch>(window.fetch);
+  const tokenRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (!originalFetchRef.current) {
       originalFetchRef.current = window.fetch.bind(window);
-    }
-
-    if (!session?.backendToken) {
-      if (originalFetchRef.current) {
-        window.fetch = originalFetchRef.current;
-      }
-      return;
     }
 
     const authedFetch: typeof window.fetch = async (input, init) => {
@@ -62,10 +56,39 @@ function useAttachBackendTokenToFetch() {
         }
       })();
 
-      if ((isBackendAbsolute || isRelativeApi || isSameOriginApi) && session.backendToken) {
+      // Avoid recursion and special-case: don't try to attach to the session endpoint itself
+      const isAuthSessionEndpoint = (() => {
+        if (typeof targetUrl !== "string") return false;
+        try {
+          const u = new URL(targetUrl, window.location.href);
+          return u.origin === window.location.origin && u.pathname === "/api/auth/session";
+        } catch {
+          return false;
+        }
+      })();
+
+      // Try to resolve a token lazily if needed
+      let token = tokenRef.current;
+      if ((isBackendAbsolute || isRelativeApi || isSameOriginApi) && !token && !isAuthSessionEndpoint) {
+        try {
+          const res = await originalFetchRef.current!(new URL("/api/auth/session", window.location.href).toString(), {
+            credentials: "include",
+          } as RequestInit);
+          if (res.ok) {
+            const data = await res.json();
+            token = data?.backendToken || data?.user?.backendToken || data?.session?.backendToken;
+            if (typeof token === "string") tokenRef.current = token;
+          }
+        } catch {
+          // ignore
+        }
+      }
+
+      // Attach Authorization if we have a token
+      if ((isBackendAbsolute || isRelativeApi || isSameOriginApi) && token) {
         const headers = new Headers(init?.headers || {});
         if (!headers.has("Authorization")) {
-          headers.set("Authorization", `Bearer ${session.backendToken}`);
+          headers.set("Authorization", `Bearer ${token}`);
         }
         const nextInit: RequestInit = { ...(init ?? {}), headers };
         return originalFetchRef.current!(input as RequestInfo | URL, nextInit);
@@ -81,5 +104,12 @@ function useAttachBackendTokenToFetch() {
         window.fetch = originalFetchRef.current;
       }
     };
+  }, []);
+
+  // Keep tokenRef up-to-date when session changes
+  useEffect(() => {
+    if (session?.backendToken) {
+      tokenRef.current = session.backendToken as string;
+    }
   }, [session?.backendToken]);
 }

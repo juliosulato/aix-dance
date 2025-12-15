@@ -72,7 +72,7 @@ export default function AllBillsData() {
 
     const { data: parentBillsData, error, isLoading, mutate } = useSWR<BillFromApi[] | PaginatedResponseLocal<BillFromApi>>(
         () => sessionData?.user?.tenancyId
-            ? `/api/v1/tenancies/${sessionData.user.tenancyId}/bills`
+            ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/bills`
             : null,
         fetcher
     );

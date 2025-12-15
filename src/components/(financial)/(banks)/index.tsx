@@ -42,7 +42,7 @@ export default function AllBanksData() {
 
     const { data: banks, error, isLoading, mutate } = useSWR<Bank[]>(
         () => sessionData?.user?.tenancyId
-            ? `/api/v1/tenancies/${sessionData.user.tenancyId}/banks`
+            ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/banks`
             : null,
         fetcher
     );

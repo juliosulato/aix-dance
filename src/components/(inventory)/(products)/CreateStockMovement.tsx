@@ -63,7 +63,7 @@ export default function CreateStockMovement({
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { createdAt: _omitCreatedAt, ...payload } = data as any;
       const response = await fetch(
-        `/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/stock-movements`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/stock-movements`,
         {
           method: "POST",
           headers: {

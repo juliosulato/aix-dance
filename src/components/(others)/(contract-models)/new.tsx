@@ -112,7 +112,7 @@ export default function NewContractModelModal({
     setIsLoading(true);
     try {
       const response = await fetch(
-        `/api/v1/tenancies/${sessionData.user.tenancyId}/contract-models`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/contract-models`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

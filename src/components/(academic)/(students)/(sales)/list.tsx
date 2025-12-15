@@ -30,7 +30,7 @@ export default function StudentSalesHistory({ tenancyId, studentId }: Props) {
 
     const { data: sales, error, isLoading } = useSWR<Item[] | PaginatedResponseLocal<Item>>(
         () => (tenancyId && studentId)
-            ? `/api/v1/tenancies/${tenancyId}/sales?studentId=${studentId}`
+            ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/sales?studentId=${studentId}`
             : null,
         async (url: string) => {
             const res = await fetcher<any>(url);

@@ -46,7 +46,7 @@ export default function UpdateCategoryGroup({ opened, onClose, categoryGroups, m
 
         setIsLoading(true);
         try {
-            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/category-groups/${categoryGroups?.id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/category-groups/${categoryGroups?.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),

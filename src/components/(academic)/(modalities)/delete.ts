@@ -19,7 +19,7 @@ async function deleteModalities(
         return;
     }
 
-    const apiUrl = `/api/v1/tenancies/${tenancyId}/modalities`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/modalities`;
 
     if (mutate) {
         await mutate(

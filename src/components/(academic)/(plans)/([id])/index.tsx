@@ -29,7 +29,7 @@ export default function PlanView({ id }: { id: string }) {
     const tenancyId = session?.data?.user.tenancyId as string;
 
     const { data: plan, error } = useSWR<Plan>(
-        `/api/v1/tenancies/${tenancyId}/plans/${id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/plans/${id}`,
         fetcher
     );
 

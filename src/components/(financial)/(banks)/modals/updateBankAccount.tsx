@@ -81,7 +81,7 @@ export default function UpdateBankAccount({
 
     try {
       const response = await fetch(
-        `/api/v1/tenancies/${sessionData.user.tenancyId}/banks/${bankAccount?.id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/banks/${bankAccount?.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

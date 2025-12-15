@@ -16,7 +16,7 @@ export default function ContractModelView({ id }: { id: string }) {
         const tenancyId = session?.user.tenancyId as string;
 
         const { data: contractModel, error } = useSWR<ContractModel>(
-            `/api/v1/tenancies/${tenancyId}/contract-models/${id}`,
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/contract-models/${id}`,
             fetcher
         );
 

@@ -54,7 +54,7 @@ export default function NewFormsOfReceipt({
     setIsLoading(true);
     try {
       const response = await fetch(
-        `/api/v1/tenancies/${sessionData.user.tenancyId}/forms-of-receipt`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/forms-of-receipt`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

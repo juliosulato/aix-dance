@@ -47,7 +47,7 @@ export default function ClassSchedulePage() {
     if (!session?.user?.tenancyId) return;
     setLoading(true);
     // Não precisamos mais de from/to, pois vamos buscar todas as turmas ativas
-    fetch(`/api/v1/tenancies/${session.user.tenancyId}/class-schedule`)
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.user.tenancyId}/class-schedule`)
       .then(res => res.json())
       .then(data => {
         // Converter dados para formato do FullCalendar com eventos recorrentes

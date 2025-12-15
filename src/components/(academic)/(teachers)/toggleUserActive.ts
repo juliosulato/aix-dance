@@ -15,7 +15,7 @@ async function toggleUserActive(
     return;
   }
 
-  const apiUrl = `/api/v1/tenancies/${tenancyId}/users/${item.id}`;
+  const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/users/${item.id}`;
 
   // Optimistic UI update
   mutate &&

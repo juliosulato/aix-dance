@@ -23,7 +23,7 @@ export default function ProductImageUpload({ productId, initialUrl, onUpdated }:
 
     try {
       const res = await fetch(
-        `/api/v1/tenancies/${tenancyId}/inventory/products/${productId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/inventory/products/${productId}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },

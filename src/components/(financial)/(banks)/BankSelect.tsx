@@ -16,7 +16,7 @@ export type BankSelectProps<T extends FieldValues> = {
 
 export function BankSelect<T extends FieldValues>({ control, errors, name, label, required }: BankSelectProps<T>) {
     const session = useSession();
-    const { data: banks } = useSWR<Bank[]>(session.data?.user.tenancyId ? `/api/v1/tenancies/${session.data.user.tenancyId}/banks` : null, fetcher);
+    const { data: banks } = useSWR<Bank[]>(session.data?.user.tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data.user.tenancyId}/banks` : null, fetcher);
 
     return (
         <Controller

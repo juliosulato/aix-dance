@@ -17,7 +17,7 @@ export default function FormsOfReceiptView({ id }: { id: string }) {
     const tenancyId = session?.data?.user.tenancyId as string;
 
     const { data: formsOfReceipt, error } = useSWR<FormsOfReceipt>(
-        `/api/v1/tenancies/${tenancyId}/forms-of-receipt/${id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/forms-of-receipt/${id}`,
         fetcher
     );
 

@@ -61,7 +61,7 @@ export default function AllModalityData() {
   >(
     () =>
       sessionData?.user?.tenancyId
-        ? `/api/v1/tenancies/${
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${
             sessionData.user.tenancyId
           }/modalities?page=${page}&limit=${limit}${
             sortKey ? `&sortKey=${encodeURIComponent(sortKey)}` : ""

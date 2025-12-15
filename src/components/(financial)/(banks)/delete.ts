@@ -15,7 +15,7 @@ async function deleteBanks(
         return;
     }
 
-    const apiUrl = `/api/v1/tenancies/${tenancyId}/banks`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/banks`;
 
     mutate && await mutate(
         (currentData) => currentData?.filter(pm => !idsToDelete.includes(pm.id)) || [],

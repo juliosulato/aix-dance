@@ -76,7 +76,7 @@ function NewStudent({ opened, onClose, mutate }: Props) {
       };
 
       const response = await fetch(
-        `/api/v1/tenancies/${sessionData.user.tenancyId}/students`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/students`,
         {
           method: "POST",
           body: JSON.stringify(payload),

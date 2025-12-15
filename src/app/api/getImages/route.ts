@@ -1,4 +1,4 @@
-// Em um arquivo como: src/app/api/v1/tenancies/[tenancyId]/students/route.ts
+// Em um arquivo como: src/app${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/[tenancyId]/students/route.ts
 
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma"; // Seu cliente prisma

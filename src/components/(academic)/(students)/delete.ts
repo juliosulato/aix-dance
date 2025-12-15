@@ -22,7 +22,7 @@ async function deleteStudents(
     return;
   }
 
-  const apiUrl = `/api/v1/tenancies/${tenancyId}/students`;
+  const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students`;
 
   if (mutate) {
     await mutate(

@@ -102,7 +102,7 @@ useEffect(() => {
       };
 
 
-      const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/students/${student?.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/students/${student?.id}`, {
         method: "PUT",
         body: JSON.stringify(payload),
         headers: { "Content-Type": "application/json" },

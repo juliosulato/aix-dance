@@ -22,7 +22,7 @@ async function deleteUsers(
     return;
   }
 
-  const apiUrl = `/api/v1/tenancies/${tenancyId}/users`;
+  const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/users`;
 
   // Atualização otimista da UI (suporta array ou paginated response)
   if (mutate) {

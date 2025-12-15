@@ -46,7 +46,7 @@ export default function NewCategoryBill({ opened, onClose, mutate }: Props) {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `/api/v1/tenancies/${sessionData.user.tenancyId}/category-bills`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/category-bills`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

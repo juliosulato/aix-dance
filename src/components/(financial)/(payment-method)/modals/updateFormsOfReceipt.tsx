@@ -76,7 +76,7 @@ export default function UpdateFormsOfReceipt({
     setIsLoading(true);
     try {
       const response = await fetch(
-        `/api/v1/tenancies/${sessionData.user.tenancyId}/forms-of-receipt/${formsOfReceipt?.id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/forms-of-receipt/${formsOfReceipt?.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

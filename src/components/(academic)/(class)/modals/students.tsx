@@ -19,7 +19,7 @@ type Props = {
 
 export default function Class__Students({ control, errors, tenancyId }: Props) {
     const { data: studentsResponse } = useSWR<StudentFromApi[] | PaginatedListResponse<StudentFromApi>>(
-        () => tenancyId ? `/api/v1/tenancies/${tenancyId}/students?limit=500` : null,
+        () => tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students?limit=500` : null,
         fetcher
     );
 

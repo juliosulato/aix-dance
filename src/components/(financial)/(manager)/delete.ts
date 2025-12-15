@@ -18,7 +18,7 @@ async function deleteBills(
         return;
     }
 
-    const apiUrl = `/api/v1/tenancies/${tenancyId}/bills`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/bills`;
 
   
     if (mutate) {

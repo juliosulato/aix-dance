@@ -15,7 +15,7 @@ async function deleteCategoryGroups(
         return;
     }
 
-    const apiUrl = `/api/v1/tenancies/${tenancyId}/category-groups`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/category-groups`;
 
     if (mutate) {
         mutate();

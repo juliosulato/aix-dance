@@ -76,7 +76,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
   const { data: studentsResponse } = useSWR<StudentFromApi[] | PaginatedListResponse<StudentFromApi>>(
     () =>
       sessionData?.user.tenancyId
-        ? `/api/v1/tenancies/${sessionData.user.tenancyId}/students?limit=500`
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/students?limit=500`
         : null,
     fetcher
   );
@@ -162,7 +162,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
 
     const promises: Promise<Response>[] = [];
     const tenancyId = sessionData!.user.tenancyId;
-    const baseUrl = `/api/v1/tenancies/${tenancyId}/classes/${classData.id}/enrollments`;
+    const baseUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/classes/${classData.id}/enrollments`;
     const className = classData?.name || "Turma desconhecida";
 
     if (studentsToEnroll.length > 0) {
@@ -176,7 +176,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
 
       studentsToEnroll.forEach(async (studentId) => {
         const student: StudentFromApi = await fetch(
-          `/api/v1/tenancies/${tenancyId}/students/${studentId}`
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${studentId}`
         ).then((res) => res.json());
 
         if (student.subscriptions.length === 0) {
@@ -251,7 +251,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
 
         promises.push(
           fetch(
-            `/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,
             {
               method: "POST",
               body: JSON.stringify({
@@ -278,7 +278,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
       studentsToArchive.forEach((studentId) => {
         promises.push(
           fetch(
-            `/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,
             {
               method: "POST",
               body: JSON.stringify({
@@ -330,7 +330,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
 
     const newId = addedIds[0];
     const student = await fetch(
-      `/api/v1/tenancies/${sessionData?.user.tenancyId}/students/${newId}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData?.user.tenancyId}/students/${newId}`
     ).then((res) => res.json());
 
     let error = "";

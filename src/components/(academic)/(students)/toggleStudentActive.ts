@@ -15,7 +15,7 @@ async function toggleStudentActive(
     return;
   }
 
-  const apiUrl = `/api/v1/tenancies/${tenancyId}/students/${item.id}`;
+  const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${item.id}`;
 
   // Optimistic UI update
   mutate &&

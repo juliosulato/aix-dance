@@ -39,7 +39,7 @@ export default function AllCategoryData() {
 
     const { data: categoryGroups, error, isLoading, mutate } = useSWR<CategoryBill[]>(
         () => sessionData?.user?.tenancyId
-            ? `/api/v1/tenancies/${sessionData.user.tenancyId}/category-bills`
+            ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/category-bills`
             : null,
         fetcher
     );

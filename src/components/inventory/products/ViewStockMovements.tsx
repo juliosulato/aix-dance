@@ -26,7 +26,7 @@ export default function ViewStockMovements({
 }) {
   const { data: sessionData, status } = useSession();
   const { data, error, mutate } = useSWR<any>(
-    `/api/v1/tenancies/${sessionData?.user.tenancyId}/inventory/stock-movements?productId=${productId}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData?.user.tenancyId}/inventory/stock-movements?productId=${productId}`,
     fetcher
   );
 
@@ -63,7 +63,7 @@ export default function ViewStockMovements({
   const handleDelete = async (movementId: string) => {
     try {
       const res = await fetch(
-        `/api/v1/tenancies/${sessionData?.user.tenancyId}/inventory/stock-movements/${movementId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData?.user.tenancyId}/inventory/stock-movements/${movementId}`,
         { method: "DELETE" }
       );
       if (!res.ok) {

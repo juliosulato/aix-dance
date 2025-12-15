@@ -32,7 +32,7 @@ export default function SaleView({ saleId }: { saleId: string }) {
 
     // --- Busca os dados da Venda ---
     const { data: sale, error, isLoading } = useSWR<SaleFromApi>(
-        `/api/v1/tenancies/${tenancyId}/sales/${saleId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/sales/${saleId}`,
         fetcher
     );
 

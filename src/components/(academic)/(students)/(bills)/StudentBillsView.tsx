@@ -94,7 +94,7 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
         }
 
         try {
-            const apiUrl = `/api/v1/tenancies/${tenancyId}/bills/exempt-penalty`;
+            const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/bills/exempt-penalty`;
             const res = await fetch(apiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

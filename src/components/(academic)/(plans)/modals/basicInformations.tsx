@@ -18,7 +18,7 @@ export default function Plan__BasicInformations({ control, errors, register, ten
 
 
     const { data: contracts, error, isLoading } = useSWR<ContractModel[]>(
-        `/api/v1/tenancies/${tenancyId}/contract-models`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/contract-models`,
         fetcher
     );
 

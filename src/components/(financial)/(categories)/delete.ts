@@ -15,7 +15,7 @@ async function deleteCategoryGroups(
         return;
     }
 
-    const apiUrl = `/api/v1/tenancies/${tenancyId}/category-bills`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/category-bills`;
 
     mutate && await mutate(
         (currentData) => currentData?.filter(pm => !idsToDelete.includes(pm.id)) || [],

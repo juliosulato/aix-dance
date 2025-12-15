@@ -68,7 +68,7 @@ export default function AllProductsData() {
   }>(
     () =>
       sessionData?.user?.tenancyId
-        ? `/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/products?page=${page}&limit=${limit}${sortKey ? `&sortKey=${encodeURIComponent(sortKey)}` : ''}${sortDir ? `&sortDir=${encodeURIComponent(sortDir)}` : ''}`
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/products?page=${page}&limit=${limit}${sortKey ? `&sortKey=${encodeURIComponent(sortKey)}` : ''}${sortDir ? `&sortDir=${encodeURIComponent(sortDir)}` : ''}`
         : null,
     fetcher
   );

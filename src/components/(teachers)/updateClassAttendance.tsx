@@ -82,7 +82,7 @@ export default function UpdateClassAttendance({
     };
 
     await fetch(
-      `/api/v1/tenancies/${studentsClass.tenancyId}/class-attendances`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${studentsClass.tenancyId}/class-attendances`,
       {
         method: "PUT",
         headers: {

@@ -48,7 +48,7 @@ export default function AllPlansData() {
   } = useSWR<Item[] | PaginatedResponseLocal<Item>>(
     () =>
       sessionData?.user?.tenancyId
-        ? `/api/v1/tenancies/${sessionData.user.tenancyId}/plans`
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/plans`
         : null,
     async (url: string) => {
       const res = await fetcher<any>(url);

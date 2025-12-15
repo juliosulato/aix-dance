@@ -42,7 +42,7 @@ export default {
   ],
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 dias - sessão NextAuth expira após 30 dias de inatividade
+    maxAge: 6 * 60 * 60, // 6 horas - sessão expira após 6h de inatividade
   },
   callbacks: {
     async jwt({ token, user }: any) {

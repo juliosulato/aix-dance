@@ -15,12 +15,12 @@ type Props = {
 export default function Category__BasicInformations({ control, errors, register, tenancyId }: Props) {
 
     const { data: groups, isLoading: isLoadingGroups } = useSWR<CategoryGroup[]>(
-        tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/category-groups` : null,
+        tenancyId ? `/api/v1/tenancies/${tenancyId}/category-groups` : null,
         fetcher
     );
 
     const { data: parentCategories, isLoading: isLoadingParents } = useSWR<CategoryBill[]>(
-        tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/category-bills` : null,
+        tenancyId ? `/api/v1/tenancies/${tenancyId}/category-bills` : null,
         fetcher
     );
 

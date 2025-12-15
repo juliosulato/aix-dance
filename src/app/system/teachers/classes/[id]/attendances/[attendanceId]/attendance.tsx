@@ -9,7 +9,7 @@ export default function AttendanceView({ attendanceId }: { attendanceId: string 
     const tenancyId = authSession?.user.tenancyId;
 
     const { data: attendance, error } = useSWR<any>(
-        tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/class-attendances/${attendanceId}` : null,
+        tenancyId ? `/api/v1/tenancies/${tenancyId}/class-attendances/${attendanceId}` : null,
         fetcher
     );
 

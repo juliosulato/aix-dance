@@ -1,46 +1,58 @@
+# -----------------------
+# deps
+# -----------------------
 FROM node:20-bookworm-slim AS deps
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y openssl ca-certificates python3 make g++ \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  ca-certificates openssl python3 make g++ \
   && rm -rf /var/lib/apt/lists/*
 
 COPY package.json package-lock.json ./
 RUN npm ci
 
+
+# -----------------------
+# builder
+# -----------------------
 FROM node:20-bookworm-slim AS builder
 WORKDIR /app
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build-time arguments
-ARG NEXT_PUBLIC_URL
-ARG NEXT_PUBLIC_BACKEND_URL
+ENV NEXT_TELEMETRY_DISABLED=1
 
-# Make them available during build
-ENV NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL}
-ENV NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
+# Se você usa Prisma no build
+RUN npx prisma generate
 
-RUN npx prisma generate && npm run build
+RUN npm run build
 
+
+# -----------------------
+# runner (standalone)
+# -----------------------
 FROM node:20-bookworm-slim AS runner
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y openssl ca-certificates \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  ca-certificates openssl \
   && rm -rf /var/lib/apt/lists/*
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL}
-ENV NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
 
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/.next ./.next
+# Usuário não-root
+RUN addgroup --system --gid 1001 nodejs \
+  && adduser --system --uid 1001 --ingroup nodejs nextjs
+
+# Copia somente o resultado standalone
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/package-lock.json ./package-lock.json
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/.next/standalone ./
+
+RUN chown -R nextjs:nodejs /app
+USER nextjs
 
 EXPOSE 3000
-
-# garante prisma client no ambiente final
-CMD ["sh", "-c", "npm run start"]
+CMD ["node","server.js"]

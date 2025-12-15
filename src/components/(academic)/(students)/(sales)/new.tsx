@@ -29,13 +29,13 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
     const { data: sessionData } = useSession();
     const tenancyId = sessionData?.user.tenancyId;
 
-    const { data: studentsResponse } = useSWR<Student[] | PaginatedListResponse<Student>>(tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students?limit=500` : null, fetcher);
+    const { data: studentsResponse } = useSWR<Student[] | PaginatedListResponse<Student>>(tenancyId ? `/api/v1/tenancies/${tenancyId}/students?limit=500` : null, fetcher);
     const students = extractItemsFromResponse(studentsResponse);
 
     // Buscar status do aluno selecionado
     const selectedStudent = students?.find(s => s.id === studentId);
-    const { data: contractModels } = useSWR<ContractModel[]>(tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/contract-models` : null, fetcher);
-    const { data: tenancy } = useSWR<Tenancy>(tenancyId ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}` : null, fetcher);
+    const { data: contractModels } = useSWR<ContractModel[]>(tenancyId ? `/api/v1/tenancies/${tenancyId}/contract-models` : null, fetcher);
+    const { data: tenancy } = useSWR<Tenancy>(tenancyId ? `/api/v1/tenancies/${tenancyId}` : null, fetcher);
 
     const { handleSubmit, formState: { errors }, control, reset, watch, setValue } = useForm<CreateStudentContractInput>({
         resolver: zodResolver(createStudentContractSchema),
@@ -129,7 +129,7 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
 
         setIsLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${studentId}/contracts`, {
+            const response = await fetch(`/api/v1/tenancies/${tenancyId}/students/${studentId}/contracts`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ ...data, status: ContractStatus.PENDING }),
@@ -137,7 +137,7 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
             
             if (!response.ok) throw new Error("Falha ao criar o contrato. Tente novamente.");
 
-            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,{
+            fetch(`/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,{
                 method: "POST",
                 body: JSON.stringify({ description: `Contrato enviado para assinatura.` }),
                 headers: { "Content-Type": "application/json" },

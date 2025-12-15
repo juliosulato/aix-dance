@@ -55,7 +55,7 @@ export default function FormsOfReceiptsView() {
   } = useSWR<FormsOfReceipt[]>(
     () =>
       sessionData?.user?.tenancyId
-        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/forms-of-receipt`
+        ? `/api/v1/tenancies/${sessionData.user.tenancyId}/forms-of-receipt`
         : null,
     fetcher
   );

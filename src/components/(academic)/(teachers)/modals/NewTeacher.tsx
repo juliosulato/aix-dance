@@ -95,7 +95,7 @@ function NewTeacher({ opened, onClose }: Props) {
 
         setVisible(true);
         try {
-            const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/users`, {
+            const resp = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/users`, {
                 method: "POST",
                 body: JSON.stringify({...data, image: avatar, role: "TEACHER" }),
                 headers: { "Content-Type": "application/json" },

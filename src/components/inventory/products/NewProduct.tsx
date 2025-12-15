@@ -47,7 +47,7 @@ export default function NewProduct({ opened, onClose, mutate }: Props) {
 
         setVisible(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/products`, {
+            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/products`, {
                 method: "POST",
                 body: JSON.stringify({
                     ...data,

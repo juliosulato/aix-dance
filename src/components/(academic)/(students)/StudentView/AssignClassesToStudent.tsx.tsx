@@ -39,7 +39,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
   const { data: allClasses } = useSWR<any[]>(
     () =>
       sessionData?.user.tenancyId
-        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/classes`
+        ? `/api/v1/tenancies/${sessionData.user.tenancyId}/classes`
         : null,
     fetcher
   );
@@ -99,7 +99,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
 
         promises.push(
           fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/classes/${classId}/enrollments`,
+            `/api/v1/tenancies/${tenancyId}/classes/${classId}/enrollments`,
             {
               method: "POST",
               body: JSON.stringify({ studentIds: [student.id] }),
@@ -110,7 +110,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
 
         promises.push(
           fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${student.id}/history`,
+            `/api/v1/tenancies/${tenancyId}/students/${student.id}/history`,
             {
               method: "POST",
               body: JSON.stringify({
@@ -131,7 +131,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
         // Arquivar matrícula
         promises.push(
           fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/classes/${classId}/enrollments/archive`,
+            `/api/v1/tenancies/${tenancyId}/classes/${classId}/enrollments/archive`,
             {
               method: "PATCH",
               body: JSON.stringify({ studentIds: [student.id] }),
@@ -142,7 +142,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
 
         promises.push(
           fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${student.id}/history`,
+            `/api/v1/tenancies/${tenancyId}/students/${student.id}/history`,
             {
               method: "POST",
               body: JSON.stringify({

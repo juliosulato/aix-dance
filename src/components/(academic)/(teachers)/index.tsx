@@ -48,7 +48,7 @@ export default function AllTeachersData() {
 
     const { data: teachers, error, isLoading, mutate } = useSWR<Item[] | PaginatedResponseLocal<Item>>(
         () => sessionData?.user?.tenancyId
-            ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/users?role=TEACHER`
+            ? `/api/v1/tenancies/${sessionData.user.tenancyId}/users?role=TEACHER`
             : null,
         async (url: string) => {
             const res = await fetcher<any>(url);

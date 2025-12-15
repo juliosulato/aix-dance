@@ -17,7 +17,7 @@ export default function SupplierView({ id }: { id: string }) {
     const tenancyId = session?.user.tenancyId as string;
 
     const { data: supplier, error } = useSWR<SupplierFromApi>(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/suppliers/${id}`,
+        `/api/v1/tenancies/${tenancyId}/suppliers/${id}`,
         fetcher
     );
     

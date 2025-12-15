@@ -107,7 +107,7 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
         const finalData = { ...data, days: daysPayload };
 
         try {
-            const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/classes/${classData.id}`, {
+            const resp = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/classes/${classData.id}`, {
                 method: "PUT",
                 body: JSON.stringify(finalData),
                 headers: { "Content-Type": "application/json" },

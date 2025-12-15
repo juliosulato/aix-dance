@@ -5,9 +5,10 @@ import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import theme from "@/utils/theme";
-import { Notifications } from '@mantine/notifications';
-import '@mantine/notifications/styles.css';
+import { Notifications } from "@mantine/notifications";
+import "@mantine/notifications/styles.css";
 import { SessionProvider } from "next-auth/react";
+import Script from "next/script";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -19,7 +20,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "AIX Dance"
+  title: "AIX Dance",
 };
 
 export default async function RootLayout({
@@ -29,12 +30,14 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body
-        className={`${inter.variable} antialiased`}
-      >
+      <head>
+        <Script src="/runtime-config.js" />
+      </head>
+
+      <body className={`${inter.variable} antialiased`}>
         <SessionProvider>
           <MantineProvider defaultColorScheme="light" theme={theme}>
-            <Notifications className="!z-[2000]"/>
+            <Notifications className="!z-[2000]" />
             {children}
           </MantineProvider>
         </SessionProvider>

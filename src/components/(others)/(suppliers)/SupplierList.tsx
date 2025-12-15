@@ -40,7 +40,7 @@ export default function AllSuppliersData() {
 
     const { data: categoryGroups, error, isLoading, mutate } = useSWR<SupplierFromApi[]>(
         () => sessionData?.user?.tenancyId
-            ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/suppliers`
+            ? `/api/v1/tenancies/${sessionData.user.tenancyId}/suppliers`
             : null,
         fetcher
     );

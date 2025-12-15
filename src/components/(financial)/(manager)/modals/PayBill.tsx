@@ -41,7 +41,7 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
     // Usamos o schema estático
     const { data: sessionData } = useSession();
     
-    const { data: banks } = useSWR<Bank[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData?.user.tenancyId}/banks`, fetcher);
+    const { data: banks } = useSWR<Bank[]>(`/api/v1/tenancies/${sessionData?.user.tenancyId}/banks`, fetcher);
 
     const { control, handleSubmit, formState: { errors }, reset } = useForm<PayBillInput>({
         resolver: zodResolver(payBillSchema),
@@ -74,7 +74,7 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                 paymentDate: data.paymentDate,
             };
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/bills/${bill.id}`, {
+            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bills/${bill.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),

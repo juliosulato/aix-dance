@@ -59,7 +59,7 @@ export default function UpdateSupplier({ opened, onClose, mutate, supplier }: Pr
 
         setIsLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/suppliers/${supplier.id}`, {
+            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/suppliers/${supplier.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),

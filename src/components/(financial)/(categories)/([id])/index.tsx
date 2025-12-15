@@ -17,7 +17,7 @@ export default function CategoryBillView({ id }: { id: string }) {
     const tenancyId = session?.data?.user.tenancyId as string;
 
     const { data: category, error } = useSWR<CategoryBill>(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/category-bills/${id}`,
+        `/api/v1/tenancies/${tenancyId}/category-bills/${id}`,
         fetcher
     );
 

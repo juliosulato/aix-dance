@@ -1,38 +1,46 @@
-FROM node:20-alpine AS base
-
-RUN apk add -no-cache libc6-compat
+FROM node:20-bookworm-slim AS deps
 WORKDIR /app
+
+RUN apt-get update && apt-get install -y openssl ca-certificates python3 make g++ \
+  && rm -rf /var/lib/apt/lists/*
 
 COPY package.json package-lock.json ./
 RUN npm ci
 
+FROM node:20-bookworm-slim AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm run build
 
-# Imagem de produção com todas as configurações necessárias
-FROM base AS production
+# Build-time arguments
+ARG NEXT_PUBLIC_URL
+ARG NEXT_PUBLIC_BACKEND_URL
+
+# Make them available during build
+ENV NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL}
+ENV NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
+
+RUN npx prisma generate && npm run build
+
+FROM node:20-bookworm-slim AS runner
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y openssl ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
+
 ENV NODE_ENV=production
-ENV NEXT_SHARP_PATH "/app/node_modules/sharp"
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL}
+ENV NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-COPY --from=deps /app/public ./public
-
-#Permissões para poder usar corretamente o prerender
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-COPY --from=deps /app/next.config.ts ./
-COPY --from=deps --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=deps --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/package-lock.json ./package-lock.json
 
 EXPOSE 3000
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
 
-CMD ["node", "server.js"]
+# garante prisma client no ambiente final
+CMD ["sh", "-c", "npm run start"]

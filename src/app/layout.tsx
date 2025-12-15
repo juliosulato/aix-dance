@@ -28,6 +28,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  console.log("ENVs", process.env.NEXT_PUBLIC_BACKEND_URL, process.env.NEXT_PUBLIC_URL);
   return (
     <html lang="pt-BR">
       <head>

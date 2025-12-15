@@ -6,6 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DateTimePicker } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
+import { authedFetch } from "@/utils/authedFetch";
 
 const schema = z
   .object({
@@ -81,7 +82,7 @@ export default function UpdateClassAttendance({
       teacherId,
     };
 
-    await fetch(
+    await authedFetch(
       `/api/v1/tenancies/${studentsClass.tenancyId}/class-attendances`,
       {
         method: "PUT",

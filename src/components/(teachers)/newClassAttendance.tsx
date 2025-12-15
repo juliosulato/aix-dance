@@ -6,6 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DateTimePicker } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
+import { authedFetch } from "@/utils/authedFetch";
 
 const schema = z.object({
   date: z.date({ error: "Date is required" }),
@@ -132,7 +133,7 @@ export default function NewClassAttendance({
       : `/api/v1/tenancies/${studentsClass.tenancyId}/class-attendances`;
     const method = attendanceToEdit ? "PUT" : "POST";
 
-    await fetch(url, {
+    await authedFetch(url, {
       method,
       headers: {
         "Content-Type": "application/json",

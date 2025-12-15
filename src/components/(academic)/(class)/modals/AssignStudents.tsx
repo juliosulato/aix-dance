@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
+import { authedFetch } from "@/utils/authedFetch";
 import {
   EnrollStudentsInput,
   enrollStudentsSchema,
@@ -175,7 +176,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
       );
 
       studentsToEnroll.forEach(async (studentId) => {
-        const student: StudentFromApi = await fetch(
+        const student: StudentFromApi = await authedFetch(
           `/api/v1/tenancies/${tenancyId}/students/${studentId}`
         ).then((res) => res.json());
 
@@ -329,7 +330,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
     }
 
     const newId = addedIds[0];
-    const student = await fetch(
+    const student = await authedFetch(
       `/api/v1/tenancies/${sessionData?.user.tenancyId}/students/${newId}`
     ).then((res) => res.json());
 

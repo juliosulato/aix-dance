@@ -16,6 +16,7 @@ import dayjs from "dayjs";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { notifications } from "@mantine/notifications";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
+import { authedFetch } from "@/utils/authedFetch";
 
 export default function ViewStockMovements({
   productId,
@@ -62,7 +63,7 @@ export default function ViewStockMovements({
 
   const handleDelete = async (movementId: string) => {
     try {
-      const res = await fetch(
+      const res = await authedFetch(
         `/api/v1/tenancies/${sessionData?.user.tenancyId}/inventory/stock-movements/${movementId}`,
         { method: "DELETE" }
       );

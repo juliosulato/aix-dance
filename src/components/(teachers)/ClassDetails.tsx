@@ -14,6 +14,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import Breadcrumps from "../ui/Breadcrumps";
 import { useSession } from "next-auth/react";
+import { authedFetch } from "@/utils/authedFetch";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -67,7 +68,7 @@ export default function ClassDetails({ classId }: { classId: string }) {
         if (!deleteModal.id) return;
         setDeleteLoading(true);
         try {
-            const res = await fetch(`/api/v1/tenancies/${session?.user.tenancyId}/class-attendances/${deleteModal.id}`, {
+            const res = await authedFetch(`/api/v1/tenancies/${session?.user.tenancyId}/class-attendances/${deleteModal.id}`, {
                 method: "DELETE",
             });
             if (!res.ok) throw new Error("Erro ao deletar");

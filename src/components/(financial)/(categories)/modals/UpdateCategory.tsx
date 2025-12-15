@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
+import { authedFetch } from "@/utils/authedFetch";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
 import {
   UpdateCategoryBillInput,
@@ -63,7 +64,7 @@ export default function UpdateCategoryBill({
 
     setIsLoading(true);
     try {
-      const response = await fetch(
+      const response = await authedFetch(
         `/api/v1/tenancies/${sessionData.user.tenancyId}/category-bills/${category?.id}`,
         {
           method: "PUT",

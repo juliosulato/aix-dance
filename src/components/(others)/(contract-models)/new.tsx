@@ -16,6 +16,7 @@ import {
 } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
+import { authedFetch } from "@/utils/authedFetch";
 import {
   contractModelSchema,
   ContractModelInput,
@@ -111,7 +112,7 @@ export default function NewContractModelModal({
 
     setIsLoading(true);
     try {
-      const response = await fetch(
+      const response = await authedFetch(
         `/api/v1/tenancies/${sessionData.user.tenancyId}/contract-models`,
         {
           method: "POST",

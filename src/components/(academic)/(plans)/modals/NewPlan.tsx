@@ -11,6 +11,7 @@ import NewPlan__Fees from "./fees";
 import { KeyedMutator } from "swr";
 import { Plan } from "@prisma/client";
 import { createPlanSchema, CreatePlanInput } from "@/schemas/academic/plan";
+import { authedFetch } from "@/utils/authedFetch";
 
 type Props = {
     opened: boolean;
@@ -59,7 +60,7 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
 
         setVisible(true);
         try {
-            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/plans`, {
+            const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/plans`, {
                 method: "POST",
                 body: JSON.stringify(data),
                 headers: { "Content-Type": "application/json" },

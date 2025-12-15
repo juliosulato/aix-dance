@@ -18,6 +18,7 @@ import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { authedFetch } from "@/utils/authedFetch";
 
 type Props = {
   opened: boolean;
@@ -62,7 +63,7 @@ export default function CreateStockMovement({
       // não enviaremos `createdAt`. O backend definirá a data.
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { createdAt: _omitCreatedAt, ...payload } = data as any;
-      const response = await fetch(
+      const response = await authedFetch(
         `/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/stock-movements`,
         {
           method: "POST",

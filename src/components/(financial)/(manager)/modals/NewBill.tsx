@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
+import { authedFetch } from "@/utils/authedFetch";
 import { Button, LoadingOverlay, Modal, Tabs } from "@mantine/core";
 import { Bill, BillStatus, BillType } from "@prisma/client";
 
@@ -70,7 +71,7 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
         try {
             console.log("Submitting data:", data);
 
-            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bills`, {
+            const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bills`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),

@@ -5,6 +5,7 @@ import { Button, LoadingOverlay, Modal, TextInput, NumberInput, Textarea, Group,
 import { notifications } from "@mantine/notifications";
 import { useSession } from "next-auth/react";
 import { useForm, Controller } from "react-hook-form";
+import { authedFetch } from "@/utils/authedFetch";
 import { useState, useEffect } from "react";
 import ProductImageUpload from "./ProductImageUpload";
 import { KeyedMutator } from "swr";
@@ -74,7 +75,7 @@ export default function UpdateProduct({ opened, onClose, mutate, product }: Prop
             // apply schema parse to ensure types/defaults
             const payload = updateProductSchema.parse(data);
 
-            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/products/${product.id}`, {
+            const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/products/${product.id}`, {
                 method: "PATCH",
                 body: JSON.stringify(payload),
                 headers: { "Content-Type": "application/json" },

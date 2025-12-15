@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { notifications } from "@mantine/notifications";
+import { authedFetch } from "@/utils/authedFetch";
 
 export default async function toggleProductActive(
   productId: string,
@@ -8,7 +9,7 @@ export default async function toggleProductActive(
   mutate?: () => void
 ) {
   try {
-    const res = await fetch(
+    const res = await authedFetch(
       `/api/v1/tenancies/${tenancyId}/inventory/products/${productId}`,
       {
         method: "PUT",

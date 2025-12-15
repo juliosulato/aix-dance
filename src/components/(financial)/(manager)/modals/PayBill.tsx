@@ -5,6 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
+import { authedFetch } from "@/utils/authedFetch";
 import { Button, LoadingOverlay, Modal, ScrollArea, NumberInput, Select } from "@mantine/core";
 import { Bank, Bill, BillStatus } from "@prisma/client";
 import useSWR, { KeyedMutator } from "swr";
@@ -74,7 +75,7 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                 paymentDate: data.paymentDate,
             };
 
-            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bills/${bill.id}`, {
+            const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bills/${bill.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),

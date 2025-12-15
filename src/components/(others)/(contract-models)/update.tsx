@@ -5,8 +5,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, LoadingOverlay, Modal, Select, TextInput, Group, Text, Divider, Alert } from '@mantine/core';
 import { useSession } from 'next-auth/react';
-import { notifications } from '@mantine/notifications';
-import { ContractModel } from '@prisma/client';
+import { notifications } from '@mantine/notifications';import { authedFetch } from "@/utils/authedFetch";import { ContractModel } from '@prisma/client';
 import { MutatorCallback } from 'swr';
 import { contractModelSchema, ContractModelInput, presetOptions } from '@/schemas/others/contract-models.schema'; 
 import RichText from './rich-text';
@@ -89,7 +88,7 @@ export default function UpdateContractModelModal({ opened, onClose, contractMode
 
         setIsLoading(true);
         try {
-            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/contract-models/${contractModel.id}`, {
+            const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/contract-models/${contractModel.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),

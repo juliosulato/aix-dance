@@ -5,6 +5,7 @@ import { Button, LoadingOverlay, Modal, TextInput, NumberInput, Textarea, Group,
 import { notifications } from "@mantine/notifications";
 import { useSession } from "next-auth/react";
 import { useForm, Controller } from "react-hook-form";
+import { authedFetch } from "@/utils/authedFetch";
 import { useState } from "react";
 import { KeyedMutator } from "swr";
 import ProductFromAPI from "@/types/productFromAPI";
@@ -47,7 +48,7 @@ export default function NewProduct({ opened, onClose, mutate }: Props) {
 
         setVisible(true);
         try {
-            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/products`, {
+            const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/products`, {
                 method: "POST",
                 body: JSON.stringify({
                     ...data,

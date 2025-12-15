@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
+import { authedFetch } from "@/utils/authedFetch";
 import { UpdateClassInput, updateClassSchema } from "@/schemas/academic/class.schema";
 import { DayOfWeek } from "@prisma/client";
 import { KeyedMutator } from "swr";
@@ -107,7 +108,7 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
         const finalData = { ...data, days: daysPayload };
 
         try {
-            const resp = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/classes/${classData.id}`, {
+            const resp = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/classes/${classData.id}`, {
                 method: "PUT",
                 body: JSON.stringify(finalData),
                 headers: { "Content-Type": "application/json" },

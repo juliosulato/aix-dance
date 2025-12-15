@@ -3,10 +3,7 @@
 import { Button, LoadingOverlay, Modal, PasswordInput, TextInput, Select } from "@mantine/core";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import dayjs from "dayjs";
-import 'dayjs/locale/pt-br';
-import 'dayjs/locale/es';
-import 'dayjs/locale/en';
+
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { notifications } from "@mantine/notifications";
@@ -14,6 +11,7 @@ import AvatarUpload from "@/components/avatarUpload";
 import { KeyedMutator } from "swr";
 import { UserFromApi } from "./UserFromApi";
 import { updateUserSchema, UpdateUserInput } from "@/schemas/user.schema";
+import { authedFetch } from "@/utils/authedFetch";
 
 type Props = {
     opened: boolean;
@@ -77,7 +75,7 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
         }
 
         try {
-            const resp = await fetch(`/api/v1/tenancies/${tenancyId}/users/${user.id}`, {
+            const resp = await authedFetch(`/api/v1/tenancies/${tenancyId}/users/${user.id}`, {
                 method: "PUT",
                 body: JSON.stringify({
                     ...data,

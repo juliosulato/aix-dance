@@ -10,6 +10,7 @@ import { Controller, useForm } from "react-hook-form";
 import { updateUserSchema, UpdateUserInput } from "@/schemas/user.schema";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
+import { authedFetch } from "@/utils/authedFetch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyedMutator } from "swr";
 import { Address as AddressType, CommissionTier, Teacher, User } from "@prisma/client";
@@ -64,7 +65,7 @@ function UpdateTeacherAccessData({ opened, onClose, user, mutate }: Props) {
 
         setVisible(true);
         try {
-            const resp = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/users/${user.id}`, {
+            const resp = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/users/${user.id}`, {
                 method: "PUT",
                 body: JSON.stringify({ ...data }),
                 headers: { "Content-Type": "application/json" },

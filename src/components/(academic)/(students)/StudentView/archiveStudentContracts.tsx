@@ -1,9 +1,10 @@
 import { notifications } from "@mantine/notifications";
+import { authedFetch } from "@/utils/authedFetch";
 import { FaCheck, FaExclamationTriangle } from "react-icons/fa";
 
 export default async function archiveStudentContracts(ids: string[], tenancyId: string) {
     try {
-        const response = await fetch(`/api/v1/tenancies/${tenancyId}/student-contracts/archive`, {
+        const response = await authedFetch(`/api/v1/tenancies/${tenancyId}/student-contracts/archive`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ids }),

@@ -35,6 +35,7 @@ import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import NewStudentContractModal from "./new";
 import { StudentFromApi } from "../StudentFromApi";
 import { useSession } from "next-auth/react";
+import { authedFetch } from "@/utils/authedFetch";
 
 // --- Validação com Zod (sem alterações) ---
 const saleFormSchema = z.object({
@@ -674,7 +675,7 @@ export default function PointOfSale({
     };
 
     try {
-      const response = await fetch(
+      const response = await authedFetch(
         `/api/v1/tenancies/${tenancyId}/sales`,
         {
           method: "POST",

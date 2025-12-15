@@ -13,6 +13,7 @@ import deleteBills from "@/components/(financial)/(manager)/delete";
 import { BiDotsVerticalRounded, BiTrash } from "react-icons/bi";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { notifications } from "@mantine/notifications";
+import { authedFetch } from "@/utils/authedFetch";
 
 interface MenuItemProps {
     bill: StudentFromApi["bills"][0];
@@ -95,7 +96,7 @@ export default function StudentBillsView({ student }: { student: StudentFromApi 
 
         try {
             const apiUrl = `/api/v1/tenancies/${tenancyId}/bills/exempt-penalty`;
-            const res = await fetch(apiUrl, {
+            const res = await authedFetch(apiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ids })

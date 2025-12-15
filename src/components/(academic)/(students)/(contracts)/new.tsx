@@ -5,8 +5,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, LoadingOverlay, Modal, Select, TextInput, Group, Divider, Alert } from '@mantine/core';
 import { useSession } from 'next-auth/react';
-import { notifications } from '@mantine/notifications';
-import { ContractModel, ContractStatus, Student, Tenancy } from '@prisma/client';
+import { notifications } from '@mantine/notifications';import { authedFetch } from "@/utils/authedFetch";import { ContractModel, ContractStatus, Student, Tenancy } from '@prisma/client';
 import { CreateStudentContractInput, createStudentContractSchema } from '@/schemas/academic/student-contract.schema';
 import useSWR from 'swr';
 import { fetcher } from '@/utils/fetcher';
@@ -102,7 +101,7 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
 
 
         try {
-            const response = await fetch(`/api/v1/tenancies/${tenancyId}/students/${studentId}/contracts`, {
+            const response = await authedFetch(`/api/v1/tenancies/${tenancyId}/students/${studentId}/contracts`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

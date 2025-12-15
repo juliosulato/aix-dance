@@ -13,6 +13,7 @@ import { FormsOfReceipt } from "..";
 import { KeyedMutator } from "swr";
 import FormsOfReceipt__BasicInformations from "./basic-informations";
 import FormsOfReceipt__Fees from "./feeForm";
+import { authedFetch } from "@/utils/authedFetch";
 
 type Props = {
   formsOfReceipt: FormsOfReceipt | null;

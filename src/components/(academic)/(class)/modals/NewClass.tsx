@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
+import { authedFetch } from "@/utils/authedFetch";
 import {
   CreateClassInput,
   createClassSchema,
@@ -102,7 +103,7 @@ function NewClass({ opened, onClose, mutate }: Props) {
     const finalData = { ...data, days: daysPayload };
 
     try {
-      const resp = await fetch(
+      const resp = await authedFetch(
         `/api/v1/tenancies/${sessionData.user.tenancyId}/classes`,
         {
           method: "POST",

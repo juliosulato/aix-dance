@@ -14,6 +14,7 @@ import { Controller, useForm } from "react-hook-form";
 import { CreateUserInput, createUserSchema } from "@/schemas/user.schema";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
+import { authedFetch } from "@/utils/authedFetch";
 import AvatarUpload from "@/components/avatarUpload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyedMutator } from "swr";
@@ -67,7 +68,7 @@ function NewUser({ opened, onClose, mutate }: Props) {
     setVisible(true);
 
     try {
-      const resp = await fetch(
+      const resp = await authedFetch(
         `/api/v1/tenancies/${sessionData.user.tenancyId}/users`,
         {
           method: "POST",

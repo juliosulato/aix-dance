@@ -26,8 +26,6 @@ interface MenuItemsProps {
   onBulkDeleteClick: (ids: string[]) => void;
 }
 
- 
-
 export default function AllModalityData() {
   const { data: sessionData, status } = useSession();
 
@@ -49,7 +47,18 @@ export default function AllModalityData() {
     error,
     isLoading,
     mutate,
-  } = useSWR<Modality[] | { products: Modality[]; pagination: { page: number; limit: number; total: number; totalPages: number } }>(
+  } = useSWR<
+    | Modality[]
+    | {
+        products: Modality[];
+        pagination: {
+          page: number;
+          limit: number;
+          total: number;
+          totalPages: number;
+        };
+      }
+  >(
     () =>
       sessionData?.user?.tenancyId
         ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${
@@ -62,7 +71,12 @@ export default function AllModalityData() {
       const res = await fetcher<any>(url);
       if (Array.isArray(res)) return res as Modality[];
       const items = res.modalities ?? [];
-      const pagination = res.pagination ?? { page, limit, total: items.length, totalPages: 1 };
+      const pagination = res.pagination ?? {
+        page,
+        limit,
+        total: items.length,
+        totalPages: 1,
+      };
       return { products: items, pagination };
     }
   );
@@ -175,13 +189,18 @@ export default function AllModalityData() {
     <>
       <DataView<Modality>
         disableTable
-        data={modalities ?? { products: [], pagination: { page, limit, total: 0, totalPages: 0 } }}
+        data={
+          modalities ?? {
+            products: [],
+            pagination: { page, limit, total: 0, totalPages: 0 },
+          }
+        }
         openNewModal={{
           func: () => setOpenNew(true),
           label: "Nova Modalidade",
         }}
         baseUrl="/system/academic/modalities/"
-  mutate={mutate}
+        mutate={mutate}
         onPageChange={(p, l, sort) => {
           setPage(p);
           setLimit(l);

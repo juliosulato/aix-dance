@@ -1,4 +1,4 @@
-import ProductView from "@/components/(inventory)/(products)/View";
+import ProductView from "../../../../../components/(inventory)/(products)/View";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 
 export default async function PlanPage({

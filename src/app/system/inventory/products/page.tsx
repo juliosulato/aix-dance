@@ -1,4 +1,4 @@
-import AllProductsData from "@/components/(inventory)/(products)/AllProductsData";
+import AllProductsData from "@/components/inventory/products/AllProductsData";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 
 export default function ProductsPage() {

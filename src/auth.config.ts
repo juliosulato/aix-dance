@@ -1,8 +1,10 @@
 import { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { SignJWT } from "jose";
-import { prisma } from "./lib/prisma";
-import { compareHashedPasswords } from "./utils/passwords";
+
+const apiBase = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL;
+if (!apiBase) {
+  throw new Error("BACKEND_URL (or NEXT_PUBLIC_BACKEND_URL) is required for auth");
+}
 
 export default {
   providers: [
@@ -12,32 +14,31 @@ export default {
         password: { type: "password", name: "password" },
       },
       authorize: async (credentials) => {
+        if (!credentials?.email || !credentials?.password) return null;
 
-        const user = await prisma.user.findFirst({
-            where: { email: credentials.email as string },
-            include: {
-              tenancy: true
-            }
-          });
-        
-        if (!user) return null;
+        const res = await fetch(`${apiBase}/api/v1/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: credentials.email,
+            password: credentials.password,
+          }),
+        });
 
-        const isPasswordIsValid = await compareHashedPasswords(
-          String(credentials.password),
-          user.password
-        );
-
-        if (!isPasswordIsValid) return null;
+        if (!res.ok) return null;
+        const data = await res.json();
+        if (!data?.token || !data?.user) return null;
 
         return {
-          id: user.id,
-          name: user.firstName,
-          email: user.email,
-          tenancyId: user.tenancyId,
-          country: user.tenancy.country,
-          role: user.role
-        };
-      }
+          id: data.user.id,
+          name: data.user.firstName || data.user.name || data.user.email,
+          email: data.user.email,
+          tenancyId: data.user.tenancyId,
+          country: data.user.country,
+          role: data.user.role,
+          backendToken: data.token,
+        } as any;
+      },
     }),
   ],
   session: {
@@ -51,7 +52,8 @@ export default {
         token.role = user.role;
         token.tenancyId = user.tenancyId;
         token.country = user.country;
-        token.role = user.role;
+        token.backendToken = user.backendToken;
+        token.email = user.email;
       }
       return token;
     },
@@ -62,26 +64,13 @@ export default {
         session.user.role = token.role;
         session.user.tenancyId = token.tenancyId;
         session.user.country = token.country;
-        if (process.env.AUTH_SECRET) {
-          const payload = {
-            id: token.id,
-            role: token.role,
-            tenancyId: token.tenancyId,
-            email: token.email,
-            country: token.country,
-          } as Record<string, unknown>;
-          const secret = new TextEncoder().encode(process.env.AUTH_SECRET);
-          session.backendToken = await new SignJWT(payload)
-            .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-            .setExpirationTime("1h") // Renova automaticamente a cada requisição
-            .sign(secret);
-        }
+        session.backendToken = token.backendToken;
       }
       return session;
-    }
+    },
   },
   secret: process.env.AUTH_SECRET,
   pages: {
     signIn: "/auth/signin",
-  }
+  },
 } satisfies NextAuthConfig;

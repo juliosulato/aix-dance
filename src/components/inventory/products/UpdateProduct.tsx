@@ -258,10 +258,10 @@ export default function UpdateProduct({ opened, onClose, mutate, product }: Prop
                             render={({ field }) => (
                                 <Select
                                     label="Status"
-                                    data=[
+                                    data={[
                                         { value: "true", label: "Ativo" },
                                         { value: "false", label: "Inativo" },
-                                    ]
+                                    ]}
                                     value={String(field.value)}
                                     onChange={(val) => field.onChange(val === "true")}
                                     error={errors.isActive?.message as unknown as string}

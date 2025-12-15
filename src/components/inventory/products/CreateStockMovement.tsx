@@ -123,11 +123,11 @@ export default function CreateStockMovement({
             render={({ field }) => (
               <Select
                 label="Tipo de Movimento"
-                data=[
+                data={[
                   { value: "IN", label: "Entrada" },
                   { value: "OUT", label: "Saída" },
                   { value: "BALANCE", label: "Balanço" },
-                ]
+                ]}
                 value={field.value}
                 onChange={field.onChange}
                 error={errors.type?.message}

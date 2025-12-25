@@ -1,0 +1,297 @@
+model Bill {
+    id          String     @id @default(cuid())
+    type        BillType
+    description String
+    amount      Decimal?
+    amountPaid  Decimal?
+    dueDate     DateTime
+    paymentDate DateTime?
+    expectedReceiveDate DateTime?
+    status      BillStatus
+
+    feeAmount   Decimal?
+    netAmount   Decimal?
+    // Penalty / multa accounting
+    originalAmount    Decimal?   // value before penalty or manual adjustments
+    penaltyAmount     Decimal?   // explicit amount of penalty applied
+    penaltyApplied    Boolean    @default(false)
+    penaltyExempted   Boolean    @default(false)
+    penaltyExemptedBy String?
+    penaltyExemptedAt DateTime?
+    penaltyExemptedReason String?
+
+    installments      Int     @default(1)
+    installmentNumber String?
+
+    recurrence        RecurrenceType?
+    recurrenceEndDate DateTime? 
+    recurrenceCount   Int?
+    complement        String?
+
+    parentId String?
+    parent   Bill?   @relation("BillHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+    children Bill[]  @relation("BillHierarchy")
+
+    subscriptionId    String?
+    subscription      Subscription?    @relation(fields: [subscriptionId], references: [id])
+
+    saleId Int?
+    sale   Sale?   @relation(fields: [saleId], references: [id])
+
+    studentId String?
+    student   Student? @relation(fields: [studentId], references: [id])
+
+    supplierId String?
+    supplier   Supplier? @relation(fields: [supplierId], references: [id])
+
+    categoryId String?
+    category   CategoryBill? @relation(fields: [categoryId], references: [id])
+
+    formsOfReceiptId String?
+    formsOfReceipt   FormsOfReceipt? @relation(fields: [formsOfReceiptId], references: [id])
+
+    paymentMethodId String?
+    paymentMethod   PaymentMethod?  @default(CASH)
+    
+    bankId String?
+    bank   Bank?   @relation(fields: [bankId], references: [id])
+
+    attachments BillAttachment[]
+
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    notifications Notification[]
+
+    @@schema("financial")
+}
+
+enum PaymentMethod {
+    CREDIT_CARD
+    DEBIT_CARD
+    CASH
+    BANK_SLIP
+    BANK_TRANSFER
+    PIX
+
+    @@schema("financial")
+}
+
+model Sale {
+  id        Int    @id @default(autoincrement())
+  saleNumber  String    // Número da venda para controle
+  tenancyId String
+  studentId String
+  
+  totalAmount Decimal
+  discountPercentage Float
+    // TRANSAÇÃO FINANCEIRA APENAS
+  paidAmount  Decimal   @default(0) // Quanto já foi pago
+  
+  // Tipos de entrega
+  fulfillmentType FulfillmentType @default(IMMEDIATE)
+  
+  // Referência ao pedido (apenas se for entrega futura)
+  orderId     String?   @unique // Link com logística
+  order       Order?    @relation(fields: [orderId], references: [id])
+  
+  items     SaleItem[]
+  bills     Bill[]
+
+  student   Student   @relation(fields: [studentId], references: [id],  onDelete: Cascade)
+  tenancy   Tenancy   @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([saleNumber, tenancyId])
+  @@schema("financial")
+}
+
+model SaleItem {
+  id          String     @id @default(cuid())
+  saleId      Int
+  
+  type        SaleItemType @default(PLAN) // Tipo do item (plano ou produto)
+  description String
+  unitAmount  Decimal
+  quantity    Int        @default(1)
+  totalAmount Decimal    // Quantidade * Valor unitário
+    isBackOrder Boolean    @default(false) // Indica que o item gerou estoque negativo / será atendido posteriormente
+  
+  // Para planos (matrículas, mensalidades)
+  planId      String?  
+  plan        Plan?      @relation(fields: [planId], references: [id], onDelete: SetNull)
+  
+  // Para produtos físicos
+  productId   String?
+  product     Product?   @relation(fields: [productId], references: [id], onDelete: SetNull)
+  
+  // Controle de estoque (apenas para produtos)
+  stockMovements StockMovement[] // Relação inversa com movimentações de estoque
+  
+  sale        Sale       @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  
+  @@schema("financial")
+}
+
+
+enum FulfillmentType {
+    IMMEDIATE   // Entrega imediata (leva na hora)
+    SCHEDULED   // Entrega agendada (encomenda)
+    
+    @@schema("financial")
+}
+
+enum SaleItemType {
+    PLAN        // Item é um plano (matrícula, mensalidade)
+    PRODUCT     // Item é um produto físico
+    
+    @@schema("financial")
+}
+
+enum BillType {
+    PAYABLE
+    RECEIVABLE
+
+    @@schema("financial")
+}
+
+enum BillStatus {
+    PENDING
+    PAID
+    AWAITING_RECEIPT
+
+    OVERDUE
+    CANCELLED
+
+    @@schema("financial")
+}
+
+enum RecurrenceType {
+    NONE
+    MONTHLY
+    BIMONTHLY
+    QUARTERLY
+    SEMIANNUAL
+    ANNUAL
+
+    @@schema("financial")
+}
+
+model BillAttachment {
+    id     String @id @default(cuid())
+    url    String
+    billId String
+    bill   Bill   @relation(fields: [billId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+
+    @@schema("financial")
+}
+
+model Bank {
+    id          String  @id @default(cuid())
+    name        String
+    code        String?
+    agency      String?
+    account     String?
+    description String?
+
+    maintenanceFeeAmount Decimal?
+    maintenanceFeeDue    Int?
+
+    bills Bill[]
+
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@schema("financial")
+}
+
+model CategoryBill {
+    id     String           @id @default(cuid())
+    name   String
+    nature BillNature
+    type   BillCategoryType
+
+    parentId String?
+    parent   CategoryBill?  @relation("CategoryParent", fields: [parentId], references: [id])
+    children CategoryBill[] @relation("CategoryParent")
+
+    groupId String?
+    group   CategoryGroup? @relation(fields: [groupId], references: [id])
+
+    bills Bill[]
+
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@schema("financial")
+}
+
+enum BillNature {
+    REVENUE
+    EXPENSE
+
+    @@schema("financial")
+}
+
+enum BillCategoryType {
+    FIXED
+    VARIABLE
+
+    @@schema("financial")
+}
+
+model CategoryGroup {
+    id   String @id @default(cuid())
+    name String
+
+    categories CategoryBill[]
+
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id])
+
+    @@schema("financial")
+}
+
+model FormsOfReceipt {
+    id       String  @id @default(cuid())
+    name     String
+    operator String?
+
+    fees     PaymentFee[]
+    bills    Bill[]
+
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@schema("financial")
+}
+
+model PaymentFee {
+    id               String        @id @default(cuid())
+    formsOfReceiptId  String
+    formsOfReceipt    FormsOfReceipt @relation(fields: [formsOfReceiptId], references: [id], onDelete: Cascade)
+    minInstallments  Int           @default(1)
+    maxInstallments  Int           @default(1)
+    feePercentage    Float
+    customerInterest Boolean       @default(false)
+    receiveInDays    Int?
+    createdAt        DateTime      @default(now())
+
+    @@schema("financial")
+}

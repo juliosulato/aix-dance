@@ -11,4 +11,4 @@ type Class = {
     assistantId: string | null;
 }
 
-export { Class };
+export default Class;

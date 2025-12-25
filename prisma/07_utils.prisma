@@ -1,0 +1,57 @@
+model SecurityLog {
+    id        String   @id @default(cuid())
+    eventType String
+    ipAddress String
+    userAgent String
+    pathname  String
+    method    String
+    timestamp DateTime @default(now())
+    blocked   Boolean  @default(true)
+    reason    String
+    sessionId String?
+    headers   Json?
+
+    @@index([ipAddress, timestamp])
+    @@schema("utils")
+}
+
+model Notification {
+    id        String   @id @default(cuid())
+    userId    String
+    user      User     @relation(fields: [userId], references: [id])
+    billId    String?
+    bill      Bill?    @relation(fields: [billId], references: [id])
+    message   String
+    read      Boolean  @default(false)
+    createdAt DateTime @default(now())
+
+    @@index([userId, read, createdAt])
+    @@schema("utils")
+}
+
+model BlockedIP {
+    id        String    @id @default(cuid())
+    ipAddress String    @unique
+    reason    String
+    blockedAt DateTime  @default(now())
+    expiresAt DateTime?
+    isActive  Boolean   @default(true)
+
+    @@schema("utils")
+}
+
+model UserActionHistory {
+    id          String   @id @default(cuid())
+    tenancyId   String
+    userId      String
+    user        User     @relation(fields: [userId], references: [id])
+    action      String   // e.g. 'CREATE_CONTRACT', 'SIGN_CONTRACT', 'ASSIGN_CLASS', etc.
+    entityType  String   // e.g. 'Contract', 'Class', 'Bill', 'Sale', etc.
+    entityId    String?  // ID of the entity affected
+    details     Json?    // Optional: extra info (before/after, payload, etc.)
+    createdAt   DateTime @default(now())
+
+    @@index([userId, createdAt])
+    @@index([tenancyId, createdAt])
+    @@schema("utils")
+}

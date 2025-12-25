@@ -1,0 +1,57 @@
+model Address {
+    id           String  @id @default(cuid())
+    zipCode      String?
+    publicPlace  String?
+    number       String?
+    complement   String?
+    neighborhood String?
+    city         String?
+    state        String?
+    country      String?
+
+    studentId String?  @unique
+    student   Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+
+    teacherId String? @unique
+    teacher   Teacher?   @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+    supplierId String?   @unique
+    supplier   Supplier? @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+    @@schema("base")
+}
+
+enum Gender {
+    MALE
+    FEMALE
+    NON_BINARY
+    OTHER
+
+    @@schema("base")
+}
+
+model Supplier {
+    id        String  @id @default(cuid())
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+
+    name            String
+    corporateReason String?
+    documentType    String?
+    document        String?
+    email           String?
+    phoneNumber     String?
+    cellPhoneNumber String?
+    address         Address?
+
+    bills     Bill[]
+    products  Product[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@schema("base")
+}

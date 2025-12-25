@@ -26,7 +26,7 @@ import "dayjs/locale/en";
 import NewStudent from "./modals/NewStudent";
 import UpdateStudent from "./modals/UpdateStudent";
 import { StudentFromApi } from "./StudentFromApi";
-import { Class } from "@/types/Class";
+import Class from "@/types/Class";
 import Image from "next/image";
 
 

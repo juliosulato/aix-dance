@@ -1,0 +1,141 @@
+model User {
+  id        String @id @default(cuid())
+  tenancyId String
+  tenancy   Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+
+  firstName String
+  lastName  String
+  email     String  @unique
+  password  String
+  image     String?
+
+  teacher   Teacher?
+  role      UserRole @default(STAFF)
+
+  classesAsTeacher   Class[]           @relation("ClassToTeacher")
+  classesAsAssistant Class[]           @relation("ClassToAssistant")
+  classAttendances   ClassAttendance[]
+
+  accounts Account[]
+  sessions Session[]
+  userActionHistories UserActionHistory[]
+
+  active    Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  notifications Notification[]
+
+  @@schema("users")
+}
+
+model Teacher {
+  id        String @id @default(cuid())
+  userId    String @unique
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  cellPhoneNumber String?
+  phoneNumber String?
+  dateOfBirth String?
+  document    String
+  gender      Gender
+  pronoun    String?
+  instagramUser   String?
+  professionalRegister String?
+  address   Address?
+
+  remunerationType RemunerationType
+  baseAmount Decimal
+  paymentDay Int @default(5)
+  paymentMethod   PaymentMethod? @default(CASH)
+  
+  paymentData String?
+  observations String?
+  
+  bonusForPresenceAmount Int @default(0)
+  loseBonusWhenAbsent Boolean @default(true)
+  
+  comissionTiers CommissionTier[] 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@schema("users")
+}
+
+
+model CommissionTier {
+  id        String  @id @default(cuid())
+  
+  teacherId String
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  minStudents Int
+  maxStudents Int
+  comission   Decimal
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@schema("users")
+}
+
+
+enum RemunerationType {
+  HOURLY
+  FIXED
+
+  @@schema("users")
+}
+
+enum UserRole {
+  ADMIN
+  TEACHER
+  STAFF
+
+  @@schema("users")
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+  @@schema("users")
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@schema("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+  @@schema("users")
+}

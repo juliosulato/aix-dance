@@ -1,0 +1,317 @@
+model Tenancy {
+    id           String @id @default(cuid())
+    name         String
+    documentType String
+    document     String @unique
+    email        String @unique
+    phoneNumber  String
+
+    enrollmentFee Decimal? @default(0) // NOVO CAMPO: Taxa de Matrícula
+
+    language Languages
+    timezone String    @default("America/Sao_Paulo")
+    country  String    @default("BR")
+    currency String    @default("BRL")
+
+    address Address[]
+
+    students       Student[]
+    classes        Class[]
+    plans          Plan[]
+    users          User[]
+    suppliers      Supplier[]
+    contractModels      ContractModel[]
+    modalities     Modality[]
+    
+    // Relações com o schema financeiro
+    bills          Bill[]
+    banks          Bank[]
+    categoryBills  CategoryBill[]
+    categoryGroups CategoryGroup[]
+    formsOfReceipts FormsOfReceipt[]
+    subscriptions  Subscription[]
+    sales Sale[] // NOVO CAMPO: Relação inversa com Vendas
+
+    // Relações com o schema de inventário
+    products Product[] // Relação com produtos
+    productCategories ProductCategory[] // Relação com categorias de produtos
+    orders   Order[]   // Relação com pedidos
+    stockMovements StockMovement[] // Relação com movimentações de estoque
+
+
+    createdAt      DateTime        @default(now())
+    updatedAt      DateTime        @updatedAt
+    lastAccess     DateTime        @updatedAt
+    @@schema("tenancy")
+}
+
+enum Languages {
+    pt_BR
+    en_US
+    es_ES
+
+    @@schema("tenancy")
+}
+
+model Student {
+    id        String  @id @default(cuid())
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+
+    firstName          String
+    lastName           String
+    image              String?
+    cellPhoneNumber    String
+    phoneNumber        String?
+    email              String?
+    dateOfBirth        String
+    documentOfIdentity String
+    gender             Gender
+    pronoun            String?
+    howDidYouMeetUs    String?
+    instagramUser      String?
+    healthProblems     String?
+    medicalAdvice      String?
+    painOrDiscomfort   String?
+    canLeaveAlone      Boolean @default(false)
+    active             Boolean @default(true)
+  
+
+    classes           StudentClass[]
+    attendanceRecords AttendanceRecord[]
+    history           StudentHistory[]
+    bills             Bill[]
+    contracts  StudentContract[] // Relação inversa adicionada
+
+    address       Address?
+    guardian      StudentGuardian[]
+    subscriptions Subscription[]
+
+    sales Sale[]
+    orders Order[] // Encomendas do aluno
+
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@schema("tenancy")
+}
+
+
+model StudentHistory {
+    id String @id @default(cuid())
+
+    description String
+
+    studentId String
+    student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+
+    @@schema("tenancy")
+}
+
+
+model StudentGuardian {
+    id                 String  @id @default(cuid())
+    firstName          String
+    lastName           String
+    cellPhoneNumber    String
+    phoneNumber        String?
+    email              String?
+    relationShip       String
+    documentOfIdentity String?
+
+    studentId String
+    student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+    @@schema("tenancy")
+}
+
+model Class {
+    id        String  @id @default(cuid())
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+
+    name       String
+    modalityId String
+    modality   Modality @relation(fields: [modalityId], references: [id])
+    online     Boolean  @default(false)
+
+    days ClassDay[]
+
+    studentClasses   StudentClass[]
+    classAttendances ClassAttendance[]
+
+    teacherId String
+    teacher   User   @relation("ClassToTeacher", fields: [teacherId], references: [id], onDelete: Cascade)
+
+    assistantId String?
+    assistant   User?   @relation("ClassToAssistant", fields: [assistantId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    active    Boolean  @default(true)
+
+    @@schema("tenancy")
+}
+
+model Modality {
+    id        String  @id @default(cuid())
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+
+    name    String
+    classes Class[]
+
+    @@schema("tenancy")
+}
+
+model StudentClass {
+    id String @id @default(cuid())
+
+    studentId String
+    classId   String
+
+    student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+    class   Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+    status StudentClassStatus @default(ACTIVE)
+
+    enrolledAt DateTime  @default(now()) 
+    leftAt     DateTime?
+
+    @@unique([studentId, classId])
+    @@schema("tenancy")
+}
+
+// NOVO ENUM para o status do aluno na turma
+enum StudentClassStatus {
+    ACTIVE   // Aluno está a frequentar a turma
+    INACTIVE // Aluno saiu da turma mas pode voltar
+    CANCELED // A matrícula foi cancelada (diferente de apenas inativo)
+
+    @@schema("tenancy")
+}
+
+model ClassDay {
+    id          String    @id @default(cuid())
+    dayOfWeek   DayOfWeek
+    initialHour String
+    endHour     String
+
+    classId String
+    class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+    @@unique([id, classId])
+    @@schema("tenancy")
+}
+
+model ClassAttendance {
+    id           String   @id @default(cuid())
+    date         DateTime @default(now())
+    isSubstitute Boolean  @default(false)
+
+    classId String
+    class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+    teacherId String
+    teacher   User   @relation(fields: [teacherId], references: [id])
+
+    attendanceRecords AttendanceRecord[]
+
+    @@schema("tenancy")
+}
+
+model AttendanceRecord {
+    id      String  @id @default(cuid())
+    present Boolean @default(false)
+
+    classAttendanceId String
+    classAttendance   ClassAttendance @relation(fields: [classAttendanceId], references: [id], onDelete: Cascade)
+
+    studentId String
+    student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+    @@unique([classAttendanceId, studentId]) 
+    @@schema("tenancy")
+}
+
+model Plan {
+    id        String  @id @default(cuid())
+    tenancyId String
+    tenancy   Tenancy @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+
+    name      String
+    frequency Int      @default(1)
+    type      PlanType
+    amount    Decimal
+    isActive  Boolean  @default(true)
+
+
+    monthlyInterest    Float
+    finePercentage     Float
+    discountPercentage Float
+
+    maximumDiscountPeriod Int
+    interestGracePeriod   Int
+    fineGracePeriod       Int
+
+    subscriptions Subscription[]
+
+    saleItems     SaleItem[] 
+
+    @@schema("tenancy")
+}
+
+enum DayOfWeek {
+    SUNDAY
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+
+    @@schema("tenancy")
+}
+
+enum PlanType {
+    BI_WEEKLY
+    MONTHLY
+    BI_MONTHLY
+    QUARTERLY
+    SEMMONTLY
+    ANNUAL
+    BI_ANNUAL
+
+    @@schema("tenancy")
+}
+
+model Subscription {
+    id        String   @id @default(cuid())
+    tenancyId String
+    studentId String
+    planId    String
+    status    SubscriptionStatus @default(ACTIVE)
+    startDate DateTime @default(now())
+    endDate   DateTime?
+    cancellationDate DateTime?
+    student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+    plan      Plan     @relation(fields: [planId], references: [id], onDelete: Restrict)
+    tenancy   Tenancy  @relation(fields: [tenancyId], references: [id], onDelete: Cascade)
+    studentContract StudentContract?
+    bills     Bill[]
+
+    @@schema("tenancy")
+}
+
+
+enum SubscriptionStatus {
+    ACTIVE
+    CANCELED
+    FINISHED
+    @@schema("tenancy")
+}
+

@@ -36,7 +36,7 @@ export default function ProductView({ id }: { id: string }) {
     mutate,
   } = useSWR<ProductFromAPI>(
     tenancyId && id
-      ? `/api/v1/tenancies/${tenancyId}/inventory/products/${id}`
+      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/inventory/products/${id}`
       : null,
     fetcher
   );

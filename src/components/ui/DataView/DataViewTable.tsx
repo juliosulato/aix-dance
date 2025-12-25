@@ -69,7 +69,7 @@ export default function DataViewTable<T>({
                 <Table className="w-full" verticalSpacing="lg" horizontalSpacing="xl" withRowBorders={false} >
                     <Table.Thead>
                         <Table.Tr>
-                            <Table.Th className="w-16 rounded-tl-3xl rounded-bl-3xl bg-white text-nowrap">
+                            <Table.Th className="!max-w-fit rounded-tl-3xl rounded-bl-3xl bg-white text-nowrap">
                                 <Group gap="xs">
                                     <Checkbox
                                         checked={data.length > 0 && data.every(item => selectedRows.includes(String(item[idKey])))}
@@ -127,7 +127,7 @@ export default function DataViewTable<T>({
                                 >
                                     <Table.Td
                                         onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                                        className={`${isFirstRow ? "rounded-tl-3xl" : ""} ${isLastRow ? "rounded-bl-3xl" : ""} w-20`}
+                                        className={`${isFirstRow ? "rounded-tl-3xl" : ""} ${isLastRow ? "rounded-bl-3xl" : ""}`}
                                     >
                                         <Flex gap="sm" align="center"
                                             className={`transition opacity-0 ${(rowHover == String(rowIdx) || isSelected) && "opacity-100"}`}

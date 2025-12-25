@@ -11,6 +11,7 @@ import { SessionProvider } from "next-auth/react";
 import Script from "next/script";
 import { Suspense } from "react";
 import LoadingSystem from "./system/loading";
+import { SWRConfig } from "swr";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -31,7 +32,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  console.log("ENVs", process.env.NEXT_PUBLIC_BACKEND_URL, process.env.NEXT_PUBLIC_URL);
   return (
     <html lang="pt-BR">
       <head>
@@ -39,14 +39,16 @@ export default async function RootLayout({
       </head>
 
       <body className={`${inter.variable} antialiased`}>
-        <Suspense fallback={<LoadingSystem />}>
-          <SessionProvider>
+          <SWRConfig value={{
+            revalidateOnFocus: false
+          }}>
+            <SessionProvider>
           <MantineProvider defaultColorScheme="light" theme={theme}>
             <Notifications className="!z-[2000]" />
             {children}
           </MantineProvider>
         </SessionProvider>
-        </Suspense>
+          </SWRConfig>
       </body>
     </html>
   );

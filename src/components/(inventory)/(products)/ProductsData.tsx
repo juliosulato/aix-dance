@@ -24,6 +24,7 @@ import NewProduct from "./NewProduct";
 import ProductFromAPI from "@/types/productFromAPI";
 import UpdateProduct from "./UpdateProduct";
 import toggleProductActive from "./toggleActive";
+import Image from "next/image";
 
 interface MenuItemProps {
   products: ProductFromAPI;
@@ -219,7 +220,7 @@ export default function AllProductsData() {
             sortable: false,
             render: (_, item) => (
               item.imageUrl ? (
-                <img
+                <Image
                   src={item.imageUrl}
                   alt={item.name}
                   className="w-12 h-12 rounded-2xl object-cover"
@@ -292,7 +293,7 @@ export default function AllProductsData() {
             <div className="flex flex-row justify-between items-start gap-3">
               <Group gap="sm">
                 {item.imageUrl ? (
-                  <img
+                  <Image
                     src={item.imageUrl}
                     alt={item.name}
                     className="w-16 h-16 rounded-2xl object-cover"

@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { fetcher } from "@/utils/fetcher";
@@ -9,6 +8,7 @@ import deletePlans from "./delete";
 import {
   ActionIcon,
   Avatar,
+  Badge,
   LoadingOverlay,
   Menu,
   Text,
@@ -25,8 +25,9 @@ import "dayjs/locale/es";
 import "dayjs/locale/en";
 import NewStudent from "./modals/NewStudent";
 import UpdateStudent from "./modals/UpdateStudent";
-import { Class } from "@prisma/client";
 import { StudentFromApi } from "./StudentFromApi";
+import { Class } from "@/types/Class";
+import Image from "next/image";
 
 
 
@@ -41,7 +42,7 @@ interface MenuItemsProps {
   onBulkDeleteClick: (ids: string[]) => void;
 }
 
-export default function AllStudentsData() {
+export default function StudentsData() {
   const { data: sessionData, status } = useSession();
 
   const [openNew, setOpenNew] = useState<boolean>(false);
@@ -223,40 +224,20 @@ export default function AllStudentsData() {
         searchbarPlaceholder={"Procure por nome, CPF ou e-mail do aluno..."}
         columns={[
           {
-            key: "image",
-            label: "",
-            sortable: false,
-            render: (val, item) => {
-              if (val) {
-                return (
-                  <a
-                    href={val}
-                    target="_blank"
-                    onClick={(ev) => ev.stopPropagation()}
-                  >
-                    <img
-                      src={val}
-                      alt={`Foto de ${item.firstName}`}
-                      className="object-cover w-16 h-16 rounded-2xl"
-                    />
-                  </a>
-                );
-              } else {
-                return (
-                  <Avatar
-                    name={item.firstName}
-                    color="#7439FA"
-                    size="64px"
-                    radius={"16px"}
-                  />
-                );
-              }
-            },
-          },
-          {
             key: "fullName",
             label: "Nome",
             sortable: true,
+            render: (value, item) => (
+              <div className="flex gap-1 flex-row text-nowrap items-center">
+                <Avatar
+                  name={item.image ? "" : item.firstName}
+                  color="#7439FA"
+                  size="48px"
+                  radius={"10px"}
+                />
+                <span className="ml-2">{value}</span>
+              </div>
+            ),
           },
           {
             key: "classes",
@@ -274,8 +255,16 @@ export default function AllStudentsData() {
             key: "subscriptions",
             label: "Plano",
             sortable: true,
-            render: (val: StudentFromApi["subscriptions"]) =>
-              val?.[0]?.plan?.name || JSON.stringify(val),
+            render: (val: StudentFromApi["subscriptions"]) => {
+              if (Array.isArray(val) && val.length > 0) {
+                return (
+                  val.slice(0, 2).map((sub) => sub?.plan?.name).join(", ") +
+                  (val.length > 2 ? ", ..." : "")
+                );
+              }
+
+              return "-";
+            }
           },
           {
             key: "documentOfIdentity",
@@ -310,18 +299,15 @@ export default function AllStudentsData() {
           {
             key: "active",
             label: "Status",
+            sortable: true,
             render: (active) => {
               if (active) {
                 return (
-                  <Tooltip label={"Ativo"} color="green">
-                    <div className={`w-4 h-4 rounded-full bg-green-500`}></div>
-                  </Tooltip>
+                  <Badge color="green" variant="filled">Ativo</Badge>
                 );
               } else {
                 return (
-                  <Tooltip label={"Inativo"} color="red">
-                    <div className={`w-4 h-4 rounded-full bg-red-500`}></div>
-                  </Tooltip>
+                  <Badge color="red" variant="filled">Inativo</Badge>
                 );
               }
             },
@@ -346,7 +332,7 @@ export default function AllStudentsData() {
             <div className="flex flex-row justify-between items-start">
               <div className="flex items-center gap-4">
                 {item.image ? (
-                  <img
+                  <Image
                     src={item.image || "/default-avatar.png"}
                     alt={`Foto de ${item.firstName}`}
                     className="object-cover w-16 h-16 rounded-2xl"
@@ -391,7 +377,6 @@ export default function AllStudentsData() {
                 </Text>
               </div>
 
-              {/* Seção de Frequência */}
               <div className="flex items-center gap-2">
                 <Text size="sm" fw={500} className="w-24">
                   Frequência:

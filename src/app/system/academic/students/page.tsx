@@ -1,5 +1,4 @@
-import AllPlansData from "@/components/(academic)/(plans)";
-import AllStudentsData from "@/components/(academic)/(students)";
+import AllStudentsData from "@/components/(academic)/(students)/StudentsData";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 
 export default async function StudentsPage() {

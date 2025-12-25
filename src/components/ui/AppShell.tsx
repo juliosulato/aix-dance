@@ -3,6 +3,7 @@
 import { ActionIcon, AppShell as AppShellMantine, Avatar, Burger, Button, Menu, NavLink, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React, { useState } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import useMenuData from "@/utils/menuData";
 import { TbSettings, TbUser } from "react-icons/tb";
@@ -24,7 +25,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     const menuData = useMenuData();
 
     const session = useSession();
-
 
     return (
         <AppShellMantine
@@ -103,39 +103,63 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         <div className="flex flex-col gap-2">
                             {menuData.map((item, index) => (
                                 <div key={index} className="flex flex-col gap-1">
-                                    <NavLink
-                                        color="violet"
-                                        leftSection={item.icon}
-                                        label={item.label}
-                                        active={activeMain === index}
-                                        onClick={() => {
-                                            setActiveMain(activeMain === index ? null : index);
-                                        }}
-                                        href={item.href}
-                                        opened={activeMain === index}
-                                        rightSection={item.subitems && <HiOutlineChevronRight size={12} className="mantine-rotate-rtl" />}
-                                        classNames={{ section: "text-xl m-auto" }}
-                                        className={`rounded-full !py-3 transition-all duration-300 ease-in px-5 !justify-start`}
-                                    >
-                                        {item?.subitems && activeMain === index ? (
-                                            <div className="transition-all duration-300 ease-in">
-                                                {item.subitems.map((subitem, subindex) => (
-                                                    <NavLink
-                                                        color="violet"
-                                                        variant="subtle"
-                                                        key={subindex}
-                                                        leftSection={subitem.icon}
-                                                        label={subitem.label}
-                                                        href={subitem.href}
-                                                        className="rounded-full !px-5 !py-3 transition-all duration-300 ease-in"
-                                                        classNames={{ section: "text-xl" }}
-
-                                                        active={pathname === subitem.href}
-                                                    />
-                                                ))}
-                                            </div>
-                                        ) : null}
-                                    </NavLink>
+                                    {item.subitems?.length ? (
+                                        <NavLink
+                                            color="violet"
+                                            leftSection={item.icon}
+                                            label={item.label}
+                                            active={activeMain === index}
+                                            onClick={() => {
+                                                setActiveMain(activeMain === index ? null : index);
+                                            }}
+                                            opened={activeMain === index}
+                                            rightSection={item.subitems && <HiOutlineChevronRight size={12} className="mantine-rotate-rtl" />}
+                                            classNames={{ section: "text-xl m-auto" }}
+                                            className={`rounded-full !py-3 transition-all duration-300 ease-in px-5 !justify-start`}
+                                        >
+                                            {activeMain === index ? (
+                                                <div className="transition-all duration-300 ease-in">
+                                                    {item.subitems.map((subitem, subindex) => (
+                                                        subitem.href ? (
+                                                            <NavLink
+                                                                color="violet"
+                                                                variant="subtle"
+                                                                key={subindex}
+                                                                leftSection={subitem.icon}
+                                                                label={subitem.label}
+                                                                component={Link}
+                                                                href={subitem.href}
+                                                                className="rounded-full !px-5 !py-3 transition-all duration-300 ease-in"
+                                                                classNames={{ section: "text-xl" }}
+                                                                active={pathname === subitem.href}
+                                                            />
+                                                        ) : null
+                                                    ))}
+                                                </div>
+                                            ) : null}
+                                        </NavLink>
+                                    ) : (
+                                        item.href ? (
+                                            <NavLink
+                                                color="violet"
+                                                leftSection={item.icon}
+                                                label={item.label}
+                                                component={Link}
+                                                href={item.href}
+                                                classNames={{ section: "text-xl m-auto" }}
+                                                className={`rounded-full !py-3 transition-all duration-300 ease-in px-5 !justify-start`}
+                                                active={pathname === item.href}
+                                            />
+                                        ) : (
+                                            <NavLink
+                                                color="violet"
+                                                leftSection={item.icon}
+                                                label={item.label}
+                                                classNames={{ section: "text-xl m-auto" }}
+                                                className={`rounded-full !py-3 transition-all duration-300 ease-in px-5 !justify-start`}
+                                            />
+                                        )
+                                    )}
                                 </div>
                             ))}
                         </div>
@@ -167,6 +191,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                                 variant="subtle"
                                 leftSection={<TbUser />}
                                 label={"Usuários"}
+                                component={Link}
                                 href={"/system/settings/users"}
                                 className="rounded-full !px-5 !py-3 transition-all duration-300 ease-in"
                                 classNames={{ section: "text-xl" }}

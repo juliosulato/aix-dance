@@ -9,6 +9,8 @@ import { Notifications } from "@mantine/notifications";
 import "@mantine/notifications/styles.css";
 import { SessionProvider } from "next-auth/react";
 import Script from "next/script";
+import { Suspense } from "react";
+import LoadingSystem from "./system/loading";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -37,12 +39,14 @@ export default async function RootLayout({
       </head>
 
       <body className={`${inter.variable} antialiased`}>
-        <SessionProvider>
+        <Suspense fallback={<LoadingSystem />}>
+          <SessionProvider>
           <MantineProvider defaultColorScheme="light" theme={theme}>
             <Notifications className="!z-[2000]" />
             {children}
           </MantineProvider>
         </SessionProvider>
+        </Suspense>
       </body>
     </html>
   );

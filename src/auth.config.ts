@@ -1,9 +1,9 @@
 import { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
-const apiBase = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL;
+const apiBase = process.env.NEXT_PUBLIC_BACKEND_URL;
 if (!apiBase) {
-  throw new Error("BACKEND_URL (or NEXT_PUBLIC_BACKEND_URL) is required for auth");
+  throw new Error("NEXT_PUBLIC_BACKEND_URL is required for auth");
 }
 
 export default {

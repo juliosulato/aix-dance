@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { Loader, Center } from "@mantine/core";
 import ContractAuditView from "./ContractAuditView";
 
-const BACKEND_URL = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL;
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default async function ViewContractPage({
   params,

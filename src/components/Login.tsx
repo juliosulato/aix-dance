@@ -108,7 +108,6 @@ export default function Login() {
                     required
                 />
 
-                <div className="flex flex-col gap-0">
                     <PasswordInput
                         id="password"
                         name="password"
@@ -119,17 +118,17 @@ export default function Login() {
                         leftSection={<PiPasswordLight />}
                         required
                     />
+                <div className="flex gap-0">
+                    <Checkbox
+                        id="remember"
+                        name="remember"
+                        label="Lembrar usuário"
+                        className="mb-4"
+                        defaultChecked
+                    />
                     <a href="/forgot-password" className="text-sm text-right w-full hover:underline text-neutral-600">Esqueci minha senha</a>
                 </div>
 
-                <Checkbox
-                    id="remember"
-                    name="remember"
-                    label="Lembrar usuário"
-                    className="mb-4"
-                    size="md"
-                    defaultChecked
-                />
 
                 <Button
                     type="submit"

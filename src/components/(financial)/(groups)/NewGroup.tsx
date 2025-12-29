@@ -38,7 +38,7 @@ export default function NewCategoryGroup({ opened, onClose, mutate }: Props) {
 
         setIsLoading(true);
         try {
-            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/category-groups`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/category-groups`, {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },

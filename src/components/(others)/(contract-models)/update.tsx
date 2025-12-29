@@ -90,7 +90,7 @@ export default function UpdateContractModelModal({ opened, onClose, contractMode
 
         setIsLoading(true);
         try {
-            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/contract-models/${contractModel.id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/contract-models/${contractModel.id}`, {
                 method: "PUT",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },

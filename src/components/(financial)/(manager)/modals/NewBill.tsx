@@ -71,7 +71,7 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
         try {
             console.log("Submitting data:", data);
 
-            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bills`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/bills`, {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
@@ -92,7 +92,7 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
             if (uploadedFiles.length > 0) {
                 try {
                     for (const f of uploadedFiles) {
-                        await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bill-attachments`, {
+                        await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/bill-attachments`, {
                             method: "POST",
                 credentials: "include",
                             headers: { 'Content-Type': 'application/json' },

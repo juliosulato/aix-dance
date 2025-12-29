@@ -8,14 +8,6 @@ const nextConfig = {
         qualities: [75, 100]
     },
     output: "standalone",
-    async rewrites() {
-        return [
-            {
-                source: "/api/v1/:path*",
-                destination: "https://dev-aixdance-api.mazzaux.com.br/api/v1/:path*",
-            },
-        ];
-    },
     turbopack: {
         // Resolve to the project directory to avoid Next.js inferring the wrong workspace root.
         root: path.resolve(__dirname)

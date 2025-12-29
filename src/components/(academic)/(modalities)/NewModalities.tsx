@@ -37,7 +37,7 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
 
         setIsLoading(true);
         try {
-            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/modalities`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/modalities`, {
                 method: "POST",
                 credentials: "include",
                 headers: {

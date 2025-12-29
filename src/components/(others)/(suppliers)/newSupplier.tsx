@@ -42,7 +42,7 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
 
         setIsLoading(true);
         try {
-            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/suppliers`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/suppliers`, {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },

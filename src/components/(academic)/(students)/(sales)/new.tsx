@@ -134,7 +134,7 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
 
         setIsLoading(true);
         try {
-            const response = await fetch(`/api/v1/tenancies/${tenancyId}/students/${studentId}/contracts`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${studentId}/contracts`, {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
@@ -143,7 +143,7 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
             
             if (!response.ok) throw new Error("Falha ao criar o contrato. Tente novamente.");
 
-            fetch(`/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,{
+            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,{
                 method: "POST",
                 credentials: "include",
                 body: JSON.stringify({ description: `Contrato enviado para assinatura.` }),

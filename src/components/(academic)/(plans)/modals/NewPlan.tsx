@@ -60,7 +60,7 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
 
         setVisible(true);
         try {
-            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/plans`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/plans`, {
                 method: "POST",
                 credentials: "include",
                 body: JSON.stringify(data),

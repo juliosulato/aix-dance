@@ -22,14 +22,14 @@ export function useNotifications(userId?: string) {
   );
 
   async function markAsRead(id: string) {
-    await fetch(`/api/v1/tenancies/${session.data?.user.tenancyId}/notifications/${id}/read`, {
+    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data?.user.tenancyId}/notifications/${id}/read`, {
       method: "PATCH",
     });
     mutate();
   }
 
   async function remove(id: string) {
-    await fetch(`/api/v1/tenancies/${session.data?.user.tenancyId}/notifications/${id}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session.data?.user.tenancyId}/notifications/${id}`, {
       method: "DELETE",
                 credentials: "include",
     });

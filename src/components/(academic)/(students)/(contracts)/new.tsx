@@ -214,7 +214,7 @@ export default function NewStudentContractModal({
         }
       );
 
-      fetch(`/api/v1/tenancies/${tenancyId}/students/${studentId}/history`, {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${studentId}/history`, {
         method: "POST",
                 credentials: "include",
         body: JSON.stringify({

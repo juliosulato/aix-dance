@@ -74,7 +74,7 @@ export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
             // Inclui o escopo da atualização no payload
             const payload = { ...data, updateScope };
 
-            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bills/${bill.id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/bills/${bill.id}`, {
                 method: "PUT",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },

@@ -275,7 +275,7 @@ export default function BillView({ id }: { id: string }) {
                 <div className="flex gap-2">
                   <Button size="xs" variant="light" onClick={async () => {
                     try {
-                      const res = await fetch(`/api/v1/tenancies/${tenancyId}/bill-attachments/${att.id}/url`);
+                      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/bill-attachments/${att.id}/url`);
                       if (!res.ok) throw new Error('Failed to fetch attachment URL');
                       const data = await res.json();
                       const url = data.url || att.url;

@@ -103,7 +103,7 @@ function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
 
         setVisible(true);
         try {
-            const resp = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/users/${user.id}`, {
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/users/${user.id}`, {
                 method: "PUT",
                 credentials: "include",
                 body: JSON.stringify({...data, image: avatar || user.image}),

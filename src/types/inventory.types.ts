@@ -19,7 +19,6 @@ export enum StockMovementType {
     BALANCE = 'BALANCE',
 }
 
-
 export type Order = {
     id: string;
     orderNumber: string;
@@ -61,7 +60,12 @@ export type StockMovement = {
     tenancyId: string;
     tenancy?: Tenancy;
     createdAt: Date;
-    createdBy: string | null;
+    createdBy: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+    };
 };
 
 export type StockMovementWithCreator = StockMovement & {

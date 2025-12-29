@@ -24,7 +24,6 @@ type ContractSignatureLog = {
     userAgent: string;
 }
 
-// JsonValue type definition for representing any valid JSON value
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
 
 type ContractModel = {

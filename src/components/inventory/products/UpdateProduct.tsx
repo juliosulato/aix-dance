@@ -8,7 +8,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useState, useEffect } from "react";
 import ProductImageUpload from "./ProductImageUpload";
 import { KeyedMutator } from "swr";
-import ProductFromAPI from "@/types/productFromAPI";
+import { Product } from "@/types/product.types";
 import { UpdateProductInput, updateProductSchema } from "@/schemas/inventory/product.schema";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 
@@ -16,10 +16,10 @@ type Props = {
     opened: boolean;
     onClose: () => void;
     mutate: KeyedMutator<{
-        products: ProductFromAPI[];
+        products: Product[];
         pagination: { page: number; limit: number; total: number; totalPages: number };
     }>;
-    product: ProductFromAPI;
+    product: Product;
 };
 
 export default function UpdateProduct({ opened, onClose, mutate, product }: Props) {
@@ -47,7 +47,7 @@ export default function UpdateProduct({ opened, onClose, mutate, product }: Prop
                 categoryId: product.categoryId ?? undefined,
                 supplierId: product.supplierId ?? undefined,
                 isActive: product.isActive ?? true,
-                barCode: product.barCode ?? undefined,
+                barcode: product.barcode ?? undefined,
             });
         }
     }, [opened, product, reset]);
@@ -119,7 +119,7 @@ export default function UpdateProduct({ opened, onClose, mutate, product }: Prop
                         <label className="text-sm font-medium mb-2 block">Imagem do Produto</label>
                         <ProductImageUpload
                             productId={product.id}
-                            initialUrl={product.imageUrl ?? undefined}
+                            initialUrl={product.image ?? undefined}
                             onUpdated={() => mutate()}
                         />
                     </div>
@@ -134,8 +134,8 @@ export default function UpdateProduct({ opened, onClose, mutate, product }: Prop
                     <TextInput
                         label="Código de Barras"
                         placeholder="Digite o código de barras"
-                        {...register('barCode')}
-                        error={errors.barCode?.message as unknown as string}
+                        {...register('barcode')}
+                        error={errors.barcode?.message as unknown as string}
                     />
 
                     <Textarea

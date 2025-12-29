@@ -8,8 +8,8 @@ import { ActionIcon, LoadingOverlay, Menu, Text } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import {
   PaymentFee,
-  FormsOfReceipt as PrismaFormsOfReceipt,
-} from "@prisma/client";
+  FormsOfReceipt as DefaultFormsOfReceipt,
+} from "@/types/receipt.types";
 import { BiDotsVerticalRounded, BiTrash } from "react-icons/bi";
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
@@ -20,7 +20,7 @@ import UpdateFormsOfReceipt from "./modals/updateFormsOfReceipt";
 import { GrUpdate } from "react-icons/gr";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 
-export interface FormsOfReceipt extends PrismaFormsOfReceipt {
+export interface FormsOfReceipt extends DefaultFormsOfReceipt {
   fees: PaymentFee[];
 }
 

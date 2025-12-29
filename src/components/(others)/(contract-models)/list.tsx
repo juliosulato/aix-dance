@@ -1,7 +1,7 @@
 "use client";
 
 import { fetcher } from "@/utils/fetcher";
-import { ContractModel } from "@prisma/client";
+import { ContractModel } from "@/types/contracts.types";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import useSWR, { MutatorCallback } from "swr";

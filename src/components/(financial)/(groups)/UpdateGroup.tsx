@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useForm, FieldErrors, UseFormRegister } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
@@ -9,7 +9,7 @@ import { authedFetch } from "@/utils/authedFetch";
 import { Button, LoadingOverlay, Modal, TextInput } from "@mantine/core";
 import { UpdateCategoryGroupInput, updateCategoryGroupSchema } from "@/schemas/financial/category-group.schema";
 import { KeyedMutator } from "swr";
-import { CategoryGroup } from "@prisma/client";
+import { CategoryGroup } from "@/types/bill.types";
 
 type Props = {
     opened: boolean;

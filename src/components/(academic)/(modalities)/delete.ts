@@ -1,7 +1,7 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { Modality } from "@prisma/client";
 import { authedFetch } from "@/utils/authedFetch";
+import { Modality } from "@/types/class.types";
 
 type Item = Modality;
 type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };

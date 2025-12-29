@@ -1,4 +1,4 @@
-import { BillCategoryType, BillNature } from "@prisma/client";
+import { BillCategoryType, BillNature } from "@/types/category.types";
 import z from "zod";
 
 export const createCategoryBillSchema = z.object({

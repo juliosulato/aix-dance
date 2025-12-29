@@ -5,13 +5,19 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, LoadingOverlay, Modal, Select, Group, Alert, Text } from '@mantine/core';
 import { useSession } from 'next-auth/react';
-import { notifications } from '@mantine/notifications';import { authedFetch } from "@/utils/authedFetch";import { ContractModel, ContractStatus, Plan, Student, Tenancy } from '@prisma/client';
+import { notifications } from '@mantine/notifications';import { authedFetch } from "@/utils/authedFetch";
+import { ContractModel } from "@/types/contracts.types";
+import { Student } from "@/types/student.types";
+import { Tenancy } from "@/types/tenancy.types";
+import { Plan } from '@/types/plan.types';
+
 import { CreateStudentContractInput, createStudentContractSchema } from '@/schemas/academic/student-contract.schema';
 import useSWR from 'swr';
 import { fetcher } from '@/utils/fetcher';
 import { extractItemsFromResponse, PaginatedListResponse } from '@/utils/pagination';
 import { FaInfoCircle } from 'react-icons/fa';
 import RichText from './StudentContractRichText';
+import { getErrorMessage } from '@/utils/getErrorMessage';
 
 type Props = {
     opened: boolean;
@@ -131,7 +137,7 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
             const response = await authedFetch(`/api/v1/tenancies/${tenancyId}/students/${studentId}/contracts`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...data, status: ContractStatus.PENDING }),
+                body: JSON.stringify({ ...data, status: "PEDING" }),
             });
             
             if (!response.ok) throw new Error("Falha ao criar o contrato. Tente novamente.");
@@ -146,9 +152,9 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
             mutate();
             handleClose();
 
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("Erro ao criar contrato:", error);
-            notifications.show({ title: "Erro", message: error.message, color: "red" });
+            notifications.show({ title: "Erro", message: getErrorMessage(error, "Erro ao criar contrato."), color: "red" });
         } finally {
             setIsLoading(false);
         }

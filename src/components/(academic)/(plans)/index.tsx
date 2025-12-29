@@ -1,7 +1,7 @@
 "use client";
 
 import { fetcher } from "@/utils/fetcher";
-import { Plan, PlanType } from "@prisma/client";
+import { Plan, PlanType } from "@/types/plan.types";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import useSWR from "swr";

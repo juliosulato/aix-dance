@@ -1,4 +1,5 @@
-import { Account, Session, Teacher, User } from "@prisma/client";
+import { Teacher } from "@/types/teacher.types";
+import { Account, User, Session } from "@/types/user.types";
 
 export interface UserFromApi extends User {
     accounts: Account[];

@@ -1,6 +1,6 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { Supplier } from "@prisma/client";
+import { Supplier } from "@/types/supplier.types";
 import { authedFetch } from "@/utils/authedFetch";
 
 async function deleteSuppliers(

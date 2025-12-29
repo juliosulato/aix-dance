@@ -1,6 +1,6 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { Class } from "@prisma/client";
+import {Class} from "@/types/class.types";
 
 type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
 type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };

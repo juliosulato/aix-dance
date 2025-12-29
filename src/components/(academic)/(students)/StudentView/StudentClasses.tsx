@@ -1,6 +1,5 @@
 "use client";
 
-import { Class, Modality, Student, User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Text } from "@mantine/core";
@@ -14,6 +13,9 @@ import {
 } from "./adapteStudentClasses";
 import AssignClassesToStudent from "./AssignClassesToStudent.tsx";
 import { StudentFromApi } from "../StudentFromApi";
+import { Class, Modality } from "@/types/class.types";
+import { User } from "@/types/user.types";
+import { Student } from "@/types/student.types";
 
 export interface ClassFromApi extends Class {
   modality: Modality;

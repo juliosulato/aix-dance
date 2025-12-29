@@ -1,9 +1,0 @@
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "debian-openssl-3.0.x"]
-}
-
-datasource db {
-  provider = "postgresql"
-  schemas  = ["base", "tenancy", "users", "contracts", "inventory", "financial", "events", "utils"]
-}

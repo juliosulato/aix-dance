@@ -16,8 +16,8 @@ import {
   CreateClassInput,
   createClassSchema,
 } from "@/schemas/academic/class.schema";
-import { DayOfWeek } from "@prisma/client";
 import { KeyedMutator } from "swr";
+import { DayOfWeek } from "@/types/class.types";
 
 type Props = {
   opened: boolean;
@@ -94,7 +94,7 @@ function NewClass({ opened, onClose, mutate }: Props) {
         day.ranges
           .filter((range) => range.from && range.to) // Garante que apenas ranges completos sejam enviados
           .map((range) => ({
-            dayOfWeek: dayKey.toUpperCase() as DayOfWeek,
+            dayOfWeek: dayKey.toUpperCase() as keyof typeof DayOfWeek,
             initialHour: range.from,
             endHour: range.to,
           }))

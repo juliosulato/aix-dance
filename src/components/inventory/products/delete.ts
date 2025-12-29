@@ -1,11 +1,11 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import ProductFromAPI from "@/types/productFromAPI";
+import { Product } from "@/types/product.types";
 
 async function deleteProducts(
-  items: ProductFromAPI | string[],
+  items: Product | string[],
   tenancyId: string,
-  mutate?: KeyedMutator<ProductFromAPI[]>
+  mutate?: KeyedMutator<Product[]>
 ) {
   const isArray = Array.isArray(items);
   const idsToDelete = isArray ? items : [items.id];

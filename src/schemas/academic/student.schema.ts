@@ -1,9 +1,9 @@
 import toTitleCase from '@/utils/toTitleCase';
-import { Gender } from '@prisma/client';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { z } from 'zod';
 import { isValidCpf } from '@/utils/validateCpf';
+import { Gender } from '@/types/student.types';
 
 dayjs.extend(customParseFormat);
 

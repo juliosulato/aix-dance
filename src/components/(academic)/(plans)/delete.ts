@@ -1,6 +1,6 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { Plan } from "@prisma/client";
+import { Plan } from "@/types/plan.types";
 import { authedFetch } from "@/utils/authedFetch";
 
 type Item = Plan;

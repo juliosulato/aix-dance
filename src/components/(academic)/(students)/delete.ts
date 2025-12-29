@@ -1,9 +1,9 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { Student } from "@prisma/client";
 import { authedFetch } from "@/utils/authedFetch";
+import { StudentWithFullName } from "@/types/student.types";
 
-type Item = Student & { fullName?: string };
+type Item = StudentWithFullName;
 type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
 type PaginatedResponseLocal<T> = { items: T[]; pagination: PaginationInfo };
 

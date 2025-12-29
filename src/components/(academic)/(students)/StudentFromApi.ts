@@ -1,4 +1,10 @@
-import { Address as AddressPrisma, Bill, Class, Student, StudentContract, StudentGuardian, StudentHistory, Sale, Subscription, Plan } from "@prisma/client";
+import { Address } from "@/types/address.types";
+import { Sale } from "@/types/sale.types";
+import { Bill } from "@/types/bill.types";
+import { Class } from "@/types/class.types";
+import { StudentContract } from "@/types/contracts.types";
+import { Plan, Subscription } from "@/types/plan.types";
+import { Student, StudentGuardian, StudentHistory } from "@/types/student.types";
 
 type BillWithPenalty = Bill & {
   originalAmount?: number | null;
@@ -11,7 +17,7 @@ type BillWithPenalty = Bill & {
 };
 
 export interface StudentFromApi extends Student {
-  address: AddressPrisma;
+  address: Address;
   guardian: StudentGuardian[];
   classes: Class[];
   attendanceAverage: number;

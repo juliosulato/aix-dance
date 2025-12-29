@@ -5,9 +5,10 @@ import { Control, useWatch } from "react-hook-form";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 import { extractItemsFromResponse, PaginatedListResponse } from "@/utils/pagination";
-import { Modality, Student, User } from "@prisma/client";
 import { CreateClassInput } from "@/schemas/academic/class.schema";
-
+import { Modality } from "@/types/class.types";
+import { Student } from "@/types/student.types";
+import { User } from "@/types/user.types";
 type Props = {
     control: Control<CreateClassInput>;
     tenancyId: string;
@@ -33,14 +34,14 @@ const ScheduleSummary = ({ schedules }: { schedules: CreateClassInput['schedules
         }));
 
     if (activeDays.length === 0) {
-        return <InfoTerm label="Horários" children="Nenhum horário definido" />;
+        return <InfoTerm label="Horários">Nenhum horário definido</InfoTerm>;
     }
 
     return (
         <>
             <h3 className="text-lg font-bold md:col-span-full text-primary">Horários da Turma</h3>
             {activeDays.map(dayInfo => (
-                <InfoTerm key={dayInfo.day} label={dayInfo.day} children={dayInfo.ranges} />
+                <InfoTerm key={dayInfo.day} label={dayInfo.day}>{dayInfo.ranges}</InfoTerm>
             ))}
         </>
     );
@@ -72,11 +73,11 @@ export default function NewClass__Resume({ control, tenancyId }: Props) {
             
             <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <h3 className="text-lg font-bold md:col-span-full text-primary">{"Informações"}</h3>
-                <InfoTerm label={"Nome"} children={watchedValues.name} />
-                <InfoTerm label={"Modalidade"} children={modalityName} />
-                <InfoTerm label={"Professor"} children={teacherName} />
-                {assistantName && <InfoTerm label={"Assistente"} children={assistantName} />}
-                <InfoTerm label={"Online"} children={watchedValues.online ? "Sim" : "Não"} />
+                <InfoTerm label={"Nome"}>{watchedValues.name}</InfoTerm>
+                <InfoTerm label={"Modalidade"}>{modalityName}</InfoTerm>
+                <InfoTerm label={"Professor"}>{teacherName}</InfoTerm>
+                {assistantName && <InfoTerm label={"Assistente"}>{assistantName}</InfoTerm>}
+                <InfoTerm label={"Online"}>{watchedValues.online ? "Sim" : "Não"}</InfoTerm>
 
                 <div className="md:col-span-full"><hr className="my-2"/></div>
 
@@ -87,8 +88,9 @@ export default function NewClass__Resume({ control, tenancyId }: Props) {
                 <h3 className="text-lg font-bold text-primary">{"Alunos Selecionados"}</h3>
                 <InfoTerm 
                     label={"Alunos"} 
-                    children={selectedStudentsNames || "Nenhum aluno selecionado"} 
-                />
+                >
+                    {selectedStudentsNames || "Nenhum aluno selecionado"}
+                </InfoTerm>
             </div>
         </div>
     );

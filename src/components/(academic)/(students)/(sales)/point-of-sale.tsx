@@ -5,8 +5,9 @@ import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import useSWR from "swr";
-import { Tenancy, Plan, Student, FormsOfReceipt } from "@prisma/client";
-import ProductFromAPI from "@/types/productFromAPI";
+import { Tenancy } from "@/types/tenancy.types";
+import { Plan } from "@/types/plan.types";
+import { Student } from "@/types/student.types";
 import {
   FaSearch,
   FaUser,
@@ -36,8 +37,8 @@ import NewStudentContractModal from "./new";
 import { StudentFromApi } from "../StudentFromApi";
 import { useSession } from "next-auth/react";
 import { authedFetch } from "@/utils/authedFetch";
+import { FormsOfReceipt } from "@/types/receipt.types";
 
-// --- Validação com Zod (sem alterações) ---
 const saleFormSchema = z.object({
   studentId: z.string().min(1, { message: "Selecione um aluno." }),
   payments: z
@@ -58,13 +59,13 @@ const saleFormSchema = z.object({
 
 type SaleFormValues = z.infer<typeof saleFormSchema>;
 
-// --- Tipagens para o Componente ---
 type Product = {
   id: string;
   name: string;
   amount: number;
   isPlan: boolean;
   isEnrollmentFee?: boolean;
+  isActive?: boolean; 
 };
 
 type CartItem = {
@@ -134,7 +135,7 @@ export default function PointOfSale({
   }`;
 
   const { data: productsData, isLoading: productsLoading } = useSWR<{
-    products: ProductFromAPI[];
+    products: Product[];
     pagination: {
       page: number;
       limit: number;
@@ -143,7 +144,7 @@ export default function PointOfSale({
     };
   } | null>(tenancyId ? productsUrl : null, fetcher);
 
-  const [accProducts, setAccProducts] = useState<ProductFromAPI[]>([]);
+  const [accProducts, setAccProducts] = useState<Product[]>([]);
   const [totalProductPages, setTotalProductPages] = useState<number>(1);
 
   // accumulate pages; when searchTerm or tenancyId changes, reset
@@ -292,7 +293,7 @@ export default function PointOfSale({
 
     // Include inventory products (non-plan items) — only active ones
     if (products) {
-      products.forEach((p: ProductFromAPI) => {
+      products.forEach((p: Product) => {
         if (p.isActive) {
           const price = Number((p as any).price ?? 0);
           productList.push({
@@ -525,7 +526,7 @@ export default function PointOfSale({
       // When programmatically setting payment values, avoid triggering the
       // user-edit adjustment logic. Use a ref to mark the update as internal.
       isAdjustingPaymentsRef.current = true;
-      paymentFields.forEach((field, index) => {
+      paymentFields.forEach((_, index) => {
         let value = baseValue;
         if (index === paymentFields.length - 1) {
           value += remainder; // último recebe o ajuste

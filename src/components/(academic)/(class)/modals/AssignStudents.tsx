@@ -21,11 +21,12 @@ import useSWR, { KeyedMutator } from "swr";
 import { ClassFromApi } from ".."; // Ajuste o caminho se necessário
 import { fetcher } from "@/utils/fetcher";
 import { extractItemsFromResponse, PaginatedListResponse } from "@/utils/pagination";
-import { Class, Student, StudentClass } from "@prisma/client";
 import Image from "next/image";
 import notFound from "@/assets/images/not-found.png";
 import { FaSearch } from "react-icons/fa";
 import { StudentFromApi } from "../../(students)/StudentFromApi";
+import { Student, StudentClass } from "@/types/student.types";
+import { Class } from "@/types/class.types";
 
 // Interface para representar a matrícula com o aluno aninhado, como vem da API
 interface StudentClassWithStudent extends StudentClass {

@@ -8,8 +8,9 @@ import { authedFetch } from "@/utils/authedFetch";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal, TextInput } from "@mantine/core";
 import { KeyedMutator } from "swr";
-import { Modality } from "@prisma/client";
+import { Modality } from "@/types/class.types";
 import { CreateModalityInput, createModalitySchema } from "@/schemas/academic/modality";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 
 type Props = {
     opened: boolean;
@@ -44,7 +45,7 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
                 body: JSON.stringify(data),
             });
 
-            const responseData = await response.json()
+            const responseData = await response.json();
 
             if (responseData.code) {
                 notifications.show({
@@ -62,13 +63,18 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
             reset();
             mutate();
             onClose();
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(error);
 
-            if (error?.code == "MODALITY_ALREADY_EXISTS") {
+            if ((error as any)?.code == "MODALITY_ALREADY_EXISTS") {
                 notifications.show({
                     message: "Já existe uma modalidade com esse nome.",
                     color: "yellow"
+                });
+            } else {
+                notifications.show({
+                    message: getErrorMessage(error, "Erro ao criar modalidade."),
+                    color: "red"
                 });
             }
         } finally {

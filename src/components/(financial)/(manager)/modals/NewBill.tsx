@@ -7,7 +7,6 @@ import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
 import { authedFetch } from "@/utils/authedFetch";
 import { Button, LoadingOverlay, Modal, Tabs } from "@mantine/core";
-import { Bill, BillStatus, BillType } from "@prisma/client";
 
 import { CreateBillInput, createBillSchema } from "@/schemas/financial/bill.schema";
 import BasicInformations from "./basic-informations";
@@ -15,6 +14,8 @@ import Subscription from "./subscription";
 import CashOrInstallments from "./cash-or-installments";
 import FileUpload, { UploadedFile } from "@/components/FileUpload";
 import { KeyedMutator } from "swr";
+import { Bill, BillStatus, BillType } from "@/types/bill.types";
+import { ZodType } from "zod";
 
 type Props = {
     opened: boolean;
@@ -28,10 +29,9 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
     const [activeTab, setActiveTab] = useState<string | null>('cash-or-installments');
     const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
-    // Usamos o schema estático
 
     const { control, handleSubmit, formState: { errors }, register, reset, watch, setValue } = useForm<CreateBillInput>({
-        resolver: zodResolver(createBillSchema) as any,
+        resolver: zodResolver(createBillSchema as ZodType<CreateBillInput, any, any>),
         defaultValues: {
             type: BillType.PAYABLE,
             description: "",

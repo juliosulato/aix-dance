@@ -20,7 +20,7 @@ import {
 } from "@/schemas/financial/bank.schema";
 import NewBank__BasicInformations from "./basic-informations";
 import { KeyedMutator } from "swr";
-import { Bank } from "@prisma/client";
+import { Bank } from "@/types/bank.types";
 
 type Props = {
   opened: boolean;

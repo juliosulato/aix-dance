@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import BasicInformations from "./basicInformations";
 import NewPlan__Fees from "./fees";
 import { KeyedMutator } from "swr";
-import { Plan } from "@prisma/client";
+import { Plan, PlanType } from "@/types/plan.types";
 import { authedFetch } from "@/utils/authedFetch";
 
 type Props = {
@@ -38,7 +38,7 @@ export default function UpdatePlan({ opened, onClose, mutate, plan }: Props) {
             maximumDiscountPeriod: 0,
             amount: 0.00,
             frequency: 1,
-            type: "MONTHLY",
+            type: "MONTHLY" as PlanType,
         }
     });
 
@@ -47,9 +47,9 @@ export default function UpdatePlan({ opened, onClose, mutate, plan }: Props) {
             reset({
                 ...plan,
                 amount: Number(plan.amount) ?? undefined,
-            })
+            });
         }
-    }, [plan, reset])
+    }, [plan, reset]);
 
     const amount = watch("amount");
 

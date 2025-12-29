@@ -1,4 +1,4 @@
-import { DayOfWeek } from "@prisma/client";
+import { DayOfWeek } from "@/types/class.types";
 import { z } from "zod";
 
 // Schema simplificado sem dependência de traduções

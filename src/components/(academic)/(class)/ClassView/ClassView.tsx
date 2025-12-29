@@ -10,12 +10,12 @@ import archiveClasses from "../archive";
 import UpdateClass from "../modals/UpdateClass";
 import { ClassFromApi } from "..";
 import { Avatar, Divider, Text } from "@mantine/core";
-import { Student, StudentClass } from "@prisma/client";
 import AssignStudents from "../modals/AssignStudents";
 import { PiStudent } from "react-icons/pi";
 import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
+import { Student, StudentClass } from "@/types/student.types";
 
 // Interface para representar a matrícula com o aluno aninhado, como vem da API
 interface StudentClassWithStudent extends StudentClass {
@@ -41,8 +41,7 @@ const ScheduleSummary = ({ days }: { days: ClassViewData["days"] }) => {
     return (
       <InfoTerm
         label={"Dias e Horários das Aulas"}
-        children={"Nenhum horário definido"}
-      />
+      >Nenhum horário definido</InfoTerm>
     );
   }
 
@@ -74,8 +73,9 @@ const ScheduleSummary = ({ days }: { days: ClassViewData["days"] }) => {
         <InfoTerm
           key={dayInfo.day}
           label={dayInfo.day}
-          children={dayInfo.ranges.join(", ")}
-        />
+        >
+          {dayInfo.ranges.join(", ")}
+        </InfoTerm>
       ))}
     </div>
   );
@@ -158,22 +158,19 @@ export default function ClassView({ id }: { id: string }) {
         {"Informações Básicas"}
       </h2>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <InfoTerm label={"Nome"} children={classData.name} />
-        <InfoTerm label={"Modalidade"} children={classData.modality.name} />
-        <InfoTerm
-          label={"Professor"}
-          children={`${classData.teacher.firstName} ${classData.teacher.lastName}`}
-        />
+        <InfoTerm label={"Nome"}>{classData.name}</InfoTerm>
+        <InfoTerm label={"Modalidade"}>{classData.modality.name}</InfoTerm>
+        <InfoTerm label={"Professor"}>
+          {`${classData.teacher.firstName} ${classData.teacher.lastName}`}
+        </InfoTerm>
         {classData.assistant && (
-          <InfoTerm
-            label={"Assistente"}
-            children={`${classData.assistant.firstName} ${classData.assistant.lastName}`}
-          />
+          <InfoTerm label={"Assistente"}>
+            {`${classData.assistant.firstName} ${classData.assistant.lastName}`}
+          </InfoTerm>
         )}
-        <InfoTerm
-          label={"Online"}
-          children={classData.online ? "Sim" : "Não"}
-        />
+        <InfoTerm label={"Online"}>
+          {classData.online ? "Sim" : "Não"}
+        </InfoTerm>
       </div>
 
       {/* --- SEÇÃO DE DIAS E HORÁRIOS --- */}

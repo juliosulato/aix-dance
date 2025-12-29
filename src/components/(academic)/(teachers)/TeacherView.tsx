@@ -13,7 +13,7 @@ import UpdateTeacherAccessData from "./modals/accessDataUpdate";
 import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
-import { Gender } from "@prisma/client";
+import { Gender } from "@/types/student.types";
 
 
 export default function TeacherView({ id }: { id: string }) {

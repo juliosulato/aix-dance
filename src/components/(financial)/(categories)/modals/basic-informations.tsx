@@ -3,7 +3,8 @@ import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-fo
 import { CreateCategoryBillInput, UpdateCategoryBillInput } from "@/schemas/financial/category-bill.schema";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
-import { BillCategoryType, BillNature, CategoryBill, CategoryGroup } from "@prisma/client";
+import { CategoryBill, CategoryGroup } from "@/types/bill.types";
+import { BillCategoryType, BillNature } from "@/types/category.types";
 
 type Props = {
     control: Control<CreateCategoryBillInput | UpdateCategoryBillInput>;

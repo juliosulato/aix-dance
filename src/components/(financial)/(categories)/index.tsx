@@ -1,7 +1,6 @@
 "use client";
 
 import { fetcher } from "@/utils/fetcher";
-import { CategoryBill } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import useSWR from "swr";
@@ -14,6 +13,7 @@ import DataView from "@/components/ui/DataView";
 
 import NewCategoryBill from "./modals/NewCategory";
 import UpdateCategoryBill from "./modals/UpdateCategory";
+import { CategoryBill } from "@/types/bill.types";
 
 
 interface MenuItemProps {

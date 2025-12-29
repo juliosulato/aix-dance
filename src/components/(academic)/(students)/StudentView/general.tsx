@@ -2,9 +2,9 @@
 
 import InfoTerm from "@/components/ui/Infoterm";
 import dayjs from "dayjs";
-import { Gender } from "@prisma/client";
 import { Avatar } from "@mantine/core";
 import { StudentFromApi } from "../StudentFromApi";
+import { Gender } from "@/types/student.types";
 
 export default function GeneralStudentsView({
   student,

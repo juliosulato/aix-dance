@@ -13,7 +13,7 @@ import {
 } from "@/schemas/financial/category-bill.schema";
 import NewCategoryBill__BasicInformations from "./basic-informations";
 import { KeyedMutator } from "swr";
-import { CategoryBill } from "@prisma/client";
+import { CategoryBill } from "@/types/bill.types";
 
 type Props = {
   opened: boolean;

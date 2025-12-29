@@ -1,7 +1,8 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { CategoryGroup } from "@prisma/client";
 import { authedFetch } from "@/utils/authedFetch";
+import { CategoryGroup } from "@/types/bill.types";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 
 async function deleteCategoryGroups(
     items: CategoryGroup | string[],
@@ -18,12 +19,6 @@ async function deleteCategoryGroups(
 
     const apiUrl = `/api/v1/tenancies/${tenancyId}/category-bills`;
 
-    mutate && await mutate(
-        (currentData) => currentData?.filter(pm => !idsToDelete.includes(pm.id)) || [],
-        {
-            revalidate: false,
-        }
-    );
 
     notifications.show({ title: "Aguarde", message: "Excluindo item(s)...", color: "yellow" });
 
@@ -43,9 +38,12 @@ async function deleteCategoryGroups(
         notifications.clean();
         notifications.show({ message: "Itens excluídos com sucesso.", color: "green" });
         
-    } catch (error) {
-        notifications.show({ message: "Erro interno ao excluir os itens.", color: "red" });
-        mutate && mutate();
+    } catch (error: unknown) {
+        notifications.show({ message: getErrorMessage(error, "Erro interno ao excluir os itens."), color: "red" });
+    }
+
+    if (mutate) {
+        mutate();
     }
 }
 

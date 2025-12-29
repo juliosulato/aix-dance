@@ -5,11 +5,11 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import deleteCategoryGroups from "../delete";
-import { CategoryGroup } from "@prisma/client";
 import UpdateCategoryGroup from "../UpdateGroup";
 import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
+import { CategoryGroup } from "@/types/bill.types";
 
 export default function CategoryGroupView({ id }: { id: string }) {
     const [openUpdate, setOpenUpdate] = useState<boolean>(false);

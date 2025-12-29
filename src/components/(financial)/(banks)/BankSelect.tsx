@@ -1,9 +1,9 @@
 import { fetcher } from "@/utils/fetcher";
-import { Bank } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { Control, Controller, FieldErrors, FieldValues, Path } from "react-hook-form";
 import useSWR from "swr";
 import { Select } from "@mantine/core";
+import { Bank } from "@/types/bank.types";
 
 // Standardized Props for all form children components
 export type BankSelectProps<T extends FieldValues> = {

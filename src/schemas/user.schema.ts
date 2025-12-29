@@ -1,9 +1,11 @@
-import { Gender, RemunerationType, UserRole } from "@prisma/client";
 import { z } from "zod";
 import dayjs from "dayjs";
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { addressSchema } from "./address.schema";
 import { isValidCpf } from "@/utils/validateCpf";
+import { Gender } from "@/types/student.types";
+import { RemunerationType } from "@/types/bill.types";
+import { UserRole } from "@/types/user.types";
 
 dayjs.extend(customParseFormat);
 
@@ -35,12 +37,12 @@ const teacherSchema = z.object({
     .transform((value) => parseBirthDate(value).format("YYYY-MM-DD")),
   remunerationType: z.enum(RemunerationType, { error: "Tipo de remuneração é obrigatório" }),
   baseAmount: z.number({ error: "Valor base é obrigatório" }).min(1, "O valor base deve ser no mínimo 1"),
-  paymentDay: z.number().int().min(1).max(31).default(5),
+  paymentDay: z.number().int().min(1).max(31).default(5).optional(),
   formsOfReceiptId: z.string().optional(),
   paymentData: z.string().optional(),
   observations: z.string().optional(),
   bonusForPresenceAmount: z.number().int().optional(),
-  loseBonusWhenAbsent: z.boolean().default(true),
+  loseBonusWhenAbsent: z.boolean().default(true).optional(),
   comissionTiers: z.array(z.object({
     minStudents: z.number().int().min(1),
     maxStudents: z.number().int().min(1),
@@ -54,8 +56,8 @@ const teacherSchema = z.object({
 export const createUserSchema = z.object({
   firstName: z.string().min(1, "Nome é obrigatório"),
   lastName: z.string().min(1, "Sobrenome é obrigatório"),
-  email: z.string().email("E-mail inválido"),
-  role: z.enum(UserRole, { error: "Papel do usuário é obrigatório" }).default("STAFF"),
+  email: z.email("E-mail inválido"),
+  role: z.enum(UserRole, { error: "Papel do usuário é obrigatório" }),
   image: z.string().optional(),
   teacher: teacherSchema.optional(),
   password: z.string()

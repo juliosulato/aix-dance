@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
 import { authedFetch } from "@/utils/authedFetch";
 import { Button, LoadingOverlay, Modal, ScrollArea, SegmentedControl, Text } from "@mantine/core";
-import { Bill } from "@prisma/client";
+import { Bill } from "@/types/bill.types";
 import { KeyedMutator } from "swr";
 
 import { UpdateBillInput, updateBillSchema } from "@/schemas/financial/bill.schema";

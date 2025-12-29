@@ -19,6 +19,7 @@ import AvatarUpload from "@/components/avatarUpload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyedMutator } from "swr";
 import { UserFromApi } from "./UserFromApi";
+import { UserRole } from "@/types/user.types";
 
 type Props = {
   opened: boolean;
@@ -39,10 +40,10 @@ function NewUser({ opened, onClose, mutate }: Props) {
     register,
     reset,
   } = useForm<CreateUserInput>({
-    resolver: zodResolver(createUserSchema) as any,
+    resolver: zodResolver(createUserSchema),
     defaultValues: {
       teacher: undefined,
-      role: "STAFF",
+      role: "STAFF" as UserRole,
     },
     mode: "all",
   });

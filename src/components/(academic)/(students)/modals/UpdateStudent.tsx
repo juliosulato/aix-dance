@@ -59,7 +59,7 @@ useEffect(() => {
     reset({
       firstName: student.firstName,
       lastName: student.lastName,
-      gender: student.gender as "MALE" | "FEMALE" | "NON_BINARY" | "OTHER",
+      gender: student.gender,
       cellPhoneNumber: student.cellPhoneNumber,
       dateOfBirth: student.dateOfBirth
         ? dayjs(student.dateOfBirth).format("YYYY-MM-DD")

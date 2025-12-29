@@ -1,14 +1,6 @@
 "use client";
 
 import { fetcher } from "@/utils/fetcher";
-import {
-  Class,
-  ClassAttendance,
-  Modality,
-  Student,
-  StudentClass,
-  User,
-} from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import useSWR from "swr";
@@ -23,6 +15,9 @@ import NewClass from "./modals/NewClass";
 import UpdateClass from "./modals/UpdateClass";
 import AssignStudents from "./modals/AssignStudents";
 import { FaRegUser } from "react-icons/fa";
+import { Class, ClassAttendance, Modality } from "@/types/class.types";
+import { Student, StudentClass } from "@/types/student.types";
+import { User } from "@/types/user.types";
 
 export interface ClassFromApi extends Class {
   modality: Modality;

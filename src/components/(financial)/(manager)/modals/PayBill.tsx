@@ -7,7 +7,8 @@ import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
 import { authedFetch } from "@/utils/authedFetch";
 import { Button, LoadingOverlay, Modal, ScrollArea, NumberInput, Select } from "@mantine/core";
-import { Bank, Bill, BillStatus } from "@prisma/client";
+import { Bill, BillStatus } from "@/types/bill.types";
+import { Bank } from "@/types/bank.types";
 import useSWR, { KeyedMutator } from "swr";
 import dayjs from "dayjs";
 

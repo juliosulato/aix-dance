@@ -13,9 +13,9 @@ import { useSession } from "next-auth/react";
 import { notifications } from "@mantine/notifications";
 import { authedFetch } from "@/utils/authedFetch";
 import { UpdateClassInput, updateClassSchema } from "@/schemas/academic/class.schema";
-import { DayOfWeek } from "@prisma/client";
 import { KeyedMutator } from "swr";
 import { ClassFromApi } from "..";
+import { DayOfWeek } from "@/types/class.types";
 
 type Props = {
     opened: boolean;
@@ -99,7 +99,7 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
             .filter(([, day]) => day?.enabled && day.ranges.some(r => r.from && r.to))
             .flatMap(([dayKey, day]) => 
                 day.ranges.map(range => ({
-                    dayOfWeek: dayKey.toUpperCase() as DayOfWeek,
+                    dayOfWeek: dayKey.toUpperCase() as keyof typeof DayOfWeek,
                     initialHour: range.from,
                     endHour: range.to,
                 }))

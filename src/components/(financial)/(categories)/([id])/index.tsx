@@ -5,11 +5,11 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import deleteCategories from "../delete";
-import { CategoryBill } from "@prisma/client";
 import UpdateCategoryBill from "../modals/UpdateCategory";
 import { useSession } from "next-auth/react";
 import { fetcher } from "@/utils/fetcher";
 import useSWR from "swr";
+import { CategoryBill } from "@/types/bill.types";
 
 export default function CategoryBillView({ id }: { id: string }) {
 
@@ -65,7 +65,7 @@ export default function CategoryBillView({ id }: { id: string }) {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <InfoTerm label={"Nome"} children={<>{category.name}</>} />
+                <InfoTerm label={"Nome"}>{category.name}</InfoTerm>
 
                 <UpdateCategoryBill category={category} onClose={() => setOpenUpdate(false)} opened={openUpdate} mutate={() => window.location.reload() as any} />
                 <ConfirmationModal

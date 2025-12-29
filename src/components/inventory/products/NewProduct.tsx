@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
 import { KeyedMutator } from "swr";
-import ProductFromAPI from "@/types/productFromAPI";
+import { Product } from "@/types/product.types";
 import { CreateProductInput, createProductSchema } from "@/schemas/inventory/product.schema";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import AvatarUpload from "@/components/avatarUpload";
@@ -15,7 +15,7 @@ import AvatarUpload from "@/components/avatarUpload";
 type Props = {
     opened: boolean;
     onClose: () => void;
-    mutate: KeyedMutator<ProductFromAPI[]>;
+    mutate: KeyedMutator<Product[]>;
 };
 
 export default function NewProduct({ opened, onClose, mutate }: Props) {
@@ -110,8 +110,8 @@ export default function NewProduct({ opened, onClose, mutate }: Props) {
                     <TextInput
                         label="Código de Barras"
                         placeholder="Digite o código de barras"
-                        {...register('barCode')}
-                        error={errors.barCode?.message as unknown as string}
+                        {...register('barcode')}
+                        error={errors.barcode?.message as unknown as string}
                     />
 
                     <Textarea

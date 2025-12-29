@@ -1,6 +1,8 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { CategoryGroup } from "@prisma/client";import { authedFetch } from "@/utils/authedFetch";
+import { authedFetch } from "@/utils/authedFetch";
+import { CategoryGroup } from "@/types/bill.types";
+
 async function deleteCategoryGroups(
     items: CategoryGroup | string[],
     tenancyId: string,

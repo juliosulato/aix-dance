@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { fetcher } from "@/utils/fetcher";
@@ -21,14 +22,14 @@ import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import DataView from "@/components/ui/DataView";
 
 import NewProduct from "./NewProduct";
-import ProductFromAPI from "@/types/productFromAPI";
+import { Product } from "@/types/product.types";
 import UpdateProduct from "./UpdateProduct";
 import toggleProductActive from "./toggleActive";
 
 interface MenuItemProps {
-  products: ProductFromAPI;
-  onUpdateClick: (b: ProductFromAPI) => void;
-  onDeleteClick: (b: ProductFromAPI) => void;
+  products: Product;
+  onUpdateClick: (b: Product) => void;
+  onDeleteClick: (b: Product) => void;
 }
 
 interface MenuItemsProps {
@@ -46,7 +47,7 @@ export default function AllProductsData() {
   const [sortDir, setSortDir] = useState<'asc' | 'desc' | null>(null);
 
   const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
-  const [selected, setSelected] = useState<ProductFromAPI | null>(null);
+  const [selected, setSelected] = useState<Product | null>(null);
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
@@ -58,7 +59,7 @@ export default function AllProductsData() {
     isLoading,
     mutate,
   } = useSWR<{
-    products: ProductFromAPI[];
+    products: Product[];
     pagination: {
       page: number;
       limit: number;
@@ -73,12 +74,12 @@ export default function AllProductsData() {
     fetcher
   );
 
-  const handleUpdateClick = (product: ProductFromAPI) => {
+  const handleUpdateClick = (product: Product) => {
     setSelected(product);
     setUpdateModalOpen(true);
   };
 
-  const handleDeleteClick = (product: ProductFromAPI) => {
+  const handleDeleteClick = (product: Product) => {
     setSelected(product);
     setIdsToDelete([]);
     setConfirmModalOpen(true);
@@ -189,7 +190,7 @@ export default function AllProductsData() {
 
   return (
     <>
-      <DataView<ProductFromAPI>
+      <DataView<Product>
         data={
           response || {
             products: [],
@@ -214,13 +215,13 @@ export default function AllProductsData() {
         searchbarPlaceholder={"Pesquise pelo SKU, nome ou descrição..."}
         columns={[
           {
-            key: "imageUrl",
+            key: "image",
             label: "",
             sortable: false,
             render: (_, item) => (
-              item.imageUrl ? (
+              item.image ? (
                 <img
-                  src={item.imageUrl}
+                  src={item.image}
                   alt={item.name}
                   className="w-12 h-12 rounded-2xl object-cover"
                 />
@@ -291,9 +292,9 @@ export default function AllProductsData() {
           <>
             <div className="flex flex-row justify-between items-start gap-3">
               <Group gap="sm">
-                {item.imageUrl ? (
+                {item.image ? (
                   <img
-                    src={item.imageUrl}
+                    src={item.image}
                     alt={item.name}
                     className="w-16 h-16 rounded-2xl object-cover"
                   />

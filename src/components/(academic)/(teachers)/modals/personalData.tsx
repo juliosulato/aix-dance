@@ -1,4 +1,4 @@
-import { Gender } from "@prisma/client";
+import { Gender } from "@/types/student.types";
 import { useState } from "react";
 import { PhoneInput } from "@/components/ui/cellPhoneInput";
 import { InputBase, Select, TextInput } from "@mantine/core";

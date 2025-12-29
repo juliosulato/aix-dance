@@ -4,7 +4,7 @@ import InfoTerm from "@/components/ui/Infoterm";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
-import { Plan, PlanType } from "@prisma/client";
+import { Plan, PlanType } from "@/types/plan.types";
 import UpdatePlan from "../modals/UpdatePlan"; // Reutilizando seu modal de atualização
 import deletePlans from "../delete"; // Reutilizando sua função de deleção (agora desativação)
 import { useRouter } from "next/navigation";

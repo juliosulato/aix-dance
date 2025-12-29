@@ -1,7 +1,6 @@
 "use client";
 
 import { fetcher } from "@/utils/fetcher";
-import { Modality } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import useSWR from "swr";
@@ -14,6 +13,7 @@ import DataView from "@/components/ui/DataView";
 
 import NewModalities from "./NewModalities";
 import UpdateModalities from "./UpdateModalities";
+import { Modality } from "@/types/class.types";
 
 interface MenuItemProps {
   categoryGroup: Modality;

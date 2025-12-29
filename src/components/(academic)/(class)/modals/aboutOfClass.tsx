@@ -6,7 +6,8 @@ import { CreateClassInput, UpdateClassInput } from "@/schemas/academic/class.sch
 import { Control, Controller, FieldErrors } from "react-hook-form";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
-import { Modality, User } from "@prisma/client";
+import { Modality } from "@/types/class.types";
+import { User } from "@/types/user.types";
 
 type Props = {
     control: Control<CreateClassInput | UpdateClassInput>;

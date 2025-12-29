@@ -13,8 +13,9 @@ import {
   createBankSchema,
 } from "@/schemas/financial/bank.schema";
 import NewBank__BasicInformations from "./basic-informations";
-import { Bank } from "@prisma/client";
+import { Bank } from "@/types/bank.types";
 import { KeyedMutator } from "swr";
+
 type Props = {
   bankAccount: Bank | null;
   opened: boolean;

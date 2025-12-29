@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { Divider, Text } from "@mantine/core";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
-import { ContractModel } from "@prisma/client";
+import { ContractModel } from "@/types/contracts.types";
 import deleteContractModels from "./delete";
 import UpdateContractModelModal from "./update";
 

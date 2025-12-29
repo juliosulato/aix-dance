@@ -1,6 +1,6 @@
 "use client";
 
-import ProductFromAPI from "@/types/productFromAPI";
+import { Product } from "@/types/product.types";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -34,7 +34,7 @@ export default function ProductView({ id }: { id: string }) {
     error,
     isLoading,
     mutate,
-  } = useSWR<ProductFromAPI>(
+  } = useSWR<Product>(
     tenancyId && id
       ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/inventory/products/${id}`
       : null,
@@ -122,7 +122,7 @@ export default function ProductView({ id }: { id: string }) {
         <div className="flex gap-4 md:gap-6 items-center">
           <ProductImageUpload
             productId={id}
-            initialUrl={product.imageUrl ?? undefined}
+            initialUrl={product.image ?? undefined}
             onUpdated={() => (mutate as any)()}
           />
           <button
@@ -165,7 +165,7 @@ export default function ProductView({ id }: { id: string }) {
           {product.description || "-"}
         </InfoTerm>
         <InfoTerm label={"Código de Barras"} className="md:col-span-2">
-          {product.barCode || "-"}
+          {product.barcode || "-"}
         </InfoTerm>
         <InfoTerm label={"Preço"}>
           {new Intl.NumberFormat("pt-BR", {

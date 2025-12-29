@@ -1,10 +1,9 @@
+import { BillStatus } from "@/types/bill.types";
 import { Tooltip } from "@mantine/core";
-import { BillStatus } from "@prisma/client";
 
 export function StatusTextToBadge(
     status: BillStatus | string | boolean,
     tooltip: boolean = false,
-    translations?: any, // Manter para compatibilidade mas não usar
     size?: string
 ) {
     const classes = `${size ? size : "w-4 h-4"} rounded-full`;

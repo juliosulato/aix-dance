@@ -1,6 +1,6 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { Bank } from "@prisma/client";
+import { Bank } from "@/types/bank.types";
 import { authedFetch } from "@/utils/authedFetch";
 
 async function deleteBanks(

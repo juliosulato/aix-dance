@@ -14,8 +14,8 @@ import { notifications } from "@mantine/notifications";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import deleteStudentContracts from "./deleteStudentContracts";
 import archiveStudentContracts from "./archiveStudentContracts";
-import { ContractStatus } from "@prisma/client";
 import { StudentFromApi } from "../StudentFromApi";
+import { ContractStatus } from "@/types/contracts.types";
 
 // Tipagem para o item do contrato, assumindo que a API retorna o título do modelo
 type ContractItem = StudentFromApi["contracts"][0] & { title?: string };
@@ -44,17 +44,17 @@ export default function StudentContractsView({ student }: { student: StudentFrom
     });
   };
 
-  const handleDeleteClick = (contract: ContractItem) => {
-    setContractToAction(contract);
-    setActionType('delete');
-    setConfirmModalOpen(true);
-  };
+  // const handleDeleteClick = (contract: ContractItem) => {
+  //   setContractToAction(contract);
+  //   setActionType('delete');
+  //   setConfirmModalOpen(true);
+  // };
 
-  const handleArchiveClick = (contract: ContractItem) => {
-    setContractToAction(contract);
-    setActionType('archive');
-    setConfirmModalOpen(true);
-  };
+  // const handleArchiveClick = (contract: ContractItem) => {
+  //   setContractToAction(contract);
+  //   setActionType('archive');
+  //   setConfirmModalOpen(true);
+  // };
 
   const handleConfirmAction = async () => {
     if (!contractToAction || !actionType) return;
@@ -144,7 +144,7 @@ export default function StudentContractsView({ student }: { student: StudentFrom
         loading={isActing}
       >
         <Text>
-          Você tem certeza que deseja {actionType === 'delete' ? 'excluir' : 'arquivar'} o contrato "{contractToAction?.title || 'Contrato Personalizado'}"?
+          Você tem certeza que deseja {actionType === 'delete' ? 'excluir' : 'arquivar'} o contrato &quot;{contractToAction?.title || 'Contrato Personalizado'}&quot;?
         </Text>
         {actionType === 'delete' && <Text c="red" size="sm" fw={500} mt="md">Esta ação é permanente.</Text>}
       </ConfirmationModal>

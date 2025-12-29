@@ -9,7 +9,7 @@ import { authedFetch } from "@/utils/authedFetch";
 import { Button, LoadingOverlay, Modal, TextInput } from "@mantine/core";
 import { CreateCategoryGroupInput, createCategoryGroupSchema } from "@/schemas/financial/category-group.schema";
 import { KeyedMutator } from "swr";
-import { CategoryGroup } from "@prisma/client";
+import { CategoryGroup } from "@/types/bill.types";
 
 type Props = {
     opened: boolean;

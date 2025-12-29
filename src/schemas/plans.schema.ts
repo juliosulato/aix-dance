@@ -1,4 +1,4 @@
-import { PlanType } from "@prisma/client";
+import { PlanType } from "@/types/plan.types";
 import z from "zod";
 
 const planSchema = z.object({

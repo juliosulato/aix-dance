@@ -1,13 +1,10 @@
 import { CreateBillInput } from "@/schemas/financial/bill.schema";
 import { NumberInput, Select } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
-import { RecurrenceType } from "@prisma/client";
+import { RecurrenceType } from "@/types/bill.types";
 import { Control, Controller, FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
 // localesMap import removed
 import dayjs from "dayjs";
-import "dayjs/locale/pt-br";
-import "dayjs/locale/es";
-import "dayjs/locale/en";
 
 // Standardized Props for all form children components
 type Props = {

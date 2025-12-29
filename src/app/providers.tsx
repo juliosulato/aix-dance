@@ -4,7 +4,7 @@ import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { SessionProvider, useSession } from "next-auth/react";
 import { useEffect, useRef } from "react";
-import theme from "@/utils/theme";
+import { theme } from "@/utils/theme";
 
 const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 

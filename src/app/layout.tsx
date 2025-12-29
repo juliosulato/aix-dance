@@ -1,17 +1,16 @@
+import "./globals.css";
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import { SessionProvider } from "next-auth/react";
+import { SWRConfig } from "swr";
+
 import { MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
+import { theme } from "@/utils/theme";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
-import theme from "@/utils/theme";
-import { Notifications } from "@mantine/notifications";
 import "@mantine/notifications/styles.css";
-import { SessionProvider } from "next-auth/react";
-import Script from "next/script";
-import { Suspense } from "react";
-import LoadingSystem from "./system/loading";
-import { SWRConfig } from "swr";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -34,10 +33,6 @@ export default async function RootLayout({
 
   return (
     <html lang="pt-BR">
-      <head>
-        <Script src="/runtime-config.js" />
-      </head>
-
       <body className={`${inter.variable} antialiased`}>
           <SWRConfig value={{
             revalidateOnFocus: false

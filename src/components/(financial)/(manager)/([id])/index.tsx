@@ -117,15 +117,22 @@ export default function BillView({ id }: { id: string }) {
           {bill.description}
         </InfoTerm>
         <InfoTerm label={"Status"}>
-          {StatusTextToBadge(bill.status, true, {
-            PENDING: "Pendente",
-            PAID: "Pago",
-            OVERDUE: "Atrasado",
-            CANCELLED: "Cancelado",
-          })}
+          {StatusTextToBadge(
+            bill.status,
+            true,
+            bill.status === "PENDING"
+              ? "Pendente"
+              : bill.status === "PAID"
+              ? "Pago"
+              : bill.status === "OVERDUE"
+              ? "Atrasado"
+              : bill.status === "CANCELLED"
+              ? "Cancelado"
+              : String(bill.status)
+          )}
         </InfoTerm>
         <InfoTerm label={"Valor"} icon={<FaFileInvoiceDollar />}>
-          {formatCurrency(bill.amount)}
+          {formatCurrency(bill.amount?.toNumber())}
         </InfoTerm>
         <InfoTerm label={"Vencimento"} icon={<FaCalendarAlt />}>
           {dayjs(bill.dueDate).format("DD/MM/YYYY")}
@@ -146,7 +153,7 @@ export default function BillView({ id }: { id: string }) {
         {bill.status === "PAID" && (
           <>
             <InfoTerm label={"Valor Pago"} icon={<FaReceipt />}>
-              {formatCurrency(bill.amountPaid)}
+              {formatCurrency(bill.amountPaid?.toNumber())}
             </InfoTerm>
             <InfoTerm label={"Data de Pagamento"} icon={<FaCalendarAlt />}>
               {bill.paymentDate
@@ -191,7 +198,7 @@ export default function BillView({ id }: { id: string }) {
         <div>
           <Divider my="lg" label="Parcelas Associadas" labelPosition="center" />
           <div className="flex flex-col gap-3 mt-4">
-            {bill.children.map((child) => (
+            {bill?.children?.map((child) => (
               <Link
                 href={`/system/financial/manager/${child.id}`}
                 key={child.id}
@@ -207,14 +214,21 @@ export default function BillView({ id }: { id: string }) {
                 </div>
                 <Flex align="center" gap="lg">
                   <Text size="sm" fw={500}>
-                    {formatCurrency(child.amount)}
+                    {formatCurrency(child.amount?.toNumber())}
                   </Text>
-                  {StatusTextToBadge(child.status, true, {
-                    PENDING: "Pendente",
-                    PAID: "Pago",
-                    OVERDUE: "Atrasado",
-                    CANCELLED: "Cancelado",
-                  })}
+                  {StatusTextToBadge(
+                    child.status,
+                    true,
+                    child.status === "PENDING"
+                      ? "Pendente"
+                      : child.status === "PAID"
+                      ? "Pago"
+                      : child.status === "OVERDUE"
+                      ? "Atrasado"
+                      : child.status === "CANCELLED"
+                      ? "Cancelado"
+                      : String(child.status)
+                  )}
                 </Flex>
               </Link>
             ))}

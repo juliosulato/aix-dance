@@ -17,7 +17,7 @@ import Address from "./address";
 import AvatarUpload from "../../../avatarUpload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyedMutator } from "swr";
-import { Teacher } from "@prisma/client";
+import { Teacher } from "@/types/teacher.types";
 
 type Props = {
     opened: boolean;

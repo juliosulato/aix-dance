@@ -40,6 +40,7 @@
     "country-flags-icons": "^0.0.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
+    "decimal.js": "^10.6.0",
     "html2canvas": "^1.4.1",
     "i18n-iso-countries": "^7.14.0",
     "jspdf": "^3.0.2",

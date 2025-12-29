@@ -37,7 +37,7 @@ export default function ProductImageUpload({ productId, initialUrl, onUpdated }:
       }
 
       notifications.show({ color: "green", message: "Imagem do produto atualizada!" });
-      onUpdated && onUpdated();
+      onUpdated?.();
     } catch (err) {
       notifications.show({
         color: "red",

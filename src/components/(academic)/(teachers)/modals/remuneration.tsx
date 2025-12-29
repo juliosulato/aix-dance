@@ -5,7 +5,7 @@ import { BiHelpCircle } from "react-icons/bi";
 import { FaTrash } from "react-icons/fa";
 import { Control, Controller, FieldErrors, useFieldArray, useWatch } from "react-hook-form";
 import { CreateUserInput, UpdateUserInput } from "@/schemas/user.schema";
-import { RemunerationType } from "@prisma/client";
+import { RemunerationType } from "@/types/bill.types";
 
 type Props = {
     control: Control<CreateUserInput | UpdateUserInput>;

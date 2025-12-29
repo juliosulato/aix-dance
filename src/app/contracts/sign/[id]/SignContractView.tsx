@@ -1,19 +1,20 @@
-"use client"; // SOLUÇÃO 1: Adiciona a diretiva para marcar como Componente de Cliente
+"use client";
 
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, LoadingOverlay, TextInput, Group, Alert, Paper, Text, Divider, Center, InputBase } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { StudentContract, Tenancy } from '@prisma/client';
 import { FaCheckCircle, FaExclamationTriangle, FaFileSignature } from 'react-icons/fa';
 import { SignatureInput, signatureSchema } from '@/schemas/academic/student-contract-signature.schema';
 import { IMaskInput } from 'react-imask';
 import dayjs from 'dayjs';
 import "dayjs/locale/pt-br";
+import { Tenancy } from '@/types/tenancy.types';
+import { StudentContract } from '@/types/contracts.types';
+import { getErrorMessage } from '@/utils/getErrorMessage';
 dayjs.locale('pt-br');
 
-// Interface para garantir que os dados relacionados (aluno, tenancy) estão incluídos
 interface ContractWithRelations extends StudentContract {
     student: {
         firstName: string;
@@ -73,10 +74,10 @@ export default function SignContractView({ contract, ipAddress, location }: Prop
             });
             setIsSigned(true);
 
-        } catch (error: any) {
+        } catch (error: unknown) {
             notifications.show({
                 title: 'Erro',
-                message: error.message,
+                message: getErrorMessage(error, 'Não foi possível assinar o contrato. Por favor, tente novamente.'),
                 color: 'red',
                 icon: <FaExclamationTriangle />,
             });

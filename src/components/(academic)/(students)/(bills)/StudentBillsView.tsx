@@ -3,11 +3,21 @@ import dayjs from "dayjs";
 import { FaCalendarAlt } from "react-icons/fa";
 import { StudentFromApi } from "../StudentFromApi";
 import DataView from "@/components/ui/DataView";
-import { ActionIcon, Badge, Box, Divider, Flex, Menu, Text, Modal, Button } from "@mantine/core";
+import {
+  ActionIcon,
+  Badge,
+  Box,
+  Divider,
+  Flex,
+  Menu,
+  Text,
+  Modal,
+  Button,
+} from "@mantine/core";
 import { StatusTextToBadge } from "@/utils/statusTextToBadge";
-import 'dayjs/locale/pt-br';
-import 'dayjs/locale/en';
-import 'dayjs/locale/es';
+import "dayjs/locale/pt-br";
+import "dayjs/locale/en";
+import "dayjs/locale/es";
 import { useState } from "react";
 import deleteBills from "@/components/(financial)/(manager)/delete";
 import { BiDotsVerticalRounded, BiTrash } from "react-icons/bi";
@@ -16,311 +26,422 @@ import { notifications } from "@mantine/notifications";
 import { authedFetch } from "@/utils/authedFetch";
 
 interface MenuItemProps {
-    bill: StudentFromApi["bills"][0];
-    onDeleteClick: (b: StudentFromApi["bills"][0]) => void;
+  bill: StudentFromApi["bills"][0];
+  onDeleteClick: (b: StudentFromApi["bills"][0]) => void;
 }
 
 interface MenuItemsProps {
-    selectedIds: string[];
-    onBulkDeleteClick: (ids: string[]) => void;
+  selectedIds: string[];
+  onBulkDeleteClick: (ids: string[]) => void;
 }
 
-export default function StudentBillsView({ student }: { student: StudentFromApi }) {
-    const bills = [...student.bills].sort((a, b) => {
-        const statusOrder: Record<string, number> = {
-            OVERDUE: 0,
-            AWAITING_RECEIPT: 1,
-            PENDING: 2,
-            PAID: 3,
-            CANCELLED: 4,
-        };
-        const aOrder = statusOrder[String(a.status)] ?? 99;
-        const bOrder = statusOrder[String(b.status)] ?? 99;
-        if (aOrder !== bOrder) return aOrder - bOrder;
-        return dayjs(a.dueDate).diff(dayjs(b.dueDate));
-    });
-
-    const [, setOpenPayBill] = useState<boolean>(false);
-    const [, setConfirmModalOpen] = useState<boolean>(false);
-    const [selectedBill, setSelectedBill] = useState<StudentFromApi["bills"][0] | null>(null);
-    const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
-    const [, setIsDeleting] = useState<boolean>(false);
-    const [, setIsExempting] = useState<boolean>(false);
-
-    const handleDeleteClick = (bill: StudentFromApi["bills"][0]) => {
-        setSelectedBill(bill);
-        setIdsToDelete([]);
-        setConfirmModalOpen(true);
+export default function StudentBillsView({
+  student,
+}: {
+  student: StudentFromApi;
+}) {
+  const bills = [...student.bills].sort((a, b) => {
+    const statusOrder: Record<string, number> = {
+      OVERDUE: 0,
+      AWAITING_RECEIPT: 1,
+      PENDING: 2,
+      PAID: 3,
+      CANCELLED: 4,
     };
+    const aOrder = statusOrder[String(a.status)] ?? 99;
+    const bOrder = statusOrder[String(b.status)] ?? 99;
+    if (aOrder !== bOrder) return aOrder - bOrder;
+    return dayjs(a.dueDate).diff(dayjs(b.dueDate));
+  });
 
-    const handleBulkDeleteClick = (ids: string[]) => {
-        setIdsToDelete(ids);
-        setSelectedBill(null);
-        setConfirmModalOpen(true);
-    };
+  const [, setOpenPayBill] = useState<boolean>(false);
+  const [, setConfirmModalOpen] = useState<boolean>(false);
+  const [selectedBill, setSelectedBill] = useState<
+    StudentFromApi["bills"][0] | null
+  >(null);
+  const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
+  const [, setIsDeleting] = useState<boolean>(false);
+  const [, setIsExempting] = useState<boolean>(false);
 
-    const handleDeleteConfirm = async () => {
-        setIsDeleting(true);
-        const tenancyId = student.tenancyId;
-        if (!tenancyId) return;
+  const handleDeleteClick = (bill: StudentFromApi["bills"][0]) => {
+    setSelectedBill(bill);
+    setIdsToDelete([]);
+    setConfirmModalOpen(true);
+  };
 
-        const finalIdsToDelete = idsToDelete.length > 0 ? idsToDelete : (selectedBill ? [selectedBill.id] : []);
+  const handleBulkDeleteClick = (ids: string[]) => {
+    setIdsToDelete(ids);
+    setSelectedBill(null);
+    setConfirmModalOpen(true);
+  };
 
-        if (finalIdsToDelete.length === 0) {
-            setIsDeleting(false);
-            setConfirmModalOpen(false);
-            return;
-        }
+  const handleDeleteConfirm = async () => {
+    setIsDeleting(true);
+    const tenancyId = student.tenancyId;
+    if (!tenancyId) return;
 
-        try {
-            await deleteBills(finalIdsToDelete, tenancyId);
-            window.location.reload();
-        } catch (error) {
-            console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);
-        } finally {
-            setIsDeleting(false);
-            setConfirmModalOpen(false);
-            setSelectedBill(null);
-            setIdsToDelete([]);
-        }
-    };
+    const finalIdsToDelete =
+      idsToDelete.length > 0
+        ? idsToDelete
+        : selectedBill
+        ? [selectedBill.id]
+        : [];
 
-    const exemptPenalty = async (ids: string[]) => {
-        setIsExempting(true);
-        const tenancyId = student.tenancyId;
-        if (!tenancyId) {
-            setIsExempting(false);
-            alert('Tenancy ID ausente.');
-            return;
-        }
+    if (finalIdsToDelete.length === 0) {
+      setIsDeleting(false);
+      setConfirmModalOpen(false);
+      return;
+    }
 
-        try {
-            const apiUrl = `/api/v1/tenancies/${tenancyId}/bills/exempt-penalty`;
-            const res = await authedFetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ids })
-            });
+    try {
+      await deleteBills(finalIdsToDelete, tenancyId);
+      window.location.reload();
+    } catch (error) {
+      console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);
+    } finally {
+      setIsDeleting(false);
+      setConfirmModalOpen(false);
+      setSelectedBill(null);
+      setIdsToDelete([]);
+    }
+  };
 
-            if (!res.ok) {
-                const text = await res.text();
-                throw new Error(text || 'Erro ao isentar multa');
-            }
+  const exemptPenalty = async (ids: string[]) => {
+    setIsExempting(true);
+    const tenancyId = student.tenancyId;
+    if (!tenancyId) {
+      setIsExempting(false);
+      alert("Tenancy ID ausente.");
+      return;
+    }
 
-            const data = await res.json();
-            // mostra um resumo do que foi atualizado antes de recarregar
-            const msg = `Isenção concluída. Faturas atualizadas: ${data.updatedCount || 0}.`;
+    try {
+      const apiUrl = `/api/v1/tenancies/${tenancyId}/bills/exempt-penalty`;
+      const res = await authedFetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids }),
+      });
 
-            notifications.show({
-                title: 'Isenção de Multa',
-                message: msg,
-                color: 'green',
-                autoClose: 8000,
-            });
-        } catch (error: any) {
-            console.error('Falha ao isentar multa:', error);
-            alert('Falha ao isentar multa: ' + (error?.message || error));
-        } finally {
-            setIsExempting(false);
-        }
-    };
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Erro ao isentar multa");
+      }
 
-    // Funções de isenção agora chamam o endpoint e exibem o relatório retornado
-    const handleExemptClick = async (bill: StudentFromApi["bills"][0]) => {
-        const hasPenalty = Boolean(bill.penaltyAmount && bill.penaltyAmount > 0);
-        if (!hasPenalty) {
-            const proceed = window.confirm('Nenhuma multa aparente nesta cobrança. Deseja prosseguir mesmo assim?');
-            if (!proceed) return;
-        } else {
-            const ok = window.confirm('Confirma isentar a multa desta cobrança?');
-            if (!ok) return;
-        }
+      const data = await res.json();
+      // mostra um resumo do que foi atualizado antes de recarregar
+      const msg = `Isenção concluída. Faturas atualizadas: ${
+        data.updatedCount || 0
+      }.`;
 
-        await exemptPenalty([bill.id]);
-    };
+      notifications.show({
+        title: "Isenção de Multa",
+        message: msg,
+        color: "green",
+        autoClose: 8000,
+      });
+    } catch (error: unknown) {
+      console.error("Falha ao isentar multa:", error);
+      alert(
+        "Falha ao isentar multa: " +
+          (error instanceof Error ? error.message : String(error))
+      );
+    } finally {
+      setIsExempting(false);
+    }
+  };
 
-    const handleBulkExemptClick = async (ids: string[]) => {
-        if (!ids || ids.length === 0) return;
-        const selectedBills = student.bills.filter(b => ids.includes(b.id));
-        const anyWithPenalty = selectedBills.some(b => Boolean(b.penaltyAmount && b.penaltyAmount > 0));
-        if (!anyWithPenalty) {
-            const proceed = window.confirm('Nenhuma das cobranças selecionadas possui multa aparente. Deseja prosseguir mesmo assim?');
-            if (!proceed) return;
-        } else {
-            const ok = window.confirm(`Confirma isentar a multa de ${ids.length} cobrança(ões)?`);
-            if (!ok) return;
-        }
+  // Funções de isenção agora chamam o endpoint e exibem o relatório retornado
+  const handleExemptClick = async (bill: StudentFromApi["bills"][0]) => {
+    const hasPenalty = Boolean(bill.penaltyAmount && bill.penaltyAmount > 0);
+    if (!hasPenalty) {
+      const proceed = window.confirm(
+        "Nenhuma multa aparente nesta cobrança. Deseja prosseguir mesmo assim?"
+      );
+      if (!proceed) return;
+    } else {
+      const ok = window.confirm("Confirma isentar a multa desta cobrança?");
+      if (!ok) return;
+    }
 
-        await exemptPenalty(ids);
-    };
+    await exemptPenalty([bill.id]);
+  };
 
-    const MenuItem = ({ bill, onDeleteClick }: MenuItemProps) => (
-        <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-            <Menu shadow="md" width={200} withinPortal>
-                <Menu.Target>
-                    <ActionIcon variant="light" color="gray" radius={"md"}>
-                        <BiDotsVerticalRounded />
-                    </ActionIcon>
-                </Menu.Target>
-                <Menu.Dropdown>
-                    <Menu.Item leftSection={<RiMoneyDollarCircleLine size={14} />} onClick={() => {
-                        setOpenPayBill(true);
-                        setSelectedBill(bill);
-                    }}>
-                        <span>{"Pagar"}</span>
-                    </Menu.Item>
-                    <Menu.Item leftSection={<RiMoneyDollarCircleLine size={14} />} onClick={async () => await handleExemptClick(bill)}>
-                        <span>{"Isentar Multa"}</span>
-                    </Menu.Item>
-                    <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onDeleteClick(bill)}>
-                        {"Excluir"}
-                    </Menu.Item>
-                </Menu.Dropdown>
-            </Menu>
-        </div>
+  const handleBulkExemptClick = async (ids: string[]) => {
+    if (!ids || ids.length === 0) return;
+    const selectedBills = student.bills.filter((b) => ids.includes(b.id));
+    const anyWithPenalty = selectedBills.some((b) =>
+      Boolean(b.penaltyAmount && b.penaltyAmount > 0)
     );
+    if (!anyWithPenalty) {
+      const proceed = window.confirm(
+        "Nenhuma das cobranças selecionadas possui multa aparente. Deseja prosseguir mesmo assim?"
+      );
+      if (!proceed) return;
+    } else {
+      const ok = window.confirm(
+        `Confirma isentar a multa de ${ids.length} cobrança(ões)?`
+      );
+      if (!ok) return;
+    }
 
-    const MenuItems = ({ selectedIds, onBulkDeleteClick }: MenuItemsProps) => (
-        <Menu shadow="md" width={200} withinPortal>
-            <Menu.Target>
-                <ActionIcon variant="light" color="gray" radius={"md"}>
-                    <BiDotsVerticalRounded />
-                </ActionIcon>
-            </Menu.Target>
-            <Menu.Dropdown>
-                <Menu.Label>{"Ações"}</Menu.Label>
-                <Menu.Item leftSection={<RiMoneyDollarCircleLine size={14} />} onClick={() => handleBulkExemptClick(selectedIds)}>
-                    {`Isentar multa de ${selectedIds.length} item${selectedIds.length > 1 ? 's' : ''}`}
-                </Menu.Item>
-                <Menu.Item color="red" leftSection={<BiTrash size={14} />} onClick={() => onBulkDeleteClick(selectedIds)}>
-                    {`Excluir ${selectedIds.length} item${selectedIds.length > 1 ? 's' : ''}`}
-                </Menu.Item>
-            </Menu.Dropdown>
-        </Menu>
-    );
+    await exemptPenalty(ids);
+  };
 
+  const MenuItem = ({ bill, onDeleteClick }: MenuItemProps) => (
+    <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+      <Menu shadow="md" width={200} withinPortal>
+        <Menu.Target>
+          <ActionIcon variant="light" color="gray" radius={"md"}>
+            <BiDotsVerticalRounded />
+          </ActionIcon>
+        </Menu.Target>
+        <Menu.Dropdown>
+          <Menu.Item
+            leftSection={<RiMoneyDollarCircleLine size={14} />}
+            onClick={() => {
+              setOpenPayBill(true);
+              setSelectedBill(bill);
+            }}
+          >
+            <span>{"Pagar"}</span>
+          </Menu.Item>
+          <Menu.Item
+            leftSection={<RiMoneyDollarCircleLine size={14} />}
+            onClick={async () => await handleExemptClick(bill)}
+          >
+            <span>{"Isentar Multa"}</span>
+          </Menu.Item>
+          <Menu.Item
+            color="red"
+            leftSection={<BiTrash size={14} />}
+            onClick={() => onDeleteClick(bill)}
+          >
+            {"Excluir"}
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
+    </div>
+  );
 
-    return (
-        <>
-            <div className="bg-neutral-100 p-4 md:p-6 lg:p-8 rounded-2xl border-neutral-200 border mt-4 md:mt-6">
-                <DataView<typeof bills[0]>
-                    data={bills}
+  const MenuItems = ({ selectedIds, onBulkDeleteClick }: MenuItemsProps) => (
+    <Menu shadow="md" width={200} withinPortal>
+      <Menu.Target>
+        <ActionIcon variant="light" color="gray" radius={"md"}>
+          <BiDotsVerticalRounded />
+        </ActionIcon>
+      </Menu.Target>
+      <Menu.Dropdown>
+        <Menu.Label>{"Ações"}</Menu.Label>
+        <Menu.Item
+          leftSection={<RiMoneyDollarCircleLine size={14} />}
+          onClick={() => handleBulkExemptClick(selectedIds)}
+        >
+          {`Isentar multa de ${selectedIds.length} item${
+            selectedIds.length > 1 ? "s" : ""
+          }`}
+        </Menu.Item>
+        <Menu.Item
+          color="red"
+          leftSection={<BiTrash size={14} />}
+          onClick={() => onBulkDeleteClick(selectedIds)}
+        >
+          {`Excluir ${selectedIds.length} item${
+            selectedIds.length > 1 ? "s" : ""
+          }`}
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
+  );
 
-                    baseUrl="/system/financial/manager/"
-                    pageTitle={`${"Gerenciador Financeiro"}`}
-                    searchbarPlaceholder={"Buscar fatura por descrição, valor, status..."}
-                    dateFilterOptions={[
-                        { key: 'dueDate', label: 'Data de Vencimento' },
-                        { key: 'createdAt', label: 'Data de Criação' },
-                    ]}
-                    columns={[
-                        {
-                            key: "complement",
-                            label: "Complemento",
-                            render: (value) => value ? value : "",
-                            sortable: true
-                        },
-                        {
-                            key: "amount",
-                            label: "Valor",
-                            render: (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value),
-                            sortable: true
-                        },
-                        {
-                            key: "originalAmount",
-                            label: "Valor Original",
-                            render: (value, row) => row.originalAmount ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(row.originalAmount)) : '-',
-                            sortable: false
-                        },
-                        {
-                            key: "penaltyAmount",
-                            label: "Multa",
-                            render: (value, row) => row.penaltyAmount ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(row.penaltyAmount)) : '-',
-                            sortable: false
-                        },
-                        {
-                            key: "originalAmount",
-                            label: "Valor Original",
-                            render: (value, row) => row.originalAmount ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(row.originalAmount) : '-',
-                            sortable: false
-                        },
-                        {
-                            key: "penaltyAmount",
-                            label: "Multa",
-                            render: (value, row) => row.penaltyAmount ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(row.penaltyAmount) : '-',
-                            sortable: false
-                        },
-                        {
-                            key: "amountPaid",
-                            label: "Valor Pago",
-                            render: (value) => value ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value) : '-',
-                            sortable: true
-                        },
-                        {
-                            key: "installmentNumber",
-                            label: "Parcela",
-                            render: (value) => value ? <span className="text-primary">{value}</span> : <span className="text-primary">1</span>,
-                            sortable: true
-                        },
-                        {
-                            key: "description",
-                            label: "Descrição",
-                        },
-                        {
-                            key: "dueDate",
-                            label: "Vencimento",
-                            render: (value) => dayjs(value).format("DD/MM/YYYY"),
-                            sortable: true
-                        },
-                        {
-                            key: "status",
-                            label: "Status",
-                            render: (st) => StatusTextToBadge(st, true, { 
-                                'PENDING': 'Pendente',
-                                'PAID': 'Pago',
-                                'OVERDUE': 'Atrasado',
-                                'CANCELLED': 'Cancelado'
-                            })
-                        },
-                    ]}
-                    RenderRowMenu={(item) => <MenuItem bill={item} onDeleteClick={handleDeleteClick} />}
-                    RenderAllRowsMenu={(selectedIds) => <MenuItems selectedIds={selectedIds} onBulkDeleteClick={handleBulkDeleteClick} />}
-                    renderCard={(item) => (
-                        <Box className="flex flex-col h-full">
-                            <Flex justify="space-between" align="start">
-                                {StatusTextToBadge(item.status, true, { 
-                                    'PENDING': 'Pendente',
-                                    'PAID': 'Pago',
-                                    'OVERDUE': 'Atrasado',
-                                    'CANCELLED': 'Cancelado'
-                                })}
-                                        <MenuItem bill={item} onDeleteClick={handleDeleteClick} />
-                            </Flex>
+  return (
+    <>
+      <div className="bg-neutral-100 p-4 md:p-6 lg:p-8 rounded-2xl border-neutral-200 border mt-4 md:mt-6">
+        <DataView<(typeof bills)[0]>
+          data={bills}
+          baseUrl="/system/financial/manager/"
+          pageTitle={`${"Gerenciador Financeiro"}`}
+          searchbarPlaceholder={"Buscar fatura por descrição, valor, status..."}
+          dateFilterOptions={[
+            { key: "dueDate", label: "Data de Vencimento" },
+            { key: "createdAt", label: "Data de Criação" },
+          ]}
+          columns={[
+            {
+              key: "complement",
+              label: "Complemento",
+              render: (value) => (value ? value : ""),
+              sortable: true,
+            },
+            {
+              key: "amount",
+              label: "Valor",
+              render: (value) =>
+                new Intl.NumberFormat("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                }).format(value),
+              sortable: true,
+            },
+            {
+              key: "originalAmount",
+              label: "Valor Original",
+              render: (value, row) =>
+                row.originalAmount
+                  ? new Intl.NumberFormat("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }).format(Number(row.originalAmount))
+                  : "-",
+              sortable: false,
+            },
+            {
+              key: "penaltyAmount",
+              label: "Multa",
+              render: (value, row) =>
+                row.penaltyAmount
+                  ? new Intl.NumberFormat("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }).format(Number(row.penaltyAmount))
+                  : "-",
+              sortable: false,
+            },
+            {
+              key: "originalAmount",
+              label: "Valor Original",
+              render: (value, row) =>
+                row.originalAmount
+                  ? new Intl.NumberFormat("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }).format(row.originalAmount)
+                  : "-",
+              sortable: false,
+            },
+            {
+              key: "penaltyAmount",
+              label: "Multa",
+              render: (value, row) =>
+                row.penaltyAmount
+                  ? new Intl.NumberFormat("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }).format(row.penaltyAmount)
+                  : "-",
+              sortable: false,
+            },
+            {
+              key: "amountPaid",
+              label: "Valor Pago",
+              render: (value) =>
+                value
+                  ? new Intl.NumberFormat("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }).format(value)
+                  : "-",
+              sortable: true,
+            },
+            {
+              key: "installmentNumber",
+              label: "Parcela",
+              render: (value) =>
+                value ? (
+                  <span className="text-primary">{value}</span>
+                ) : (
+                  <span className="text-primary">1</span>
+                ),
+              sortable: true,
+            },
+            {
+              key: "description",
+              label: "Descrição",
+            },
+            {
+              key: "dueDate",
+              label: "Vencimento",
+              render: (value) => dayjs(value).format("DD/MM/YYYY"),
+              sortable: true,
+            },
+            {
+              key: "status",
+              label: "Status",
+              render: (st) =>
+                StatusTextToBadge(
+                  st,
+                  true,
+                  st === "PENDING"
+                    ? "Pendente"
+                    : st === "PAID"
+                    ? "Pago"
+                    : st === "OVERDUE"
+                    ? "Atrasado"
+                    : st === "CANCELLED"
+                    ? "Cancelado"
+                    : st
+                ),
+            },
+          ]}
+          RenderRowMenu={(item) => (
+            <MenuItem bill={item} onDeleteClick={handleDeleteClick} />
+          )}
+          RenderAllRowsMenu={(selectedIds) => (
+            <MenuItems
+              selectedIds={selectedIds}
+              onBulkDeleteClick={handleBulkDeleteClick}
+            />
+          )}
+          renderCard={(item) => (
+            <Box className="flex flex-col h-full">
+              <Flex justify="space-between" align="start">
+                {StatusTextToBadge(
+                  item.status,
+                  true,
+                  item.status === "PENDING"
+                    ? "Pendente"
+                    : item.status === "PAID"
+                    ? "Pago"
+                    : item.status === "OVERDUE"
+                    ? "Atrasado"
+                    : item.status === "CANCELLED"
+                    ? "Cancelado"
+                    : String(item.status)
+                )}
+                <MenuItem bill={item} onDeleteClick={handleDeleteClick} />
+              </Flex>
 
-                            <Divider my="xs" />
+              <Divider my="xs" />
 
-                            <Flex justify="space-between" align="center">
-                                <Text size="sm" c="dimmed">Vencimento</Text>
-                                <Flex align="center" gap="xs">
-                                    <FaCalendarAlt className="text-gray-500" />
-                                    <Text size="sm" fw={500}>{dayjs(item.dueDate).format("DD/MM/YYYY")}</Text>
-                                </Flex>
-                            </Flex>
+              <Flex justify="space-between" align="center">
+                <Text size="sm" c="dimmed">
+                  Vencimento
+                </Text>
+                <Flex align="center" gap="xs">
+                  <FaCalendarAlt className="text-gray-500" />
+                  <Text size="sm" fw={500}>
+                    {dayjs(item.dueDate).format("DD/MM/YYYY")}
+                  </Text>
+                </Flex>
+              </Flex>
 
-                            <Flex justify="space-between" align="center" mt="sm">
-                                <Text size="lg" fw={700} c="gray.8">
-                                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(item.amount))}
-                                </Text>
-                                {(item.installments && item.installments > 1) && (
-                                    <Badge variant="light" color="gray">
-                                        {item.installmentNumber}
-                                    </Badge>
-                                )}
-                            </Flex>
-                        </Box>
-                    )}
-                />
-            </div>
-        </>
-    );
+              <Flex justify="space-between" align="center" mt="sm">
+                <Text size="lg" fw={700} c="gray.8">
+                  {new Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  }).format(Number(item.amount))}
+                </Text>
+                {item.installments && item.installments > 1 && (
+                  <Badge variant="light" color="gray">
+                    {item.installmentNumber}
+                  </Badge>
+                )}
+              </Flex>
+            </Box>
+          )}
+        />
+      </div>
+    </>
+  );
 }

@@ -20,8 +20,13 @@ WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+COPY .env .env
 
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# Garante que DATABASE_URL está disponível para o Prisma
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
 
 RUN npx prisma generate && npm run build
 

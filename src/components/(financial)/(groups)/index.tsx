@@ -1,7 +1,6 @@
 "use client";
 
 import { fetcher } from "@/utils/fetcher";
-import { CategoryGroup } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import useSWR from "swr";
@@ -15,6 +14,7 @@ import DataView from "@/components/ui/DataView";
 // dayjs imports removed (not used in this component)
 import NewCategoryGroup from "./NewGroup";
 import UpdateCategoryGroup from "./UpdateGroup";
+import { CategoryGroup } from "@/types/bill.types";
 
 
 interface MenuItemProps {

@@ -1,4 +1,3 @@
-import { Gender } from "@prisma/client";
 import { useState, memo } from "react";
 import { PhoneInput } from "@/components/ui/cellPhoneInput";
 import { InputBase, Select, TextInput } from "@mantine/core";
@@ -17,7 +16,7 @@ type Props = {
 }
 
 function NewStudent__PersonalData({ control, register, errors }: Props) {
-    const [gender, setGender] = useState<Gender | null>(null);
+    const [gender, setGender] = useState<string | null>(null);
 
     return (
         <div className="p-4 md:p-6 lg:p-8 border border-neutral-300 rounded-2xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4">
@@ -115,15 +114,15 @@ function NewStudent__PersonalData({ control, register, errors }: Props) {
                         label={"Gênero"}
                         placeholder={"Selecione o gênero"}
                         data={[
-                            { label: "Mulher", value: Gender.FEMALE },
-                            { label: "Homem", value: Gender.MALE },
-                            { label: "Não binário", value: Gender.NON_BINARY },
-                            { label: "Outro", value: Gender.OTHER },
+                            { label: "Mulher", value: "FEMALE" },
+                            { label: "Homem", value: "MALE" },
+                            { label: "Não binário", value: "NON_BINARY" },
+                            { label: "Outro", value: "OTHER" },
                         ]}
                         value={field.value ?? null}
                         onChange={(val) => {
                             field.onChange(val);
-                            setGender(val as Gender);
+                            setGender(val as string | null);
                         }}
                         error={errors.gender?.message}
                         required
@@ -132,7 +131,7 @@ function NewStudent__PersonalData({ control, register, errors }: Props) {
                 )}
             />
 
-            {gender && (gender === Gender.NON_BINARY || gender === Gender.OTHER) && (
+            {gender && (gender === "NON_BINARY" || gender === "OTHER") && (
                 <TextInput
                     label={"Pronome"}
                     placeholder={"Digite o pronome"}

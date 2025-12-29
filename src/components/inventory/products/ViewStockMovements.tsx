@@ -1,4 +1,3 @@
-import { StockMovementFromApi } from "@/types/StockMovementFromApi";
 import { fetcher } from "@/utils/fetcher";
 import {
   ActionIcon,
@@ -16,6 +15,7 @@ import dayjs from "dayjs";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { notifications } from "@mantine/notifications";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
+import { StockMovementWithCreator } from "@/types/inventory.types";
 
 export default function ViewStockMovements({
   productId,
@@ -56,9 +56,9 @@ export default function ViewStockMovements({
   if (status !== "authenticated") return <div>Sessão inválida</div>;
 
   // Normalize API shape: it may return an array or an object { movements, pagination }
-  const movements: StockMovementFromApi[] = Array.isArray(data)
-    ? (data as StockMovementFromApi[])
-    : (data?.movements as StockMovementFromApi[]) || [];
+  const movements: StockMovementWithCreator[] = Array.isArray(data)
+    ? (data as StockMovementWithCreator[])
+    : (data?.movements as StockMovementWithCreator[]) || [];
 
   const handleDelete = async (movementId: string) => {
     try {
@@ -146,7 +146,7 @@ export default function ViewStockMovements({
                         : "Balanço"}
                     </Table.Td>
                     <Table.Td>{movement.quantity}</Table.Td>
-                    <Table.Td>{movement.createdBy?.name || "-"}</Table.Td>
+                    <Table.Td>{movement.createdBy?.firstName + " " + movement.createdBy?.lastName || "-"}</Table.Td>
                     <Table.Td>{movement.reason || "-"}</Table.Td>
                     <Table.Td>
                       <Tooltip label="Excluir movimento" color="red">

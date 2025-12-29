@@ -2,12 +2,13 @@ import Link from "next/link";
 import React from "react";
 
 type Props = {
+    children?: React.ReactNode;
     label: string;
     icon?: React.ReactNode;
     href?: string;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export default function InfoTerm({ label, icon, href, children, ...props }: React.PropsWithChildren<Props>) {
+export default function InfoTerm({ children, label, icon, href, ...props }: React.PropsWithChildren<Props>) {
     
     const content = (
         <div className="flex flex-col gap-2" {...props}>
@@ -22,7 +23,7 @@ export default function InfoTerm({ label, icon, href, children, ...props }: Reac
     );
 
     if (href) {
-        return <Link href={href} className="hover:opacity-75 transition-opacity">{content}</Link>
+        return <Link href={href} className="hover:opacity-75 transition-opacity">{content}</Link>;
     }
 
     return content;

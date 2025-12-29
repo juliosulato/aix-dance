@@ -1,5 +1,5 @@
+import { BillStatus, BillType, PaymentMethod, RecurrenceType } from '@/types/bill.types';
 import { z } from 'zod';
-import { BillStatus, BillType, PaymentMethod, RecurrenceType } from '@prisma/client';
 
 const baseBillSchema = z.object({
   type: z.enum(BillType, {

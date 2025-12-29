@@ -18,7 +18,8 @@ import 'dayjs/locale/es';
 import 'dayjs/locale/en';
 import NewTeacher from "./modals/NewTeacher";
 import UpdateTeacher, { TeacherFromApi } from "./modals/UpdateTeacher";
-import { RemunerationType, Teacher } from "@prisma/client";
+import { RemunerationType } from "@/types/bill.types";
+import { Teacher } from "@/types/teacher.types";
 
 interface MenuItemProps {
     teacher: TeacherFromApi;

@@ -5,11 +5,8 @@ import useSWR from "swr";
 import DataView from "@/components/ui/DataView";
 import { fetcher } from "@/utils/fetcher";
 import dayjs from "dayjs";
-import 'dayjs/locale/pt-br';
-import 'dayjs/locale/es';
-import 'dayjs/locale/en';
 import { LoadingOverlay, Text } from "@mantine/core";
-import { Sale, SaleItem } from "@prisma/client";
+import { Sale, SaleItem } from "@/types/sale.types";
 
 type SaleFromApi = Sale & {
     items: SaleItem[];
@@ -102,7 +99,7 @@ export default function StudentSalesHistory({ tenancyId, studentId }: Props) {
                         <div className="mt-2 pl-2 border-l-2 border-gray-200">
                             <Text size="sm" fw={500}>Itens:</Text>
                             <ul className="list-disc pl-6 text-sm text-gray-600">
-                                {item.items.map(saleItem => <li key={saleItem.id}>{saleItem.description}</li>)}
+                                {item.items.map((saleItem: SaleItem) => <li key={saleItem.id}>{saleItem.description}</li>)}
                             </ul>
                         </div>
                     </div>

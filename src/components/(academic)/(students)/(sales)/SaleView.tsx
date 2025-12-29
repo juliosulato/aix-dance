@@ -3,25 +3,24 @@
 import InfoTerm from "@/components/ui/Infoterm";
 import { FaUser, FaFileInvoiceDollar, FaBoxOpen, FaMoneyBillWave } from "react-icons/fa";
 import dayjs from "dayjs";
-import { Bill, FormsOfReceipt, Plan, Sale, SaleItem, Student } from "@prisma/client";
 import { Divider, Skeleton, Text } from "@mantine/core";
 import Link from "next/link";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 import { useSession } from "next-auth/react";
+import { Sale, SaleItem } from "@/types/sale.types";
+import { Plan } from "@/types/plan.types";
+import { Bill } from "@/types/bill.types";
+import { Student } from "@/types/student.types";
 
 // --- Tipagens para os dados que vêm da API ---
-type SaleItemFromApi = SaleItem & { plan: Plan | null };
+type SaleItemResponse = SaleItem & { plan: Plan | null };
 
-type BillFromApi = Bill & { 
-    formsOfReceipt: FormsOfReceipt | null,
-    children: (Bill & { formsOfReceipt: FormsOfReceipt | null })[]
-};
 
-type SaleFromApi = Sale & {
+type SaleResponse = Sale & {
     student: Student;
-    items: SaleItemFromApi[];
-    bills: BillFromApi[];
+    items: SaleItemResponse[];
+    bills: Bill[];
 };
 
 
@@ -31,7 +30,7 @@ export default function SaleView({ saleId }: { saleId: string }) {
     const tenancyId = session?.user.tenancyId as string;
 
     // --- Busca os dados da Venda ---
-    const { data: sale, error, isLoading } = useSWR<SaleFromApi>(
+    const { data: sale, error, isLoading } = useSWR<SaleResponse>(
         `/api/v1/tenancies/${tenancyId}/sales/${saleId}`,
         fetcher
     );
@@ -111,7 +110,7 @@ export default function SaleView({ saleId }: { saleId: string }) {
                 <div>
                     <Divider my="lg" label={"Pagamentos Realizados"} labelPosition="center" />
                     <div className="flex flex-col gap-3 mt-4">
-                        {payments.map(payment => (
+                        {payments.map((payment) => (
                              <Link href={`/system/financial/manager/${payment.id}`} key={payment.id} className="p-3 bg-gray-50 hover:bg-violet-50 rounded-lg transition-colors flex justify-between items-center">
                                 <div className="flex items-center gap-4">
                                     <FaMoneyBillWave className="text-green-600" />

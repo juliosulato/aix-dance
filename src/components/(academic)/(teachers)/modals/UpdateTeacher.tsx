@@ -17,8 +17,9 @@ import Address from "./address";
 import AvatarUpload from "../../../avatarUpload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyedMutator } from "swr";
-import { Address as AddressType, CommissionTier, Teacher, User } from "@prisma/client";
-import Teacher__AccessDataUpdate from "./accessDataUpdate";
+import { CommissionTier, Teacher } from "@/types/teacher.types";
+import { User } from "@/types/user.types";
+import { Address as AddressType } from "@/types/address.types";
 
 export interface TeacherFromApi extends User {
     teacher: (Teacher & {

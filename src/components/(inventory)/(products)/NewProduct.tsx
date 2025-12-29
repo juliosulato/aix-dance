@@ -5,7 +5,7 @@ import { Button, LoadingOverlay, Modal, TextInput, NumberInput, Textarea, Group,
 import { notifications } from "@mantine/notifications";
 import { useSession } from "@/lib/auth-client";
 import { useForm, Controller } from "react-hook-form";
-import { authedFetch } from "@/utils/authedFetch";
+
 import { useState } from "react";
 import { KeyedMutator } from "swr";
 import { CreateProductInput, createProductSchema } from "@/schemas/inventory/product.schema";
@@ -34,9 +34,9 @@ export default function NewProduct({ opened, onClose, mutate }: Props) {
         }
     });
 
-    const { data: sessionData, status } = useSession();
-    if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>Sessão inválida</div>;
+    const { data: sessionData, isPending } = useSession();
+    if (isPending) return <LoadingOverlay visible />;
+    
 
     async function createProduct(data: CreateProductInput) {
         if (!sessionData?.user.tenancyId) {
@@ -48,8 +48,9 @@ export default function NewProduct({ opened, onClose, mutate }: Props) {
 
         setVisible(true);
         try {
-            const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/products`, {
+            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/products`, {
                 method: "POST",
+                credentials: "include",
                 body: JSON.stringify({
                     ...data,
                     imageUrl: imageUrl ?? undefined,
@@ -240,7 +241,7 @@ export default function NewProduct({ opened, onClose, mutate }: Props) {
                         radius="lg"
                         size="lg"
                         fullWidth={false}
-                        className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+                        className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
                     >
                        Salvar
                     </Button>

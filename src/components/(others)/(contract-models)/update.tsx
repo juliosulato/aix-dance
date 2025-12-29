@@ -4,9 +4,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, LoadingOverlay, Modal, Select, TextInput, Group, Text, Divider, Alert } from '@mantine/core';
-import { useSession } from 'next-auth/react';
+import { useSession } from "@/lib/auth-client";
 import { notifications } from '@mantine/notifications';
-import { authedFetch } from "@/utils/authedFetch";
+
 import { ContractModel } from '@/types/contracts.types';
 import { MutatorCallback } from 'swr';
 import { contractModelSchema, ContractModelInput, presetOptions } from '@/schemas/others/contract-models.schema'; 
@@ -23,7 +23,7 @@ type Props = {
 export default function UpdateContractModelModal({ opened, onClose, contractModel, mutate }: Props) {
     const [isLoading, setIsLoading] = useState(false);
     const [variables, setVariables] = useState<string[]>([]);
-    const { data: sessionData } = useSession();
+    const { data: sessionData, isPending } = useSession();
 
     const { handleSubmit, formState: { errors }, control, reset, watch, setValue } = useForm<ContractModelInput>({
         resolver: zodResolver(contractModelSchema),
@@ -90,8 +90,9 @@ export default function UpdateContractModelModal({ opened, onClose, contractMode
 
         setIsLoading(true);
         try {
-            const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/contract-models/${contractModel.id}`, {
+            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/contract-models/${contractModel.id}`, {
                 method: "PUT",
+                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
             });

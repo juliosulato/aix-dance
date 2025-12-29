@@ -12,6 +12,7 @@ export default async function toggleProductActive(
       `/api/v1/tenancies/${tenancyId}/inventory/products/${productId}`,
       {
         method: "PUT",
+                credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },

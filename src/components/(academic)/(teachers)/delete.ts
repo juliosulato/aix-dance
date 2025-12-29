@@ -1,7 +1,7 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { TeacherFromApi } from "./modals/UpdateTeacher";
-import { authedFetch } from "@/utils/authedFetch";
+
 
 type Item = TeacherFromApi & { fullName?: string };
 type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
@@ -49,8 +49,9 @@ async function deleteUsers(
   });
 
   try {
-    const response = await authedFetch(apiUrl, {
+    const response = await fetch(apiUrl, {
       method: "DELETE",
+                credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },

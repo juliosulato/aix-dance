@@ -36,7 +36,7 @@ import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import NewStudentContractModal from "./new";
 import { StudentFromApi } from "../StudentFromApi";
 import { useSession } from "@/lib/auth-client";
-import { authedFetch } from "@/utils/authedFetch";
+
 import { FormsOfReceipt } from "@/types/receipt.types";
 
 const saleFormSchema = z.object({
@@ -676,10 +676,11 @@ export default function PointOfSale({
     };
 
     try {
-      const response = await authedFetch(
+      const response = await fetch(
         `/api/v1/tenancies/${tenancyId}/sales`,
         {
           method: "POST",
+                credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         }
@@ -714,6 +715,7 @@ export default function PointOfSale({
         `/api/v1/tenancies/${tenancyId}/students/${data.studentId}/history`,
         {
           method: "POST",
+                credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             description: `Venda realizada de ${payload.items
@@ -816,7 +818,7 @@ export default function PointOfSale({
                   color={product.amount > 0 ? "#7439FA" : "gray"}
                   radius="lg"
                   size="lg"
-                  className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+                  className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
                   onClick={() => addToCart(product)}
                   leftSection={<FaPlusCircle />}
                   disabled={product.amount <= 0}
@@ -934,7 +936,7 @@ export default function PointOfSale({
                             fullWidth
                             radius="lg"
                             size="lg"
-                            className="!text-sm !font-medium tracking-wider w-full"
+                            className="text-sm! font-medium! tracking-wider w-full"
                           >
                             Adicionar Contrato
                           </Button>
@@ -968,8 +970,8 @@ export default function PointOfSale({
                           {...field}
                           onChange={(e) => field.onChange(e || 0)}
                           suffix="%"
-                          className="!w-fit !max-w-fit"
-                          classNames={{ input: "!w-fit !max-w-fit" }}
+                          className="w-fit! !max-w-fit"
+                          classNames={{ input: "w-fit! !max-w-fit" }}
                         />
                       )}
                     />

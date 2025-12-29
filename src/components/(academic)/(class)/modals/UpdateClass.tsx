@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 import { UpdateClassInput, updateClassSchema } from "@/schemas/academic/class.schema";
 import { KeyedMutator } from "swr";
 import { ClassFromApi } from "..";
@@ -84,9 +84,8 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
     };
     const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
 
-    const { data: sessionData, status } = useSession();
-    if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>Você precisa estar logado.</div>;
+    const { data: sessionData, isPending } = useSession();
+    if (isPending) return <LoadingOverlay visible />;
 
     async function updateClass(data: UpdateClassInput) {
         if (!sessionData?.user.tenancyId || !classData?.id) {
@@ -108,8 +107,9 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
         const finalData = { ...data, days: daysPayload };
 
         try {
-            const resp = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/classes/${classData.id}`, {
+            const resp = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/classes/${classData.id}`, {
                 method: "PUT",
+                credentials: "include",
                 body: JSON.stringify(finalData),
                 headers: { "Content-Type": "application/json" },
             });
@@ -126,7 +126,7 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
         }
     }
 
-    return (
+    return sessionData && (
         <>
             <Modal opened={opened} onClose={onClose} title={"Atualizar Turma"} size="auto" radius="lg" centered classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}>
                 <form onSubmit={handleSubmit(updateClass)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 w-full lg:w-[60vw] lg:p-6" >

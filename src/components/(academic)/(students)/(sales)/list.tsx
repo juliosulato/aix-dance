@@ -19,7 +19,7 @@ type Props = {
 };
 
 export default function StudentSalesHistory({ tenancyId, studentId }: Props) {
-    const { status } = useSession();
+    const { isPending, data: sessionData } = useSession();
 
     type Item = SaleFromApi;
     type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
@@ -38,8 +38,8 @@ export default function StudentSalesHistory({ tenancyId, studentId }: Props) {
         }
     );
 
-    if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>Sessão inválida</div>;
+    if (isPending || isLoading) return <LoadingOverlay visible />;
+    
     if (error) return <p>Erro ao carregar dados</p>;
     if (!sales || (Array.isArray(sales) && sales.length === 0) || (!Array.isArray(sales) && sales.products.length === 0)) {
         return (

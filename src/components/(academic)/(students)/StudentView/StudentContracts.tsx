@@ -28,10 +28,10 @@ export default function StudentContractsView({ student }: { student: StudentFrom
   const [actionType, setActionType] = useState<'delete' | 'archive' | null>(null);
   const [isActing, setIsActing] = useState(false);
 
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData } = useSession();
 
-  if (status !== "authenticated") return <div>Sessão inválida</div>;
-  const tenancyId = sessionData.user.tenancyId;
+  
+  const tenancyId = sessionData?.user.tenancyId || "";
 
   const handleCopyLink = (contractId: string) => {
     const link = `https://aixdance.mazzaux.com.br/pt-BR/contracts/sign/${contractId}`;

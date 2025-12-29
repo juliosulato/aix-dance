@@ -1,5 +1,3 @@
-import { DefaultSession } from "next-auth";
-
 export type User = {
     id: string;
     tenancyId: string;
@@ -37,18 +35,6 @@ export type Account = {
     updatedAt: Date;
 }
 
-declare module "next-auth" {
-  interface Session {
-    user: {
-      id: string;
-      country: string;
-      tenancyId: string;
-      role: UserRole;
-      teacherId?: string; 
-    } & DefaultSession["user"];
-    backendToken?: string;
-  }
-}
 
 export type Session = {
     sessionToken: string;

@@ -14,7 +14,7 @@ import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { authedFetch } from "@/utils/authedFetch";
+
 
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import Address from "../../../AddressForm";
@@ -36,7 +36,7 @@ type Props = {
 
 function UpdateStudent({ opened, onClose, mutate, student }: Props) {
 
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData, isPending } = useSession();
 
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
   const [visible, setVisible] = useState(false);
@@ -103,8 +103,9 @@ useEffect(() => {
       };
 
 
-      const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/students/${student?.id}`, {
+      const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/students/${student?.id}`, {
         method: "PUT",
+                credentials: "include",
         body: JSON.stringify(payload),
         headers: { "Content-Type": "application/json" },
       });
@@ -135,8 +136,8 @@ useEffect(() => {
     console.log("Erros de validação:", errors);
   };
 
-    if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>Sessão inválida</div>;
+    if (isPending) return <LoadingOverlay visible />;
+    
 
     return (
     <>
@@ -163,7 +164,7 @@ useEffect(() => {
             color="#7439FA"
             radius="lg"
             size="lg"
-            className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+            className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
           >
             {"Salvar"}
           </Button>

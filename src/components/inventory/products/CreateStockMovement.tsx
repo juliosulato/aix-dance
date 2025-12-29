@@ -51,9 +51,9 @@ export default function CreateStockMovement({
     },
   });
 
-  const { data: sessionData, status } = useSession();
-  if (status === "loading") return <LoadingOverlay visible />;
-  if (status !== "authenticated") return <div>Sessão inválida</div>;
+  const { data: sessionData, isPending } = useSession();
+  if (isPending) return <LoadingOverlay visible />;
+  
 
   const onSubmit = async (data: CreateStockMovementInput) => {
     setVisible(true);
@@ -63,9 +63,10 @@ export default function CreateStockMovement({
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { createdAt: _omitCreatedAt, ...payload } = data as any;
       const response = await fetch(
-        `/api/v1/tenancies/${sessionData.user.tenancyId}/inventory/stock-movements`,
+        `/api/v1/tenancies/${sessionData?.user.tenancyId}/inventory/stock-movements`,
         {
           method: "POST",
+                credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
@@ -185,7 +186,7 @@ export default function CreateStockMovement({
             radius="lg"
             size="lg"
             fullWidth={false}
-            className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+            className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
           >
             Salvar
           </Button>

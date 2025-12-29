@@ -38,7 +38,7 @@ interface MenuItemsProps {
 }
 
 export default function AllProductsData() {
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData, isPending } = useSession();
 
   const [openNew, setOpenNew] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
@@ -184,11 +184,10 @@ export default function AllProductsData() {
     </Menu>
   );
 
-  if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-  if (status !== "authenticated") return <div>{"Acesso não autorizado"}</div>;
+  if (isPending || isLoading) return <LoadingOverlay visible />;
   if (error) return <p>{"Erro ao carregar os produtos."}</p>;
 
-  return (
+  return sessionData && (
     <>
       <DataView<Product>
         data={

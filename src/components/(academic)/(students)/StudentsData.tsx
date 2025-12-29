@@ -43,7 +43,7 @@ interface MenuItemsProps {
 }
 
 export default function StudentsData() {
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData, isPending } = useSession();
 
   const [openNew, setOpenNew] = useState<boolean>(false);
   const [openUpdate, setOpenUpdate] = useState<boolean>(false);
@@ -197,7 +197,7 @@ export default function StudentsData() {
   );
 
   if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-  if (status !== "authenticated") return <div>Sessão inválida</div>;
+  
   if (error) return <p>{"Erro inesperado"}</p>;
 
   return (

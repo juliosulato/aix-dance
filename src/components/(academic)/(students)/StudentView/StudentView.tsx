@@ -91,8 +91,8 @@ export default function StudentsView({ id }: { id: string }) {
         keepMounted={false}
         variant="pills"
         classNames={{
-          tab: "!px-6 !py-4 !font-medium !rounded-2xl",
-          root: "!p-1",
+          tab: "!px-6 !py-4 font-medium! !rounded-2xl",
+          root: "p-1!",
         }}
       >
         <Tabs.List justify="center">

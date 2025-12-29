@@ -52,9 +52,9 @@ export default function UpdateProduct({ opened, onClose, mutate, product }: Prop
         }
     }, [opened, product, reset]);
 
-    const { data: sessionData, status } = useSession();
-    if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>Sessão inválida</div>;
+    const { data: sessionData, isPending } = useSession();
+    if (isPending) return <LoadingOverlay visible />;
+    
 
     async function updateProduct(data: UpdateProductInput) {
         if (!sessionData?.user.tenancyId) {
@@ -270,7 +270,7 @@ export default function UpdateProduct({ opened, onClose, mutate, product }: Prop
                         />
                     </Group>
 
-                    <Button type="submit" color="#7439FA" radius="lg" size="lg" className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto">
+                    <Button type="submit" color="#7439FA" radius="lg" size="lg" className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto">
                         Salvar
                     </Button>
                 </form>

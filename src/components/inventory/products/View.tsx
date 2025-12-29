@@ -25,7 +25,7 @@ export default function ProductView({ id }: { id: string }) {
 
   const router = useRouter();
 
-  const { data: sessionData } = useSession();
+  const { data: sessionData, isPending } = useSession();
   const tenancyId = sessionData?.user.tenancyId as string;
 
   // Fetch product via SWR
@@ -74,7 +74,7 @@ export default function ProductView({ id }: { id: string }) {
           radius="lg"
           size="lg"
           fullWidth={false}
-          className="!text-sm !font-medium tracking-wider w-full md:!w-fit"
+          className="text-sm! font-medium! tracking-wider w-full md:w-fit!"
           onClick={() => router.push("/system/inventory/products")}
         >
           Voltar para a lista de produtos
@@ -104,7 +104,7 @@ export default function ProductView({ id }: { id: string }) {
           radius="lg"
           size="lg"
           fullWidth={false}
-          className="!text-sm !font-medium tracking-wider w-full md:!w-fit"
+          className="text-sm! font-medium! tracking-wider w-full md:w-fit!"
           onClick={() => router.push("/system/inventory/products")}
         >
           Voltar para a lista de produtos

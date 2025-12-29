@@ -45,7 +45,8 @@ export default function SignContractView({ contract, ipAddress, location }: Prop
         setIsLoading(true);
         try {
             const response = await fetch(`/api/v1/tenancies/${contract.student.tenancy.id}/contracts/sign/${contract.id}`, {
-                method: 'POST',
+                method: "POST",
+credentials: "include",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     ...data,
@@ -60,7 +61,8 @@ export default function SignContractView({ contract, ipAddress, location }: Prop
             }
 
             await fetch(`/api/v1/tenancies/${contract.student.tenancy.id}/students/${contract.student.id}/history`, {
-                method: 'POST',
+                method: "POST",
+                credentials: "include",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ description: `Contrato assinado por ${data.fullName}` })
             });

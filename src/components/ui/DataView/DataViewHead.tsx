@@ -97,7 +97,7 @@ export default function DataViewHead<T>({
                             onClick={onPrint}
                             size="lg"
                             radius="lg"
-                            className="!text-sm !font-medium tracking-wider w-full md:w-fit"
+                            className="text-sm! font-medium! tracking-wider w-full md:w-fit"
                         >
                             {"Imprimir"}
                         </Button>
@@ -109,7 +109,7 @@ export default function DataViewHead<T>({
                             color="#7439FA"
                             radius="lg"
                             size="lg"
-                            className="!text-sm !font-medium tracking-wider ml-auto min-w-full w-full md:min-w-fit md:w-fit"
+                            className="text-sm! font-medium! tracking-wider ml-auto min-w-full w-full md:min-w-fit md:w-fit"
                             rightSection={<IoAdd />}
                             onClick={openNewModal.func}
                         >
@@ -215,8 +215,8 @@ export default function DataViewHead<T>({
                             </ActionIcon>
                         </Tooltip>
                     )}
-                    {dateFilter?.from && <button onClick={() => onDateFilterChange(prev => ({ ...prev!, from: null }))} className="text-nowrap flex flex-nowrap gap-2 items-center justify-center hover:opacity-50 transition cursor-pointer text-primary bg-violet-100 !text-sm px-4 py-2 border border-primary rounded-full">{"De"} {dayjs(dateFilter.from).format("DD/MM/YYYY")} <MdClose /></button>}
-                    {dateFilter?.to && <button onClick={() => onDateFilterChange(prev => ({ ...prev!, to: null }))} className="text-nowrap flex flex-nowrap gap-2 items-center justify-center hover:opacity-50 transition cursor-pointer text-primary bg-violet-100 !text-sm px-4 py-2 border border-primary rounded-full">{"Até"} {dayjs(dateFilter.to).format("DD/MM/YYYY")} <MdClose /></button>}
+                    {dateFilter?.from && <button onClick={() => onDateFilterChange(prev => ({ ...prev!, from: null }))} className="text-nowrap flex flex-nowrap gap-2 items-center justify-center hover:opacity-50 transition cursor-pointer text-primary bg-violet-100 text-sm! px-4 py-2 border border-primary rounded-full">{"De"} {dayjs(dateFilter.from).format("DD/MM/YYYY")} <MdClose /></button>}
+                    {dateFilter?.to && <button onClick={() => onDateFilterChange(prev => ({ ...prev!, to: null }))} className="text-nowrap flex flex-nowrap gap-2 items-center justify-center hover:opacity-50 transition cursor-pointer text-primary bg-violet-100 text-sm! px-4 py-2 border border-primary rounded-full">{"Até"} {dayjs(dateFilter.to).format("DD/MM/YYYY")} <MdClose /></button>}
                 </div>
 
                 <div className="hidden md:flex flex-row flex-wrap gap-2 md:flex-nowrap justify-between items-center">

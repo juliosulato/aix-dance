@@ -27,7 +27,7 @@ export default function FormsOfReceipt__Fees({
           size="xs"
           variant="light"
           color="violet"
-          className="!w-full md:!w-fit"
+          className="!w-full md:w-fit!"
           onClick={() =>
             append({
               minInstallments: 1,

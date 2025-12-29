@@ -27,7 +27,7 @@ interface MenuItemsProps {
 }
 
 export default function AllPlansData() {
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData, isPending } = useSession();
 
   const [openNew, setOpenNew] = useState<boolean>(false);
   const [openUpdate, setOpenUpdate] = useState<boolean>(false);
@@ -183,7 +183,7 @@ export default function AllPlansData() {
   };
 
   if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-  if (status !== "authenticated") return <div>{"Acesso não autorizado"}</div>;
+  if (!sessionData) return <div>Sessão inválida</div>; return <div>{"Acesso não autorizado"}</div>;
   if (error) return <p>{"Erro ao carregar os planos."}</p>;
 
   return (

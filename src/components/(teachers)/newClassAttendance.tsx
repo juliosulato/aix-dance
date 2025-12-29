@@ -6,7 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DateTimePicker } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 
 const schema = z.object({
   date: z.date({ error: "Date is required" }),
@@ -133,7 +133,7 @@ export default function NewClassAttendance({
       : `/api/v1/tenancies/${studentsClass.tenancyId}/class-attendances`;
     const method = attendanceToEdit ? "PUT" : "POST";
 
-    await authedFetch(url, {
+    await fetch(url, {
       method,
       headers: {
         "Content-Type": "application/json",
@@ -267,7 +267,7 @@ export default function NewClassAttendance({
           color="#7439FA"
           radius="lg"
           size="md"
-          className="!text-sm !font-medium tracking-wider"
+          className="text-sm! font-medium! tracking-wider"
         >
           {attendanceToEdit ? "Atualizar Chamada" : "Salvar Chamada"}
         </Button>

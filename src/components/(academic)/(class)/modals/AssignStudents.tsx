@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 import {
   EnrollStudentsInput,
   enrollStudentsSchema,
@@ -47,7 +47,7 @@ type Props = {
 
 function AssignStudents({ opened, onClose, mutate, classData }: Props) {
   const [visible, setVisible] = useState(false);
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData, isPending } = useSession();
 
   const enrollSchema = enrollStudentsSchema;
 
@@ -171,13 +171,14 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
       promises.push(
         fetch(baseUrl, {
           method: "POST",
+credentials: "include",
           body: JSON.stringify({ studentIds: studentsToEnroll }),
           headers: { "Content-Type": "application/json" },
         })
       );
 
       studentsToEnroll.forEach(async (studentId) => {
-        const student: StudentFromApi = await authedFetch(
+        const student: StudentFromApi = await fetch(
           `/api/v1/tenancies/${tenancyId}/students/${studentId}`
         ).then((res) => res.json());
 
@@ -256,6 +257,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
             `/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,
             {
               method: "POST",
+credentials: "include",
               body: JSON.stringify({
                 description: `Aluno matriculado na turma ${className}`,
               }),
@@ -283,6 +285,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
             `/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,
             {
               method: "POST",
+credentials: "include",
               body: JSON.stringify({
                 description: `Aluno removido da turma ${className}`,
               }),
@@ -331,7 +334,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
     }
 
     const newId = addedIds[0];
-    const student = await authedFetch(
+    const student = await fetch(
       `/api/v1/tenancies/${sessionData?.user.tenancyId}/students/${newId}`
     ).then((res) => res.json());
 
@@ -357,7 +360,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
     }
   };
 
-  if (status === "loading") return <LoadingOverlay visible />;
+  if (isPending) return <LoadingOverlay visible />;
 
   return (
     <>
@@ -388,7 +391,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
                   data={studentOptions}
                   {...field}
                   searchable
-                  className="!w-full"
+                  className="w-full!"
                   nothingFoundMessage={"Nada encontrado..."}
                   rightSection={<FaSearch />}
                   onChange={handleStudentChange}
@@ -396,13 +399,13 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
                 />
               )}
             />
-            <div className="p-4 border border-neutral-300 rounded-2xl flex flex-col gap-4 min-h-[200px]">
+            <div className="p-4 border border-neutral-300 rounded-2xl flex flex-col gap-4 min-h-200px">
               {studentsSelected.length === 0 ? (
                 <div className="flex flex-col gap-3 items-center justify-center text-center m-auto">
                   <Image
                     src={notFound}
                     alt="Nenhum aluno encontrado"
-                    className="max-w-[150px]"
+                    className="max-w-150px"
                   />
                   <h3 className="text-xl text-primary font-bold">
                     Nenhum aluno encontrado

@@ -53,6 +53,7 @@ export default function FileUpload({
         const body = { filename: file.name, contentType: file.type, size: file.size, prefix: uploadPathPrefix };
         const presignedRes = await fetch("/api/upload", {
           method: "POST",
+                credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
         });

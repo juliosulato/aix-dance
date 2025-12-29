@@ -13,7 +13,7 @@ interface BankBalance {
 }
 
 export function BankBalances() {
-  const { data: sessionData } = useSession();
+  const { data: sessionData, isPending } = useSession();
   const { data, error, isLoading } = useSWR<BankBalance[]>(
     sessionData?.user.tenancyId
       ? `/api/v1/tenancies/${sessionData.user.tenancyId}/banks/balances`

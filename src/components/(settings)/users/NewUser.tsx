@@ -14,7 +14,7 @@ import { Controller, useForm } from "react-hook-form";
 import { CreateUserInput, createUserSchema } from "@/schemas/user.schema";
 import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 import AvatarUpload from "@/components/avatarUpload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyedMutator } from "swr";
@@ -53,9 +53,9 @@ function NewUser({ opened, onClose, mutate }: Props) {
     onClose();
   };
 
-  const { data: sessionData, status } = useSession();
-  if (status === "loading") return <LoadingOverlay visible />;
-  if (status !== "authenticated") return <div>Sessão inválida</div>;
+  const { data: sessionData, isPending } = useSession();
+  if (isPending) return <LoadingOverlay visible />;
+  
 
   async function createUser(data: CreateUserInput) {
     if (!sessionData?.user.tenancyId) {
@@ -69,10 +69,11 @@ function NewUser({ opened, onClose, mutate }: Props) {
     setVisible(true);
 
     try {
-      const resp = await authedFetch(
+      const resp = await fetch(
         `/api/v1/tenancies/${sessionData.user.tenancyId}/users`,
         {
           method: "POST",
+                credentials: "include",
           body: JSON.stringify({
             ...data,
             image: avatar,
@@ -204,7 +205,7 @@ function NewUser({ opened, onClose, mutate }: Props) {
             radius="lg"
             size="lg"
             fullWidth={false}
-            className="!text-sm !font-medium tracking-wider w-full md!w-fit ml-auto"
+            className="text-sm! font-medium! tracking-wider w-full mdw-fit! ml-auto"
           >
             {"Salvar"}
           </Button>

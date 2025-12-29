@@ -5,7 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 import { Button, LoadingOverlay, Modal, ScrollArea, NumberInput, Select } from "@mantine/core";
 import { Bill, BillStatus } from "@/types/bill.types";
 import { Bank } from "@/types/bank.types";
@@ -41,7 +41,7 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
     const [isLoading, setIsLoading] = useState(false);
 
     // Usamos o schema estático
-    const { data: sessionData } = useSession();
+    const { data: sessionData, isPending } = useSession();
     
     const { data: banks } = useSWR<Bank[]>(`/api/v1/tenancies/${sessionData?.user.tenancyId}/banks`, fetcher);
 
@@ -76,8 +76,9 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                 paymentDate: data.paymentDate,
             };
 
-            const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bills/${bill.id}`, {
+            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bills/${bill.id}`, {
                 method: "PUT",
+                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
             });
@@ -211,7 +212,7 @@ export default function PayBill({ opened, onClose, mutate, bill }: Props) {
                         radius="lg"
                         size="md"
                         loading={isLoading}
-                        className="!text-sm !font-medium tracking-wider"
+                        className="text-sm! font-medium! tracking-wider"
                     >
                         Pagar
                     </Button>

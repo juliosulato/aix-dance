@@ -27,7 +27,7 @@ type FormValues = {
 
 function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
   const [visible, setVisible] = useState(false);
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData, isPending } = useSession();
 
   const { control, handleSubmit, reset } = useForm<FormValues>({
     resolver: zodResolver(
@@ -102,6 +102,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
             `/api/v1/tenancies/${tenancyId}/classes/${classId}/enrollments`,
             {
               method: "POST",
+                credentials: "include",
               body: JSON.stringify({ studentIds: [student.id] }),
               headers: { "Content-Type": "application/json" },
             }
@@ -113,6 +114,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
             `/api/v1/tenancies/${tenancyId}/students/${student.id}/history`,
             {
               method: "POST",
+                credentials: "include",
               body: JSON.stringify({
                 description: `Aluno adiciona na turma ${className}`,
               }),
@@ -145,6 +147,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
             `/api/v1/tenancies/${tenancyId}/students/${student.id}/history`,
             {
               method: "POST",
+                credentials: "include",
               body: JSON.stringify({
                 description: `Aluno removido da turma ${className}`,
               }),
@@ -179,7 +182,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
     }
   }
 
-  if (status === "loading") return <LoadingOverlay visible />;
+  if (isPending) return <LoadingOverlay visible />;
 
   return (
     <>

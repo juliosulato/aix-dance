@@ -16,7 +16,7 @@ import {
 } from "@mantine/core";
 import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 import {
   contractModelSchema,
   ContractModelInput,
@@ -39,7 +39,7 @@ export default function NewContractModelModal({
 }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [variables, setVariables] = useState<string[]>([]);
-  const { data: sessionData } = useSession();
+  const { data: sessionData, isPending } = useSession();
 
   const {
     handleSubmit,
@@ -112,10 +112,11 @@ export default function NewContractModelModal({
 
     setIsLoading(true);
     try {
-      const response = await authedFetch(
+      const response = await fetch(
         `/api/v1/tenancies/${sessionData.user.tenancyId}/contract-models`,
         {
           method: "POST",
+                credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         }

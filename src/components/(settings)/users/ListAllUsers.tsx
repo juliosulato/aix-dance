@@ -34,7 +34,7 @@ interface MenuItemProps {
 
 
 export default function AllUsersData() {
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData, isPending } = useSession();
 
   const [openNew, setOpenNew] = useState<boolean>(false);
   const [openUpdate, setOpenUpdate] = useState<boolean>(false);
@@ -158,11 +158,11 @@ export default function AllUsersData() {
     </div>
   );
 
-  if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-  if (status !== "authenticated") return <div>Sessão inválida</div>;
+  if (isPending || isLoading) return <LoadingOverlay visible />;
+  
   if (error) return <p>{"Erro inesperado"}</p>;
 
-  return (
+  return sessionData && (
     <>
       <DataView<UserFromApi & { fullName: string }>
         data={d || []}

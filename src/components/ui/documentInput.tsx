@@ -3,7 +3,6 @@ import { Flex, InputBase, InputBaseProps } from '@mantine/core';
 import { IMaskInput } from 'react-imask';
 import { americaDocumentOptions } from '@/utils/americaDocumentOptions';
 import { europeDocumentOptions } from '@/utils/europeDocumentOptions';
-import { useSession } from 'next-auth/react';
 
 const documentOptions: Record<string, { label: string; mask?: string }> = {};
 americaDocumentOptions.forEach(doc => {
@@ -19,18 +18,17 @@ type DocumentInputProps = InputBaseProps & {
 };
 
 export default function DocumentInput({ value: controlledValue, onChange, ...props }: DocumentInputProps) {
-  const { data: session } = useSession();
   const [mask, setMask] = useState<string>('000.000.000-00');
   const [label, setLabel] = useState<string>('CPF');
   const [value, setValue] = useState<string>(controlledValue || '');
 
   useEffect(() => {
-    const country = session?.user?.country || 'BR';
+    const country = 'BR';
     const doc = documentOptions[country] || documentOptions['BR'];
     setLabel(doc.label);
     setMask(doc.mask || '');
     setValue(controlledValue || '');
-  }, [controlledValue, session]);
+  }, [controlledValue]);
 
   return (
     <Flex gap="0" align="flex-end">

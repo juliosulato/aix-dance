@@ -11,7 +11,7 @@ import NewPlan__Fees from "./fees";
 import { KeyedMutator } from "swr";
 import { Plan, PlanType } from "@/types/plan.types";
 import { createPlanSchema, CreatePlanInput } from "@/schemas/academic/plan";
-import { authedFetch } from "@/utils/authedFetch";
+
 
 type Props = {
     opened: boolean;
@@ -43,9 +43,9 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
 
     const amount = watch("amount");
 
-    const { data: sessionData, status } = useSession();
-    if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>Sessão inválida</div>;
+    const { data: sessionData, isPending } = useSession();
+    if (isPending) return <LoadingOverlay visible />;
+    
 
     async function createPlan(data: CreatePlanInput) {
         if (!sessionData?.user.tenancyId) {
@@ -60,8 +60,9 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
 
         setVisible(true);
         try {
-            const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/plans`, {
+            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/plans`, {
                 method: "POST",
+                credentials: "include",
                 body: JSON.stringify(data),
                 headers: { "Content-Type": "application/json" },
             });
@@ -88,7 +89,7 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
 
     const onError = (errors: any) => console.log("Erros de validação:", errors);
 
-    return (
+    return sessionData && (
         <>
             <Modal
                 opened={opened}
@@ -108,7 +109,7 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
                         radius="lg"
                         size="lg"
                         fullWidth={false}
-                        className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+                        className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
                     >
                        Salvar
                     </Button>

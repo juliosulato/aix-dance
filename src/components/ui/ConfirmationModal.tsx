@@ -42,7 +42,7 @@ export default function ConfirmationModal({
         <Button
           radius="lg"
           size="md"
-          className="!text-sm !font-medium tracking-wider w-full md:!w-fit"
+          className="text-sm! font-medium! tracking-wider w-full md:w-fit!"
           variant="default"
           onClick={onClose}
           disabled={loading}>
@@ -55,7 +55,7 @@ export default function ConfirmationModal({
           radius="lg"
           size="md"
           leftSection={<TiWarningOutline className="text-xl"/>}
-          className="!text-sm !font-medium tracking-wider w-full md:!w-fit"
+          className="text-sm! font-medium! tracking-wider w-full md:w-fit!"
         >
           {confirmLabel}
         </Button>

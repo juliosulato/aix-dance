@@ -15,7 +15,7 @@ import {
 } from "@mantine/core";
 import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 import { ContractModel } from "@/types/contracts.types";
 import { Student } from "@/types/student.types";
 import { Tenancy } from "@/types/tenancy.types";
@@ -49,7 +49,7 @@ export default function NewStudentContractModal({
   const [isLoading, setIsLoading] = useState(false);
   const [manualVariables, setManualVariables] = useState<string[]>([]);
   const [richTextKey, setRichTextKey] = useState(Date.now()); // NOVO ESTADO: Chave para forçar a recriação
-  const { data: sessionData } = useSession();
+  const { data: sessionData, isPending } = useSession();
   const tenancyId = sessionData?.user.tenancyId;
 
   const { data: studentsResponse } = useSWR<
@@ -201,10 +201,11 @@ export default function NewStudentContractModal({
     setIsLoading(true);
 
     try {
-      const response = await authedFetch(
+      const response = await fetch(
         `/api/v1/tenancies/${tenancyId}/students/${studentId}/contracts`,
         {
           method: "POST",
+                credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ...data,
@@ -215,6 +216,7 @@ export default function NewStudentContractModal({
 
       fetch(`/api/v1/tenancies/${tenancyId}/students/${studentId}/history`, {
         method: "POST",
+                credentials: "include",
         body: JSON.stringify({
           description: `Contrato enviado para assinatura.`,
         }),

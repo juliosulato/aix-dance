@@ -4,25 +4,25 @@ import { ActionIcon, AppShell as AppShellMantine, Avatar, Burger, Button, Menu, 
 import { useDisclosure } from "@mantine/hooks";
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import useMenuData from "@/utils/menuData";
 import { TbSettings, TbUser } from "react-icons/tb";
 import { BiSupport } from "react-icons/bi";
 import LogoSVG from "../Logo";
 import { HiOutlineChevronRight, HiOutlineChevronDown } from "react-icons/hi2";
-import { signOut, useSession } from "next-auth/react";
 import NotificationBell from "./NotificationBell";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa";
 import { LuLogOut } from "react-icons/lu";
 import { BsBox } from "react-icons/bs";
-
+import { signOut, useSession } from "@/lib/auth-client";
 export default function AppShell({ children }: { children: React.ReactNode }) {
     const [activeMain, setActiveMain] = useState<number | string | null>(null);
     const [mobileOpened, { toggle: toggleMobile }] = useDisclosure(true);
     const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(false);
     const pathname = usePathname();
     const menuData = useMenuData();
+    const router = useRouter();
 
     const session = useSession();
 
@@ -37,7 +37,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             }}
         >
             <AppShellMantine.Header className="flex items-center justify-between h-full print:hidden">
-                <div className="flex items-center justify-between gap-2  py-2 px-4 xl:px-6 xl:py-3 xl:!min-w-[300px] h-[80px] xl:border-r xl:border-neutral-300">
+                <div className="flex items-center justify-between gap-2  py-2 px-4 xl:px-6 xl:py-3 xl:min-w-300px! h-80px! xl:border-r xl:border-neutral-300">
                     <LogoSVG className={`h-full`} />
                     <Burger opened={!desktopOpened} onClick={toggleDesktop} size="sm" className="hidden xl:block" />
                 </div>
@@ -78,7 +78,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                     <NotificationBell />
                     <Menu>
                         <Menu.Target>
-                            <Button className="flex items-center gap-2 !h-full !p-0" variant="transparent">
+                            <Button className="flex items-center gap-2 h-full! p-0!" variant="transparent">
                                 <Avatar src={session.data?.user?.image ?? null} radius="lg" size="42px" color="violet" name={session.data?.user?.image ? undefined : `${session.data?.user?.name}`} />
                                 <HiOutlineChevronDown />
                             </Button>
@@ -87,7 +87,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                             {/* <Menu.Item leftSection={<FaRegUser />}>
                                 {"Meu Perfil"}
                             </Menu.Item> */}
-                            <Menu.Item leftSection={<LuLogOut />} onClick={() => signOut({ redirect: true, redirectTo: "/auth/signin" })}>
+                            <Menu.Item leftSection={<LuLogOut />} onClick={() => signOut({ fetchOptions: {
+                                onSuccess: () => {
+                                    router.push("/auth/signin")
+                                }
+                            } })}>
                                 {"Sair"}
                             </Menu.Item>
                         </Menu.Dropdown>
@@ -115,7 +119,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                                             opened={activeMain === index}
                                             rightSection={item.subitems && <HiOutlineChevronRight size={12} className="mantine-rotate-rtl" />}
                                             classNames={{ section: "text-xl m-auto" }}
-                                            className={`rounded-full !py-3 transition-all duration-300 ease-in px-5 !justify-start`}
+                                            className={`rounded-full py-3! transition-all duration-300 ease-in px-5 justify-start!`}
                                         >
                                             {activeMain === index ? (
                                                 <div className="transition-all duration-300 ease-in">
@@ -129,7 +133,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                                                                 label={subitem.label}
                                                                 component={Link}
                                                                 href={subitem.href}
-                                                                className="rounded-full !px-5 !py-3 transition-all duration-300 ease-in"
+                                                                className="rounded-full px-5! py-3! transition-all duration-300 ease-in"
                                                                 classNames={{ section: "text-xl" }}
                                                                 active={pathname === subitem.href}
                                                             />
@@ -147,7 +151,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                                                 component={Link}
                                                 href={item.href}
                                                 classNames={{ section: "text-xl m-auto" }}
-                                                className={`rounded-full !py-3 transition-all duration-300 ease-in px-5 !justify-start`}
+                                                className={`rounded-full py-3! transition-all duration-300 ease-in px-5 justify-start!`}
                                                 active={pathname === item.href}
                                             />
                                         ) : (
@@ -156,7 +160,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                                                 leftSection={item.icon}
                                                 label={item.label}
                                                 classNames={{ section: "text-xl m-auto" }}
-                                                className={`rounded-full !py-3 transition-all duration-300 ease-in px-5 !justify-start`}
+                                                className={`rounded-full py-3! transition-all duration-300 ease-in px-5 justify-start!`}
                                             />
                                         )
                                     )}
@@ -173,7 +177,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                             active={pathname === "/settings"}
                             onClick={() => setActiveMain(activeMain === "/settings" ? null : "/settings")}
                             opened={activeMain === "/settings"}
-                            className={`rounded-full !py-3 transition-all duration-300 ease-in !px-5 !justify-start `}
+                            className={`rounded-full py-3! transition-all duration-300 ease-in px-5 justify-start!`}
                             rightSection={<HiOutlineChevronRight size={12} className="mantine-rotate-rtl" />}
                         >
                             {/* <NavLink
@@ -193,7 +197,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                                 label={"Usuários"}
                                 component={Link}
                                 href={"/system/settings/users"}
-                                className="rounded-full !px-5 !py-3 transition-all duration-300 ease-in"
+                                className="rounded-full px-5! py-3! transition-all duration-300 ease-in"
                                 classNames={{ section: "text-xl" }}
                                 active={pathname === "/system/settings/users"}
                             />
@@ -207,7 +211,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                             href="https://wa.me/5514981834361?text=Ol%C3%A1!%20Gostaria%20de%20ajuda%20com%20o%20AIX%20Dance."
                             target="_blank"
                             active={pathname === "/support"}
-                            className={`rounded-full !py-3 transition-all duration-300 ease-in !px-5 !justify-start `}
+                            className={`rounded-full py-3! transition-all duration-300 ease-in px-5 justify-start!`}
                         />
 
                     </div>

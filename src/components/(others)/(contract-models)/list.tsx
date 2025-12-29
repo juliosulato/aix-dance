@@ -29,7 +29,7 @@ interface MenuItemsProps {
 }
 
 export default function AllContractModelsPage() {
-    const { data: sessionData, status } = useSession();
+    const { data: sessionData, isPending } = useSession();
 
     // Estados do componente
     const [openNew, setOpenNew] = useState<boolean>(false);
@@ -130,11 +130,10 @@ export default function AllContractModelsPage() {
         </Menu>
     );
 
-    if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>Sessão inválida.</div>;
+    if (isPending || isLoading) return <LoadingOverlay visible />;
     if (error) return <p>Erro ao carregar os dados.</p>;
 
-    return (
+    return sessionData && (
         <>
             <DataView<ContractModel>
                 data={contractModels|| []} // Filtra os arquivados se o campo ainda existir no retorno da API

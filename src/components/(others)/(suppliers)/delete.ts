@@ -1,7 +1,7 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { Supplier } from "@/types/supplier.types";
-import { authedFetch } from "@/utils/authedFetch";
+
 
 async function deleteSuppliers(
     items: Supplier | string[],
@@ -25,7 +25,7 @@ async function deleteSuppliers(
     notifications.show({ title: "Aguarde", message: "Processando exclusão...", color: "yellow" });
 
     try {
-        const response = await authedFetch(apiUrl, {
+        const response = await fetch(apiUrl, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

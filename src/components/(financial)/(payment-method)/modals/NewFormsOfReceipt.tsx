@@ -15,7 +15,7 @@ import FormsOfReceipt__BasicInformations from "./basic-informations";
 import FormsOfReceipt__Fees from "./feeForm";
 import { KeyedMutator } from "swr";
 import { FormsOfReceipt } from "..";
-import { authedFetch } from "@/utils/authedFetch";
+
 
 type Props = {
   opened: boolean;
@@ -45,7 +45,7 @@ export default function NewFormsOfReceipt({
     defaultValues: { name: "", operator: "", fees: [] },
   });
 
-  const { data: sessionData } = useSession();
+  const { data: sessionData, isPending } = useSession();
 
   async function createFormsOfReceipt(data: CreateFormsOfReceiptInput) {
     if (!sessionData?.user.tenancyId) {
@@ -54,10 +54,11 @@ export default function NewFormsOfReceipt({
     }
     setIsLoading(true);
     try {
-      const response = await authedFetch(
+      const response = await fetch(
         `/api/v1/tenancies/${sessionData.user.tenancyId}/forms-of-receipt`,
         {
           method: "POST",
+                credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         }
@@ -120,7 +121,7 @@ export default function NewFormsOfReceipt({
           radius="lg"
           size="md"
           loading={isLoading}
-          className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+          className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
         >
           Salvar
         </Button>

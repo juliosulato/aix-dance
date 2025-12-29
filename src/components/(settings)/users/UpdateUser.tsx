@@ -17,7 +17,7 @@ import AvatarUpload from "@/components/avatarUpload";
 import { KeyedMutator } from "swr";
 import { UserFromApi } from "./UserFromApi";
 import { updateUserSchema, UpdateUserInput } from "@/schemas/user.schema";
-import { authedFetch } from "@/utils/authedFetch";
+
 import { UserRole } from "@/types/user.types";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 
@@ -97,10 +97,11 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
     }
 
     try {
-      const resp = await authedFetch(
+      const resp = await fetch(
         `/api/v1/tenancies/${tenancyId}/users/${user.id}`,
         {
           method: "PUT",
+                credentials: "include",
           body: JSON.stringify({
             ...data,
             image: avatar,
@@ -253,7 +254,7 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
             radius="lg"
             size="lg"
             fullWidth={false}
-            className="!text-sm !font-medium tracking-wider w-full md!w-fit ml-auto"
+            className="text-sm! font-medium! tracking-wider w-full mdw-fit! ml-auto"
           >
             {"Salvar"}
           </Button>

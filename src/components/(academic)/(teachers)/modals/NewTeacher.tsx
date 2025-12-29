@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { CreateUserInput, createUserSchema } from "@/schemas/user.schema"; // Importando a função
 import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 import Address from "./address";
 import AvatarUpload from "../../../avatarUpload";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -84,9 +84,9 @@ function NewTeacher({ opened, onClose }: Props) {
         }
     };
 
-    const { data: sessionData, status } = useSession();
-    if (status === "loading") return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>Você precisa estar logado para criar professores.</div>;
+    const { data: sessionData, isPending } = useSession();
+    if (isPending) return <LoadingOverlay visible />;
+    if (!sessionData) return <div>Você precisa estar logado para criar professores.</div>;
 
     async function createTeacher(data: CreateUserInput) {
         if (!sessionData?.user.tenancyId) {
@@ -96,8 +96,9 @@ function NewTeacher({ opened, onClose }: Props) {
 
         setVisible(true);
         try {
-            const resp = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/users`, {
+            const resp = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/users`, {
                 method: "POST",
+                credentials: "include",
                 body: JSON.stringify({...data, image: avatar, role: "TEACHER" }),
                 headers: { "Content-Type": "application/json" },
             });
@@ -138,7 +139,7 @@ function NewTeacher({ opened, onClose }: Props) {
                                         size="lg"
                                         fullWidth={false}
                                         onClick={handleNextStep}
-                                        className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+                                        className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
                                     >{"Próximo"}</Button>
                                 </div>
                             </div>
@@ -156,7 +157,7 @@ function NewTeacher({ opened, onClose }: Props) {
                                     size="lg"
                                     fullWidth={false}
                                     onClick={prevStep}
-                                    className="!text-sm !font-medium tracking-wider w-full md:!w-fit"
+                                    className="text-sm! font-medium! tracking-wider w-full md:w-fit!"
                                 >{"Voltar"}</Button>
                                 <Button
                                     type="submit"
@@ -164,7 +165,7 @@ function NewTeacher({ opened, onClose }: Props) {
                                     radius={"lg"}
                                     size="lg"
                                     fullWidth={false}
-                                    className="!text-sm !font-medium tracking-wider w-full md!w-fit ml-auto"
+                                    className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
                                 >{"Salvar"}</Button>
                             </div>
                         </Stepper.Step>

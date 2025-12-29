@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 import { Button, LoadingOverlay, Modal, TextInput } from "@mantine/core";
 import { UpdateCategoryGroupInput, updateCategoryGroupSchema } from "@/schemas/financial/category-group.schema";
 import { KeyedMutator } from "swr";
@@ -37,7 +37,7 @@ export default function UpdateCategoryGroup({ opened, onClose, categoryGroups, m
         }
     }, [categoryGroups, reset]);
 
-    const { data: sessionData } = useSession();
+    const { data: sessionData, isPending } = useSession();
 
     async function updateCategoryGroup(data: UpdateCategoryGroupInput) {
         if (!sessionData?.user.tenancyId) {
@@ -47,8 +47,9 @@ export default function UpdateCategoryGroup({ opened, onClose, categoryGroups, m
 
         setIsLoading(true);
         try {
-            const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/category-groups/${categoryGroups?.id}`, {
+            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/category-groups/${categoryGroups?.id}`, {
                 method: "PUT",
+                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
             });
@@ -108,7 +109,7 @@ export default function UpdateCategoryGroup({ opened, onClose, categoryGroups, m
                     radius="lg"
                     size="lg"
                     loading={isLoading}
-                    className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+                    className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
                 >
                     Salvar
                 </Button>

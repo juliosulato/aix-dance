@@ -45,7 +45,7 @@ export default function ClassSchedulePage() {
   useEffect(() => {
     setLoading(true);
     // Não precisamos mais de from/to, pois vamos buscar todas as turmas ativas
-    fetch(`/api/v1/tenancies/${session.user.tenancyId}/class-schedule`)
+    fetch(`/api/v1/tenancies/${session?.user.tenancyId}/class-schedule`)
       .then(res => res.json())
       .then(data => {
         // Converter dados para formato do FullCalendar com eventos recorrentes

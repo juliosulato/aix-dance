@@ -6,7 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DateTimePicker } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 
 const schema = z
   .object({
@@ -82,10 +82,11 @@ export default function UpdateClassAttendance({
       teacherId,
     };
 
-    await authedFetch(
+    await fetch(
       `/api/v1/tenancies/${studentsClass.tenancyId}/class-attendances`,
       {
         method: "PUT",
+                credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -216,7 +217,7 @@ export default function UpdateClassAttendance({
           color="#7439FA"
           radius="lg"
           size="md"
-          className="!text-sm !font-medium tracking-wider"
+          className="text-sm! font-medium! tracking-wider"
         >
           Atualizar Chamada
         </Button>

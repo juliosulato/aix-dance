@@ -1,7 +1,7 @@
 import { KeyedMutator } from "swr";
 import { FormsOfReceipt } from ".";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 
 async function deleteFormsOfReceipt(
     items: FormsOfReceipt | string[],
@@ -28,7 +28,7 @@ async function deleteFormsOfReceipt(
     notifications.show({ title: "Aguarde!", message: "Deletando itens...", color: "yellow" });
 
     try {
-        const response = await authedFetch(apiUrl, {
+        const response = await fetch(apiUrl, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

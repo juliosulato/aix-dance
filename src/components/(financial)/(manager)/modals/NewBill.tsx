@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 import { Button, LoadingOverlay, Modal, Tabs } from "@mantine/core";
 
 import { CreateBillInput, createBillSchema } from "@/schemas/financial/bill.schema";
@@ -58,7 +58,7 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
         }
     };
 
-    const { data: sessionData } = useSession();
+    const { data: sessionData, isPending } = useSession();
 
     // The 'data' parameter is now correctly typed as CreateBillInput, resolving the error.
     async function createBill(data: CreateBillInput) {
@@ -71,8 +71,9 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
         try {
             console.log("Submitting data:", data);
 
-            const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bills`, {
+            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bills`, {
                 method: "POST",
+                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
             });
@@ -92,7 +93,8 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
                 try {
                     for (const f of uploadedFiles) {
                         await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bill-attachments`, {
-                            method: 'POST',
+                            method: "POST",
+                credentials: "include",
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ url: f.fileUrl, billId: createdBill.id }),
                         });
@@ -171,7 +173,7 @@ export default function NewBill({ opened, onClose, mutate }: Props) {
                         radius="lg"
                         size="md"
                         loading={isLoading}
-                        className="!text-sm !font-medium tracking-wider"
+                        className="text-sm! font-medium! tracking-wider"
                     >
                         Salvar
                     </Button>

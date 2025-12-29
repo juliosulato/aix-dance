@@ -45,7 +45,8 @@ function AvatarUpload({ defaultUrl, onUploadComplete, folder = "avatars" }: Prop
 
     try {
       const presignedUrlResponse = await fetch('/api/upload', {
-        method: 'POST',
+        method: "POST",
+                credentials: "include",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ filename: file.name, contentType: file.type, size: file.size, prefix: folder }),
       });

@@ -1,6 +1,6 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 import { Modality } from "@/types/class.types";
 
 type Item = Modality;
@@ -37,7 +37,7 @@ async function deleteModalities(
     notifications.show({ title: "Aguarde...", message: "Excluindo itens...", color: "yellow" });
 
     try {
-        const response = await authedFetch(apiUrl, {
+        const response = await fetch(apiUrl, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

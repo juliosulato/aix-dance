@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
-import { authedFetch } from "@/utils/authedFetch";
+
 
 import {
   CreateBankInput,
@@ -52,9 +52,9 @@ export default function NewBankAccount({ opened, onClose }: Props) {
     },
   });
 
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData, isPending } = useSession();
 
-  if (status === "loading") {
+  if (isPending) {
     return <LoadingOverlay visible />;
   }
 
@@ -67,10 +67,11 @@ export default function NewBankAccount({ opened, onClose }: Props) {
     setIsLoading(true);
 
     try {
-      const response = await authedFetch(
+      const response = await fetch(
         `/api/v1/tenancies/${sessionData.user.tenancyId}/banks`,
         {
           method: "POST",
+                credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         }
@@ -136,7 +137,7 @@ export default function NewBankAccount({ opened, onClose }: Props) {
             color="#7439FA"
             radius="lg"
             size="lg"
-            className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+            className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
             loading={isLoading}
           >
             Salvar

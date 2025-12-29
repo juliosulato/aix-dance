@@ -39,7 +39,8 @@ const normalizePrefix = (raw?: string) => {
 export async function POST(request: Request) {
     try {
         const session = await authClient.getSession();
-        const tenancyId = session?.data?.user?.tenancyId;
+        // Extend the user type to include tenancyId or handle its absence
+        const tenancyId = (session?.data?.user as { tenancyId?: string })?.tenancyId;
 
         if (!session || !tenancyId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

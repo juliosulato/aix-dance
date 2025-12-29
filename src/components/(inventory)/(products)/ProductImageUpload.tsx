@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function ProductImageUpload({ productId, initialUrl, onUpdated }: Props) {
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData, isPending } = useSession();
 
   const tenancyId = sessionData?.user?.tenancyId as string | undefined;
 
@@ -46,8 +46,8 @@ export default function ProductImageUpload({ productId, initialUrl, onUpdated }:
     }
   };
 
-  if (status === "loading") return null;
-  if (status !== "authenticated") return null;
+  if (isPending) return null;
+  if (!sessionData) return <div>Sessão inválida</div>; return null;
 
   return (
     <AvatarUpload

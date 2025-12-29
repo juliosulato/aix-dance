@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, LoadingOverlay, Modal, Select, Group, Alert, Text } from '@mantine/core';
-import { useSession } from 'next-auth/react';
-import { notifications } from '@mantine/notifications';import { authedFetch } from "@/utils/authedFetch";
+import { useSession } from "@/lib/auth-client";
+import { notifications } from '@mantine/notifications';
 import { ContractModel } from "@/types/contracts.types";
 import { Student } from "@/types/student.types";
 import { Tenancy } from "@/types/tenancy.types";
@@ -31,7 +31,7 @@ type Props = {
 export default function NewStudentContractModal({ opened, onClose, mutate, studentId, onConfirm, planContext }: Props) {
     const [isLoading, setIsLoading] = useState(false);
     const [richTextKey, setRichTextKey] = useState(Date.now());
-    const { data: sessionData } = useSession();
+    const { data: sessionData, isPending } = useSession();
     const tenancyId = sessionData?.user.tenancyId;
 
     const { data: studentsResponse } = useSWR<Student[] | PaginatedListResponse<Student>>(tenancyId ? `/api/v1/tenancies/${tenancyId}/students?limit=500` : null, fetcher);
@@ -134,8 +134,9 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
 
         setIsLoading(true);
         try {
-            const response = await authedFetch(`/api/v1/tenancies/${tenancyId}/students/${studentId}/contracts`, {
+            const response = await fetch(`/api/v1/tenancies/${tenancyId}/students/${studentId}/contracts`, {
                 method: "POST",
+                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ ...data, status: "PEDING" }),
             });
@@ -144,6 +145,7 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
 
             fetch(`/api/v1/tenancies/${tenancyId}/students/${studentId}/history`,{
                 method: "POST",
+                credentials: "include",
                 body: JSON.stringify({ description: `Contrato enviado para assinatura.` }),
                 headers: { "Content-Type": "application/json" },
             });

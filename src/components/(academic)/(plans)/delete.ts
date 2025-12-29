@@ -1,7 +1,7 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { Plan } from "@/types/plan.types";
-import { authedFetch } from "@/utils/authedFetch";
+
 
 type Item = Plan;
 type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
@@ -45,7 +45,7 @@ async function deletePlans(
   });
 
   try {
-    const response = await authedFetch(apiUrl, {
+    const response = await fetch(apiUrl, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

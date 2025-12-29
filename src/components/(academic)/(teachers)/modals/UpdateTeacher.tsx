@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { updateUserSchema, UpdateUserInput } from "@/schemas/user.schema"; 
 import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 import Address from "./address";
 import AvatarUpload from "../../../avatarUpload";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -91,9 +91,9 @@ function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
         }
     };
 
-    const { data: sessionData, status } = useSession();
+    const { data: sessionData, isPending } = useSession();
     if (status === "loading" && !user) return <LoadingOverlay visible />;
-    if (status !== "authenticated") return <div>Você precisa estar logado para editar professores.</div>;
+    if (!sessionData) return <div>Sessão inválida</div>; return <div>Você precisa estar logado para editar professores.</div>;
 
     async function updateTeacher(data: UpdateUserInput) {
         if (!sessionData?.user.tenancyId || !user?.id) {
@@ -103,8 +103,9 @@ function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
 
         setVisible(true);
         try {
-            const resp = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/users/${user.id}`, {
+            const resp = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/users/${user.id}`, {
                 method: "PUT",
+                credentials: "include",
                 body: JSON.stringify({...data, image: avatar || user.image}),
                 headers: { "Content-Type": "application/json" },
             });
@@ -148,7 +149,7 @@ function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
                                         size="lg"
                                         fullWidth={false}
                                         onClick={handleNextStep}
-                                        className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+                                        className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
                                     >{"Próximo"}</Button>
                                 </div>
                             </div>
@@ -164,7 +165,7 @@ function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
                                     size="lg"
                                     fullWidth={false}
                                     onClick={prevStep}
-                                    className="!text-sm !font-medium tracking-wider w-full md:!w-fit"
+                                    className="text-sm! font-medium! tracking-wider w-full md:w-fit!"
                                 >{"Voltar"}</Button>
                                 <Button
                                     type="submit"
@@ -172,7 +173,7 @@ function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
                                     radius={"lg"}
                                     size="lg"
                                     fullWidth={false}
-                                    className="!text-sm !font-medium tracking-wider w-full md!w-fit ml-auto"
+                                    className="text-sm! font-medium! tracking-wider w-full mdw-fit! ml-auto"
                                 >{"Salvar"}</Button>
                             </div>
                         </Stepper.Step>

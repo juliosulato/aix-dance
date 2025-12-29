@@ -59,7 +59,7 @@ interface MenuItemsProps {
 }
 
 export default function AllBillsData() {
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData, isPending } = useSession();
 
   const [openNew, setOpenNew] = useState<boolean>(false);
   const [openUpdate, setOpenUpdate] = useState<boolean>(false);
@@ -251,7 +251,7 @@ export default function AllBillsData() {
   );
 
   if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-  if (status !== "authenticated") return <div>Sessão inválida</div>;
+  
   if (error) return <p>{"Erro inesperado"}</p>;
 
   return (
@@ -374,8 +374,8 @@ export default function AllBillsData() {
             <Tabs
               variant="pills"
               classNames={{
-                tab: "!px-6 !py-4 !font-medium !rounded-2xl",
-                root: "!p-1 !bg-white !rounded-2xl shadow-sm",
+                tab: "!px-6 !py-4 font-medium! !rounded-2xl",
+                root: "p-1! !bg-white !rounded-2xl shadow-sm",
               }}
               value={activeTab}
               onChange={setActiveTab}
@@ -391,7 +391,7 @@ export default function AllBillsData() {
                 color="#7439FA"
                 radius="lg"
                 size="lg"
-                className="!text-sm !font-medium tracking-wider ml-auto min-w-full w-full md:min-w-fit md:w-fit"
+                className="text-sm! font-medium! tracking-wider ml-auto min-w-full w-full md:min-w-fit md:w-fit"
                 rightSection={<IoAdd />}
                 onClick={() => setOpenNew(true)}
               >

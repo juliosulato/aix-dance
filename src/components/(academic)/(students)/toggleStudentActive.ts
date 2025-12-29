@@ -1,6 +1,6 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 import { StudentFromApi } from "./StudentFromApi";
 
 async function toggleStudentActive(
@@ -35,8 +35,9 @@ async function toggleStudentActive(
   });
 
   try {
-    const response = await authedFetch(apiUrl, {
+    const response = await fetch(apiUrl, {
       method: "PUT",
+                credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },

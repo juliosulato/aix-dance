@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 import { Button, LoadingOverlay, Modal, TextInput } from "@mantine/core";
 import { KeyedMutator } from "swr";
 import { UpdateSupplierInput, updateSupplierSchema } from "@/schemas/supplier.schema";
@@ -50,7 +50,7 @@ export default function UpdateSupplier({ opened, onClose, mutate, supplier }: Pr
         reset();
     }
 
-    const { data: sessionData } = useSession();
+    const { data: sessionData, isPending } = useSession();
 
     async function handleUpdateSupplier(data: UpdateSupplierInput) {
         if (!sessionData?.user.tenancyId) {
@@ -60,8 +60,9 @@ export default function UpdateSupplier({ opened, onClose, mutate, supplier }: Pr
 
         setIsLoading(true);
         try {
-            const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/suppliers/${supplier.id}`, {
+            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/suppliers/${supplier.id}`, {
                 method: "PUT",
+                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
             });
@@ -159,7 +160,7 @@ export default function UpdateSupplier({ opened, onClose, mutate, supplier }: Pr
                     radius="lg"
                     size="lg"
                     loading={isLoading}
-                    className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+                    className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
                 >
                     {"Salvar"}
                 </Button>

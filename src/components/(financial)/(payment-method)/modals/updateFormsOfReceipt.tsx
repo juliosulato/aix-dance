@@ -13,7 +13,7 @@ import { FormsOfReceipt } from "..";
 import { KeyedMutator } from "swr";
 import FormsOfReceipt__BasicInformations from "./basic-informations";
 import FormsOfReceipt__Fees from "./feeForm";
-import { authedFetch } from "@/utils/authedFetch";
+
 
 type Props = {
   formsOfReceipt: FormsOfReceipt | null;
@@ -67,7 +67,7 @@ export default function UpdateFormsOfReceipt({
     }
   }, [formsOfReceipt, reset]);
 
-  const { data: sessionData } = useSession();
+  const { data: sessionData, isPending } = useSession();
 
   async function updateFormsOfReceipt(data: UpdateFormsOfReceiptInput) {
     if (!sessionData?.user.tenancyId) {
@@ -76,10 +76,11 @@ export default function UpdateFormsOfReceipt({
     }
     setIsLoading(true);
     try {
-      const response = await authedFetch(
+      const response = await fetch(
         `/api/v1/tenancies/${sessionData.user.tenancyId}/forms-of-receipt/${formsOfReceipt?.id}`,
         {
           method: "PUT",
+                credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...data }),
         }
@@ -133,7 +134,7 @@ export default function UpdateFormsOfReceipt({
           color="#7439FA"
           radius="lg"
           size="md"
-          className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+          className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
         >
           Salvar
         </Button>

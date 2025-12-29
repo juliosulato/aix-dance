@@ -1,9 +1,10 @@
 "use client";
 
-import { getSession } from "next-auth/react";
+import { authClient } from "@/lib/auth-client";
+
 
 export const fetcher = async <T = any>(url: string): Promise<T> => {
-  const session = await getSession();
+  const session = await authClient.getSession() as { data: { backendToken?: string } } | null;
   const backendBase = process.env.NEXT_PUBLIC_BACKEND_URL;
   const headers: Record<string, string> = {};
 
@@ -20,8 +21,8 @@ export const fetcher = async <T = any>(url: string): Promise<T> => {
     isApiTarget = url.startsWith("/api/");
   }
 
-  if (session?.backendToken && isApiTarget) {
-    headers["Authorization"] = `Bearer ${session.backendToken}`;
+  if (session?.data?.backendToken && isApiTarget) {
+    headers["Authorization"] = `Bearer ${session.data.backendToken}`;
   }
 
   const res = await fetch(url, Object.keys(headers).length ? { headers } : undefined);

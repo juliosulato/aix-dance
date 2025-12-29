@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 import {
   CreateClassInput,
   createClassSchema,
@@ -73,9 +73,8 @@ function NewClass({ opened, onClose, mutate }: Props) {
   const prevStep = () =>
     setActive((current) => (current > 0 ? current - 1 : current));
 
-  const { data: sessionData, status } = useSession();
-  if (status === "loading") return <LoadingOverlay visible />;
-  if (status !== "authenticated") return <div>Você precisa estar logado.</div>;
+  const { data: sessionData, isPending } = useSession();
+  if (isPending) return <LoadingOverlay visible />;
 
   async function createClass(data: CreateClassInput) {
     if (!sessionData?.user.tenancyId) {
@@ -103,10 +102,11 @@ function NewClass({ opened, onClose, mutate }: Props) {
     const finalData = { ...data, days: daysPayload };
 
     try {
-      const resp = await authedFetch(
+      const resp = await fetch(
         `/api/v1/tenancies/${sessionData.user.tenancyId}/classes`,
         {
           method: "POST",
+            credentials: "include",
           body: JSON.stringify(finalData),
           headers: { "Content-Type": "application/json" },
         }
@@ -129,7 +129,7 @@ function NewClass({ opened, onClose, mutate }: Props) {
     }
   }
 
-  return (
+  return sessionData && (
     <>
       <Modal
         opened={opened}

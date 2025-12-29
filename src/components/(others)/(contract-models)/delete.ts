@@ -1,6 +1,6 @@
 import { notifications } from "@mantine/notifications";
 import { MutatorCallback } from "swr";
-import { authedFetch } from "@/utils/authedFetch";
+
 
 export default async function deleteContractModels(
     ids: string[],
@@ -8,7 +8,7 @@ export default async function deleteContractModels(
     mutate: MutatorCallback
 ) {
     try {
-        const response = await authedFetch(`/api/v1/tenancies/${tenancyId}/contract-models`, {
+        const response = await fetch(`/api/v1/tenancies/${tenancyId}/contract-models`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ids }),

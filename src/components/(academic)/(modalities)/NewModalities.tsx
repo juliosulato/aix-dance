@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "@/lib/auth-client";
-import { authedFetch } from "@/utils/authedFetch";
+
 import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal, TextInput } from "@mantine/core";
 import { KeyedMutator } from "swr";
@@ -27,7 +27,7 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
         resolver: zodResolver(createModalitySchema) as any,
     });
 
-    const { data: sessionData } = useSession();
+    const { data: sessionData, isPending } = useSession();
 
     async function createModality(data: CreateModalityInput) {
         if (!sessionData?.user.tenancyId) {
@@ -37,8 +37,9 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
 
         setIsLoading(true);
         try {
-            const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/modalities`, {
+            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/modalities`, {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -116,7 +117,7 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
                     radius="lg"
                     size="md"
                     loading={isLoading}
-                    className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+                    className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
                 >
                     Salvar
                 </Button>

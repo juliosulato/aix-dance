@@ -304,7 +304,7 @@ export default function DataView<T>({
                             color="#7439FA"
                             radius="lg"
                             size="lg"
-                            className="!text-sm !font-medium tracking-wider min-w-full w-full md:min-w-fit md:w-fit"
+                            className="text-sm! font-medium! tracking-wider min-w-full w-full md:min-w-fit md:w-fit"
                             rightSection={<IoAdd />}
                             onClick={openNewModal.func}
                         >

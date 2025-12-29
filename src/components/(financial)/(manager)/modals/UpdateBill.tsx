@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 import { Button, LoadingOverlay, Modal, ScrollArea, SegmentedControl, Text } from "@mantine/core";
 import { Bill } from "@/types/bill.types";
 import { KeyedMutator } from "swr";
@@ -61,7 +61,7 @@ export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
         }
     }, [bill, reset]);
 
-    const { data: sessionData } = useSession();
+    const { data: sessionData, isPending } = useSession();
 
     async function handleUpdateBill(data: UpdateBillInput) {
         if (!sessionData?.user.tenancyId || !bill) {
@@ -74,8 +74,9 @@ export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
             // Inclui o escopo da atualização no payload
             const payload = { ...data, updateScope };
 
-            const response = await authedFetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bills/${bill.id}`, {
+            const response = await fetch(`/api/v1/tenancies/${sessionData.user.tenancyId}/bills/${bill.id}`, {
                 method: "PUT",
+                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
             });
@@ -159,7 +160,7 @@ export default function UpdateBill({ opened, onClose, mutate, bill }: Props) {
                         radius="lg"
                         size="md"
                         loading={isLoading}
-                        className="!text-sm !font-medium tracking-wider ml-auto"
+                        className="text-sm! font-medium! tracking-wider ml-auto"
                     >
                         Salvar
                     </Button>

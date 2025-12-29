@@ -1,6 +1,6 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
-import { authedFetch } from "@/utils/authedFetch";
+
 import { CategoryGroup } from "@/types/bill.types";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 
@@ -23,7 +23,7 @@ async function deleteCategoryGroups(
     notifications.show({ title: "Aguarde", message: "Excluindo item(s)...", color: "yellow" });
 
     try {
-        const response = await authedFetch(apiUrl, {
+        const response = await fetch(apiUrl, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

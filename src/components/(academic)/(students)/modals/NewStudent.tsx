@@ -14,7 +14,7 @@ import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { authedFetch } from "@/utils/authedFetch";
+
 
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import Address from "../../../AddressForm";
@@ -34,7 +34,7 @@ type Props = {
 };
 
 function NewStudent({ opened, onClose, mutate }: Props) {
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData, isPending } = useSession();
 
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
@@ -76,10 +76,11 @@ function NewStudent({ opened, onClose, mutate }: Props) {
         image: avatarUrl,
       };
 
-      const response = await authedFetch(
+      const response = await fetch(
         `/api/v1/tenancies/${sessionData.user.tenancyId}/students`,
         {
           method: "POST",
+                credentials: "include",
           body: JSON.stringify(payload),
           headers: { "Content-Type": "application/json" },
         }
@@ -111,8 +112,8 @@ function NewStudent({ opened, onClose, mutate }: Props) {
     console.log("Erros de validação:", errors);
   };
 
-  if (status === "loading") return <LoadingOverlay visible />;
-  if (status !== "authenticated") return <div>Sessão inválida</div>;
+  if (isPending) return <LoadingOverlay visible />;
+  
 
   return (
     <>
@@ -149,7 +150,7 @@ function NewStudent({ opened, onClose, mutate }: Props) {
             color="#7439FA"
             radius="lg"
             size="lg"
-            className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+            className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
           >
             {"Salvar"}
           </Button>

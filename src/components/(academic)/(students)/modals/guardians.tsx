@@ -39,7 +39,7 @@ function NewStudent__Guardians({ control, errors }: Props) {
         color="#7439FA"
         radius="lg"
         size="lg"
-        className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+        className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
       >
         {"Adicionar Responsável"}
       </Button>

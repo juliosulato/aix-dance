@@ -24,7 +24,7 @@ export default function ViewStockMovements({
   productId: string;
   productMutate: () => void;
 }) {
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData, isPending } = useSession();
   const { data, error, mutate } = useSWR<any>(
     `/api/v1/tenancies/${sessionData?.user.tenancyId}/inventory/stock-movements?productId=${productId}`,
     fetcher
@@ -53,7 +53,7 @@ export default function ViewStockMovements({
     );
   }
 
-  if (status !== "authenticated") return <div>Sessão inválida</div>;
+  
 
   // Normalize API shape: it may return an array or an object { movements, pagination }
   const movements: StockMovementWithCreator[] = Array.isArray(data)
@@ -108,7 +108,7 @@ export default function ViewStockMovements({
             radius="lg"
             size="lg"
             fullWidth={false}
-            className="!text-sm !font-medium tracking-wider w-full md:!w-fit ml-auto"
+            className="text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto"
           >
             Lançar Movimento
           </Button>

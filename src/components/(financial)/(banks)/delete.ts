@@ -1,7 +1,7 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
 import { Bank } from "@/types/bank.types";
-import { authedFetch } from "@/utils/authedFetch";
+
 
 async function deleteBanks(
     items: Bank | string[],
@@ -28,7 +28,7 @@ async function deleteBanks(
     notifications.show({ title: "Aguarde", message: "Excluindo conta(s) bancária(s)...", color: "yellow" });
 
     try {
-        const response = await authedFetch(apiUrl, {
+        const response = await fetch(apiUrl, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

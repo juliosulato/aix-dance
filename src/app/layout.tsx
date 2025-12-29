@@ -2,7 +2,6 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { SessionProvider } from "next-auth/react";
 import { SWRConfig } from "swr";
 
 import { MantineProvider } from "@mantine/core";
@@ -37,12 +36,10 @@ export default async function RootLayout({
           <SWRConfig value={{
             revalidateOnFocus: false
           }}>
-            <SessionProvider>
           <MantineProvider defaultColorScheme="light" theme={theme}>
-            <Notifications className="!z-[2000]" />
+            <Notifications className="z-2000!" />
             {children}
-          </MantineProvider>
-        </SessionProvider>
+          </MantineProvider>''
           </SWRConfig>
       </body>
     </html>

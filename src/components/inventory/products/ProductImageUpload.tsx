@@ -2,7 +2,7 @@
 
 import AvatarUpload from "@/components/avatarUpload";
 import { notifications } from "@mantine/notifications";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 
 type Props = {
   productId: string;

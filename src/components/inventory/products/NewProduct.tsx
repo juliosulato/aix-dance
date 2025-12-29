@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, LoadingOverlay, Modal, TextInput, NumberInput, Textarea, Group, Select, ScrollAreaAutosize } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
 import { KeyedMutator } from "swr";

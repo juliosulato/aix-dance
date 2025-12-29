@@ -1,8 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { Loader, Text, Paper, Button, Group, Title, Modal, Table } from "@mantine/core";
-import { FaPrint, FaTable } from "react-icons/fa";
+import { Loader, Paper, Button, Group, Title } from "@mantine/core";
+import { FaTable } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
@@ -16,6 +15,7 @@ import type { EventClickArg } from "@fullcalendar/core";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import { useSession } from "@/lib/auth-client";
 
 dayjs.extend(weekday);
 dayjs.extend(localeData);
@@ -41,10 +41,8 @@ export default function ClassSchedulePage() {
   const router = useRouter();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showTablePrint, setShowTablePrint] = useState(false);
 
   useEffect(() => {
-    if (!session?.user?.tenancyId) return;
     setLoading(true);
     // Não precisamos mais de from/to, pois vamos buscar todas as turmas ativas
     fetch(`/api/v1/tenancies/${session.user.tenancyId}/class-schedule`)

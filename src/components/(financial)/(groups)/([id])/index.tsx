@@ -6,7 +6,7 @@ import { useState } from "react";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import deleteCategoryGroups from "../delete";
 import UpdateCategoryGroup from "../UpdateGroup";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 import { CategoryGroup } from "@/types/bill.types";

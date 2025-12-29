@@ -4,7 +4,7 @@ import { Button, LoadingOverlay, Modal, MultiSelect, Text, Alert } from "@mantin
 import { useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
 import useSWR, { KeyedMutator } from "swr";
 import { fetcher } from "@/utils/fetcher";

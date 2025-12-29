@@ -1,5 +1,5 @@
 import { fetcher } from "@/utils/fetcher";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import useSWR from "swr";
 import { Card, Group, Stack, Text, Title } from "@mantine/core";
 

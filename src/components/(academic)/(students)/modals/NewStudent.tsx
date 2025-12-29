@@ -10,7 +10,7 @@ import AvatarUpload from "@/components/avatarUpload";
 import PersonalData from "./personalData";
 import Checkboxies from "./checkboxies";
 import Guardians from "./guardians";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";

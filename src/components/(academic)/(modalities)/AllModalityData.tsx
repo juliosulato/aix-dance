@@ -1,7 +1,7 @@
 "use client";
 
 import { fetcher } from "@/utils/fetcher";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { useState } from "react";
 import useSWR from "swr";
 import deleteModality from "./delete";

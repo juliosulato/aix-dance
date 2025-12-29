@@ -7,7 +7,7 @@ import deleteFormsOfReceipt from "../deleteFormsOfReceipt";
 import UpdateFormsOfReceipt from "../modals/updateFormsOfReceipt";
 import { useState } from "react";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { fetcher } from "@/utils/fetcher";
 import useSWR from "swr";
 

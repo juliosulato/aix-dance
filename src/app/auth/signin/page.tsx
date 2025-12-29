@@ -13,7 +13,7 @@ export default async function LoginPage() {
       <Image
         src={illustration}
         alt=""
-        className="hidden lg:block order-2 md:-order-1 object-center object-cover !w-[60%]"
+        className="hidden lg:block order-2 md:-order-1 object-center object-cover w-[60%]!"
         fill
         quality={100}
         loading="eager"

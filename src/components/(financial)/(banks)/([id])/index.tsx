@@ -9,7 +9,7 @@ import { Bank } from "@/types/bank.types";
 import UpdateBankAccount from "../modals/updateBankAccount";
 import { fetcher } from "@/utils/fetcher";
 import useSWR from "swr";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 
 export default function BanksView({ id }: { id: string }) {
   const session = useSession();

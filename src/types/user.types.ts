@@ -6,6 +6,7 @@ export type User = {
     firstName: string;
     lastName: string;
     email: string;
+    emailVerified: boolean;
     password: string;
     image: string | null;
     role: "ADMIN" | "TEACHER" | "STAFF";

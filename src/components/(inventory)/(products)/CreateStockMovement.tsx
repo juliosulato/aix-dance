@@ -15,7 +15,7 @@ import {
 import { DateTimePicker } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
 import dayjs from "dayjs";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { authedFetch } from "@/utils/authedFetch";

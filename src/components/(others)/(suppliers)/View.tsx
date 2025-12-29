@@ -8,7 +8,7 @@ import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import deleteSuppliers from "./delete";
 import UpdateSupplier from "./UpdateSupplier";
 import { SupplierFromApi } from "./SupplierFromApi";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { fetcher } from "@/utils/fetcher";
 import useSWR from "swr";
 

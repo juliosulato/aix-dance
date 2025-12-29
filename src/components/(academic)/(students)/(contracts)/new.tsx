@@ -13,7 +13,7 @@ import {
   Divider,
   Alert,
 } from "@mantine/core";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
 import { authedFetch } from "@/utils/authedFetch";
 import { ContractModel } from "@/types/contracts.types";

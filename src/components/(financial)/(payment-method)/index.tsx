@@ -5,7 +5,7 @@ import NewFormsOfReceipt from "./modals/NewFormsOfReceipt";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 import { ActionIcon, LoadingOverlay, Menu, Text } from "@mantine/core";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import {
   PaymentFee,
   FormsOfReceipt as DefaultFormsOfReceipt,

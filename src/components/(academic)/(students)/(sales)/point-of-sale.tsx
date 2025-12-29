@@ -35,7 +35,7 @@ import { extractItemsFromResponse, PaginatedListResponse } from "@/utils/paginat
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import NewStudentContractModal from "./new";
 import { StudentFromApi } from "../StudentFromApi";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { authedFetch } from "@/utils/authedFetch";
 import { FormsOfReceipt } from "@/types/receipt.types";
 

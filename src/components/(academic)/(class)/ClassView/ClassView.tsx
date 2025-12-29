@@ -12,7 +12,7 @@ import { ClassFromApi } from "..";
 import { Avatar, Divider, Text } from "@mantine/core";
 import AssignStudents from "../modals/AssignStudents";
 import { PiStudent } from "react-icons/pi";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 import { Student, StudentClass } from "@/types/student.types";

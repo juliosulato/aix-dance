@@ -3,7 +3,7 @@ import { ClassFromApi } from "@/components/(academic)/(class)";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 import { fetcher } from "@/utils/fetcher";
 import { Button } from "@mantine/core";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import useSWR from "swr";
 
 export default function TeachersClassesPage() {

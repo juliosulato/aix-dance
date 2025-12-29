@@ -10,7 +10,7 @@ import UpdateContractModelModal from "./update";
 
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 export default function ContractModelView({ id }: { id: string }) {
         const session = useSession().data;
         const tenancyId = session?.user.tenancyId as string;

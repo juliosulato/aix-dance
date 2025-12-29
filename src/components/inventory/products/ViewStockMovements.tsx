@@ -7,7 +7,7 @@ import {
   Table,
   Tooltip,
 } from "@mantine/core";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import useSWR from "swr";
 import CreateStockMovement from "./CreateStockMovement";
 import { useState } from "react";

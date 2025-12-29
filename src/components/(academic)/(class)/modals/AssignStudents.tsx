@@ -10,7 +10,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
 import { authedFetch } from "@/utils/authedFetch";
 import {

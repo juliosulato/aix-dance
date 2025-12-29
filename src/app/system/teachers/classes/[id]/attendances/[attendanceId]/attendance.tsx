@@ -1,6 +1,6 @@
 "use client";
 import Breadcrumps from "@/components/ui/Breadcrumps";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 

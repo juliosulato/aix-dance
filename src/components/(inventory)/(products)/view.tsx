@@ -1,7 +1,7 @@
 "use client";
 
 import { Product } from "@/types/product.types";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";

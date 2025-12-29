@@ -7,7 +7,7 @@ import { Divider, Skeleton, Text } from "@mantine/core";
 import Link from "next/link";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { Sale, SaleItem } from "@/types/sale.types";
 import { Plan } from "@/types/plan.types";
 import { Bill } from "@/types/bill.types";

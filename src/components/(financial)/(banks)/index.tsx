@@ -2,7 +2,7 @@
 
 import { fetcher } from "@/utils/fetcher";
 import { Bank } from "@/types/bank.types";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { useState } from "react";
 import useSWR from "swr";
 import deleteBanks from "./delete";

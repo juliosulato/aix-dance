@@ -4,7 +4,7 @@ import { notifications } from "@mantine/notifications";
 import { BsThreeDots } from "react-icons/bs";
 import { BiUpload, BiCamera } from "react-icons/bi";
 import { BsImageAlt } from "react-icons/bs";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 
 type Props = {
   defaultUrl?: string | null;

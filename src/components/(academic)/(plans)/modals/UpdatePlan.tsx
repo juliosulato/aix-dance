@@ -4,7 +4,7 @@ import { updatePlanSchema, UpdatePlanInput } from "@/schemas/academic/plan";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import BasicInformations from "./basicInformations";

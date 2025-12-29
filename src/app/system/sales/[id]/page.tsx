@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import SaleView from "@/components/(academic)/(students)/(sales)/SaleView";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 

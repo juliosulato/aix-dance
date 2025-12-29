@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
 import { authedFetch } from "@/utils/authedFetch";
 import { Button, LoadingOverlay, Modal, ScrollArea, NumberInput, Select } from "@mantine/core";

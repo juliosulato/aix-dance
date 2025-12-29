@@ -2,7 +2,7 @@
 
 import { fetcher } from "@/utils/fetcher";
 import { ContractModel } from "@/types/contracts.types";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { useState } from "react";
 import useSWR, { MutatorCallback } from "swr";
 import deleteContractModels from "./delete"; // Nova função para excluir

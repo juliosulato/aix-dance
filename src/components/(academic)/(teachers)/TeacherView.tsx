@@ -10,7 +10,7 @@ import UpdateTeacher from "./modals/UpdateTeacher";
 import deactivateUsers from "./delete"; // Supondo que a função de delete agora desative usuários
 import dayjs from "dayjs";
 import UpdateTeacherAccessData from "./modals/accessDataUpdate";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 import { Gender } from "@/types/student.types";

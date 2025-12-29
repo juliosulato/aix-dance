@@ -5,7 +5,7 @@ import { PaymentMethod } from "@/types/bill.types";
 import { Supplier } from "@/types/supplier.types";
 import { fetcher } from "@/utils/fetcher";
 import { NumberInput, Select, TextInput } from "@mantine/core";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { Control, Controller, FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import useSWR from "swr";

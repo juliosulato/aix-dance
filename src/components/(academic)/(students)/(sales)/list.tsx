@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import useSWR from "swr";
 import DataView from "@/components/ui/DataView";
 import { fetcher } from "@/utils/fetcher";

@@ -10,7 +10,7 @@ import Teacher__RemunerationData from "./remuneration";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { CreateUserInput, createUserSchema } from "@/schemas/user.schema"; // Importando a função
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
 import { authedFetch } from "@/utils/authedFetch";
 import Address from "./address";

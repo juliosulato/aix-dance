@@ -12,7 +12,7 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { CreateUserInput, createUserSchema } from "@/schemas/user.schema";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { notifications } from "@mantine/notifications";
 import { authedFetch } from "@/utils/authedFetch";
 import AvatarUpload from "@/components/avatarUpload";

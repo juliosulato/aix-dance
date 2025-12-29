@@ -2,7 +2,7 @@
 
 import { fetcher } from "@/utils/fetcher";
 import { Plan, PlanType } from "@/types/plan.types";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { useState } from "react";
 import useSWR from "swr";
 import deletePlans from "./delete";

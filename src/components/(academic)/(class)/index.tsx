@@ -1,7 +1,7 @@
 "use client";
 
 import { fetcher } from "@/utils/fetcher";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { useState } from "react";
 import useSWR from "swr";
 import archiveClasses from "./archive"; // ATUALIZADO: Importa a nova função
@@ -41,7 +41,7 @@ interface MenuItemsProps {
 }
 
 export default function AllClassesData() {
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData } = useSession();
 
   const [openNew, setOpenNew] = useState<boolean>(false);
   const [openUpdate, setOpenUpdate] = useState<boolean>(false);

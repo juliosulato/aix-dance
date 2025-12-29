@@ -14,7 +14,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import StudentBillsView from "../(bills)/StudentBillsView";
 import { StudentFromApi } from "../StudentFromApi";
 import Sales from "../(sales)";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { fetcher } from "@/utils/fetcher";
 import useSWR from "swr";
 

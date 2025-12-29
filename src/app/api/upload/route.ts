@@ -1,8 +1,8 @@
-import { auth } from "@/auth";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
+import { authClient } from "@/lib/auth-client";
 
 const s3Client = new S3Client({
     region: process.env.AWS_REGION!,
@@ -38,8 +38,8 @@ const normalizePrefix = (raw?: string) => {
 
 export async function POST(request: Request) {
     try {
-        const session = await auth();
-        const tenancyId = session?.user?.tenancyId;
+        const session = await authClient.getSession();
+        const tenancyId = session?.data?.user?.tenancyId;
 
         if (!session || !tenancyId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

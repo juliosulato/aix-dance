@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { useState } from "react";
 import { Text } from "@mantine/core";
 import DataView from "@/components/ui/DataView";

@@ -1,5 +1,5 @@
 import { fetcher } from "@/utils/fetcher";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { Control, Controller, FieldErrors, FieldValues, Path } from "react-hook-form";
 import useSWR from "swr";
 import { Select } from "@mantine/core";

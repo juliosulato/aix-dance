@@ -8,7 +8,7 @@ import { Plan, PlanType } from "@/types/plan.types";
 import UpdatePlan from "../modals/UpdatePlan"; // Reutilizando seu modal de atualização
 import deletePlans from "../delete"; // Reutilizando sua função de deleção (agora desativação)
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { fetcher } from "@/utils/fetcher";
 import useSWR from "swr";
 

@@ -29,7 +29,7 @@ import Link from "next/link";
 import { Button } from "@mantine/core";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import PayBill from "../modals/PayBill";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 

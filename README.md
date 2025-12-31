@@ -1,6 +1,5 @@
-AIX Dance — Sistema ERP
-
-Projeto web de um sistema ERP de gestão de escolas/estúdios de dança.
+# AIX Dance — Sistema ERP
+## Projeto web de um sistema ERP de gestão de escolas/estúdios de dança.
 
 **Visão geral**
 - Aplicação Next.js (app router) com TypeScript, Prisma, integração S3 e UI baseada em Mantine.

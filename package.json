@@ -49,7 +49,6 @@
     "libphonenumber-js": "^1.12.13",
     "lodash": "^4.17.21",
     "next": "16.0.10",
-    "prisma": "^7.2.0",
     "react": "^19.2.3",
     "react-big-calendar": "^1.19.4",
     "react-dom": "^19.2.3",
@@ -63,7 +62,6 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@prisma/client": "^6.19.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

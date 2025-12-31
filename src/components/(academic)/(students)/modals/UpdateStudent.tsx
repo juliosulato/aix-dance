@@ -4,8 +4,8 @@ import { Button, LoadingOverlay, Modal } from "@mantine/core";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
-import 'dayjs/locale/en';
-import 'dayjs/locale/es';
+
+
 import AvatarUpload from "@/components/avatarUpload";
 import PersonalData from "./personalData";
 import Checkboxies from "./checkboxies";

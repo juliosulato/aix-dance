@@ -6,18 +6,11 @@ export const createBankSchema = z.object({
   agency: z.string().optional(),
   account: z.string().optional(),
   description: z.string().optional(),
-  maintenanceFeeAmount: z.coerce.number({
-    error: 'Valor da taxa de manutenção inválido',
-  }).optional(),
-  maintenanceFeeDue: z.number()
-    .int()
-    .nonnegative({ message: 'A data de vencimento da taxa de manutenção deve ser um número não negativo' })
-    .min(1, 'A data de vencimento da taxa de manutenção deve ser um número entre 1 e 31')
-    .max(31, 'A data de vencimento da taxa de manutenção deve ser um número entre 1 e 31')
-    .optional(),
+  maintenanceFeeAmount: z.string().transform((val) => val === '' ? null : Number(val)).optional().default(0),
+  maintenanceFeeDue: z.string().transform((val) => val === '' ? null : Number(val)).nullable().optional(),
 });
 
-export const updateBankSchema = createBankSchema.partial();
+export const updateBankSchema = createBankSchema.partial().extend({ id: z.string().min(1, { message: 'ID da conta bancária é obrigatório' }) });
 
 export type CreateBankInput = z.infer<typeof createBankSchema>;
 export type UpdateBankInput = z.infer<typeof updateBankSchema>;

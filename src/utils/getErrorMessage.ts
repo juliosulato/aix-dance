@@ -2,5 +2,6 @@ export function getErrorMessage(error: unknown, fallback = "Erro desconhecido"):
   if (error instanceof Error) {
     return error.message;
   }
+  
   return fallback;
 }

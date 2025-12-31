@@ -2,14 +2,10 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { SWRConfig } from "swr";
-
-import { MantineProvider } from "@mantine/core";
-import { Notifications } from "@mantine/notifications";
-import { theme } from "@/utils/theme";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "@mantine/notifications/styles.css";
+import Provider from "@/components/Provider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -33,14 +29,7 @@ export default async function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${inter.variable} antialiased`}>
-          <SWRConfig value={{
-            revalidateOnFocus: false
-          }}>
-          <MantineProvider defaultColorScheme="light" theme={theme}>
-            <Notifications className="z-2000!" />
-            {children}
-          </MantineProvider>''
-          </SWRConfig>
+          <Provider>{children}</Provider>
       </body>
     </html>
   );

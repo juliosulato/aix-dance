@@ -30,8 +30,8 @@ import { FaCalendarAlt } from "react-icons/fa";
 import PayBill from "./modals/PayBill";
 import { IoAdd } from "react-icons/io5";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
-import { Bill,  RecurrenceType } from "@/types/bill.types";
-import { CategoryBill,  } from "@/types/bill.types";
+import { Bill, RecurrenceType } from "@/types/bill.types";
+import { CategoryBill } from "@/types/bill.types";
 import { Supplier } from "@/types/supplier.types";
 import Decimal from "decimal.js";
 import { FormsOfReceipt } from "@/types/receipt.types";
@@ -39,13 +39,13 @@ import { Bank } from "@/types/bank.types";
 import { Sale } from "@/types/sale.types";
 
 export type BillFromApi = Bill & {
-    bank?: Bank | null;
-    category?: CategoryBill | null;
-    formsOfReceipt?: FormsOfReceipt | null;
-    sale?: Sale | null;
-    supplier?: Supplier | null;
-    totalInstallments?: number;
-}
+  bank?: Bank | null;
+  category?: CategoryBill | null;
+  formsOfReceipt?: FormsOfReceipt | null;
+  sale?: Sale | null;
+  supplier?: Supplier | null;
+  totalInstallments?: number;
+};
 
 interface MenuItemProps {
   bill: BillFromApi;
@@ -251,7 +251,7 @@ export default function AllBillsData() {
   );
 
   if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-  
+
   if (error) return <p>{"Erro inesperado"}</p>;
 
   return (
@@ -424,7 +424,7 @@ export default function AllBillsData() {
               />
             </Flex>
 
-            <Box className="flex-grow my-4">
+            <Box className="grow my-4">
               <Text size="sm" c="dimmed">
                 {item.category?.name || "Sem categoria"}
               </Text>
@@ -452,7 +452,11 @@ export default function AllBillsData() {
                 {new Intl.NumberFormat("pt-BR", {
                   style: "currency",
                   currency: "BRL",
-                }).format(item.amount instanceof Decimal ? item.amount.toNumber() : item.amount ?? 0)}
+                }).format(
+                  item.amount instanceof Decimal
+                    ? item.amount.toNumber()
+                    : item.amount ?? 0
+                )}
               </Text>
               {item.totalInstallments && item.totalInstallments > 1 && (
                 <Badge variant="light" color="gray">

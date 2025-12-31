@@ -6,8 +6,8 @@ import { DateInput } from "@mantine/dates"
 import DocumentInput from "@/components/ui/documentInput";
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
-import 'dayjs/locale/en';
-import 'dayjs/locale/es';
+
+
 import { Control, Controller, FieldErrors, UseFormRegister } from "react-hook-form";
 import { CreateUserInput, UpdateUserInput } from "@/schemas/user.schema";
 import { IMaskInput } from "react-imask";

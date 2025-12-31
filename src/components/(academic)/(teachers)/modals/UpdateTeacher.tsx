@@ -4,8 +4,8 @@ import { Button, LoadingOverlay, Modal, Stepper } from "@mantine/core";
 import Teacher__PersonalData from "./personalData";
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
-import 'dayjs/locale/es';
-import 'dayjs/locale/en';
+
+
 import Teacher__RemunerationData from "./remuneration";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";

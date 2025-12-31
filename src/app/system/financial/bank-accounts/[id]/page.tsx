@@ -1,5 +1,5 @@
 import Breadcrumps from "@/components/ui/Breadcrumps";
-import BanksView from "@/components/(financial)/(banks)/([id])";
+import BanksView from "@/components/(financial)/(banks)/BankAccountsView";
 
 export default async function FormsOfReceiptPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;

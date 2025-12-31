@@ -3,8 +3,8 @@
 import { Button, LoadingOverlay, Modal, Stepper } from "@mantine/core";
 import Teacher__PersonalData from "./personalData";
 import 'dayjs/locale/pt-br';
-import 'dayjs/locale/es';
-import 'dayjs/locale/en';
+
+
 import Teacher__AccessData from "./accessData";
 import Teacher__RemunerationData from "./remuneration";
 import { useState } from "react";

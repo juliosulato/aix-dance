@@ -14,8 +14,8 @@ import DataView from "@/components/ui/DataView";
 
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br';
-import 'dayjs/locale/es';
-import 'dayjs/locale/en';
+
+
 import NewTeacher from "./modals/NewTeacher";
 import UpdateTeacher, { TeacherFromApi } from "./modals/UpdateTeacher";
 import { RemunerationType } from "@/types/bill.types";

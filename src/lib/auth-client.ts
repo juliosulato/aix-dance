@@ -2,7 +2,10 @@ import { createAuthClient } from "better-auth/react";
 import type { Session } from "./auth-types"; 
 
 export const authClient = createAuthClient({
-    baseURL: "https://dev-aixdance-api.mazzaux.com.br", 
+    baseURL: process.env.BACKEND_URL || "http://localhost:3001",
+    fetchOptions: {
+      credentials: "include",
+    }
 });
 
 export const useSession = authClient.useSession as () => {
@@ -10,6 +13,7 @@ export const useSession = authClient.useSession as () => {
   isPending: boolean;
   error: any;
 };
+
 
 export const { 
     signIn, 

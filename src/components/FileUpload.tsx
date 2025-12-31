@@ -148,7 +148,7 @@ export default function FileUpload({
           </Text>
           <div className="space-y-2">
             {uploadedFiles.map((file, index) => (
-              <Paper key={index} p="xs" withBorder radius="md" className="!flex !flex-row items-center justify-between">
+              <Paper key={index} p="xs" withBorder radius="md" className="flex! flex-row! items-center justify-between">
                 <Group gap="xs">
                   <IconFile size={18} className="text-gray-600" />
                   <div>

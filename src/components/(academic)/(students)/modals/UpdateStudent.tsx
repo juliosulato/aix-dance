@@ -149,7 +149,7 @@ useEffect(() => {
         radius="lg"
         centered
         classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}
-        className="!relative"
+        className="relative!"
       >
         <form onSubmit={handleSubmit(createStudent, onError)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw] lg:p-6">
           <AvatarUpload  defaultUrl={avatarUrl} onUploadComplete={setAvatarUrl} folder="students/avatars" />

@@ -296,7 +296,7 @@ export default function DataView<T>({
 
             {items.length === 0 && (
                 <div className="flex flex-col items-center justify-center h-full text-center bg-white gap-4 rounded-2xl shadow-sm p-3 md:p-6">
-                    <Image src={notFound} alt="Nada encontrado" className="max-w-[250px]" />
+                    <Image src={notFound} alt="Nada encontrado" className="max-w-250px" />
                     <h2 className="font-semibold text-xl md:text-3xl">Ooops... não encontramos nada aqui.</h2>
                     {openNewModal && (
                         <Button

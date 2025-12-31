@@ -3,6 +3,7 @@
 
 **Visão geral**
 - Aplicação Next.js (app router) com TypeScript, Prisma, integração S3 e UI baseada em Mantine.
+ - Aplicação Next.js (app router) com TypeScript, integração S3 e UI baseada em Mantine.
 - Estrutura modular com rotas de autenticação, contratos, financeiro, inventário e painel administrativo.
 
 **Destaques**
@@ -10,13 +11,14 @@
 - Upload/armazenamento em S3 e presigned URLs.
 - Validações com Zod e formulários com react-hook-form.
 - ORM com Prisma para acesso ao banco de dados.
+ - Acesso a banco de dados configurável conforme o ORM/driver escolhido.
 
 **Tecnologias principais**
 - Runtime: Node.js (recomendado >= 18)
 - Framework: Next.js 16 (app router)
 - Linguagem: TypeScript
-- ORM: Prisma
 - UI: Mantine
+ - UI: Mantine
 - State/data fetching: SWR
 - Validação: Zod
 
@@ -24,6 +26,7 @@
 - Node.js >= 18
 - pnpm / npm / yarn (uso recomendado: pnpm)
 - Um banco de dados compatível com Prisma (Postgres, MySQL, etc.)
+ - Um banco de dados compatível (Postgres, MySQL, etc.)
 - Conta S3 (opcional para upload de ativos)
 
 ## Começando (rápido)
@@ -68,7 +71,6 @@ Esses scripts são os definidos em `package.json`.
 
 Crie um `.env` ou `.env.local` com as chaves abaixo (ajuste conforme infra):
 
-- `DATABASE_URL` — string de conexão do Prisma
 - `NEXT_PUBLIC_S3_BUCKET` — nome do bucket S3 (se aplicável)
 - `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` — credenciais S3
 - `NEXTAUTH_URL` — URL pública da aplicação
@@ -89,16 +91,12 @@ Observação: mantenha segredos fora do controle de versão.
 
 Essa estrutura prioriza modularidade e separação por domínio.
 
-## Banco de dados & Prisma
+## Banco de dados
 
-- Configure `DATABASE_URL` e execute:
+- Configure `DATABASE_URL` apontando para seu banco (Postgres, MySQL, etc.).
+- Execute as rotinas de migração/geração correspondentes ao ORM ou ferramenta que você utiliza (os comandos dependem da stack adotada).
 
-```bash
-pnpm prisma generate
-pnpm prisma migrate dev --name init
-```
-
-Ajuste migrations conforme necessário no fluxo de desenvolvimento.
+Se o projeto utilizar um ORM específico, documente aqui os comandos de migração e geração correspondentes.
 
 ## Deploy / Docker
 

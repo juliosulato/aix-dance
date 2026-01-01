@@ -84,7 +84,7 @@ const useMenuData = () => {
         { icon: <TbBuildingBank />, label: "Contas Bancárias", href: "/system/financial/bank-accounts" },
         { icon: <MdPayment />, label: "Formas de Recebimento", href: "/system/financial/forms-of-receipt" },
         { icon: <MdOutlineCategory />, label: "Categorias", href: "/system/financial/categories" },
-        { icon: <BsBox />, label: "Grupos", href: "/system/financial/groups" },
+        { icon: <BsBox />, label: "Grupos", href: "/system/financial/category-groups" },
         // { icon: <LuChartSpline />, label: "Relatórios", href: "/system/financial/reports" },
       ],
     },

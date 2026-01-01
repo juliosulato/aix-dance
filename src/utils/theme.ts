@@ -1,4 +1,4 @@
-import { createTheme, Input, InputBase, LoadingOverlay, NumberInput, TextInput } from '@mantine/core';
+import { Button, createTheme, Input, InputBase, LoadingOverlay, NumberInput, TextInput } from '@mantine/core';
 
 const theme = createTheme({
     fontFamily: "Inter, sans-serif",
@@ -60,6 +60,14 @@ const theme = createTheme({
                 },
                 zIndex: 9999
             }
+        },
+        Button: {
+            defaultProps: {
+                className: "text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto",
+                color: "#7439FA",
+                radius: "lg",
+                size: "md"
+            },
         }
     }
 });

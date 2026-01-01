@@ -3,7 +3,7 @@
 import { protectedAction } from "@/lib/auth-guards";
 import { UpdateCategoryBillInput } from "@/schemas/financial/category-bill.schema";
 import { updateCategoryGroupSchema } from "@/schemas/financial/category-group.schema";
-import { CategoryGroupsService } from "@/services/categoryGroups.service";
+import { CategoryGroupsService } from "@/services/financial/categoryGroups.service";
 import { ActionState } from "@/types/server-actions.types";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { revalidatePath } from "next/cache";

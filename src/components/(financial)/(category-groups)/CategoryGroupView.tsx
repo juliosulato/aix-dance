@@ -35,7 +35,6 @@ export default function CategoryGroupView({ categoryGroup }: Props) {
                 <InfoTerm label={"Nome"}>{categoryGroup.name}</InfoTerm>
 
                 <UpdateCategoryGroup selectedItem={categoryGroup} onClose={() => crud.setModals.setUpdate(false)} opened={crud.modals.update} />
-                    
                 <ConfirmationModal
                     opened={crud.modals.delete}
                     onClose={() => crud.setModals.setDelete(false)}

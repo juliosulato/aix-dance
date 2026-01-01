@@ -44,7 +44,7 @@ export default function NewCategoryGroup({ opened, onClose }: Props) {
       setFormValues({
         name: "",
       });
-    }
+    }696
   }, [opened]);
 
   useEffect(() => {

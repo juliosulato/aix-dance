@@ -1,14 +1,14 @@
 "use server";
 
 import { protectedAction } from "@/lib/auth-guards";
-import { BanksService } from "@/services/banks.service";
+import { BanksService } from "@/services/financial/banks.service";
 import { ActionResult } from "@/types/action-result.types";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { revalidatePath } from "next/cache";
 
 export const deleteBanks = protectedAction(
-  async (user, data: string[]): Promise<ActionResult> => {
-    if (Array.isArray(data) === false || data.length === 0) {
+  async (user, ids: string[]): Promise<ActionResult> => {
+    if (Array.isArray(ids) === false || ids.length === 0) {
       return {
         success: false,
         error: "Nenhum ID fornecido para exclusão.",
@@ -16,9 +16,11 @@ export const deleteBanks = protectedAction(
     }
   
     try {
-      await BanksService.deleteMany(user.tenancyId, data)
+      await BanksService.deleteMany(user.tenancyId, ids)
 
       revalidatePath("/system/financial/banks", "page")
+      ids.forEach((id) => revalidatePath(`/system/financial/banks/${id}`, "page"))
+      
       return { success: true };
     } catch (error: unknown) {
       const errorMessage =

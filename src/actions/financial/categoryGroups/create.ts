@@ -2,7 +2,7 @@
 
 import { protectedAction } from "@/lib/auth-guards";
 import { CreateCategoryGroupInput, createCategoryGroupSchema } from "@/schemas/financial/category-group.schema";
-import { CategoryGroupsService } from "@/services/categoryGroups.service";
+import { CategoryGroupsService } from "@/services/financial/categoryGroups.service";
 import { ActionState } from "@/types/server-actions.types";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { revalidatePath } from "next/cache";

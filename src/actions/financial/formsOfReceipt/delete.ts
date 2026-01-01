@@ -1,12 +1,12 @@
 "use server";
 
 import { protectedAction } from "@/lib/auth-guards";
-import { CategoryGroupsService } from "@/services/financial/categoryGroups.service";
+import { FormsOfReceiptService } from "@/services/financial/formsOfReceipt.service";
 import { ActionResult } from "@/types/action-result.types";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { revalidatePath } from "next/cache";
 
-export const deleteCategoryGroups = protectedAction(
+export const deleteFormOfReceipt = protectedAction(
   async (user, ids: string[]): Promise<ActionResult> => {
     if (Array.isArray(ids) === false || ids.length === 0) {
       return {
@@ -16,15 +16,17 @@ export const deleteCategoryGroups = protectedAction(
     }
     
     try {
-      await CategoryGroupsService.deleteMany(user.tenancyId, ids)
+      await FormsOfReceiptService.deleteMany(user.tenancyId, ids);
 
-      revalidatePath("/system/financial/category-groups", "page");
-      ids.forEach((id) => revalidatePath(`/system/financial/category-groups/${id}`, "page"))
+      revalidatePath("/system/financial/forms-of-receipt", "page");
+      ids.forEach((id) =>
+        revalidatePath(`/system/financial/forms-of-receipt/${id}`, "page")
+      );
 
       return { success: true };
     } catch (error: unknown) {
       return {
-        error: getErrorMessage(error, "Erro ao deletar grupo."),
+        error: getErrorMessage(error, "Erro ao deletar categoria."),
         success: false,
       };
     }

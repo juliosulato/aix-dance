@@ -20,7 +20,7 @@ export default async function BankAccountsPage() {
             href: "/system/financial/forms-of-receipt",
           },
           { label: "Categorias", href: "/system/financial/categories" },
-          { label: "Grupos", href: "/system/financial/groups" },
+          { label: "Grupos", href: "/system/financial/category-groups" },
           {
             label: "Contas Bancárias",
             href: "/system/financial/bank-accounts",

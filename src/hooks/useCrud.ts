@@ -1,6 +1,6 @@
 import { notifications } from "@mantine/notifications";
-import { usePathname } from "next/navigation";
 import { useState, useCallback } from "react";
+import { KeyedMutator } from "swr";
 
 interface BaseEntity {
   id: string;
@@ -9,9 +9,10 @@ interface BaseEntity {
 
 interface UseCrudOptions<T> {
   deleteAction?: (ids: string[]) => Promise<any>;
+  mutate?: KeyedMutator<T>;
 }
 
-export function useCrud<T extends BaseEntity>({ deleteAction }: UseCrudOptions<T> = {}) {
+export function useCrud<T extends BaseEntity>({ mutate, deleteAction }: UseCrudOptions<T> = {}) {
   const [isCreateOpen, setCreateOpen] = useState(false);
   const [isUpdateOpen, setUpdateOpen] = useState(false);
   const [isDeleteOpen, setDeleteOpen] = useState(false);
@@ -19,8 +20,6 @@ export function useCrud<T extends BaseEntity>({ deleteAction }: UseCrudOptions<T
   const [selectedItem, setSelectedItem] = useState<T | null>(null);
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
-
-  const path = usePathname();
 
   const handleCreate = useCallback(() => {
     setSelectedItem(null);
@@ -57,7 +56,6 @@ export function useCrud<T extends BaseEntity>({ deleteAction }: UseCrudOptions<T
       console.error("Nenhuma deleteAction forneceida para o useCrud.");
       return;
     }
-      console.error("Nenhuma deleteAction fornecida para o useCrud.");
     setIsDeleting(true);
 
     const finalIdsToDelete = idsToDelete.length > 0 
@@ -72,6 +70,7 @@ export function useCrud<T extends BaseEntity>({ deleteAction }: UseCrudOptions<T
 
     try {
       await deleteAction(finalIdsToDelete);
+      mutate?.()
 
       notifications.show({
         title: "Sucesso",

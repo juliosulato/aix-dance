@@ -4,11 +4,11 @@ export const createFormsOfReceiptSchema = z.object({
   name: z.string().min(1, { message: 'O nome é obrigatório' }),
   operator: z.string().optional(),
   fees: z.array(z.object({
-    minInstallments: z.coerce.number({ message: 'Mínimo de parcelas inválido' }).min(1, { message: 'Mínimo de parcelas deve ser 1 ou mais' }),
-    maxInstallments: z.coerce.number({ message: 'Máximo de parcelas inválido' }).min(1, { message: 'Máximo de parcelas deve ser 1 ou mais' }),
-    feePercentage: z.coerce.number({ message: 'Taxa de porcentagem inválida' }).min(0, { message: 'Taxa de porcentagem deve ser 0 ou mais' }),
-    customerInterest: z.boolean().default(false),
-    receiveInDays: z.coerce.number({ message: 'Receber em dias inválido' }).min(0, { message: 'Receber em dias deve ser 0 ou mais' }).optional(),
+    minInstallments: z.number({ message: 'Mínimo de parcelas inválido' }).min(1, { message: 'Mínimo de parcelas deve ser 1 ou mais' }),
+    maxInstallments: z.number({ message: 'Máximo de parcelas inválido' }).min(1, { message: 'Máximo de parcelas deve ser 1 ou mais' }),
+    feePercentage: z.number({ message: 'Taxa de porcentagem inválida' }).min(0, { message: 'Taxa de porcentagem deve ser 0 ou mais' }),
+    customerInterest: z.boolean(),
+    receiveInDays: z.number({ message: 'Receber em dias inválido' }).min(0, { message: 'Receber em dias deve ser 0 ou mais' }).optional(),
   })).optional(),
 }).refine(data => {
     if (data.fees) {

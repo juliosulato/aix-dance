@@ -76,6 +76,7 @@ export default function UpdateCategoryGroup({
       }}
     >
       <form action={formAction} className="flex flex-col gap-4">
+        <input type="hidden" name="id" value={selectedItem?.id} />
         <LoadingOverlay visible={pending} />
         <TextInput
           label={"Nome"}

@@ -5,7 +5,7 @@ import {
   UpdateBankInput,
   updateBankSchema,
 } from "@/schemas/financial/bank.schema";
-import { BanksService } from "@/services/banks.service";
+import { BanksService } from "@/services/financial/banks.service";
 import { ActionState } from "@/types/server-actions.types";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { revalidatePath } from "next/cache";

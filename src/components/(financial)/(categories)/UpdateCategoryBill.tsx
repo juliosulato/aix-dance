@@ -107,6 +107,7 @@ export default function UpdateCategoryBill({
     >
       <form className="flex flex-col gap-4" action={formAction}>
         <div className="rounded-xl grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input type="hidden" name="id" value={selectedItem?.id} />
           <TextInput
             id="name"
             name="name"

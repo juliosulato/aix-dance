@@ -19,7 +19,7 @@ export default async function CategoryGroupsPage({ params }: { params: Promise<{
                     { label: "Gerenciador", href: "/system/financial/manager" },
                     { label: "Formas de Recebimento", href: "/system/financial/forms-of-receipt" },
                     { label: "Categorias", href: "/system/financial/categories" },
-                    { label: "Grupos", href: "/system/financial/groups" },
+                    { label: "Grupos", href: "/system/financial/category-groups" },
                     { label: "Contas Bancárias", href: "/system/financial/bank-accounts" },
                     { label: "Relatórios", href: "/system/financial/reports" },
                 ]} />

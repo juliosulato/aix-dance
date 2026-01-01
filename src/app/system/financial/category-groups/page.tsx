@@ -1,13 +1,18 @@
+import CategoryGroupsList from "@/components/(financial)/(category-groups)/CategoryGroupsList";
 import Breadcrumps from "@/components/ui/Breadcrumps";
-import CategoryGroupView from "@/components/(financial)/(groups)/([id])";
+import { requireAuth } from "@/lib/auth-guards";
+import { serverFetch } from "@/lib/server-fetch";
+import { CategoryGroup } from "@/types/category.types";
 
-export default async function CategoryGroupsPage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params;
+export default async function CategoryGroupsPage() {
+  const { user } = await requireAuth();
+
+    const categoryGroups = await serverFetch<CategoryGroup[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user.tenancyId}/category-groups`);
 
     return (
         <main>
             <Breadcrumps
-                items={["Início", "Financeiro", "Grupos"]}
+                items={["Início", "Financeiro"]}
                 menu={[
                     { label: "Resumo", href: "/system/summary" },
                     { label: "Gerenciador", href: "/system/financial/manager" },
@@ -18,7 +23,7 @@ export default async function CategoryGroupsPage({ params }: { params: Promise<{
                     { label: "Relatórios", href: "/system/financial/reports" },
                 ]} />
             <br />
-            <CategoryGroupView id={id}/>
+            <CategoryGroupsList categoryGroups={categoryGroups}/>
         </main>
     );
 }

@@ -1,6 +1,6 @@
 import { CreateBillInput } from "@/schemas/financial/bill.schema";
 import { Bank } from "@/types/bank.types";
-import {  CategoryBill } from "@/types/bill.types";
+import { CategoryBill } from "@/types/category.types";
 import { PaymentMethod } from "@/types/bill.types";
 import { Supplier } from "@/types/supplier.types";
 import { fetcher } from "@/utils/fetcher";

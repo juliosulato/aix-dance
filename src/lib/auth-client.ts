@@ -2,7 +2,7 @@ import { createAuthClient } from "better-auth/react";
 import type { Session } from "./auth-types"; 
 
 export const authClient = createAuthClient({
-    baseURL: process.env.BACKEND_URL || "http://localhost:3001",
+    baseURL: process.env.NEXT_PUBLIC_BACKEND_URL || "https://dev-aixdance-api.com.br",
     fetchOptions: {
       credentials: "include",
     }

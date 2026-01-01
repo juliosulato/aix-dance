@@ -2,32 +2,20 @@
 
 import InfoTerm from "@/components/ui/Infoterm";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { useRouter } from "next/navigation";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import { deleteBanks } from "@/actions/financial/banks/delete";
 import { Bank } from "@/types/bank.types";
 import UpdateBankAccount from "./UpdateBankAccount";
 import { useCrud } from "@/hooks/useCrud";
-import { GetSession } from "@/lib/auth-types";
 import { Text } from "@mantine/core";
+import { clearCacheAndRevalidate } from "@/actions/clearCacheAndRevalidate";
 
-export default function BanksView({
+export default function BankAccountView({
   bank,
-  session,
 }: {
   bank: Bank;
-  session: GetSession;
 }) {
-  const router = useRouter();
-
-  const crud = useCrud<Bank>();
-
-  const onConfirmDelete = () => {
-    crud.confirmDelete(
-      (ids, tId) => deleteBanks(ids),
-      session?.data?.user?.tenancyId
-    );
-  };
+  const crud = useCrud<Bank>({ deleteAction: deleteBanks });
 
   return (
     <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
@@ -38,7 +26,6 @@ export default function BanksView({
         <div className="flex gap-4 md:gap-6">
           <button
             className="text-red-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition"
-            // O hook já popula o selectedItem e abre o modal
             onClick={() => crud.handleDelete(bank)}
           >
             <FaTrash />
@@ -46,7 +33,6 @@ export default function BanksView({
           </button>
           <button
             className="text-primary flex items-center gap-2 cursor-pointer hover:opacity-50 transition"
-            // O hook popula o selectedItem e abre o modal de update
             onClick={() => crud.handleUpdate(bank)}
           >
             <FaEdit />
@@ -87,7 +73,10 @@ export default function BanksView({
       <ConfirmationModal
         opened={crud.modals.delete}
         onClose={() => crud.setModals.setDelete(false)}
-        onConfirm={onConfirmDelete}
+        onConfirm={() => {
+          crud.confirmDelete;
+          clearCacheAndRevalidate(`/system/financial/banks/${bank.id}`)
+        }}
         title={"Confirmar Exclusão"}
         confirmLabel={"Excluir"}
         cancelLabel={"Cancelar"}

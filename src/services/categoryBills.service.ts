@@ -1,0 +1,36 @@
+import { serverFetch } from "@/lib/server-fetch";
+import { CreateCategoryBillInput, UpdateCategoryBillInput } from "@/schemas/financial/category-bill.schema";
+
+const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+export const CategoryBillsService = {
+  create(tenancyId: string, data: CreateCategoryBillInput) {
+    return serverFetch(
+      `${baseUrl}/api/v1/tenancies/${tenancyId}/category-bills`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      }
+    );
+  },
+
+  update(tenancyId: string, data: UpdateCategoryBillInput) {
+    return serverFetch(
+      `${baseUrl}/api/v1/tenancies/${tenancyId}/category-bills`,
+      {
+        method: "PUT",
+        body: JSON.stringify(data),
+      }
+    );
+  },
+
+  deleteMany(tenancyId: string, ids: string[]) {
+    return serverFetch(
+      `${baseUrl}/api/v1/tenancies/${tenancyId}/category-bills`,
+      {
+        method: "DELETE",
+        body: JSON.stringify({ ids }),
+      }
+    );
+  },
+};

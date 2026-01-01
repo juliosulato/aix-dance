@@ -1,135 +1,106 @@
-# AIX Dance — Sistema ERP
-## Projeto web de um sistema ERP de gestão de escolas/estúdios de dança.
+![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Mantine](https://img.shields.io/badge/Mantine-UI-4B4F6D?style=for-the-badge)
+![Docker](https://img.shields.io/badge/Docker-Container-blue?style=for-the-badge&logo=docker)
 
-**Visão geral**
-- Aplicação Next.js (app router) com TypeScript, Prisma, integração S3 e UI baseada em Mantine.
- - Aplicação Next.js (app router) com TypeScript, integração S3 e UI baseada em Mantine.
-- Estrutura modular com rotas de autenticação, contratos, financeiro, inventário e painel administrativo.
+# AIX Dance — Sistema ERP para Escolas e Estúdios de Dança
 
-**Destaques**
-- UI responsiva com componentes reutilizáveis.
-- Upload/armazenamento em S3 e presigned URLs.
-- Validações com Zod e formulários com react-hook-form.
-- ORM com Prisma para acesso ao banco de dados.
- - Acesso a banco de dados configurável conforme o ORM/driver escolhido.
+Projeto SaaS moderno baseado em Next.js 16 (App Router) e TypeScript, voltado para gestão de escolas e estúdios de dança. O repositório segue uma arquitetura enxuta com Separation of Concerns: UI, regras de negócio e infra estão claramente separadas para facilitar manutenção, testes e evolução.
 
-**Tecnologias principais**
-- Runtime: Node.js (recomendado >= 18)
-- Framework: Next.js 16 (app router)
+Sumário rápido
+- Framework: Next.js 16 (App Router)
 - Linguagem: TypeScript
 - UI: Mantine
- - UI: Mantine
-- State/data fetching: SWR
+- Mutations: Server Actions (Server Components)
+- Data fetching: Server Components híbridos + SWR (client-side cache)
 - Validação: Zod
+- Infra: Docker (opcional)
 
-**Requisitos**
-- Node.js >= 18
-- pnpm / npm / yarn (uso recomendado: pnpm)
-- Um banco de dados compatível com Prisma (Postgres, MySQL, etc.)
- - Um banco de dados compatível (Postgres, MySQL, etc.)
-- Conta S3 (opcional para upload de ativos)
+Principais características
+- Arquitetura refatorada com foco em SoC (Separation of Concerns).
+- Server Actions para mutações (POST/PUT/DELETE) com validação Zod e wrappers de ação para tratamento de erros.
+- `src/services` contém a lógica de domínio e contratos de API — UI não possui lógica de negócio.
+- `serverFetch` centralizado para chamadas HTTP e uniformização de headers, timeouts e tratamento de erros.
 
-## Começando (rápido)
+Requisitos
+- Node.js >= 20
+- pnpm (recomendado)
 
+Instalação (rápido)
 1. Clone o repositório:
 
-```bash
-git clone <repo-url>
-cd aix-dance
-```
+	 git clone <repo-url>
+	 cd aix-dance
 
-2. Instale dependências:
+2. Instale dependências (pnpm):
 
-```bash
-pnpm install
-# ou
-npm install
-```
+	 pnpm install
 
-3. Crie o arquivo de variáveis de ambiente (`.env`): veja a seção "Variáveis de ambiente" abaixo.
+3. Copie o arquivo de variáveis de ambiente de exemplo (não adicione chaves sensíveis ao README):
+
+	 cp .env.example .env.local
+
+	 (No Windows PowerShell você pode usar `Copy-Item .env.example .env.local`)
 
 4. Rodar em modo desenvolvimento:
 
-```bash
-pnpm dev
-# ou
-npm run dev
-```
+	 pnpm dev
 
-O servidor ficará disponível em http://localhost:3000 por padrão.
+Variáveis de ambiente
+Por segurança, não incluir chaves sensíveis neste arquivo. Copie o `.env.example` para `.env.local` e preencha as chaves necessárias no seu ambiente local. Exemplos de variáveis podem incluir URLs de backend e credenciais de serviços opcionais (S3, etc.).
 
-## Scripts úteis
+Arquitetura (guia para novos devs)
 
-- **Desenvolvimento:** `pnpm dev` ou `npm run dev`
-- **Build (produção):** `pnpm build` ou `npm run build`
-- **Start (produção):** `pnpm start` ou `npm run start`
-- **Lint:** `pnpm lint` ou `npm run lint`
+Estrutura principal (pasta `src/`)
 
-Esses scripts são os definidos em `package.json`.
+- `src/actions/` — Server Actions
+	- Implementa Server Actions responsáveis por receber dados da UI, validar com Zod e orquestrar chamadas aos serviços.
+	- Só deve conter lógica de orquestração e validação; não contenha regras de negócio complexas.
 
-## Variáveis de ambiente (exemplo)
+- `src/services/` — Camada de Domínio
+	- Contém regras de negócio, transformações, contratos para a API externa e adaptação de respostas.
+	- Serviços são testáveis e independentes da camada de apresentação.
 
-Crie um `.env` ou `.env.local` com as chaves abaixo (ajuste conforme infra):
+- `src/lib/` — Infraestrutura e utilitários de runtime
+	- Ex.: `serverFetch` (cliente HTTP central), auth-guards, helpers de sessão e wrappers para Actions (tratamento de erros, retries, logging).
 
-- `NEXT_PUBLIC_S3_BUCKET` — nome do bucket S3 (se aplicável)
-- `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` — credenciais S3
-- `NEXTAUTH_URL` — URL pública da aplicação
-- `NEXTAUTH_SECRET` — segredo para NextAuth (ou equivalente)
-- `NODE_ENV` — `development` | `production`
+- `src/components/` — Componentes React (Server/Client)
+	- Componentes puros de UI; preferir componentes stateless e delegar comportamento para hooks e actions.
 
-Observação: mantenha segredos fora do controle de versão.
+- `src/schemas/` — Schemas Zod e tipos compartilhados
+	- Todos os schemas usados para validação em `actions` e para validação de payloads vindos do backend.
 
-## Arquitetura / Organização
+- Outras pastas relevantes:
+	- `src/hooks/` — hooks reutilizáveis (ex.: `useCrud`, integração SWR)
+	- `src/utils/` — utilitários genéricos
+	- `src/services/*.service.ts` — cada serviço encapsula contrato e regras relacionadas ao domínio específico
 
-- `app/` — rotas e layouts do Next.js (app router)
-- `src/components/` — componentes reutilizáveis (UI)
-- `src/lib/` — utilitários e integrações (auth, clients)
-- `src/hooks/` — hooks personalizados
-- `src/schemas/` — validações Zod
-- `src/types/` — tipos TypeScript compartilhados
-- `prisma/` — esquemas e migrations do Prisma (se presentes)
+Padrões e convenções
+- Mutações devem ser implementadas via Server Actions em `src/actions/`.
+- Regras de negócio e integração com APIs externas ficam em `src/services/`.
+- Validação com Zod é obrigatória em pontos de entrada (Server Actions) e usada como contrato entre camadas.
+- Use `serverFetch` para chamadas externas (centraliza headers, retry e parsing de erros).
 
-Essa estrutura prioriza modularidade e separação por domínio.
+Data fetching
+- Estratégia híbrida: Server Components para renderização inicial (onde aplicável) e SWR no cliente para cache, revalidação e interatividade.
 
-## Banco de dados
+Docker e deploy
+- O repositório inclui `Dockerfile` e `docker-compose.yml` para facilitar deploy local e CI/CD.
+- Build de produção (exemplo):
 
-- Configure `DATABASE_URL` apontando para seu banco (Postgres, MySQL, etc.).
-- Execute as rotinas de migração/geração correspondentes ao ORM ou ferramenta que você utiliza (os comandos dependem da stack adotada).
+	docker build -t aix-dance .
 
-Se o projeto utilizar um ORM específico, documente aqui os comandos de migração e geração correspondentes.
+	# ou com compose
+	docker compose up --build
 
-## Deploy / Docker
+Boas práticas para contribuidores
+- Não comitar segredos ou `.env.local`.
+- Mantenha `services` testáveis; extraia lógica complexa para funções puras.
+- Escreva schemas Zod para qualquer payload que entrar no sistema.
 
-O repositório inclui um `Dockerfile`. Um exemplo breve de build/run:
+Contato e contribuição
+- Abra issues para bugs e features.
+- Envie PRs com descrição clara e referências à issue correspondente.
 
-```bash
-docker build -t aix-dance:latest .
-docker run -e DATABASE_URL="..." -e NEXTAUTH_SECRET="..." -p 3000:3000 aix-dance:latest
-```
-
-Para plataformas como Vercel/Cloud Run/EC2, ajuste as variáveis de ambiente e o processo de build.
-
-## Qualidade de código
-
-- ESLint está configurado (`npm run lint`).
-- Formatação (opcional): configure Prettier se desejar.
-
-## Segurança e operação
-
-- Nunca comite arquivos `.env` ou segredos.
-- Revise permissões S3 e políticas IAM para uploads.
-- Use variáveis de ambiente para chaves e segredos.
-
-## Contribuição
-
-1. Fork e branch com nome claro (`feat/<descrição>`, `fix/<descrição>`).
-2. Abra PR com descrição das mudanças e screenshots quando aplicável.
-3. Execute `pnpm lint` antes de submeter.
-
-## Licença
-
-Defina a licença do projeto (ex.: MIT) adicionando um arquivo `LICENSE`.
-
-## Contato
-
-Para dúvidas ou suporte interno, abra issue no repositório ou contate os mantenedores do projeto.
+Licença
+- (Adicionar informação de licença aqui, se aplicável)

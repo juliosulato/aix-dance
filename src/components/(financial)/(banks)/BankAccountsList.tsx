@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteBanks } from "@/actions/financial/banks/delete"; // Supondo que exista este arquivo
+import { deleteBanks } from "@/actions/financial/banks/delete";
 import { ActionIcon, Menu, Text } from "@mantine/core";
 import { BiDotsVerticalRounded, BiTrash } from "react-icons/bi";
 import { GrUpdate } from "react-icons/gr";
@@ -11,7 +11,6 @@ import NewBank from "./NewBankAccount";
 import UpdateBank from "./UpdateBankAccount";
 import { Bank } from "@/types/bank.types";
 import { useCrud } from "@/hooks/useCrud"; 
-import { SessionData } from "@/lib/auth-server";
 
 interface MenuItemProps {
     bank: Bank;
@@ -23,17 +22,6 @@ interface MenuItemsProps {
     selectedIds: string[];
     onBulkDeleteClick: (ids: string[]) => void;
 }
-
-export default function AllBanksData({ banks, user }: { banks: Bank[], user: SessionData['user'] }) {
-
-    const crud = useCrud<Bank>();
-
-    const onConfirmDelete = () => {
-        crud.confirmDelete(
-            (ids, tId) => deleteBanks(ids), 
-            user?.tenancyId,
-        );
-    };
 
     const MenuItem = ({ bank, onUpdateClick, onDeleteClick }: MenuItemProps) => (
         <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
@@ -71,6 +59,14 @@ export default function AllBanksData({ banks, user }: { banks: Bank[], user: Ses
             </Menu.Dropdown>
         </Menu>
     );
+
+
+export default function BankAccountsList({ banks }: { banks: Bank[] }) {
+
+    const crud = useCrud<Bank>({
+        deleteAction: deleteBanks
+    });
+
 
     return (
         <>
@@ -115,7 +111,7 @@ export default function AllBanksData({ banks, user }: { banks: Bank[], user: Ses
             <ConfirmationModal
                 opened={crud.modals.delete}
                 onClose={() => crud.setModals.setDelete(false)}
-                onConfirm={onConfirmDelete}
+                onConfirm={() => crud.confirmDelete}
                 title={"Confirmar Exclusão"}
                 confirmLabel={"Excluir"}
                 cancelLabel={"Cancelar"}

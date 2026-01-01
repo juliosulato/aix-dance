@@ -31,7 +31,7 @@ import PayBill from "./modals/PayBill";
 import { IoAdd } from "react-icons/io5";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { Bill, RecurrenceType } from "@/types/bill.types";
-import { CategoryBill } from "@/types/bill.types";
+import { CategoryBill } from "@/types/category.types";
 import { Supplier } from "@/types/supplier.types";
 import Decimal from "decimal.js";
 import { FormsOfReceipt } from "@/types/receipt.types";

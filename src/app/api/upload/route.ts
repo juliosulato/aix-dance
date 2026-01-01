@@ -3,6 +3,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { authClient } from "@/lib/auth-client";
+import { requireAuth } from "@/lib/auth-guards";
 
 const s3Client = new S3Client({
     region: process.env.AWS_REGION!,
@@ -38,13 +39,7 @@ const normalizePrefix = (raw?: string) => {
 
 export async function POST(request: Request) {
     try {
-        const session = await authClient.getSession();
-        // Extend the user type to include tenancyId or handle its absence
-        const tenancyId = (session?.data?.user as { tenancyId?: string })?.tenancyId;
-
-        if (!session || !tenancyId) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
+        const { user } = await requireAuth();
 
         const { filename, contentType, size, prefix } = await request.json();
 
@@ -66,7 +61,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Invalid upload prefix" }, { status: 400 });
         }
 
-        const keySegments = [`tenancies/${tenancyId}`, normalizedPrefix, `${randomUUID()}-${safeFilename}`];
+        const keySegments = [`tenancies/${user?.tenancyId}`, normalizedPrefix, `${randomUUID()}-${safeFilename}`];
         const objectKey = keySegments.join("/");
 
         const whitelist = process.env.UPLOAD_CONTENT_TYPE_WHITELIST;

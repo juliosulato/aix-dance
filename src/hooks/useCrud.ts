@@ -7,11 +7,11 @@ interface BaseEntity {
   [key: string]: any;
 }
 
-interface UseCrudOptions<_T> {
-  onSuccess?: () => void;
+interface UseCrudOptions<T> {
+  deleteAction?: (ids: string[]) => Promise<any>;
 }
 
-export function useCrud<T extends BaseEntity>(options?: UseCrudOptions<T>) {
+export function useCrud<T extends BaseEntity>({ deleteAction }: UseCrudOptions<T> = {}) {
   const [isCreateOpen, setCreateOpen] = useState(false);
   const [isUpdateOpen, setUpdateOpen] = useState(false);
   const [isDeleteOpen, setDeleteOpen] = useState(false);
@@ -52,17 +52,13 @@ export function useCrud<T extends BaseEntity>(options?: UseCrudOptions<T>) {
     setIdsToDelete([]);
   }, []);
 
-  const confirmDelete = async (
-    deleteApiFunction: (ids: string[], tenancyId: string) => Promise<any>,
-    tenancyId: string | undefined,
-    mutate?: () => Promise<any>
-  ) => {
-    setIsDeleting(true);
-
-    if (!tenancyId) {
-        setIsDeleting(false);
-        return;
+  const confirmDelete = async () => {
+    if (!deleteAction) {
+      console.error("Nenhuma deleteAction forneceida para o useCrud.");
+      return;
     }
+      console.error("Nenhuma deleteAction fornecida para o useCrud.");
+    setIsDeleting(true);
 
     const finalIdsToDelete = idsToDelete.length > 0 
       ? idsToDelete 
@@ -75,13 +71,15 @@ export function useCrud<T extends BaseEntity>(options?: UseCrudOptions<T>) {
     }
 
     try {
-      await deleteApiFunction(finalIdsToDelete, tenancyId);
-      if (mutate) {
-        await mutate();
-        if (options?.onSuccess) options.onSuccess();
-      } else {
-        window.location.replace(path + "?notification=delete-success");
-      }
+      await deleteAction(finalIdsToDelete);
+
+      notifications.show({
+        title: "Sucesso",
+        message: "Item(ns) excluído(s) com sucesso.",
+        color: "green",
+      });
+
+      closeAll();
     } catch (error) {
       console.error("Erro ao excluir:", error);
       notifications.show({

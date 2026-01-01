@@ -4,12 +4,12 @@ import { Suspense } from "react";
 import { Loader, Center } from "@mantine/core";
 import { headers } from "next/headers";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const NEXT_PUBLIC_BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default async function SignContractPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
 
@@ -18,7 +18,7 @@ export default async function SignContractPage({
   const city = (await headersList).get("x-vercel-ip-city") ?? "Cidade não detectada";
   const country = (await headersList).get("x-vercel-ip-country") ?? "País não detectado";
 
-  const res = await fetch(`${BACKEND_URL}/api/v1/contracts/sign/${id}`, {
+  const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/v1/contracts/sign/${id}`, {
     cache: "no-store",
   });
 

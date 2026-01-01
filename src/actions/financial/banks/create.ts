@@ -5,13 +5,19 @@ import {
   CreateBankInput,
   createBankSchema,
 } from "@/schemas/financial/bank.schema";
+import { BanksService } from "@/services/banks.service";
 import { ApiError } from "@/types/apiError.types";
 import { ActionState } from "@/types/server-actions.types";
 import { getErrorMessage } from "@/utils/getErrorMessage";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import z from "zod";
 
-export const createBank = protectedAction(async (user, _prevState: ActionState<CreateBankInput>,  formData: FormData
+export const createBank = protectedAction(
+  async (
+    user,
+    _prevState: ActionState<CreateBankInput>,
+    formData: FormData
   ): Promise<ActionState<CreateBankInput>> => {
     const rawData = Object.fromEntries(formData.entries());
     const validatedData = createBankSchema.safeParse(rawData);
@@ -21,44 +27,19 @@ export const createBank = protectedAction(async (user, _prevState: ActionState<C
 
       return {
         errors: flattenedErrors.fieldErrors,
+        success: false,
       };
     }
 
-    console.log(validatedData.data);
-    const headersList = await headers();
-    const cookie = headersList.get("cookie") || "";
-
     try {
-      const response = await fetch(
-        `${process.env.BACKEND_URL}/api/v1/tenancies/${user?.tenancyId}/banks`,
-        {
-          method: "POST",
-          headers: {
-            Cookie: cookie,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(validatedData.data),
-        }
-      );
+      await BanksService.create(user.tenancyId, validatedData.data)
 
-      if (!response.ok) {
-        const errorData: ApiError = await response.json();
-
-        const errors = errorData.errors.map((err) => {
-          return err.message;
-        }).join(", ");
-
-        return {
-          error: errors || errorData?.message || "Erro ao criar conta bancária."
-        };
-      }
-
+      revalidatePath("/system/financial/banks", "page")
       return { success: true };
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
       return {
-        error: getErrorMessage(errorMessage, "Erro ao criar conta bancária."),
+        error: getErrorMessage(error, "Erro ao criar conta bancária."),
+        success: false,
       };
     }
   }

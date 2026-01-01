@@ -7,11 +7,11 @@ import { PiPasswordLight } from "react-icons/pi";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { notifications } from "@mantine/notifications";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/schemas/login";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signIn } from "@/lib/auth-client";
 
 export default function Login() {

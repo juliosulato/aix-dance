@@ -1,14 +1,12 @@
-import CategoriesBillsList from "@/components/(financial)/(categories)/CategoriesBillsList";
+import BankAccountsList from "@/components/(financial)/(banks)/BankAccountsList";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 import { requireAuth } from "@/lib/auth-guards";
 import { serverFetch } from "@/lib/server-fetch";
-import { CategoryBill, CategoryGroup } from "@/types/category.types";
+import { Bank } from "@/types/bank.types";
 
-export default async function CategoryPage() {
+export default async function BankAccountsPage() {
   const { user } = await requireAuth();
-
-  const categoryGroups = await serverFetch<CategoryGroup[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/${user.tenancyId}/category-groups`);
-  const categoryBills = await serverFetch<CategoryBill[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/${user.tenancyId}/category-bills`);
+  const banks = await serverFetch<Bank[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user?.tenancyId}/banks`)
 
   return (
     <main>
@@ -31,7 +29,7 @@ export default async function CategoryPage() {
         ]}
       />
       <br />
-      <CategoriesBillsList categoryBills={categoryBills} categoryGroups={categoryGroups} />
+      <BankAccountsList banks={banks} />
     </main>
   );
 }

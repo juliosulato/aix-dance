@@ -5,6 +5,8 @@ import { Metadata } from "next";
 import { authClient } from "@/lib/auth-client";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Realizar Login",
 };

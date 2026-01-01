@@ -1,36 +1,23 @@
-import AllBanksData from "@/components/(financial)/(banks)/ListBankAccountsData";
 import Breadcrumps from "@/components/ui/Breadcrumps";
+import BankAccountView from "@/components/(financial)/(banks)/BankAccountView";
 import { requireAuth } from "@/lib/auth-guards";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { serverFetch } from "@/lib/server-fetch";
+import { Bank } from "@/types/bank.types";
 
-export default async function BankAccountsPage() {
+export default async function FormsOfReceiptPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { user } = await requireAuth();
+  const { id } = await params;
 
-  const headersList = await headers();
-  const cookie = headersList.get("cookie") || "";
-
-  const banksResponse = await fetch(
-    `${process.env.BACKEND_URL}/api/v1/tenancies/${user?.tenancyId}/banks`,
-    {
-      method: "GET",
-      headers: {
-        Cookie: cookie,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  if (!banksResponse.ok) {
-    return redirect("/errors?code=500");
-  }
-
-  const banks = await banksResponse.json();
+  const bank = await serverFetch<Bank>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user?.tenancyId}/banks/${id}`)
 
   return (
     <main>
       <Breadcrumps
-        items={["Início", "Financeiro"]}
+        items={["Início", "Financeiro", "Contas Bancárias"]}
         menu={[
           { label: "Resumo", href: "/system/summary" },
           { label: "Gerenciador", href: "/system/financial/manager" },
@@ -48,7 +35,7 @@ export default async function BankAccountsPage() {
         ]}
       />
       <br />
-      <AllBanksData banks={banks} user={user} />
+      <BankAccountView bank={bank} />
     </main>
   );
 }

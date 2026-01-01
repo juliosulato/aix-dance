@@ -3,16 +3,16 @@ import { Suspense } from "react";
 import { Loader, Center } from "@mantine/core";
 import ContractAuditView from "./ContractAuditView";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const NEXT_PUBLIC_BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default async function ViewContractPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
 
-  const res = await fetch(`${BACKEND_URL}/api/v1/contracts/view/${id}`, {
+  const res = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/api/v1/contracts/view/${id}`, {
     cache: "no-store",
   });
 

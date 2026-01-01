@@ -1,5 +1,5 @@
 import { Decimal } from 'decimal.js';
-import { BillCategoryType, BillNature } from './category.types';
+import { CategoryBill } from './category.types';
 import { FormsOfReceipt } from './receipt.types';
 
 export enum BillType {
@@ -87,28 +87,6 @@ export type BillWithCategory = Bill & {
     category?: CategoryBill | null;
 };
 
-export type CategoryBill = {
-    id: string;
-    name: string;
-    nature: BillNature;
-    type: BillCategoryType;
-    parentId: string | null;
-    parent?: CategoryBill | null;
-    children?: CategoryBill[];
-    groupId: string | null;
-    group?: CategoryGroup | null;
-    bills?: Bill[];
-    tenancyId: string;
-    createdAt: Date;
-    updatedAt: Date;
-};
-
-export type CategoryGroup = {
-    id: string;
-    name: string;
-    categories?: CategoryBill[];
-    tenancyId: string;
-};
 
 export type BillAttachment = {
     id: string;

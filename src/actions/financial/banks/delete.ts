@@ -1,53 +1,24 @@
 "use server";
 
 import { protectedAction } from "@/lib/auth-guards";
-import { ApiError } from "@/types/apiError.types";
+import { BanksService } from "@/services/banks.service";
+import { ActionResult } from "@/types/action-result.types";
 import { getErrorMessage } from "@/utils/getErrorMessage";
-import { headers } from "next/headers";
-
-type DeleteBankResult = { success: true } | { success: false; error: string };
+import { revalidatePath } from "next/cache";
 
 export const deleteBanks = protectedAction(
-  async (user, data: string[]): Promise<DeleteBankResult> => {
+  async (user, data: string[]): Promise<ActionResult> => {
     if (Array.isArray(data) === false || data.length === 0) {
       return {
         success: false,
         error: "Nenhum ID fornecido para exclusão.",
       };
     }
-
-    const headersList = await headers();
-    const cookie = headersList.get("cookie") || "";
-
+  
     try {
-      const response = await fetch(
-        `${process.env.BACKEND_URL}/api/v1/tenancies/${user?.tenancyId}/banks`,
-        {
-          method: "DELETE",
-          headers: {
-            Cookie: cookie,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ids: data }),
-        }
-      );
+      await BanksService.deleteMany(user.tenancyId, data)
 
-      if (!response.ok) {
-        const errorData: ApiError = await response.json();
-
-        const errors = errorData.errors
-          .map((err) => {
-            return err.message;
-          })
-          .join(", ");
-
-        return {
-          success: false,
-          error:
-            errors || errorData?.message || "Erro ao criar conta bancária.",
-        };
-      }
-
+      revalidatePath("/system/financial/banks", "page")
       return { success: true };
     } catch (error: unknown) {
       const errorMessage =

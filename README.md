@@ -5,7 +5,7 @@
 
 # AIX Dance — SaaS de Gestão para Escolas e Estúdios de Dança
 
-AIX Dance é um **SaaS em desenvolvimento ativo** voltado para a gestão completa de escolas e estúdios de dança, centralizando operações administrativas, financeiras e de relacionamento com alunos em uma única plataforma.
+AIX Dance é um **SaaS em desenvolvimento ativo** voltado para a gestão completa de escolas e estúdios de dança, centralizando operações administrativas, financeiras e de relacionamento com alunos em fluxos integrados e automatizados em uma única plataforma.
 
 O projeto resolve dores comuns desse tipo de negócio, como controle financeiro, contratos, organização de eventos e acompanhamento de alunos, oferecendo uma solução moderna, escalável e focada em usabilidade.
 
@@ -25,7 +25,7 @@ Atuo como **desenvolvedor full-cycle**, sendo responsável por:
 - Definição de padrões de código e organização
 - Evolução técnica e manutenção do produto
 
-Sumário rápido
+Tech Stack
 - Framework: Next.js 16 (App Router)
 - Linguagem: TypeScript
 - UI: Mantine
@@ -108,7 +108,7 @@ Docker e deploy
 
 	docker build -t aix-dance .
 
-	# ou com compose
+	### ou com compose
 	docker compose up --build
 
 Boas práticas para contribuidores
@@ -121,4 +121,8 @@ Contato e contribuição
 - Envie PRs com descrição clara e referências à issue correspondente.
 
 Licença
-- (Adicionar informação de licença aqui, se aplicável)
+Copyright (c) 2026 Julio Cesar Sulato Filho
+
+Permission is granted to view this source code for educational and evaluation purposes only.
+Any use, reproduction, modification, distribution, or commercial exploitation of this software, in whole or in part, is strictly prohibited without prior written permission from the copyright holder.
+

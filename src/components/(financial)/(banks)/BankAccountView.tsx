@@ -4,9 +4,10 @@ import InfoTerm from "@/components/ui/Infoterm";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import { Bank } from "@/types/bank.types";
-import UpdateBankAccount from "./UpdateBankAccount";
+import BankFormModal from "./BankFormModal";
 import { useCrud } from "@/hooks/useCrud";
 import { Text } from "@mantine/core";
+import Decimal from "decimal.js";
 
 export default function BankAccountView({ bank }: { bank: Bank }) {
   const crud = useCrud<Bank>();
@@ -45,7 +46,7 @@ export default function BankAccountView({ bank }: { bank: Bank }) {
           {new Intl.NumberFormat("pt-BR", {
             style: "currency",
             currency: "BRL",
-          }).format(bank?.maintenanceFeeAmount?.toNumber() || 0)}
+          }).format(bank?.maintenanceFeeAmount instanceof Decimal ? bank?.maintenanceFeeAmount?.toNumber() : bank.maintenanceFeeAmount || 0)}
         </InfoTerm>
         <InfoTerm label={"Vencimento da Taxa"}>
           {bank.maintenanceFeeDue || "-"}
@@ -59,17 +60,18 @@ export default function BankAccountView({ bank }: { bank: Bank }) {
       </div>
 
       {crud.selectedItem && (
-        <UpdateBankAccount
-          bankAccount={crud.selectedItem}
-          onClose={() => crud.setModals.setUpdate(false)}
+        <BankFormModal
+          bankToEdit={crud.selectedItem}
+          onClose={crud.closeModals.update}
           opened={crud.modals.update}
+          key={`update-${crud.formVersion}`}
         />
       )}
 
       <ConfirmationModal
         opened={crud.modals.delete}
-        onClose={() => crud.setModals.setDelete(false)}
-        onConfirm={() => crud.confirmDelete}
+        onClose={crud.closeModals.delete}
+        onConfirm={crud.confirmDelete}
         title={"Confirmar Exclusão"}
         confirmLabel={"Excluir"}
         cancelLabel={"Cancelar"}

@@ -29,13 +29,13 @@ export default async function FormsOfReceiptPage({
           { label: "Grupos", href: "/system/financial/category-groups" },
           {
             label: "Contas Bancárias",
-            href: "/system/financial/bank-accounts",
+            href: "/system/financial/banks",
           },
           { label: "Relatórios", href: "/system/financial/reports" },
         ]}
       />
       <br />
-      <BankAccountView bank={bank} />
+      <BankAccountView bank={bank.data} />
     </main>
   );
 }

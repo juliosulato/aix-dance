@@ -16,7 +16,7 @@ export const BillsService = {
 
   update(tenancyId: string, data: UpdateBillInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/bills`,
+      `${baseUrl}/api/v1/tenancies/${tenancyId}/bills/${data.id}`,
       {
         method: "PUT",
         body: JSON.stringify(data),
@@ -30,6 +30,15 @@ export const BillsService = {
       {
         method: "DELETE",
         body: JSON.stringify({ ids }),
+      }
+    );
+  },
+
+  deleteOne(tenancyId: string, id: string, scope: string) {
+    return serverFetch(
+      `${baseUrl}/api/v1/tenancies/${tenancyId}/bills/${id}?scope=${scope}`,
+      {
+        method: "DELETE",
       }
     );
   },

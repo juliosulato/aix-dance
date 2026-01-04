@@ -6,11 +6,10 @@ import { GrUpdate } from "react-icons/gr";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import DataView from "@/components/ui/DataView";
 
-import NewCategoryGroup from "./NewCategoryGroup";
-import UpdateCategoryGroup from "./UpdateCategoryGroup";
 import { CategoryGroup } from "@/types/category.types";
 import { useCrud } from "@/hooks/useCrud";
 import { deleteCategoryGroups } from "@/actions/financial/categoryGroups/delete";
+import CategoryGroupFormModal from "./CategoryGroupFormModal";
 
 type Props = {
   categoryGroups: CategoryGroup[];
@@ -88,7 +87,7 @@ export default function CategoryGroupsList({ categoryGroups }: Props) {
         disableTable
         data={categoryGroups || []}
         openNewModal={{
-          func: () => crud.handleCreate,
+          func: crud.handleCreate,
           label: "Novo Grupo",
         }}
         baseUrl="/system/financial/category-groups/"
@@ -98,14 +97,14 @@ export default function CategoryGroupsList({ categoryGroups }: Props) {
         RenderRowMenu={(item) => (
           <MenuItem
             categoryGroup={item}
-            onUpdateClick={() => crud.handleUpdate}
-            onDeleteClick={() => crud.handleDelete}
+            onUpdateClick={crud.handleUpdate}
+            onDeleteClick={crud.handleDelete}
           />
         )}
         RenderAllRowsMenu={(selectedIds) => (
           <MenuItems
             selectedIds={selectedIds}
-            onBulkDeleteClick={() => crud.handleBulkDelete}
+            onBulkDeleteClick={crud.handleBulkDelete}
           />
         )}
         renderCard={(item) => (
@@ -116,31 +115,33 @@ export default function CategoryGroupsList({ categoryGroups }: Props) {
               </Text>
               <MenuItem
                 categoryGroup={item}
-                onUpdateClick={() => crud.handleUpdate}
-                onDeleteClick={() => crud.handleUpdate}
+                onUpdateClick={crud.handleUpdate}
+                onDeleteClick={crud.handleDelete}
               />
             </div>
           </>
         )}
       />
 
-      <NewCategoryGroup
+      <CategoryGroupFormModal
         opened={crud.modals.create}
-        onClose={() => crud.setModals.setCreate(false)}
+        onClose={crud.closeModals.create}
+        key={"new-" + crud.formVersion}
       />
 
       {crud.selectedItem && (
-        <UpdateCategoryGroup
+        <CategoryGroupFormModal
           opened={crud.modals.update}
-          onClose={() => crud.setModals.setUpdate(false)}
+          onClose={crud.closeModals.update}
           selectedItem={crud.selectedItem}
+          key={"update-" + crud.formVersion}
         />
       )}
 
       <ConfirmationModal
         opened={crud.modals.delete}
-        onClose={() => crud.setModals.setDelete(false)}
-        onConfirm={() => crud.confirmDelete}
+        onClose={crud.closeModals.delete}
+        onConfirm={crud.confirmDelete}
         title={"Confirmar Exclusão"}
         confirmLabel={"Excluir"}
         cancelLabel={"Cancelar"}

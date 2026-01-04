@@ -16,7 +16,7 @@ export const FormsOfReceiptService = {
 
   update(tenancyId: string, data: UpdateFormsOfReceiptInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/forms-of-receipt`,
+      `${baseUrl}/api/v1/tenancies/${tenancyId}/forms-of-receipt/${data.id}`,
       {
         method: "PUT",
         body: JSON.stringify(data),

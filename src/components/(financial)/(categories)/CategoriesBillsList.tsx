@@ -6,10 +6,10 @@ import { GrUpdate } from "react-icons/gr";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import DataView from "@/components/ui/DataView";
 
-import NewCategoryBill from "./NewCategoryBill";
-import UpdateCategoryBill from "./UpdateCategoryBill";
 import { CategoryBill, CategoryGroup } from "@/types/category.types";
 import { useCrud } from "@/hooks/useCrud";
+import CategoryBillFormModal from "./CategoryBillFormModal";
+import { deleteCategoryBills } from "@/actions/financial/categoryBills/delete";
 
 interface MenuItemProps {
   categoryGroup: CategoryBill;
@@ -80,7 +80,7 @@ const MenuItems = ({ selectedIds, onBulkDeleteClick }: MenuItemsProps) => (
 );
  
 export default function CategoriesBillsList({ categoryGroups, categoryBills }: Props) {
-  const crud = useCrud<CategoryBill>();
+  const crud = useCrud<CategoryBill>({ deleteAction: deleteCategoryBills });
 
   return (
     <>
@@ -88,7 +88,7 @@ export default function CategoriesBillsList({ categoryGroups, categoryBills }: P
         disableTable
         data={categoryBills}
         openNewModal={{
-          func: () => crud.handleCreate(),
+          func: crud.handleCreate,
           label: "Nova Categoria",
         }}
         baseUrl="/system/financial/categories/"
@@ -124,27 +124,29 @@ export default function CategoriesBillsList({ categoryGroups, categoryBills }: P
         )}
       />
 
-      <NewCategoryBill
+      <CategoryBillFormModal
         opened={crud.modals.create}
-        onClose={() => crud.setModals.setCreate(false)}
+        onClose={crud.closeModals.create}
         categoryGroups={categoryGroups}
         parentCategories={categoryBills}
+        key={"new-" + crud.formVersion}
       />
 
       {crud.selectedItem && (
-        <UpdateCategoryBill
-          opened={crud.modals.create}
-          onClose={() => crud.setModals.setUpdate(false)}
-          selectedItem={crud.selectedItem}
+        <CategoryBillFormModal
+          opened={crud.modals.update}
+          onClose={crud.closeModals.update}
+          categoryToEdit={crud.selectedItem}
           categoryGroups={categoryGroups}
           parentCategories={categoryBills}
+          key={"update-" + crud.formVersion}
         />
       )}
 
       <ConfirmationModal
         opened={crud.modals.delete}
-        onClose={() => crud.setModals.setDelete(false)}
-        onConfirm={() => crud.confirmDelete}
+        onClose={crud.closeModals.delete}
+        onConfirm={crud.confirmDelete}
         title={"Confirmar Exclusão"}
         confirmLabel={"Excluir"}
         cancelLabel={"Cancelar"}

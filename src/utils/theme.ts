@@ -1,4 +1,6 @@
 import { Button, createTheme, Input, InputBase, LoadingOverlay, NumberInput, TextInput } from '@mantine/core';
+import { DateInput } from '@mantine/dates';
+import { dateParser } from './dateParser';
 
 const theme = createTheme({
     fontFamily: "Inter, sans-serif",
@@ -68,6 +70,13 @@ const theme = createTheme({
                 radius: "lg",
                 size: "md"
             },
+        },
+        DateInput: {
+            defaultProps: {
+                dateParser: dateParser,
+                locale: "pt-BR",
+                valueFormat: "DD/MM/YYYY"
+            }
         }
     }
 });

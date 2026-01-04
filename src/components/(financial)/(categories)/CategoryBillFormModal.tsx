@@ -1,102 +1,63 @@
 "use client";
-
-import {
-  Button,
-  LoadingOverlay,
-  Modal,
-  Select,
-  TextInput,
-} from "@mantine/core";
-import { useActionState, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Button, LoadingOverlay, Modal, Select, TextInput } from "@mantine/core";
 import { createCategoryBill } from "@/actions/financial/categoryBills/create";
-import { CreateBankInput } from "@/schemas/financial/bank.schema";
-import { ActionState } from "@/types/server-actions.types";
-import {
-  BillCategoryType,
-  BillNature,
-  CategoryBill,
-  CategoryGroup,
-} from "@/types/category.types";
-import { notifications } from "@mantine/notifications";
+import { updateCategoryBill } from "@/actions/financial/categoryBills/update";
+import { BillCategoryType, BillNature, CategoryBill, CategoryGroup } from "@/types/category.types";
+import { useFormAction } from "@/hooks/useFormAction";
 
 type Props = {
   opened: boolean;
   onClose: () => void;
   categoryGroups: CategoryGroup[];
   parentCategories: CategoryBill[];
-  selectedItem: CategoryBill;
+  categoryToEdit?: CategoryBill | null;
 };
 
-const initialState: ActionState<CreateBankInput> = {
-  error: undefined,
-  errors: {
-    name: undefined,
-    account: undefined,
-    agency: undefined,
-    code: undefined,
-    description: undefined,
-    maintenanceFeeAmount: undefined,
-    maintenanceFeeDue: undefined,
-  },
-};
+const initialState = { error: undefined, errors: {} };
 
-export default function UpdateCategoryBill({
+export default function CategoryBillFormModal({
   opened,
   onClose,
   categoryGroups,
   parentCategories,
-  selectedItem,
+  categoryToEdit,
 }: Props) {
-  const [state, formAction, pending] = useActionState(
-    createCategoryBill,
-    initialState
-  );
+  
+  const { state, formAction, pending } = useFormAction({
+    action: categoryToEdit ? updateCategoryBill : createCategoryBill,
+    initialState,
+    onClose,
+    successMessage: categoryToEdit
+      ? "Categoria atualizada com sucesso!"
+      : "Categoria criada com sucesso!",
+  });
 
   const [formValues, setFormValues] = useState({
-    name: selectedItem.name,
-    nature: selectedItem.nature,
-    type: selectedItem.type,
-    groupId: selectedItem.groupId,
-    parentId: selectedItem.parentId,
+    name: categoryToEdit?.name || "",
+    nature: categoryToEdit?.nature || "",
+    type: categoryToEdit?.type || "",
+    groupId: categoryToEdit?.groupId || "",
+    parentId: categoryToEdit?.parentId || "",
   });
 
   useEffect(() => {
-    if (state.success) {
-      notifications.show({
-        title: "Sucesso",
-        message: "Categoria atualizada com sucesso!",
-        color: "green",
-      });
-    }
-  }, [state.success, onClose]);
-
-  useEffect(() => {
-    if (!opened) {
+    if (opened) {
       setFormValues({
-        name: selectedItem.name,
-        nature: selectedItem.nature,
-        type: selectedItem.type,
-        groupId: selectedItem.groupId,
-        parentId: selectedItem.parentId,
+        name: categoryToEdit?.name || "",
+        nature: categoryToEdit?.nature || "",
+        type: categoryToEdit?.type || "",
+        groupId: categoryToEdit?.groupId || "",
+        parentId: categoryToEdit?.parentId || "",
       });
     }
-  }, [opened]);
-
-  useEffect(() => {
-    if (state.error) {
-      notifications.show({
-        title: "Erro",
-        message: state.error,
-        color: "red",
-      });
-    }
-  }, [state.error]);
+  }, [opened, categoryToEdit]);
 
   return (
     <Modal
       opened={opened}
       onClose={onClose}
-      title="Nova Categoria"
+      title={categoryToEdit ? "Editar Categoria" : "Nova Categoria"}
       size="lg"
       radius="lg"
       centered
@@ -107,12 +68,19 @@ export default function UpdateCategoryBill({
     >
       <form className="flex flex-col gap-4" action={formAction}>
         <div className="rounded-xl grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input type="hidden" name="id" value={selectedItem?.id} />
+          
+          {categoryToEdit && (
+            <input type="hidden" name="id" value={categoryToEdit.id} />
+          )}
+
           <TextInput
             id="name"
             name="name"
             label="Nome"
             value={formValues.name}
+            onChange={(ev) =>
+              setFormValues({ ...formValues, name: ev.currentTarget.value })
+            }
             required
             error={state.errors?.name}
             className="md:col-span-2"
@@ -122,8 +90,15 @@ export default function UpdateCategoryBill({
             id="nature"
             name="nature"
             label="Natureza"
+            clearable={false}
             placeholder="Selecione a natureza"
             value={formValues.nature}
+            onChange={(ev) =>
+              setFormValues({
+                ...formValues,
+                nature: (ev as BillNature) || BillNature.REVENUE,
+              })
+            }
             data={[
               { label: "Receita", value: BillNature.REVENUE },
               { label: "Despesa", value: BillNature.EXPENSE },
@@ -142,16 +117,28 @@ export default function UpdateCategoryBill({
               { label: "Fixo", value: BillCategoryType.FIXED },
               { label: "Variável", value: BillCategoryType.VARIABLE },
             ]}
+            onChange={(ev) =>
+              setFormValues({
+                ...formValues,
+                type: (ev as BillCategoryType) || BillCategoryType.FIXED,
+              })
+            }
             error={state.errors?.type}
             required
           />
+
           <Select
             id="groupId"
             name="groupId"
             label="Grupo"
             placeholder="Selecione o grupo"
             value={formValues.groupId}
-            data={categoryGroups?.map((g) => ({ label: g.name, value: g.id })) || []}
+            onChange={(val) => 
+               setFormValues({ ...formValues, groupId: val || "" })
+            }
+            data={
+              categoryGroups?.map((g) => ({ label: g.name, value: g.id })) || []
+            }
             searchable
             clearable
             nothingFoundMessage={"Nenhum grupo encontrado"}
@@ -164,6 +151,9 @@ export default function UpdateCategoryBill({
             label={"Categoria Ascendente"}
             placeholder={"Selecione a categoria ascendente"}
             value={formValues.parentId}
+            onChange={(val) => 
+               setFormValues({ ...formValues, parentId: val || "" })
+            }
             data={
               parentCategories?.map((p) => ({ label: p.name, value: p.id })) ||
               []
@@ -175,6 +165,7 @@ export default function UpdateCategoryBill({
             className="md:col-span-2"
           />
         </div>
+        
         <Button
           type="submit"
           color="#7439FA"

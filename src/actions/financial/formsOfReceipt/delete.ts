@@ -3,7 +3,7 @@
 import { protectedAction } from "@/lib/auth-guards";
 import { FormsOfReceiptService } from "@/services/financial/formsOfReceipt.service";
 import { ActionResult } from "@/types/action-result.types";
-import { getErrorMessage } from "@/utils/getErrorMessage";
+import { handleServerActionError } from "@/utils/handlerApiErrors";
 import { revalidatePath } from "next/cache";
 
 export const deleteFormOfReceipt = protectedAction(
@@ -19,16 +19,15 @@ export const deleteFormOfReceipt = protectedAction(
       await FormsOfReceiptService.deleteMany(user.tenancyId, ids);
 
       revalidatePath("/system/financial/forms-of-receipt", "page");
+      
       ids.forEach((id) =>
         revalidatePath(`/system/financial/forms-of-receipt/${id}`, "page")
       );
 
       return { success: true };
     } catch (error: unknown) {
-      return {
-        error: getErrorMessage(error, "Erro ao deletar categoria."),
-        success: false,
-      };
+      const result = handleServerActionError(error);
+      return { success: false, error: result.error ?? "Erro ao deletar forma de recebimento." };
     }
   }
 );

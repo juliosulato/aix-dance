@@ -13,9 +13,9 @@ export default async function CategoryPage({
 
   const { user } = await requireAuth();
 
-  const categoryGroups = await serverFetch<CategoryGroup[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/${user.tenancyId}/category-groups`);
-  const categoryBills = await serverFetch<CategoryBill[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/${user.tenancyId}/category-bills`);
-  const categoryBill = await serverFetch<CategoryBill>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/${user.tenancyId}/category-bills/${id}`);
+  const categoryGroups = await serverFetch<CategoryGroup[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user.tenancyId}/categories/groups`);
+  const categoryBills = await serverFetch<CategoryBill[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user.tenancyId}/categories/bills`);
+  const categoryBill = await serverFetch<CategoryBill>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user.tenancyId}/categories/bills/${id}`);
 
   return (
     <main>
@@ -32,16 +32,16 @@ export default async function CategoryPage({
           { label: "Grupos", href: "/system/financial/category-groups" },
           {
             label: "Contas Bancárias",
-            href: "/system/financial/bank-accounts",
+            href: "/system/financial/banks",
           },
           { label: "Relatórios", href: "/system/financial/reports" },
         ]}
       />
       <br />
       <CategoryBillView
-        categoryBill={categoryBill}
-        categoryBills={categoryBills}
-        categoryGroups={categoryGroups}
+        categoryBill={categoryBill.data}
+        categoryBills={categoryBills.data}
+        categoryGroups={categoryGroups.data}
       />
     </main>
   );

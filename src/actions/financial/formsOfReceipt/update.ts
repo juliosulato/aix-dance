@@ -4,7 +4,7 @@ import { protectedAction } from "@/lib/auth-guards";
 import { UpdateFormsOfReceiptInput, updateFormsOfReceiptSchema } from "@/schemas/financial/forms-receipt.schema";
 import { FormsOfReceiptService } from "@/services/financial/formsOfReceipt.service";
 import { ActionState } from "@/types/server-actions.types";
-import { getErrorMessage } from "@/utils/getErrorMessage";
+import { handleServerActionError } from "@/utils/handlerApiErrors";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 
@@ -29,12 +29,11 @@ export const updateFormOfReceipt = protectedAction(async (user, _prevState: Acti
         await FormsOfReceiptService.update(user.tenancyId, validatedData.data)
 
         revalidatePath("/system/financial/forms-of-receipt", "page");
+        revalidatePath("/system/financial/forms-of-receipt/" + validatedData.data.id, "page");
         
         return { success: true }
     } catch (error: unknown) {
-        return {
-            success: false,
-            error: getErrorMessage(error, "Erro ao criar forma de recebimento."),
-        };
+        console.error(error)
+        return handleServerActionError(error);
     }
 });

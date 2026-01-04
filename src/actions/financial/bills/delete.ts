@@ -3,27 +3,35 @@
 import { protectedAction } from "@/lib/auth-guards";
 import { BillsService } from "@/services/financial/bills.service";
 import { ActionResult } from "@/types/action-result.types";
-import { getErrorMessage } from "@/utils/getErrorMessage";
+import { handleServerActionError } from "@/utils/handlerApiErrors";
+import { revalidatePath } from "next/cache";
 
 export const deleteBills = protectedAction(
-  async (user, data: string[]): Promise<ActionResult> => {
-    if (Array.isArray(data) === false || data.length === 0) {
-      return {
-        success: false,
-        error: "Nenhum ID fornecido para exclusão.",
-      };
-    }
-  
+  async (
+    user,
+    data: string[] | { id: string; scope: "ONE" | "ALL_FUTURE" }
+  ): Promise<ActionResult> => {
     try {
-      await BillsService.deleteMany(user.tenancyId, data)
-      
+      if (Array.isArray(data)) {
+        if (data.length === 0) {
+          return { success: false, error: "Nenhum ID fornecido." };
+        }
+        await BillsService.deleteMany(user.tenancyId, data);
+
+        data.forEach((id) => {
+          revalidatePath("/system/financial/manager/" + id);
+        });
+      } else {
+        await BillsService.deleteOne(user.tenancyId, data.id, data.scope);
+        revalidatePath("/system/financial/manager/" + data.id);
+      }
       return { success: true };
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
+      console.error(error);
+      const result = handleServerActionError(error);
       return {
         success: false,
-        error: getErrorMessage(errorMessage, "Erro ao excluir cobrança(s)."),
+        error: result.error ?? "Erro ao deletar cobrança.",
       };
     }
   }

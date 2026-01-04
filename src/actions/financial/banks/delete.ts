@@ -3,7 +3,7 @@
 import { protectedAction } from "@/lib/auth-guards";
 import { BanksService } from "@/services/financial/banks.service";
 import { ActionResult } from "@/types/action-result.types";
-import { getErrorMessage } from "@/utils/getErrorMessage";
+import { handleServerActionError } from "@/utils/handlerApiErrors";
 import { revalidatePath } from "next/cache";
 
 export const deleteBanks = protectedAction(
@@ -19,16 +19,13 @@ export const deleteBanks = protectedAction(
       await BanksService.deleteMany(user.tenancyId, ids)
 
       revalidatePath("/system/financial/banks", "page")
+      revalidatePath("/system/financial/manager", "page");
       ids.forEach((id) => revalidatePath(`/system/financial/banks/${id}`, "page"))
       
       return { success: true };
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      return {
-        success: false,
-        error: getErrorMessage(errorMessage, "Erro ao excluir conta bancária."),
-      };
+      const result = handleServerActionError(error);
+      return { success: false, error: result.error ?? "Erro ao deletar conta bancária." };
     }
   }
 );

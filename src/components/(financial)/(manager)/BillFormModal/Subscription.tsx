@@ -1,28 +1,24 @@
-import { CreateBillInput } from "@/schemas/financial/bill.schema";
+import { CreateBillInput, UpdateBillInput } from "@/schemas/financial/bill.schema";
 import { NumberInput, Select } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { RecurrenceType } from "@/types/bill.types";
 import { Control, Controller, FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
-// localesMap import removed
 import dayjs from "dayjs";
+import { dateParser } from "@/utils/dateParser";
 
-// Standardized Props for all form children components
 type Props = {
-    register: UseFormRegister<CreateBillInput>;
-    control: Control<CreateBillInput>;
-    errors: FieldErrors<CreateBillInput>;
-    watch: UseFormWatch<CreateBillInput>;
-    setValue: UseFormSetValue<CreateBillInput>;
+    register: UseFormRegister<CreateBillInput | UpdateBillInput>;
+    control: Control<CreateBillInput | UpdateBillInput>;
+    errors: FieldErrors<CreateBillInput | UpdateBillInput>;
+    watch: UseFormWatch<CreateBillInput | UpdateBillInput>;
+    setValue: UseFormSetValue<CreateBillInput | UpdateBillInput>;
 }
 
 export default function Subscription({ control, errors, watch }: Props) {
-
     const endCondition = watch("paymentMode") === "SUBSCRIPTION" ? watch("endCondition") : "noDateSet";
 
-    const recurrenceTypes = Object.values(RecurrenceType).filter(type => type !== "NONE");
-
     return (
-        <div className="border border-neutral-300 p-4 md:p-6 rounded-xl grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="form-card-grid">
             <Controller
                 control={control}
                 name="recurrence"
@@ -31,13 +27,15 @@ export default function Subscription({ control, errors, watch }: Props) {
                         label={"Recorrência"}
                         placeholder={"Selecione a recorrência"}
                         required
-                        data={recurrenceTypes.map(type => ({
-                            label: type.toLowerCase(),
-                            value: type,
-                        }))}
+                        data={[
+                            { label: "Mensal", value: RecurrenceType.MONTHLY },
+                            { label: "Bimestral", value: RecurrenceType.BIMONTHLY },
+                            { label: "Trimestral", value: RecurrenceType.QUARTERLY },
+                            { label: "Semestral", value: RecurrenceType.SEMIANNUAL },
+                            { label: "Anual", value: RecurrenceType.ANNUAL },
+                        ]}
                         value={field.value as RecurrenceType | undefined}
                         onChange={field.onChange}
-                        // Use a type assertion to bypass the strict union type check
                         error={(errors as any)['recurrence']?.message}
                     />
                 )}
@@ -48,16 +46,9 @@ export default function Subscription({ control, errors, watch }: Props) {
                 name="dueDate"
                 render={({ field }) => (
                     <DateInput
-                        label={"Data de Vencimento"}
-                        locale={"pt-br"}
-                        onChange={(date) => {
-                            if (!date) {
-                                field.onChange(null);
-                                return;
-                            }
-                            const newDate = dayjs(date).hour(12).minute(0).second(0).toDate();
-                            field.onChange(newDate);
-                        }} value={field.value ? new Date(field.value) : null}
+                        {...field}
+                        label={"Data do 1º Vencimento"}
+                        value={field.value}
                         error={(errors as any)?.dueDate?.message}
                         valueFormat={"DD/MM/YYYY"}
                         required
@@ -83,7 +74,6 @@ export default function Subscription({ control, errors, watch }: Props) {
                 )}
             />
 
-            {/* Conditional Fields based on endCondition */}
             {(endCondition as any) === 'chooseData' && (
                 <Controller
                     control={control}

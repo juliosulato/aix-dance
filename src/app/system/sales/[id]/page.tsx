@@ -13,7 +13,7 @@ export default async function FormsOfReceiptPage({ params }: { params: Promise<{
                     { label: "Formas de Recebimento", href: "/system/financial/forms-of-receipt" },
                     { label: "Categorias", href: "/system/financial/categories" },
                     { label: "Grupos", href: "/system/financial/category-groups" },
-                    { label: "Contas Bancárias", href: "/system/financial/bank-accounts" },
+                    { label: "Contas Bancárias", href: "/system/financial/banks" },
                     { label: "Relatórios", href: "/system/financial/reports" },
                 ]} />
             <br />

@@ -1,18 +1,13 @@
+import { BaseEntity, CrudHandlers, UseCrudOptions } from "@/types/useCrud.types";
 import { notifications } from "@mantine/notifications";
+import { useRouter } from "next/navigation";
 import { useState, useCallback } from "react";
-import { KeyedMutator } from "swr";
 
-interface BaseEntity {
-  id: string;
-  [key: string]: any;
-}
+export function useCrud<T extends BaseEntity>({ mutate, redirectUrl, deleteAction }: UseCrudOptions<T> = {}): CrudHandlers<T> {
+  const router = useRouter();
 
-interface UseCrudOptions<T> {
-  deleteAction?: (ids: string[]) => Promise<any>;
-  mutate?: KeyedMutator<T>;
-}
+  const [formVersion, setFormVersion] = useState(0);
 
-export function useCrud<T extends BaseEntity>({ mutate, deleteAction }: UseCrudOptions<T> = {}) {
   const [isCreateOpen, setCreateOpen] = useState(false);
   const [isUpdateOpen, setUpdateOpen] = useState(false);
   const [isDeleteOpen, setDeleteOpen] = useState(false);
@@ -24,11 +19,13 @@ export function useCrud<T extends BaseEntity>({ mutate, deleteAction }: UseCrudO
   const handleCreate = useCallback(() => {
     setSelectedItem(null);
     setCreateOpen(true);
+    setFormVersion((v) => v + 1);
   }, []);
 
   const handleUpdate = useCallback((item: T) => {
     setSelectedItem(item);
     setUpdateOpen(true);
+    setFormVersion((v) => v + 1);
   }, []);
 
   const handleDelete = useCallback((item: T) => {
@@ -43,11 +40,17 @@ export function useCrud<T extends BaseEntity>({ mutate, deleteAction }: UseCrudO
     setDeleteOpen(true);
   }, []);
 
-  const closeAll = useCallback(() => {
+  const closeCreate = useCallback(() => {
     setCreateOpen(false);
+  }, []);
+
+  const closeUpdate = useCallback(() => {
     setUpdateOpen(false);
+    setSelectedItem(null); 
+  }, []);
+
+  const closeDelete = useCallback(() => {
     setDeleteOpen(false);
-    setSelectedItem(null);
     setIdsToDelete([]);
   }, []);
 
@@ -59,8 +62,7 @@ export function useCrud<T extends BaseEntity>({ mutate, deleteAction }: UseCrudO
     setIsDeleting(true);
 
     const finalIdsToDelete = idsToDelete.length > 0 
-      ? idsToDelete 
-      : (selectedItem ? [selectedItem.id] : []);
+      ? idsToDelete : (selectedItem ? [selectedItem.id] : []);
 
     if (finalIdsToDelete.length === 0) {
       setIsDeleting(false);
@@ -71,14 +73,15 @@ export function useCrud<T extends BaseEntity>({ mutate, deleteAction }: UseCrudO
     try {
       await deleteAction(finalIdsToDelete);
       mutate?.()
-
+      
+      if (redirectUrl) {
+        router.replace(redirectUrl)
+      }
       notifications.show({
         title: "Sucesso",
         message: "Item(ns) excluído(s) com sucesso.",
         color: "green",
       });
-
-      closeAll();
     } catch (error) {
       console.error("Erro ao excluir:", error);
       notifications.show({
@@ -94,15 +97,22 @@ export function useCrud<T extends BaseEntity>({ mutate, deleteAction }: UseCrudO
     }
   };
 
-  return {
+return {
     selectedItem,
     idsToDelete,
     isDeleting,
+    formVersion, // <--- Importante para o key={}
     modals: {
       create: isCreateOpen,
       update: isUpdateOpen,
       delete: isDeleteOpen,
     },
+    closeModals: {
+      create: closeCreate,
+      update: closeUpdate,
+      delete: closeDelete,
+    },
+    setSelectedItem: setSelectedItem,
     setModals: {
         setCreate: setCreateOpen,
         setUpdate: setUpdateOpen,
@@ -113,6 +123,5 @@ export function useCrud<T extends BaseEntity>({ mutate, deleteAction }: UseCrudO
     handleDelete,
     handleBulkDelete,
     confirmDelete,
-    closeAll,
   };
 }

@@ -16,7 +16,7 @@ export const BanksService = {
 
   update(tenancyId: string, data: UpdateBankInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/banks`,
+      `${baseUrl}/api/v1/tenancies/${tenancyId}/banks/${data.id}`,
       {
         method: "PUT",
         body: JSON.stringify(data),

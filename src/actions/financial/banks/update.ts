@@ -7,7 +7,7 @@ import {
 } from "@/schemas/financial/bank.schema";
 import { BanksService } from "@/services/financial/banks.service";
 import { ActionState } from "@/types/server-actions.types";
-import { getErrorMessage } from "@/utils/getErrorMessage";
+import { handleServerActionError } from "@/utils/handlerApiErrors";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 
@@ -33,18 +33,11 @@ export const updateBank = protectedAction(
       await BanksService.update(user.tenancyId, validatedData.data);
 
       revalidatePath("/system/financial/banks", "page");
+      revalidatePath("/system/financial/manager", "page");
 
       return { success: true };
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      return {
-        error: getErrorMessage(
-          errorMessage,
-          "Erro ao atualizar conta bancária."
-        ),
-        success: false,
-      };
+      return handleServerActionError(error);
     }
   }
 );

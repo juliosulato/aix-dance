@@ -5,15 +5,15 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import { FormsOfReceipt } from "@/types/receipt.types";
 import { useCrud } from "@/hooks/useCrud";
-import UpdateFormsOfReceipt from "./UpdateFormsOfReceipt";
 import { deleteFormOfReceipt } from "@/actions/financial/formsOfReceipt/delete";
+import FormsOfReceiptModal from "./FormsOfReceiptModal";
 
 type Props = {
   formOfReceipt: FormsOfReceipt;
 };
 
 export default function FormOfReceiptView({ formOfReceipt }: Props) {
-  const crud = useCrud<FormsOfReceipt>({ deleteAction: deleteFormOfReceipt });
+  const crud = useCrud<FormsOfReceipt>({ deleteAction: deleteFormOfReceipt, redirectUrl: "/system/financial/forms-of-receipt" });
   
   return (
     <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
@@ -24,14 +24,14 @@ export default function FormOfReceiptView({ formOfReceipt }: Props) {
         <div className="flex gap-4 md:gap-6">
           <button
             className="text-red-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition"
-            onClick={() => crud.handleDelete}
+            onClick={() => crud.handleDelete(formOfReceipt)}
           >
             <FaTrash />
             <span>{"Excluir"}</span>
           </button>
           <button
             className="text-primary flex items-center gap-2 cursor-pointer hover:opacity-50 transition"
-            onClick={() => crud.handleUpdate}
+            onClick={() => crud.handleUpdate(formOfReceipt)}
           >
             <FaEdit />
             <span>{"Atualizar"}</span>
@@ -73,15 +73,16 @@ export default function FormOfReceiptView({ formOfReceipt }: Props) {
        )}
       </div>
 
-      <UpdateFormsOfReceipt
+      <FormsOfReceiptModal
+        key={`update-${crud.formVersion}`}
         selectedItem={formOfReceipt}
-        onClose={() => crud.setModals.setUpdate(false)}
+        onClose={crud.closeModals.update}
         opened={crud.modals.update}
       />
       <ConfirmationModal
         opened={crud.modals.delete}
-        onClose={() => crud.setModals.setDelete(false)}
-        onConfirm={() => crud.confirmDelete}
+        onClose={crud.closeModals.delete}
+        onConfirm={crud.confirmDelete}
         title="Confirmar Exclusão"
         confirmLabel="Sim, Excluir"
         confirmColor="red"

@@ -13,6 +13,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: #7439FA;
+  --color-softWhite: #fafafaa9;
   --font-sans: var(--font-inter);
 }
 
@@ -21,4 +22,8 @@ body {
   color: var(--foreground);
   font-family: var(--font-inter);
   font-size: 1rem;
+}
+
+.form-card-grid {
+  @apply border border-neutral-300 p-4 md:p-6 rounded-xl grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3;
 }

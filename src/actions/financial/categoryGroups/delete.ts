@@ -3,7 +3,7 @@
 import { protectedAction } from "@/lib/auth-guards";
 import { CategoryGroupsService } from "@/services/financial/categoryGroups.service";
 import { ActionResult } from "@/types/action-result.types";
-import { getErrorMessage } from "@/utils/getErrorMessage";
+import { handleServerActionError } from "@/utils/handlerApiErrors";
 import { revalidatePath } from "next/cache";
 
 export const deleteCategoryGroups = protectedAction(
@@ -14,19 +14,16 @@ export const deleteCategoryGroups = protectedAction(
         error: "Nenhum ID fornecido para exclusão.",
       };
     }
-    
-    try {
-      await CategoryGroupsService.deleteMany(user.tenancyId, ids)
 
-      revalidatePath("/system/financial/category-groups", "page");
-      ids.forEach((id) => revalidatePath(`/system/financial/category-groups/${id}`, "page"))
+    try {
+      const service = await CategoryGroupsService.deleteMany(user.tenancyId, ids)
+
+      revalidatePath("/system/financial/category-groups");
 
       return { success: true };
     } catch (error: unknown) {
-      return {
-        error: getErrorMessage(error, "Erro ao deletar grupo."),
-        success: false,
-      };
+      const result = handleServerActionError(error);
+      return { success: false, error: result.error ?? "Erro ao deletar grupo." };
     }
   }
 );

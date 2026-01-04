@@ -1,6 +1,8 @@
 import { Decimal } from 'decimal.js';
 import { CategoryBill } from './category.types';
 import { FormsOfReceipt } from './receipt.types';
+import { Bank } from './bank.types';
+import { Supplier } from './supplier.types';
 
 export enum BillType {
     PAYABLE = 'PAYABLE',
@@ -42,7 +44,7 @@ export type Bill = {
     id: string;
     type: BillType;
     description: string;
-    amount: Decimal | null;
+    amount: Decimal;
     amountPaid: Decimal | null;
     dueDate: Date;
     paymentDate: Date | null;
@@ -83,11 +85,6 @@ export type Bill = {
     formsOfReceipt: FormsOfReceipt | null,
 };
 
-export type BillWithCategory = Bill & {
-    category?: CategoryBill | null;
-};
-
-
 export type BillAttachment = {
     id: string;
     url: string;
@@ -96,3 +93,17 @@ export type BillAttachment = {
     createdAt: Date;
 };
 
+export type BillWithCategory = Bill & {
+    category?: CategoryBill | null;
+};
+
+export type BillWithAttachment = Bill & {
+    attachments?: BillAttachment[];
+};
+
+export type BillComplete = Bill & {
+    category?: CategoryBill;
+    bank?: Bank;
+    totalInstallments: number;
+    supplier?: Supplier;
+};

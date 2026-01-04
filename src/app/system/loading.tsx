@@ -1,21 +1,11 @@
 "use client";
 
-import { Loader, Paper, Text } from "@mantine/core";
+import { Loader } from "@mantine/core";
 
 export default function LoadingSystem() {
   return (
-    <main className="flex h-screen items-center justify-center bg-neutral-100 px-6">
-      <Paper shadow="md" radius="lg" p="xl" className="flex items-center gap-4">
-        <Loader color="violet" size="lg" type="oval" aria-label="Carregando" />
-        <div className="flex flex-col">
-          <Text fw={600} size="lg" className="text-neutral-800">
-            Carregando módulo
-          </Text>
-          <Text size="sm" c="dimmed">
-            Buscando dados do painel solicitado.
-          </Text>
-        </div>
-      </Paper>
-    </main>
-  );
+    <div className="text-center flex flex-col items-center justify-center min-h-lvh w-full bg-softWhite! fixed top-0 left-0 z-999999 backdrop-blur-sm">
+      <Loader type="dots" color="#7439FA" size="xl"/>;
+    </div>
+  )
 }

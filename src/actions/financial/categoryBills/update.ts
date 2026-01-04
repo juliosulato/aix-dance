@@ -4,7 +4,7 @@ import { protectedAction } from "@/lib/auth-guards";
 import { UpdateCategoryBillInput, updateCategoryBillSchema } from "@/schemas/financial/category-bill.schema";
 import { CategoryBillsService } from "@/services/financial/categoryBills.service";
 import { ActionState } from "@/types/server-actions.types";
-import { getErrorMessage } from "@/utils/getErrorMessage";
+import { handleServerActionError } from "@/utils/handlerApiErrors";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 
@@ -17,6 +17,7 @@ export const updateCategoryBill = protectedAction(
     const rawData = Object.fromEntries(formData.entries());
 
     const validatedData = updateCategoryBillSchema.safeParse(rawData);
+    console.log(rawData, validatedData)
 
     if (!validatedData.success) {
       const flattenedErrors = z.flattenError(validatedData.error);
@@ -27,6 +28,7 @@ export const updateCategoryBill = protectedAction(
       };
     }
 
+
     try {
       await CategoryBillsService.update(user.tenancyId, validatedData.data)
 
@@ -35,11 +37,7 @@ export const updateCategoryBill = protectedAction(
       return { success: true };
     } catch (error: unknown) {
       console.error("Error updating category bill:", error);
-
-      return {
-        error: getErrorMessage(error, "Erro ao atualiazar categoria de conta."),
-        success: false,
-      };
+      return handleServerActionError(error);
     }
   }
 );

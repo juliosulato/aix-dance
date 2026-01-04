@@ -69,7 +69,7 @@ export default function DataViewTable<T>({
                 <Table className="w-full" verticalSpacing="lg" horizontalSpacing="xl" withRowBorders={false} >
                     <Table.Thead>
                         <Table.Tr>
-                            <Table.Th className="!max-w-fit rounded-tl-3xl rounded-bl-3xl bg-white text-nowrap">
+                            <Table.Th className="max-w-fit! rounded-tl-3xl rounded-bl-3xl bg-white text-nowrap">
                                 <Group gap="xs">
                                     <Checkbox
                                         checked={data.length > 0 && data.every(item => selectedRows.includes(String(item[idKey])))}
@@ -122,7 +122,7 @@ export default function DataViewTable<T>({
                                     onMouseLeave={() => setRowHover(null)}
                                     className={`
                                     transition-colors duration-200 
-                                    ${baseUrl ? 'cursor-pointer hover:!bg-purple-50' : 'hover:bg-[rgb(124,58,237,0.1)]'}
+                                    ${baseUrl ? 'cursor-pointer hover:bg-purple-50!' : 'hover:bg-[rgb(124,58,237,0.1)]'}
                                 `}
                                 >
                                     <Table.Td

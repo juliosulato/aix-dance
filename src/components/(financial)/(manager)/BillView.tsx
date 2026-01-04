@@ -15,69 +15,50 @@ import {
 } from "react-icons/fa";
 import { useState } from "react";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
-import deleteBills from "../delete";
-import UpdateBill from "../modals/UpdateBill";
 import dayjs from "dayjs";
-import { BillFromApi } from "..";
 
-// Local augmentation: the API returns attachments for bills; add a minimal type
-type Attachment = { id: string; url: string; createdAt: string };
-type BillWithAttachments = BillFromApi & { attachments?: Attachment[] };
 import { StatusTextToBadge } from "@/utils/statusTextToBadge";
 import { Divider, Flex, Text } from "@mantine/core";
 import Link from "next/link";
 import { Button } from "@mantine/core";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
-import PayBill from "../modals/PayBill";
-import { useSession } from "@/lib/auth-client";
-import useSWR from "swr";
-import { fetcher } from "@/utils/fetcher";
+import PayBill from "./PayBill";
+import {
+  BillAttachment,
+  BillComplete,
+  BillWithAttachment,
+} from "@/types/bill.types";
+import { deleteBills } from "@/actions/financial/bills/delete";
+import { useCrud } from "@/hooks/useCrud";
+import BillFormModal from "./BillFormModal/BillFormModal";
+import { SessionData } from "@/lib/auth-server";
+import { Bank } from "@/types/bank.types";
+import { Supplier } from "@/types/supplier.types";
+import { CategoryBill } from "@/types/category.types";
+import Decimal from "decimal.js";
+import { formatCurrency } from "@/utils/formatCurrency";
 
-export default function BillView({ id }: { id: string }) {
-  const session = useSession();
-  const tenancyId = session?.data?.user.tenancyId as string;
-  const { data: bill, error } = useSWR<BillFromApi>(
-    `/api/v1/tenancies/${tenancyId}/bills/${id}`,
-    fetcher
-  );
-
-  const [openUpdate, setOpenUpdate] = useState<boolean>(false);
+type Props = {
+  banks: Bank[];
+  suppliers: Supplier[];
+  categories: CategoryBill[];
+  bill: BillComplete;
+  user: SessionData["user"];
+};
+export default function BillView({
+  bill,
+  user,
+  banks,
+  categories,
+  suppliers
+}: Props) {
   const [openPayBill, setOpenPayBill] = useState<boolean>(false);
-  const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
-  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-  const handleDelete = async () => {
-    setIsDeleting(true);
-    try {
-      await deleteBills([bill?.id || "-"], tenancyId);
-      window.location.replace("/system/financial/manager");
-    } catch (error) {
-      console.error("Falha ao excluir a conta:", error);
-    } finally {
-      setIsDeleting(false);
-      setConfirmModalOpen(false);
-    }
-  };
+  const crud = useCrud<BillComplete>({ deleteAction: deleteBills, redirectUrl: "/system/financial/manager" });
 
-  const formatCurrency = (value: number | null | undefined) => {
-    if (value == null) return "-";
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(value);
-  };
 
   const isInstallmentParent =
     bill?.children && bill?.children.length > 0 && bill?.installments > 1;
-
-    if (error) {
-        console.error("Falha ao carregar os dados da conta:", error);
-        return <div>Falha ao carregar os dados da conta.</div>;
-    }
-
-    if (!bill) {
-        return <div>Carregando...</div>;
-    }
 
   return (
     <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-6">
@@ -88,18 +69,19 @@ export default function BillView({ id }: { id: string }) {
         <div className="flex gap-4 md:gap-6">
           <button
             className="text-red-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition"
-            onClick={() => setConfirmModalOpen(true)}
+            onClick={() => crud.handleDelete(bill)}
           >
             <FaTrash />
             <span>{"Excluir"}</span>
           </button>
           <button
             className="text-primary flex items-center gap-2 cursor-pointer hover:opacity-50 transition"
-            onClick={() => setOpenUpdate(true)}
+            onClick={() => crud.handleUpdate(bill)}
           >
             <FaEdit />
             <span>{"Atualizar"}</span>
           </button>
+
           {bill.status !== "PAID" && (
             <button
               className="text-green-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition"
@@ -132,7 +114,7 @@ export default function BillView({ id }: { id: string }) {
           )}
         </InfoTerm>
         <InfoTerm label={"Valor"} icon={<FaFileInvoiceDollar />}>
-          {formatCurrency(bill.amount?.toNumber())}
+          {formatCurrency(bill.amount instanceof Decimal ? bill.amount?.toNumber() : bill.amount || 0)}
         </InfoTerm>
         <InfoTerm label={"Vencimento"} icon={<FaCalendarAlt />}>
           {dayjs(bill.dueDate).format("DD/MM/YYYY")}
@@ -182,7 +164,6 @@ export default function BillView({ id }: { id: string }) {
           </InfoTerm>
         )}
 
-        {/* ADICIONADO: Link para a venda associada */}
         {bill.saleId && (
           <InfoTerm
             label="Venda de Origem"
@@ -236,62 +217,85 @@ export default function BillView({ id }: { id: string }) {
         </div>
       )}
 
-      <UpdateBill
-        bill={bill as any}
-        onClose={() => setOpenUpdate(false)}
-        opened={openUpdate}
-        mutate={() => window.location.reload() as any}
+      <BillFormModal
+        isEditing={bill}
+        onClose={() => crud.closeModals.update()}
+        opened={crud.modals.update}
+        banks={banks}
+        categories={categories}
+        suppliers={suppliers}
+        user={user}
       />
+
       <PayBill
         bill={bill as any}
         onClose={() => setOpenPayBill(false)}
         opened={openPayBill}
-        mutate={() => window.location.reload() as any}
+        banks={banks}
       />
       <ConfirmationModal
-        opened={isConfirmModalOpen}
-        onClose={() => setConfirmModalOpen(false)}
-        onConfirm={handleDelete}
+        opened={crud.modals.delete}
+        onClose={() => crud.closeModals.delete()}
+        onConfirm={() => crud.confirmDelete()}
         title={"Confirmar Exclusão"}
         confirmLabel={"Excluir"}
         cancelLabel={"Cancelar"}
-        loading={isDeleting}
+        loading={crud.isDeleting}
       >
         {`Tem certeza de que deseja excluir a conta com vencimento em ${
           dayjs(bill?.dueDate).format("DD/MM/YYYY") || ""
         }?`}
       </ConfirmationModal>
       {/* Attachments list with download buttons */}
-  {((bill as any) as BillWithAttachments).attachments && ((bill as any) as BillWithAttachments).attachments!.length > 0 && (
-        <div>
-          <Divider my="lg" label="Anexos" labelPosition="center" />
-          <div className="flex flex-col gap-3 mt-4">
-            {((bill as any) as BillWithAttachments).attachments!.map((att: Attachment) => (
-              <div key={att.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div>
-                  <Text size="sm" fw={500}>{att.url.split('/').pop()}</Text>
-                  <Text size="xs" c="dimmed">Anexado em: {dayjs(att.createdAt).format('DD/MM/YYYY HH:mm')}</Text>
-                </div>
-                <div className="flex gap-2">
-                  <Button size="xs" variant="light" onClick={async () => {
-                    try {
-                      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/bill-attachments/${att.id}/url`);
-                      if (!res.ok) throw new Error('Failed to fetch attachment URL');
-                      const data = await res.json();
-                      const url = data.url || att.url;
-                      window.open(url, '_blank');
-                    } catch (e) {
-                      console.error('Download failed', e);
-                      // fallback: open stored URL
-                      window.open(att.url, '_blank');
-                    }
-                  }}>Baixar</Button>
-                </div>
-              </div>
-            ))}
+      {(bill as any as BillWithAttachment).attachments &&
+        (bill as any as BillWithAttachment).attachments!.length > 0 && (
+          <div>
+            <Divider my="lg" label="Anexos" labelPosition="center" />
+            <div className="flex flex-col gap-3 mt-4">
+              {(bill as any as BillWithAttachment).attachments!.map(
+                (att: BillAttachment) => (
+                  <div
+                    key={att.id}
+                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                  >
+                    <div>
+                      <Text size="sm" fw={500}>
+                        {att.url.split("/").pop()}
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        Anexado em:{" "}
+                        {dayjs(att.createdAt).format("DD/MM/YYYY HH:mm")}
+                      </Text>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        size="xs"
+                        variant="light"
+                        onClick={async () => {
+                          try {
+                            const res = await fetch(
+                              `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user.tenancyId}/bill-attachments/${att.id}/url`
+                            );
+                            if (!res.ok)
+                              throw new Error("Failed to fetch attachment URL");
+                            const data = await res.json();
+                            const url = data.url || att.url;
+                            window.open(url, "_blank");
+                          } catch (e) {
+                            console.error("Download failed", e);
+                            window.open(att.url, "_blank");
+                          }
+                        }}
+                      >
+                        Baixar
+                      </Button>
+                    </div>
+                  </div>
+                )
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
     </div>
   );
 }

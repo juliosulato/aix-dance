@@ -1,0 +1,211 @@
+"use client";
+
+import { fetcher } from "@/utils/fetcher";
+import { useState } from "react";
+import useSWR, { KeyedMutator } from "swr";
+import { Text, Tabs, Button, LoadingOverlay } from "@mantine/core";
+import ConfirmationModal from "@/components/ui/ConfirmationModal";
+import DataView from "@/components/ui/DataView";
+
+import dayjs from "dayjs";
+import PayBill from "./PayBill";
+import { IoAdd } from "react-icons/io5";
+import { BillComplete } from "@/types/bill.types";
+import { SessionData } from "@/lib/auth-server";
+import { useCrud } from "@/hooks/useCrud";
+import { deleteBills } from "@/actions/financial/bills/delete";
+import { billListColumns } from "./billListColumns";
+import BillRowMenu from "./BillRowMenu";
+import BillCard from "./BillCard";
+import BillBulkMenu from "./BillBulkMenu";
+import { useBillsData } from "@/hooks/useBillsData";
+import { Bank } from "@/types/bank.types";
+import { Supplier } from "@/types/supplier.types";
+import { CategoryBill } from "@/types/category.types";
+import { PaginatedListResponse } from "@/utils/pagination";
+import BillFormModal from "./BillFormModal/BillFormModal";
+
+type Props = {
+  user: SessionData["user"];
+  banks: Bank[];
+  suppliers: Supplier[];
+  categories: CategoryBill[];
+};
+
+type MutateType = KeyedMutator<BillComplete[]>;
+
+export default function BillsList({
+  user,
+  banks,
+  suppliers,
+  categories,
+}: Props) {
+  const { data, error, isLoading, mutate } = useSWR<
+    PaginatedListResponse<BillComplete>
+  >(`/api/v1/tenancies/${user.tenancyId}/bills`, fetcher);
+
+  const billsData = useBillsData(data?.data || []);
+
+  const [openPayBill, setOpenPayBill] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<string | null>("payable");
+  const [deleteScope, setDeleteScope] = useState<"ONE" | "ALL_FUTURE">("ONE");
+
+
+  const handleDeleteAction = async (ids: string[]) => {
+    if (ids.length === 1) {
+       return deleteBills({ 
+           id: ids[0], 
+           scope: deleteScope 
+       });
+    }
+    
+    return deleteBills(ids);
+  };
+
+  const handlePrepareDelete = (bill: BillComplete, scope: "ONE" | "ALL_FUTURE" = "ONE") => {
+    setDeleteScope(scope); 
+    crud.handleDelete(bill); 
+  };
+
+  const crud = useCrud<BillComplete>({
+    deleteAction: handleDeleteAction,
+    mutate: mutate as MutateType,
+  });
+
+  if (error) {
+    return <p>ERRO 503</p>;
+  }
+
+  if (isLoading) {
+    return <LoadingOverlay visible />;
+  }
+  return (
+    <>
+      <DataView<BillComplete>
+        data={billsData}
+        baseUrl="/system/financial/manager/"
+        mutate={mutate}
+        pageTitle={`${"Contas"}`}
+        searchbarPlaceholder={"Pesquisar contas..."}
+        dateFilterOptions={[
+          { key: "dueDate", label: "Data de Vencimento" },
+          { key: "createdAt", label: "Data de Criação" },
+        ]}
+        columns={billListColumns}
+        renderHead={() => (
+          <>
+            <Tabs
+              variant="pills"
+              classNames={{
+                tab: "!px-6 !py-4 font-medium! !rounded-2xl",
+                root: "p-1! !bg-white !rounded-2xl shadow-sm",
+              }}
+              value={activeTab}
+              onChange={setActiveTab}
+            >
+              <Tabs.List>
+                <Tabs.Tab value="payable">{"A Pagar"}</Tabs.Tab>
+                <Tabs.Tab value="receivable">{"A Receber"}</Tabs.Tab>
+              </Tabs.List>
+            </Tabs>
+            {activeTab == "payable" && (
+              <Button
+                type="button"
+                color="#7439FA"
+                radius="lg"
+                size="lg"
+                className="text-sm! font-medium! tracking-wider ml-auto min-w-full w-full md:min-w-fit md:w-fit"
+                rightSection={<IoAdd />}
+                onClick={() => crud.setModals.setCreate(true)}
+              >
+                {"Nova Conta"}
+              </Button>
+            )}
+          </>
+        )}
+        RenderRowMenu={(item) => (
+          <BillRowMenu
+            bill={item}
+            onUpdateClick={crud.handleUpdate}
+            onDeleteClick={handlePrepareDelete}
+            setOpenPayBill={() => setOpenPayBill(true)}
+            setSelectedItems={crud.setSelectedItem}
+          />
+        )}
+        RenderAllRowsMenu={(selectedIds) => (
+          <BillBulkMenu
+            selectedIds={selectedIds}
+            onBulkDeleteClick={(ids) => {
+                setDeleteScope("ONE");
+                crud.handleBulkDelete(ids);
+            }}
+          />
+        )}
+        renderCard={(item: BillComplete) => (
+          <BillCard crud={crud} item={item} setOpenPayBill={setOpenPayBill} />
+        )}
+      />
+
+      <BillFormModal
+        key={`new-${crud.formVersion}`}
+        opened={crud.modals.create}
+        onClose={crud.closeModals.create}
+        mutate={mutate as MutateType}
+        banks={banks}
+        suppliers={suppliers}
+        categories={categories}
+        user={user}
+      />
+
+      {crud.selectedItem && (
+        <BillFormModal
+          key={`update-${crud.formVersion}`}
+          opened={crud.modals.update}
+          onClose={crud.closeModals.update}
+          mutate={mutate as MutateType}
+          banks={banks}
+          categories={categories}
+          suppliers={suppliers}
+          user={user}
+          isEditing={crud.selectedItem}
+        />
+      )}
+
+      {crud.selectedItem && (
+        <PayBill
+          banks={banks}
+          opened={openPayBill}
+          onClose={() => {
+            setOpenPayBill(false);
+            crud.setSelectedItem(null);
+          }}
+          bill={crud.selectedItem}
+          mutate={mutate as MutateType}
+        />
+      )}
+
+      <ConfirmationModal
+        opened={crud.modals.delete}
+        onClose={crud.closeModals.delete}
+        onConfirm={crud.confirmDelete}
+        title={"Confirmar Exclusão"}
+        confirmLabel={"Excluir"}
+        cancelLabel={"Cancelar"}
+        loading={crud.isDeleting}
+      >
+         {crud.idsToDelete.length > 0 ? (
+           "Tem certeza que deseja excluir as contas selecionadas?"
+        ) : deleteScope === 'ALL_FUTURE' ? (
+           `Tem certeza que deseja excluir ESTA conta (${dayjs(crud.selectedItem?.dueDate).format("DD/MM/YYYY")}) e TODAS as futuras desta série?`
+        ) : (
+           `Tem certeza que deseja excluir a conta com vencimento em ${dayjs(crud.selectedItem?.dueDate).format("DD/MM/YYYY") || ""}?`
+        )}
+
+        <br />
+        <Text component="span" c="red" size="sm" fw={500} mt="md">
+          Aviso: ação irreversível.
+        </Text>
+      </ConfirmationModal>
+    </>
+  );
+}

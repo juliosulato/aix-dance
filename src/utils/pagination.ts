@@ -1,8 +1,6 @@
 export type PaginatedListResponse<T> = {
-  items?: T[];
-  students?: T[];
-  products?: T[];
-  pagination?: {
+  data: T[];
+  meta?: {
     page: number;
     limit: number;
     total: number;

@@ -6,7 +6,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 export const CategoryGroupsService = {
   create(tenancyId: string, data: CreateCategoryGroupInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/category-groups`,
+      `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/groups`,
       {
         method: "POST",
         body: JSON.stringify(data),
@@ -16,7 +16,7 @@ export const CategoryGroupsService = {
 
   update(tenancyId: string, data: UpdateCategoryGroupInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/category-groups`,
+      `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/groups/${data.id}`,
       {
         method: "PUT",
         body: JSON.stringify(data),
@@ -26,7 +26,7 @@ export const CategoryGroupsService = {
 
   deleteMany(tenancyId: string, ids: string[]) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/category-groups`,
+      `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/groups`,
       {
         method: "DELETE",
         body: JSON.stringify({ ids }),

@@ -3,7 +3,7 @@
 import { protectedAction } from "@/lib/auth-guards";
 import { CategoryBillsService } from "@/services/financial/categoryBills.service";
 import { ActionResult } from "@/types/action-result.types";
-import { getErrorMessage } from "@/utils/getErrorMessage";
+import { handleServerActionError } from "@/utils/handlerApiErrors";
 import { revalidatePath } from "next/cache";
 
 export const deleteCategoryBills = protectedAction(
@@ -23,10 +23,8 @@ export const deleteCategoryBills = protectedAction(
 
       return { success: true };
     } catch (error: unknown) {
-      return {
-        error: getErrorMessage(error, "Erro ao deletar categoria."),
-        success: false,
-      };
+      const result = handleServerActionError(error);
+      return { success: false, error: result.error ?? "Erro ao deletar categoria." };
     }
   }
 );

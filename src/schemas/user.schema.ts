@@ -26,15 +26,7 @@ const teacherSchema = z.object({
   instagramUser: z.string().optional(),
   professionalRegister: z.string().optional(),
   address: addressSchema.optional(),
-  dateOfBirth: z.string()
-    .refine((value) => {
-      const parsed = parseBirthDate(value);
-      if (!parsed.isValid()) return false;
-      if (parsed.isBefore(MIN_BIRTH_DATE)) return false;
-      if (parsed.isAfter(MAX_BIRTH_DATE)) return false;
-      return true;
-    }, { message: "Data de nascimento inválida" })
-    .transform((value) => parseBirthDate(value).format("YYYY-MM-DD")),
+  dateOfBirth: z.coerce.date("Data de nascimento inválida"),
   remunerationType: z.enum(RemunerationType, { error: "Tipo de remuneração é obrigatório" }),
   baseAmount: z.number({ error: "Valor base é obrigatório" }).min(1, "O valor base deve ser no mínimo 1"),
   paymentDay: z.number().int().min(1).max(31).default(5).optional(),

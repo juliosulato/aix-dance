@@ -13,7 +13,7 @@ export const createCategoryBillSchema = z.object({
   parentId: z.string().optional().nullable(),
 });
 
-export const updateCategoryBillSchema = createCategoryBillSchema.partial();
+export const updateCategoryBillSchema = createCategoryBillSchema.partial().extend({ id: z.cuid2() });
 
 export type CreateCategoryBillInput = z.infer<typeof createCategoryBillSchema>;
 export type UpdateCategoryBillInput = z.infer<typeof updateCategoryBillSchema>;

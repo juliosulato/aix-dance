@@ -13,11 +13,22 @@ export const fetcher = async <T = any>(url: string): Promise<T> => {
       "Content-Type": "application/json",
     }
   });
+  const contentType = res.headers.get("content-type") || "";
 
   if (!res.ok) {
-    const errorData = await res.json().catch(() => null);
-    throw new Error(errorData?.message || `Erro ${res.status}: ${res.statusText}`);
+    if (contentType.includes("application/json")) {
+      const errorData = await res.json().catch(() => null);
+      throw new Error(errorData?.message || `Erro ${res.status}: ${res.statusText}`);
+    }
+
+    const bodyText = await res.text().catch(() => "");
+    throw new Error(`Erro ${res.status}: ${res.statusText} — resposta não-JSON: ${bodyText.slice(0,1000)}`);
   }
 
-  return res.json();
+  if (contentType.includes("application/json")) {
+    return res.json();
+  }
+
+  const bodyText = await res.text().catch(() => "");
+  throw new Error(`Resposta inválida: esperado JSON, recebido ${contentType}. Corpo: ${bodyText.slice(0,1000)}`);
 };

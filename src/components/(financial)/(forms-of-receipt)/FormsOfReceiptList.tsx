@@ -1,15 +1,14 @@
 "use client";
 import DataView from "@/components/ui/DataView";
-import NewFormsOfReceipt from "./NewFormsOfReceipt";
 import { ActionIcon, Menu, Text } from "@mantine/core";
 import { BiDotsVerticalRounded, BiTrash } from "react-icons/bi";
 import dayjs from "dayjs";
 import { GrUpdate } from "react-icons/gr";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
-import UpdateFormsOfReceipt from "./UpdateFormsOfReceipt";
 import { FormsOfReceipt } from "@/types/receipt.types";
 import { useCrud } from "@/hooks/useCrud";
 import { deleteFormOfReceipt } from "@/actions/financial/formsOfReceipt/delete";
+import FormsOfReceiptModal from "./FormsOfReceiptModal";
 
 interface MenuItemProps {
   formsOfReceipt: FormsOfReceipt;
@@ -86,7 +85,7 @@ export default function FormsOfReceiptList({ formsOfReceipt }: Props) {
       <DataView<FormsOfReceipt>
         data={formsOfReceipt || []}
         openNewModal={{
-          func: () => crud.handleCreate,
+          func: crud.handleCreate,
           label: "Nova Forma de Recebimento",
         }}
         baseUrl="/system/financial/forms-of-receipt/"
@@ -95,6 +94,7 @@ export default function FormsOfReceiptList({ formsOfReceipt }: Props) {
         columns={[
           { key: "name", label: "Nome" },
           { key: "operator", label: "Operador" },
+          { key: "createdAt", label: "Criado em", render: (item) => dayjs(item.createdAt).format("DD/MM/YYYY [às] HH[h]mm") },
         ]}
         RenderRowMenu={(item) => (
           <MenuItem
@@ -135,23 +135,25 @@ export default function FormsOfReceiptList({ formsOfReceipt }: Props) {
         )}
       />
 
-      <NewFormsOfReceipt
+      <FormsOfReceiptModal
         opened={crud.modals.create}
-        onClose={() => crud.setModals.setCreate(false)}
+        onClose={crud.closeModals.create}
+        key={"new-" + crud.formVersion}
       />
 
       {crud.selectedItem && (
-        <UpdateFormsOfReceipt
+        <FormsOfReceiptModal
           opened={crud.modals.update}
-          onClose={() => crud.setModals.setUpdate(false)}
+          onClose={crud.closeModals.update}
           selectedItem={crud.selectedItem}
+          key={"update-" + crud.formVersion}
         />
       )}
 
       <ConfirmationModal
-              opened={crud.modals.delete}
-              onClose={() => crud.setModals.setDelete(false)}
-              onConfirm={() => crud.confirmDelete}
+        opened={crud.modals.delete}
+        onClose={crud.closeModals.delete}
+        onConfirm={crud.confirmDelete}
         title={"Excluir Forma de Recebimento"}
         confirmLabel={"Excluir"}
         cancelLabel={"Cancelar"}

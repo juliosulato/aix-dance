@@ -5,12 +5,12 @@ import { UpdateCategoryBillInput } from "@/schemas/financial/category-bill.schem
 import { updateCategoryGroupSchema } from "@/schemas/financial/category-group.schema";
 import { CategoryGroupsService } from "@/services/financial/categoryGroups.service";
 import { ActionState } from "@/types/server-actions.types";
-import { getErrorMessage } from "@/utils/getErrorMessage";
+import { handleServerActionError } from "@/utils/handlerApiErrors";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 
 export const updateCategoryGroup = protectedAction(async (user, _prevState, formData: FormData): Promise<ActionState<UpdateCategoryBillInput>> => {
-    const rawData = Object.entries(formData.entries());
+    const rawData = Object.fromEntries(formData.entries());
     const validatedData = updateCategoryGroupSchema.safeParse(rawData);
 
     if (!validatedData.success) {
@@ -31,9 +31,6 @@ export const updateCategoryGroup = protectedAction(async (user, _prevState, form
         return { success: true }
     } catch (error: unknown) {
         console.error("Error creating category groups.");
-        return {
-            error: getErrorMessage(error, "Erro ao criar grupos."),
-            success: false
-        }
+        return handleServerActionError(error);
     }
 })

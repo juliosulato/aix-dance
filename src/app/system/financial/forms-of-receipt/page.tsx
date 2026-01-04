@@ -8,6 +8,7 @@ export default async function FormsOfReceiptsPage() {
     const { user } = await requireAuth();
     
     const formsOfReceipt = await serverFetch<FormsOfReceipt[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user.tenancyId}/forms-of-receipt`)
+    
 
     return (
         <main>
@@ -19,11 +20,11 @@ export default async function FormsOfReceiptsPage() {
                     { label: "Formas de Recebimento", href: "/system/financial/forms-of-receipt" },
                     { label: "Categorias", href: "/system/financial/categories" },
                     { label: "Grupos", href: "/system/financial/category-groups" },
-                    { label: "Contas Bancárias", href: "/system/financial/bank-accounts" },
+                    { label: "Contas Bancárias", href: "/system/financial/banks" },
                     { label: "Relatórios", href: "/system/financial/reports" },
                 ]} />
             <br />
-            <FormsOfReceiptsView formsOfReceipt={formsOfReceipt}/>
+            <FormsOfReceiptsView formsOfReceipt={formsOfReceipt.data}/>
         </main>
     );
 }

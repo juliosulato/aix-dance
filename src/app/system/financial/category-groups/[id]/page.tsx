@@ -8,7 +8,7 @@ export default async function CategoryGroupsPage({ params }: { params: Promise<{
     const { id } = await params;
     const { user } = await requireAuth();
     
-    const categoryGroup = await serverFetch<CategoryGroup>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user.tenancyId}/category-groups/${id}`);
+    const categoryGroup = await serverFetch<CategoryGroup>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user.tenancyId}/categories/groups/${id}`);
 
     return (
         <main>
@@ -20,11 +20,11 @@ export default async function CategoryGroupsPage({ params }: { params: Promise<{
                     { label: "Formas de Recebimento", href: "/system/financial/forms-of-receipt" },
                     { label: "Categorias", href: "/system/financial/categories" },
                     { label: "Grupos", href: "/system/financial/category-groups" },
-                    { label: "Contas Bancárias", href: "/system/financial/bank-accounts" },
+                    { label: "Contas Bancárias", href: "/system/financial/banks" },
                     { label: "Relatórios", href: "/system/financial/reports" },
                 ]} />
             <br />
-            <CategoryGroupView categoryGroup={categoryGroup}/>
+            <CategoryGroupView categoryGroup={categoryGroup.data}/>
         </main>
     );
 }

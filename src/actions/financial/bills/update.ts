@@ -1,15 +1,29 @@
 "use server";
 
 import { protectedAction } from "@/lib/auth-guards";
-import { CreateBillInput, updateBillSchema } from "@/schemas/financial/bill.schema";
+import { UpdateBillInput, updateBillSchema } from "@/schemas/financial/bill.schema";
 import { BillsService } from "@/services/financial/bills.service";
 import { ActionState } from "@/types/server-actions.types";
-import { getErrorMessage } from "@/utils/getErrorMessage";
+import { handleServerActionError } from "@/utils/handlerApiErrors";
+import { revalidatePath } from "next/cache";
 import z from "zod";
 
-export const updateBill = protectedAction(async (user, _prevState, formData: FormData): Promise<ActionState<CreateBillInput>> => {
-    const rawData = Object.entries(formData.entries());
-    const validatedData = updateBillSchema.safeParse(rawData);
+export const updateBill = protectedAction(async (user, _prevState: ActionState<UpdateBillInput>, formData: FormData): Promise<ActionState<UpdateBillInput>> => {
+    const rawData = Object.fromEntries(formData.entries());
+
+    const inputForValidation: any = { ...rawData };
+    if (rawData.amount !== undefined && rawData.amount !== null && rawData.amount !== "") {
+        inputForValidation.amount = String(rawData.amount);
+    }
+
+    if (rawData.amountPaid !== undefined && rawData.amountPaid !== null && rawData.amountPaid !== "") {
+        const cleaned = String(rawData.amountPaid).replace(/\./g, '').replace(',', '.');
+        const num = Number(cleaned);
+        inputForValidation.amountPaid = Number.isNaN(num) ? undefined : num;
+    }
+
+    const validatedData = updateBillSchema.safeParse(inputForValidation);
+    console.log(rawData, validatedData);
 
     if (!validatedData.success) {
         const flattenedErrors = z.flattenError(validatedData.error);
@@ -20,14 +34,19 @@ export const updateBill = protectedAction(async (user, _prevState, formData: For
         }
     }
 
+    const payload = {
+        ...validatedData.data,
+        paymentDate: validatedData.data.paymentDate ? new Date(validatedData.data.paymentDate) : undefined,
+    }
+
+    revalidatePath("/system/financial/manager/" + payload.id);
+
     try {
-        await BillsService.update(user.tenancyId, validatedData.data);
+        const response = await BillsService.update(user.tenancyId, payload);
+        console.log(response, validatedData.data);
 
         return { success: true }
     } catch (error) {
-        return {
-            error: getErrorMessage(error, "Erro inesperado ao atualizar cobrança. Tente novamente mais tarde."),
-            success: false
-        }
+        return handleServerActionError(error);
     }
 })

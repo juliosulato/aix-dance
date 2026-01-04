@@ -22,7 +22,7 @@ export const createFormsOfReceiptSchema = z.object({
     path: ['fees']
 });
 
-export const updateFormsOfReceiptSchema = createFormsOfReceiptSchema.partial();
+export const updateFormsOfReceiptSchema = createFormsOfReceiptSchema.partial().extend({ id: z.cuid2() });
 
 export type CreateFormsOfReceiptInput = z.infer<typeof createFormsOfReceiptSchema>;
 export type UpdateFormsOfReceiptInput = z.infer<typeof updateFormsOfReceiptSchema>;

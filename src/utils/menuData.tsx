@@ -81,7 +81,7 @@ const useMenuData = () => {
       subitems: [
         // { icon: <MdOutlineSpaceDashboard />, label: "Resumo", href: "/system/financial/resume" },
         { icon: <PiMoneyWavy />, label: "Gerenciador", href: "/system/financial/manager/" },
-        { icon: <TbBuildingBank />, label: "Contas Bancárias", href: "/system/financial/bank-accounts" },
+        { icon: <TbBuildingBank />, label: "Contas Bancárias", href: "/system/financial/banks" },
         { icon: <MdPayment />, label: "Formas de Recebimento", href: "/system/financial/forms-of-receipt" },
         { icon: <MdOutlineCategory />, label: "Categorias", href: "/system/financial/categories" },
         { icon: <BsBox />, label: "Grupos", href: "/system/financial/category-groups" },

@@ -6,7 +6,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 export const CategoryBillsService = {
   create(tenancyId: string, data: CreateCategoryBillInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/category-bills`,
+      `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/bills`,
       {
         method: "POST",
         body: JSON.stringify(data),
@@ -16,7 +16,7 @@ export const CategoryBillsService = {
 
   update(tenancyId: string, data: UpdateCategoryBillInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/category-bills`,
+      `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/bills/${data.id}`,
       {
         method: "PUT",
         body: JSON.stringify(data),
@@ -26,7 +26,7 @@ export const CategoryBillsService = {
 
   deleteMany(tenancyId: string, ids: string[]) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/category-bills`,
+      `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/bills`,
       {
         method: "DELETE",
         body: JSON.stringify({ ids }),

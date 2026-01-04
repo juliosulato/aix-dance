@@ -3,10 +3,10 @@
 import InfoTerm from "@/components/ui/Infoterm";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
-import UpdateCategoryBill from "./UpdateCategoryBill";
 import { useCrud } from "@/hooks/useCrud";
 import { deleteCategoryBills } from "@/actions/financial/categoryBills/delete";
 import { CategoryBill, CategoryGroup } from "@/types/category.types";
+import CategoryBillFormModal from "./CategoryBillFormModal";
 
 export default function CategoryBillView({
   categoryBill,
@@ -17,7 +17,7 @@ export default function CategoryBillView({
   categoryGroups: CategoryGroup[];
   categoryBills: CategoryBill[];
 }) {
-  const crud = useCrud({ deleteAction: deleteCategoryBills });
+  const crud = useCrud({ deleteAction: deleteCategoryBills, redirectUrl: "/system/financial/categories" });
 
   return (
     <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
@@ -28,14 +28,14 @@ export default function CategoryBillView({
         <div className="flex gap-4 md:gap-6">
           <button
             className="text-red-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition"
-            onClick={() => crud.handleDelete}
+            onClick={() => crud.handleDelete(categoryBill)}
           >
             <FaTrash />
             <span>{"Excluir"}</span>
           </button>
           <button
             className="text-primary flex items-center gap-2 cursor-pointer hover:opacity-50 transition"
-            onClick={() => crud.handleUpdate}
+            onClick={() => crud.handleUpdate(categoryBill)}
           >
             <FaEdit />
             <span>{"Atualizar"}</span>
@@ -46,18 +46,19 @@ export default function CategoryBillView({
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <InfoTerm label={"Nome"}>{categoryBill.name}</InfoTerm>
 
-        <UpdateCategoryBill
-          selectedItem={categoryBill}
-          onClose={() => crud.setModals.setUpdate(false)}
+        <CategoryBillFormModal
+          categoryToEdit={categoryBill}
+          onClose={crud.closeModals.update}
           opened={crud.modals.update}
           categoryGroups={categoryGroups}
           parentCategories={categoryBills}
+          key={`update-${crud.formVersion}`}
         />
 
         <ConfirmationModal
           opened={crud.modals.delete}
-          onClose={() => crud.setModals.setDelete(false)}
-          onConfirm={() => crud.confirmDelete}
+          onClose={crud.closeModals.delete}
+          onConfirm={crud.confirmDelete}
           title={"Confirmar Exclusão"}
           confirmLabel={"Excluir"}
           cancelLabel={"Cancelar"}

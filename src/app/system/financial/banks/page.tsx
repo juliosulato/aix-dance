@@ -6,7 +6,8 @@ import { Bank } from "@/types/bank.types";
 
 export default async function BankAccountsPage() {
   const { user } = await requireAuth();
-  const banks = await serverFetch<Bank[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user?.tenancyId}/banks`)
+
+  const banks = await serverFetch<{ success: boolean; data: Bank[] }>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user?.tenancyId}/banks`)
 
   return (
     <main>
@@ -23,13 +24,13 @@ export default async function BankAccountsPage() {
           { label: "Grupos", href: "/system/financial/category-groups" },
           {
             label: "Contas Bancárias",
-            href: "/system/financial/bank-accounts",
+            href: "/system/financial/banks",
           },
           { label: "Relatórios", href: "/system/financial/reports" },
         ]}
       />
       <br />
-      <BankAccountsList banks={banks} />
+      <BankAccountsList banks={banks.data} />
     </main>
   );
 }

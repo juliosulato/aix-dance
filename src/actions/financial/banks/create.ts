@@ -7,7 +7,7 @@ import {
 } from "@/schemas/financial/bank.schema";
 import { BanksService } from "@/services/financial/banks.service";
 import { ActionState } from "@/types/server-actions.types";
-import { getErrorMessage } from "@/utils/getErrorMessage";
+import { handleServerActionError } from "@/utils/handlerApiErrors";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 
@@ -19,6 +19,7 @@ export const createBank = protectedAction(
   ): Promise<ActionState<CreateBankInput>> => {
     const rawData = Object.fromEntries(formData.entries());
     const validatedData = createBankSchema.safeParse(rawData);
+    console.log(validatedData, rawData)
 
     if (!validatedData.success) {
       const flattenedErrors = z.flattenError(validatedData.error);
@@ -32,13 +33,12 @@ export const createBank = protectedAction(
     try {
       await BanksService.create(user.tenancyId, validatedData.data)
 
+      revalidatePath("/system/financial/manager", "page");
       revalidatePath("/system/financial/banks", "page")
+      
       return { success: true };
     } catch (error: unknown) {
-      return {
-        error: getErrorMessage(error, "Erro ao criar conta bancária."),
-        success: false,
-      };
+      return handleServerActionError(error);
     }
   }
 );

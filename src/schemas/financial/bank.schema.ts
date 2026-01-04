@@ -6,8 +6,8 @@ export const createBankSchema = z.object({
   agency: z.string().optional(),
   account: z.string().optional(),
   description: z.string().optional(),
-  maintenanceFeeAmount: z.string().transform((val) => val === '' ? null : Number(val)).optional().default(0),
-  maintenanceFeeDue: z.string().transform((val) => val === '' ? null : Number(val)).nullable().optional(),
+  maintenanceFeeAmount: z.string().transform((val) => val === '' ? null : Number(val.replace(/\,/g, '.'))).optional().default(0),
+  maintenanceFeeDue: z.string().transform((val) => val === '' ? null : Number(val.replace(/\,/g, '.'))).nullable().optional(),
 });
 
 export const updateBankSchema = createBankSchema.partial().extend({ id: z.string().min(1, { message: 'ID da conta bancária é obrigatório' }) });

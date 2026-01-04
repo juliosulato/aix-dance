@@ -3,11 +3,29 @@
 ![Mantine](https://img.shields.io/badge/Mantine-UI-4B4F6D?style=for-the-badge)
 ![Docker](https://img.shields.io/badge/Docker-Container-blue?style=for-the-badge&logo=docker)
 
-# AIX Dance — Sistema ERP para Escolas e Estúdios de Dança
+# AIX Dance — SaaS de Gestão para Escolas e Estúdios de Dança
 
-Projeto SaaS moderno baseado em Next.js 16 (App Router) e TypeScript, voltado para gestão de escolas e estúdios de dança. O repositório segue uma arquitetura enxuta com Separation of Concerns: UI, regras de negócio e infra estão claramente separadas para facilitar manutenção, testes e evolução.
+AIX Dance é um **SaaS em desenvolvimento ativo** voltado para a gestão completa de escolas e estúdios de dança, centralizando operações administrativas, financeiras e de relacionamento com alunos em fluxos integrados e automatizados em uma única plataforma.
 
-Sumário rápido
+O projeto resolve dores comuns desse tipo de negócio, como controle financeiro, contratos, organização de eventos e acompanhamento de alunos, oferecendo uma solução moderna, escalável e focada em usabilidade.
+
+## Status do Projeto
+🚧 Em desenvolvimento ativo  
+O sistema já possui módulos funcionais e arquitetura consolidada. Algumas partes seguem em evolução contínua, como:
+- Migração gradual de fluxos para Server Actions no Next.js
+- Refatoração progressiva para padronização de operações CRUD por meio de hooks reutilizáveis (ex.: `useCrud`)
+- Melhoria contínua de legibilidade, organização e manutenibilidade do código existente
+- Refinamentos de UI/UX
+- Expansão de módulos secundários (CRM e Eventos)
+
+## Meu papel no projeto
+Atuo como **desenvolvedor full-cycle**, sendo responsável por:
+- Arquitetura da aplicação
+- Implementação front-end e back-end
+- Definição de padrões de código e organização
+- Evolução técnica e manutenção do produto
+
+Tech Stack
 - Framework: Next.js 16 (App Router)
 - Linguagem: TypeScript
 - UI: Mantine
@@ -90,7 +108,7 @@ Docker e deploy
 
 	docker build -t aix-dance .
 
-	# ou com compose
+	### ou com compose
 	docker compose up --build
 
 Boas práticas para contribuidores
@@ -103,4 +121,8 @@ Contato e contribuição
 - Envie PRs com descrição clara e referências à issue correspondente.
 
 Licença
-- (Adicionar informação de licença aqui, se aplicável)
+Copyright (c) 2026 Julio Cesar Sulato Filho
+
+Permission is granted to view this source code for educational and evaluation purposes only.
+Any use, reproduction, modification, distribution, or commercial exploitation of this software, in whole or in part, is strictly prohibited without prior written permission from the copyright holder.
+

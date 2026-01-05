@@ -12,32 +12,26 @@ import {
   StudentClassFromApi,
 } from "./adapteStudentClasses";
 import AssignClassesToStudent from "./AssignClassesToStudent.tsx";
-import { StudentFromApi } from "../StudentFromApi";
 import { Class, Modality } from "@/types/class.types";
 import { User } from "@/types/user.types";
-import { Student } from "@/types/student.types";
+import { StudentClass, StudentComplete } from "@/types/student.types";
 
 export interface ClassFromApi extends Class {
   modality: Modality;
   teacher: User;
   assistant: User | null;
-  studentClasses: Student[];
+  studentClasses: StudentClass[];
   classAttendances?: any[];
 }
 
 export default function StudentClassView({
   student,
 }: {
-  student: StudentFromApi;
+  student: StudentComplete;
 }) {
-  const { data: sessionData } = useSession();
   const classes = adaptStudentClasses(student);
 
   const [openAssign, setOpenAssign] = useState(false);
-
-  if (!sessionData) return <div>Sessão inválida</div>; return <div>{"Sessão inválida"}</div>;
-
-  // const activeClassLength = student.classes.filter((c: any) => c.status == "ACTIVE").length;
 
   return (
     <div className="bg-neutral-100 p-4 md:p-6 lg:p-8 rounded-2xl border-neutral-200 border mt-4 md:mt-6">

@@ -14,13 +14,13 @@ import { notifications } from "@mantine/notifications";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import deleteStudentContracts from "./deleteStudentContracts";
 import archiveStudentContracts from "./archiveStudentContracts";
-import { StudentFromApi } from "../StudentFromApi";
 import { ContractStatus } from "@/types/contracts.types";
+import { StudentComplete } from "@/types/student.types";
 
 // Tipagem para o item do contrato, assumindo que a API retorna o título do modelo
-type ContractItem = StudentFromApi["contracts"][0] & { title?: string };
+type ContractItem = StudentComplete["contracts"][0] & { title?: string };
 
-export default function StudentContractsView({ student }: { student: StudentFromApi }) {
+export default function StudentContractsView({ student }: { student: StudentComplete }) {
 
   const [openNew, setOpenNew] = useState<boolean>(false);
   const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);

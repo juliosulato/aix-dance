@@ -23,18 +23,17 @@ import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 import "dayjs/locale/es";
 import "dayjs/locale/en";
-import NewStudent from "./modals/NewStudent";
-import UpdateStudent from "./modals/UpdateStudent";
-import { StudentFromApi } from "./StudentFromApi";
 import {Class} from "@/types/class.types";
 import Image from "next/image";
+import { StudentComplete } from "@/types/student.types";
+import StudentForm from "./StudentForm";
 
 
 
 interface MenuItemProps {
-  student: StudentFromApi;
-  onUpdateClick: (b: StudentFromApi) => void;
-  onDeleteClick: (b: StudentFromApi) => void;
+  student: StudentComplete;
+  onUpdateClick: (b: StudentComplete) => void;
+  onDeleteClick: (b: StudentComplete) => void;
 }
 
 interface MenuItemsProps {
@@ -48,7 +47,7 @@ export default function StudentsData() {
   const [openNew, setOpenNew] = useState<boolean>(false);
   const [openUpdate, setOpenUpdate] = useState<boolean>(false);
   const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
-  const [selectedStudent, setSelectedStudent] = useState<StudentFromApi | null>(
+  const [selectedStudent, setSelectedStudent] = useState<StudentComplete | null>(
     null
   );
   const [page, setPage] = useState<number>(1);
@@ -56,7 +55,7 @@ export default function StudentsData() {
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-  type Item = StudentFromApi & { fullName: string };
+  type Item = StudentComplete & { fullName: string };
   type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
   type PaginatedResponseLocal<T> = { items: T[]; pagination: PaginationInfo };
 
@@ -72,7 +71,7 @@ export default function StudentsData() {
         : null,
     async (url: string) => {
       const res = await fetcher<any>(url);
-      const rawItems: StudentFromApi[] = Array.isArray(res)
+      const rawItems: StudentComplete[] = Array.isArray(res)
         ? res
         : res.items ?? res.students ?? res.products ?? [];
       const items: Item[] = rawItems.map((s) => ({ ...s, fullName: `${s.firstName} ${s.lastName}` }));
@@ -94,12 +93,12 @@ export default function StudentsData() {
     }
   );
 
-  const handleUpdateClick = (student: StudentFromApi) => {
+  const handleUpdateClick = (student: StudentComplete) => {
     setSelectedStudent(student);
     setOpenUpdate(true);
   };
 
-  const handleDeleteClick = (student: StudentFromApi) => {
+  const handleDeleteClick = (student: StudentComplete) => {
     setSelectedStudent(student);
     setIdsToDelete([]);
     setConfirmModalOpen(true);
@@ -202,7 +201,7 @@ export default function StudentsData() {
 
   return (
     <>
-      <DataView<StudentFromApi & { fullName: string }>
+      <DataView<StudentComplete & { fullName: string }>
         data={
           students ?? {
             items: [],
@@ -255,7 +254,7 @@ export default function StudentsData() {
             key: "subscriptions",
             label: "Plano",
             sortable: true,
-            render: (val: StudentFromApi["subscriptions"]) => {
+            render: (val: StudentComplete["subscriptions"]) => {
               if (Array.isArray(val) && val.length > 0) {
                 return (
                   val.slice(0, 2).map((sub) => sub?.plan?.name).join(", ") +
@@ -372,7 +371,7 @@ export default function StudentsData() {
                   {item.classes &&
                   Array.isArray(item.classes) &&
                   item.classes.length > 0
-                    ? item.classes.map((c: Class) => c.name).join(", ")
+                    ? item.classes.map((c) => c.name).join(", ")
                     : "Nenhuma turma"}
                 </Text>
               </div>

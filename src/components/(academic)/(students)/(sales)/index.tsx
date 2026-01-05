@@ -1,10 +1,10 @@
 import { Tabs } from "@mantine/core";
 import { useState } from "react";
 import PointOfSale from "./point-of-sale";
-import { StudentFromApi } from "../StudentFromApi";
 import StudentSalesHistory from "./list";
+import { StudentComplete } from "@/types/student.types";
 
-export default function Sales({ student }: { student: StudentFromApi }) {
+export default function Sales({ student }: { student: StudentComplete }) {
     const [selectedTab, setSelectedTab] = useState<string>("pdv");
     return (
         <div className="bg-neutral-100 p-4 md:p-6 lg:p-8 rounded-2xl border-neutral-200 border mt-4! md:mt-6! ">

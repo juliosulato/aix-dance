@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import dayjs from "dayjs";
 import { FaCalendarAlt } from "react-icons/fa";
-import { StudentFromApi } from "../StudentFromApi";
 import DataView from "@/components/ui/DataView";
 import {
   ActionIcon,
@@ -11,23 +10,23 @@ import {
   Flex,
   Menu,
   Text,
-  Modal,
-  Button,
 } from "@mantine/core";
 import { StatusTextToBadge } from "@/utils/statusTextToBadge";
 import "dayjs/locale/pt-br";
 import "dayjs/locale/en";
 import "dayjs/locale/es";
 import { useState } from "react";
-import deleteBills from "@/components/(financial)/(manager)/delete";
 import { BiDotsVerticalRounded, BiTrash } from "react-icons/bi";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { notifications } from "@mantine/notifications";
+import { deleteBills } from "@/actions/financial/bills/delete";
+import { StudentComplete } from "@/types/student.types";
+import Decimal from "decimal.js";
 
 
 interface MenuItemProps {
-  bill: StudentFromApi["bills"][0];
-  onDeleteClick: (b: StudentFromApi["bills"][0]) => void;
+  bill: StudentComplete["bills"][0];
+  onDeleteClick: (b: StudentComplete["bills"][0]) => void;
 }
 
 interface MenuItemsProps {
@@ -38,7 +37,7 @@ interface MenuItemsProps {
 export default function StudentBillsView({
   student,
 }: {
-  student: StudentFromApi;
+  student: StudentComplete;
 }) {
   const bills = [...student.bills].sort((a, b) => {
     const statusOrder: Record<string, number> = {
@@ -57,13 +56,13 @@ export default function StudentBillsView({
   const [, setOpenPayBill] = useState<boolean>(false);
   const [, setConfirmModalOpen] = useState<boolean>(false);
   const [selectedBill, setSelectedBill] = useState<
-    StudentFromApi["bills"][0] | null
+    StudentComplete["bills"][0] | null
   >(null);
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const [, setIsDeleting] = useState<boolean>(false);
   const [, setIsExempting] = useState<boolean>(false);
 
-  const handleDeleteClick = (bill: StudentFromApi["bills"][0]) => {
+  const handleDeleteClick = (bill: StudentComplete["bills"][0]) => {
     setSelectedBill(bill);
     setIdsToDelete([]);
     setConfirmModalOpen(true);
@@ -153,8 +152,8 @@ export default function StudentBillsView({
   };
 
   // Funções de isenção agora chamam o endpoint e exibem o relatório retornado
-  const handleExemptClick = async (bill: StudentFromApi["bills"][0]) => {
-    const hasPenalty = Boolean(bill.penaltyAmount && bill.penaltyAmount > 0);
+  const handleExemptClick = async (bill: StudentComplete["bills"][0]) => {
+    const hasPenalty = Boolean(bill.penaltyAmount instanceof Decimal ? bill.penaltyAmount.toNumber() > 0 : (bill?.penaltyAmount || 0) > 0);
     if (!hasPenalty) {
       const proceed = window.confirm(
         "Nenhuma multa aparente nesta cobrança. Deseja prosseguir mesmo assim?"
@@ -172,7 +171,7 @@ export default function StudentBillsView({
     if (!ids || ids.length === 0) return;
     const selectedBills = student.bills.filter((b) => ids.includes(b.id));
     const anyWithPenalty = selectedBills.some((b) =>
-      Boolean(b.penaltyAmount && b.penaltyAmount > 0)
+      Boolean(b.penaltyAmount instanceof Decimal ? b.penaltyAmount.toNumber() > 0 : (b?.penaltyAmount || 0) > 0)
     );
     if (!anyWithPenalty) {
       const proceed = window.confirm(
@@ -316,7 +315,7 @@ export default function StudentBillsView({
                   ? new Intl.NumberFormat("pt-BR", {
                       style: "currency",
                       currency: "BRL",
-                    }).format(row.originalAmount)
+                    }).format(row.originalAmount instanceof Decimal ? row.originalAmount.toNumber() : row.originalAmount)
                   : "-",
               sortable: false,
             },
@@ -328,7 +327,7 @@ export default function StudentBillsView({
                   ? new Intl.NumberFormat("pt-BR", {
                       style: "currency",
                       currency: "BRL",
-                    }).format(row.penaltyAmount)
+                    }).format(row.penaltyAmount instanceof Decimal ? row.penaltyAmount.toNumber() : row.penaltyAmount)
                   : "-",
               sortable: false,
             },

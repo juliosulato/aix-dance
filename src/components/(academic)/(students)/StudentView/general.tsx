@@ -3,13 +3,12 @@
 import InfoTerm from "@/components/ui/Infoterm";
 import dayjs from "dayjs";
 import { Avatar } from "@mantine/core";
-import { StudentFromApi } from "../StudentFromApi";
-import { Gender } from "@/types/student.types";
+import { Gender, StudentComplete } from "@/types/student.types";
 
 export default function GeneralStudentsView({
   student,
 }: {
-  student: StudentFromApi;
+  student: StudentComplete;
 }) {
   let gender: Gender | string = student.gender;
 

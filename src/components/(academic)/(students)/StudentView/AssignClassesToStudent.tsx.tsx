@@ -12,13 +12,13 @@ import Image from "next/image";
 import notFound from "@/assets/images/not-found.png";
 import { FaSearch } from "react-icons/fa";
 import z from "zod";
-import { StudentFromApi } from "../StudentFromApi";
+import { StudentComplete } from "@/types/student.types";
 
 type Props = {
   opened: boolean;
   onClose: () => void;
   mutate: KeyedMutator<any>;
-  student: StudentFromApi; // classes vem com studentClasses do aluno
+  student: StudentComplete; // classes vem com studentClasses do aluno
 };
 
 type FormValues = {

@@ -4,7 +4,6 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import deleteStudents from "../delete";
-import UpdateStudent from "../modals/UpdateStudent";
 import { Tabs } from "@mantine/core";
 import GeneralStudentsView from "./general";
 import StudentHistoryView from "./history";
@@ -12,17 +11,18 @@ import StudentClassView from "./StudentClasses";
 import StudentContractsView from "./StudentContracts";
 import { useRouter, useSearchParams } from "next/navigation";
 import StudentBillsView from "../(bills)/StudentBillsView";
-import { StudentFromApi } from "../StudentFromApi";
 import Sales from "../(sales)";
 import { useSession } from "@/lib/auth-client";
 import { fetcher } from "@/utils/fetcher";
 import useSWR from "swr";
+import StudentForm from "../StudentForm";
+import { StudentComplete } from "@/types/student.types";
 
 export default function StudentsView({ id }: { id: string }) {
   const session = useSession();
   const tenancyId = session?.data?.user.tenancyId as string;
 
-  const { data: student, error } = useSWR<StudentFromApi>(
+  const { data: student, error } = useSWR<StudentComplete>(
     `/api/v1/tenancies/${tenancyId}/students/${id}`,
     fetcher
   );

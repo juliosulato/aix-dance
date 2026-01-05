@@ -1,4 +1,8 @@
 import { Address } from "./address.types";
+import { Bill } from "./bill.types";
+import { Class } from "./class.types";
+import { StudentContract } from "./contracts.types";
+import { Plan, Subscription } from "./plan.types";
 
 export enum Gender {
     MALE = "MALE",
@@ -25,9 +29,11 @@ export type Student = {
     medicalAdvice: string | null;
     painOrDiscomfort: string | null;
     canLeaveAlone: boolean;
+    attendanceAverage: number;
     active: boolean;
     createdAt: Date;
     updatedAt: Date;
+    tenancyId: string;
 }
 
 export type StudentGuardian = {
@@ -63,4 +69,11 @@ export type StudentHistory = {
 export type StudentComplete = Student & {    
     address: Address;
     guardian: StudentGuardian[];
+    classes: Class[];
+    subscriptions: (Subscription & {
+        plan: Plan;
+    })[];
+    history: StudentHistory[];
+    contracts: StudentContract[];
+    bills: Bill[];
 }

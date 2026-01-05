@@ -23,7 +23,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 import "dayjs/locale/es";
 import "dayjs/locale/en";
-import {Class} from "@/types/class.types";
+import { Class } from "@/types/class.types";
 import Image from "next/image";
 import { StudentComplete } from "@/types/student.types";
 import StudentForm from "./StudentForm";

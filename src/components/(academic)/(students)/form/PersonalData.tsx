@@ -14,6 +14,7 @@ import { CreateStudentFormData } from "@/schemas/academic/student.schema";
 import { IMaskInput } from "react-imask";
 import { UpdateStudentInput } from "@/schemas/academic/student.schema";
 import { FiAtSign } from "react-icons/fi";
+import { DateInput } from "@mantine/dates";
 
 type Props = {
   control: Control<CreateStudentFormData | UpdateStudentInput>;
@@ -91,14 +92,12 @@ function NewStudent__PersonalData({ control, register, errors }: Props) {
         name="dateOfBirth"
         control={control}
         render={({ field }) => (
-          <InputBase
-            component={IMaskInput}
-            mask="00/00/0000"
-            required
+          <DateInput
             value={field.value || ""}
+            required
             label="Data de Nascimento"
             error={errors.dateOfBirth?.message}
-            onAccept={(val: string) => field.onChange(val)}
+            onChange={(val) => field.onChange(val)}
           />
         )}
       />

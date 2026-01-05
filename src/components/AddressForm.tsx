@@ -15,12 +15,14 @@ export default function Address<T extends FieldValues>({ errors, register }: Pro
                 label="Logradouro"
                 {...register("address.publicPlace" as any)}
                 error={(errors.address as any)?.publicPlace?.message}
+                required
             />
 
             <TextInput
                 label="Número"
                 {...register("address.number" as any)}
                 error={(errors.address as any)?.number?.message}
+                required
             />
 
             <TextInput
@@ -33,24 +35,28 @@ export default function Address<T extends FieldValues>({ errors, register }: Pro
                 label="Bairro"
                 {...register("address.neighborhood" as any)}
                 error={(errors.address as any)?.neighborhood?.message}
+                required
             />
 
             <TextInput
                 label="CEP"
-                {...register("address.zipCode" as any)}
-                error={(errors.address as any)?.zipCode?.message}
+                {...register("address.postalCode" as any)}
+                error={(errors.address as any)?.postalCode?.message}
+                required
             />
 
             <TextInput
                 label="Cidade"
                 {...register("address.city" as any)}
                 error={(errors.address as any)?.city?.message}
+                required
             />
 
             <TextInput
                 label="Estado"
                 {...register("address.state" as any)}
                 error={(errors.address as any)?.state?.message}
+                required
             />
         </div>
     );

@@ -2,9 +2,8 @@ import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { notifications } from "@mantine/notifications";
-import dayjs from "dayjs";
 import { KeyedMutator } from "swr";
-import { useSession } from "@/lib/auth-client"; 
+import { useSession } from "@/lib/auth-client";
 
 import {
   CreateStudentInput,
@@ -13,9 +12,10 @@ import {
   updateStudentSchema,
 } from "@/schemas/academic/student.schema";
 import { createStudent } from "@/actions/academic/student/create";
-import { updateStudent } from "@/actions/academic/student/update"; // Nova action importada
+import { updateStudent } from "@/actions/academic/student/update";
 import { StudentComplete } from "@/types/student.types";
 import { ZodType } from "zod";
+import { AppError } from "@/lib/AppError";
 
 interface UseStudentFormProps {
   isEditing?: StudentComplete | null;
@@ -24,7 +24,12 @@ interface UseStudentFormProps {
   opened: boolean;
 }
 
-export function useStudentForm({ isEditing, onClose, mutate, opened }: UseStudentFormProps) {
+export function useStudentForm({
+  isEditing,
+  onClose,
+  mutate,
+  opened,
+}: UseStudentFormProps) {
   const { data: sessionData } = useSession();
   const [isPending, startTransition] = useTransition();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -33,9 +38,13 @@ export function useStudentForm({ isEditing, onClose, mutate, opened }: UseStuden
 
   const form = useForm<CreateStudentInput>({
     resolver: zodResolver(
-      isUpdate 
-        ? updateStudentSchema 
-        : (createStudentSchema as ZodType<CreateStudentInput | UpdateStudentInput, any, any>)
+      isUpdate
+        ? updateStudentSchema
+        : (createStudentSchema as ZodType<
+            CreateStudentInput | UpdateStudentInput,
+            any,
+            any
+          >)
     ),
     defaultValues: {
       guardian: [],
@@ -61,15 +70,12 @@ export function useStudentForm({ isEditing, onClose, mutate, opened }: UseStuden
     if (!opened) return;
 
     if (isUpdate && isEditing) {
-      // Conversão rigorosa de null para "" ou undefined para satisfazer o TypeScript
       reset({
         firstName: isEditing.firstName,
         lastName: isEditing.lastName,
         gender: isEditing.gender,
         cellPhoneNumber: isEditing.cellPhoneNumber,
-        dateOfBirth: isEditing.dateOfBirth
-          ? dayjs(isEditing.dateOfBirth).format("DD/MM/YYYY")
-          : "",
+        dateOfBirth: isEditing.dateOfBirth,
         documentOfIdentity: isEditing.documentOfIdentity ?? "",
         email: isEditing.email ?? "",
         phoneNumber: isEditing.phoneNumber ?? "",
@@ -102,7 +108,6 @@ export function useStudentForm({ isEditing, onClose, mutate, opened }: UseStuden
             documentOfIdentity: g.documentOfIdentity ?? "",
           })) ?? [],
       });
-      setAvatarPreview(isEditing.image || null);
     } else {
       reset({
         guardian: [],
@@ -122,7 +127,6 @@ export function useStudentForm({ isEditing, onClose, mutate, opened }: UseStuden
   };
 
   const onSubmit = async (data: CreateStudentInput) => {
-    // Validação básica de sessão, embora o middleware do Next.js deva cuidar disso
     if (!sessionData?.user) {
       notifications.show({ color: "red", message: "Sessão inválida" });
       return;
@@ -130,7 +134,6 @@ export function useStudentForm({ isEditing, onClose, mutate, opened }: UseStuden
 
     const formData = new FormData();
 
-    // 1. Campos simples
     Object.keys(data).forEach((key) => {
       const k = key as keyof CreateStudentInput;
       const value = data[k];
@@ -146,7 +149,6 @@ export function useStudentForm({ isEditing, onClose, mutate, opened }: UseStuden
       }
     });
 
-    // 2. Objetos complexos
     if (data.address) {
       formData.append("address", JSON.stringify(data.address));
     }
@@ -154,7 +156,6 @@ export function useStudentForm({ isEditing, onClose, mutate, opened }: UseStuden
       formData.append("guardian", JSON.stringify(data.guardian));
     }
 
-    // 3. Arquivo
     if (data.file instanceof File) {
       formData.append("file", data.file);
     }
@@ -166,12 +167,15 @@ export function useStudentForm({ isEditing, onClose, mutate, opened }: UseStuden
         if (isUpdate && isEditing?.id) {
           result = await updateStudent(formData, isEditing.id);
         } else {
-          // --- CRIAÇÃO (Server Action) ---
           result = await createStudent(formData);
         }
 
         if (!result.success) {
-          throw new Error(result.error || `Erro ao ${isUpdate ? "atualizar" : "criar"} aluno`);
+        console.error("Erro retornado pela Server Action:", result);
+
+          throw new AppError(
+            result.error || `Erro ao ${isUpdate ? "atualizar" : "criar"} aluno`, "500"
+          );
         }
 
         notifications.show({
@@ -186,7 +190,9 @@ export function useStudentForm({ isEditing, onClose, mutate, opened }: UseStuden
         notifications.show({
           title: "Erro",
           message:
-            error instanceof Error ? error.message : "Ocorreu um erro inesperado.",
+            error instanceof Error
+              ? error.message
+              : "Ocorreu um erro inesperado.",
           color: "red",
         });
       }
@@ -195,8 +201,33 @@ export function useStudentForm({ isEditing, onClose, mutate, opened }: UseStuden
 
   const onInvalid = (errors: any) => {
     console.log("Erros de validação:", errors);
+
+    const getFirstErrorMessage = (errorNode: any): string | undefined => {
+      if (!errorNode) return undefined;
+
+      if (errorNode.message && typeof errorNode.message === "string") {
+        return errorNode.message;
+      }
+
+      if (typeof errorNode === "object") {
+        for (const key of Object.keys(errorNode)) {
+          if (key === "ref" || key === "type") continue;
+
+          const nestedMessage = getFirstErrorMessage(errorNode[key]);
+          if (nestedMessage) return nestedMessage;
+        }
+      }
+
+      return undefined;
+    };
+
+    const firstError = getFirstErrorMessage(errors);
+
     notifications.show({
-      message: "Verifique os campos obrigatórios",
+      title: "Dados inválidos",
+      message:
+        firstError ||
+        "Verifique os campos obrigatórios destacados em vermelho.",
       color: "red",
     });
   };

@@ -215,7 +215,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
                 data={classOptions}
                 {...field}
                 searchable
-                className="!w-full"
+                className="w-full!"
                 nothingFoundMessage={"Nada encontrado..."}
                 rightSection={<FaSearch />}
                 disabled={student.active === false}
@@ -226,7 +226,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
           <div className="p-4 border border-neutral-300 rounded-xl flex flex-col gap-2">
                 {selectedClassIds.length === 0 ? (
               <div className="flex flex-col items-center justify-center gap-2 text-neutral-500">
-                <Image src={notFound} alt="no-classes" className="max-w-[150px]" />
+                <Image src={notFound} alt="no-classes" className="max-w-150px" />
                 <Text>{"Nenhuma turma selecionada"}</Text>
               </div>
             ) : (

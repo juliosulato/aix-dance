@@ -1,3 +1,5 @@
+import { Address } from "./address.types";
+
 export enum Gender {
     MALE = "MALE",
     FEMALE = "FEMALE",
@@ -6,13 +8,12 @@ export enum Gender {
 }
 
 export type Student = {
-    email: string | null;
-    image: string | null;
     id: string;
-    tenancyId: string;
     firstName: string;
     lastName: string;
+    image: string | null;
     cellPhoneNumber: string;
+    email: string | null;
     phoneNumber: string | null;
     dateOfBirth: string;
     documentOfIdentity: string;
@@ -57,4 +58,9 @@ export type StudentHistory = {
     description: string;
     studentId: string;
     createdAt: Date;
+}
+
+export type StudentComplete = Student & {    
+    address: Address;
+    guardian: StudentGuardian[];
 }

@@ -93,7 +93,7 @@ export default function StudentBillsView({
     }
 
     try {
-      await deleteBills(finalIdsToDelete, tenancyId);
+      await deleteBills(finalIdsToDelete);
       window.location.reload();
     } catch (error) {
       console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);

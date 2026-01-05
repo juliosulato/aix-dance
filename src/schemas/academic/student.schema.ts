@@ -55,19 +55,8 @@ const createStudentSchema = z.object({
   gender: z.enum(Gender, { error: "Gênero inválido" }),
   cellPhoneNumber: z.string().min(1, { message: "Celular do aluno é obrigatório" }),
   pronoun: z.string().optional(),
-  dateOfBirth: z
-    .string()
-    .min(1, { message: "Data de nascimento é obrigatória" })
-    .refine((value) => {
-      const parsed = dayjs(value, "DD/MM/YYYY", true);
-      if (!parsed.isValid()) return false;
-      if (parsed.isBefore(MIN_BIRTH_DATE)) return false;
-      if (parsed.isAfter(MAX_BIRTH_DATE)) return false;
-      return true;
-    }, { message: "Data de nascimento inválida" }),
+  dateOfBirth: z.coerce.date(),
   phoneNumber: z.string().optional(),
-  // Mantive o image url opcional caso venha do banco em updates, mas o file é o principal para create
-  image: z.string().url({ message: "URL da imagem inválida" }).optional().nullable(),
   documentOfIdentity: z
     .string()
     .optional()

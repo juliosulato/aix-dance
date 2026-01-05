@@ -8,5 +8,11 @@ export const studentService = {
             method: "POST",
             body: formData, 
         });
+    },
+    async update(tenancyId: string, formData: FormData, id: string) {
+        return await serverFetch(`${baseUrl}/api/v1/tenancies/${tenancyId}/students/id`, {
+            method: "PUT",
+            body: formData, 
+        });
     }
 }

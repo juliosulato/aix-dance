@@ -1,12 +1,12 @@
 "use server";
 
 import { protectedAction } from "@/lib/auth-guards";
-import { CreateStudentFormData, CreateStudentInput, createStudentSchema } from "@/schemas/academic/student.schema";
+import { UpdateStudentFormData, UpdateStudentInput, updateStudentSchema } from "@/schemas/academic/student.schema";
 import { studentService } from "@/services/academic/student.service";
 import { ActionState } from "@/types/server-actions.types";
 import z from "zod";
 
-export const createStudent = protectedAction(async (user, formData: FormData): Promise<ActionState<CreateStudentInput>> => {
+export const updateStudent = protectedAction(async (user, formData: FormData, id: string): Promise<ActionState<UpdateStudentInput>> => {
     const rawData: Record<string, any> = {};
     
     for (const [key, value] of formData.entries()) {
@@ -38,7 +38,7 @@ export const createStudent = protectedAction(async (user, formData: FormData): P
         }
     }
 
-    const validatedData = createStudentSchema.safeParse(rawData);
+    const validatedData = updateStudentSchema.safeParse(rawData);
 
     if (!validatedData.success) {
         const flattenedErrors = z.flattenError(validatedData.error).fieldErrors;
@@ -70,7 +70,7 @@ export const createStudent = protectedAction(async (user, formData: FormData): P
     }
 
     try {
-        await studentService.create(user.tenancyId, payload);
+        await studentService.update(user.tenancyId, payload, id);
         
         return { success: true };
     } catch (error) {

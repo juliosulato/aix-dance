@@ -4,6 +4,7 @@ import { protectedAction } from "@/lib/auth-guards";
 import { UpdateStudentFormData, UpdateStudentInput, updateStudentSchema } from "@/schemas/academic/student.schema";
 import { studentService } from "@/services/academic/student.service";
 import { ActionState } from "@/types/server-actions.types";
+import { handleServerActionError } from "@/utils/handlerApiErrors";
 import z from "zod";
 
 export const updateStudent = protectedAction(async (user, formData: FormData, id: string): Promise<ActionState<UpdateStudentInput>> => {
@@ -74,10 +75,7 @@ export const updateStudent = protectedAction(async (user, formData: FormData, id
         
         return { success: true };
     } catch (error) {
-        console.error("Erro ao criar estudante:", error);
-        return {
-            success: false,
-            error: "Falha ao criar estudante. Tente novamente."
-        };
+        console.error("Erro ao atualizar estudante:", error);
+        return handleServerActionError(error);
     }
 });

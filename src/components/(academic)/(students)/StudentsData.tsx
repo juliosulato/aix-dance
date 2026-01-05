@@ -447,20 +447,20 @@ export default function StudentsData() {
         )}
       />
 
-      <NewStudent
+      <StudentForm
         opened={openNew}
         onClose={() => setOpenNew(false)}
         mutate={mutate as any}
       />
 
       {selectedStudent && (
-        <UpdateStudent
+        <StudentForm
           opened={openUpdate}
           onClose={() => {
             setOpenUpdate(false);
             setSelectedStudent(null);
           }}
-          student={selectedStudent}
+          isEditing={selectedStudent}
           mutate={mutate as any}
         />
       )}

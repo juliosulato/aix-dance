@@ -123,8 +123,8 @@ export default function StudentsView({ id }: { id: string }) {
         </Tabs.Panel>
       </Tabs>
 
-      <UpdateStudent
-        student={student}
+      <StudentForm
+        isEditing={student}
         onClose={() => setOpenUpdate(false)}
         opened={openUpdate}
         mutate={() => window.location.reload() as any}

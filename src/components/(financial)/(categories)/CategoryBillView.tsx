@@ -4,7 +4,7 @@ import InfoTerm from "@/components/ui/Infoterm";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import { useCrud } from "@/hooks/useCrud";
-import { deleteCategoryBills } from "@/actions/financial/categoryBills/delete";
+import { deleteCategoryBills } from "@/actions/categoryBills";
 import { CategoryBill, CategoryGroup } from "@/types/category.types";
 import CategoryBillFormModal from "./CategoryBillFormModal";
 

@@ -9,11 +9,11 @@ import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { DateInput } from "@mantine/dates";
 import { useActionState, useEffect, useState } from "react";
 import { PayBillInput } from "@/schemas/financial/bill.schema";
-import { updateBill } from "@/actions/financial/bills/update";
 import { ActionState } from "@/types/server-actions.types";
 import { Bank } from "@/types/bank.types";
 import { notifications } from "@mantine/notifications";
 import Decimal from "decimal.js";
+import { updateBill } from "@/actions/bills";
 
 type Props = {
   opened: boolean;

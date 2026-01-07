@@ -28,7 +28,7 @@ import {
   BillComplete,
   BillWithAttachment,
 } from "@/types/bill.types";
-import { deleteBills } from "@/actions/financial/bills/delete";
+import { deleteBills } from "@/actions/bills";
 import { useCrud } from "@/hooks/useCrud";
 import BillFormModal from "./BillFormModal/BillFormModal";
 import { SessionData } from "@/lib/auth-server";

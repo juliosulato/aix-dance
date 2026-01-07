@@ -13,15 +13,13 @@ import {
 } from "@mantine/core";
 import { StatusTextToBadge } from "@/utils/statusTextToBadge";
 import "dayjs/locale/pt-br";
-import "dayjs/locale/en";
-import "dayjs/locale/es";
 import { useState } from "react";
 import { BiDotsVerticalRounded, BiTrash } from "react-icons/bi";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { notifications } from "@mantine/notifications";
-import { deleteBills } from "@/actions/financial/bills/delete";
 import { StudentComplete } from "@/types/student.types";
 import Decimal from "decimal.js";
+import { deleteBills } from "@/actions/bills";
 
 
 interface MenuItemProps {

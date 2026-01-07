@@ -9,7 +9,7 @@ import { Control, Controller, FieldErrors, useWatch } from "react-hook-form";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 import { extractItemsFromResponse, PaginatedListResponse } from "@/utils/pagination";
-import { StudentFromApi } from "../../(students)/StudentFromApi";
+import { StudentComplete } from "@/types/student.types";
 
 type Props = {
     control: Control<CreateClassInput | UpdateClassInput>;
@@ -18,14 +18,14 @@ type Props = {
 };
 
 export default function Class__Students({ control, errors, tenancyId }: Props) {
-    const { data: studentsResponse } = useSWR<StudentFromApi[] | PaginatedListResponse<StudentFromApi>>(
+    const { data: studentsResponse } = useSWR<StudentComplete[] | PaginatedListResponse<StudentComplete>>(
         () => tenancyId ? `/api/v1/tenancies/${tenancyId}/students?limit=500` : null,
         fetcher
     );
 
     const allStudents = extractItemsFromResponse(studentsResponse);
 
-    const studentOptions = allStudents?.filter((student: StudentFromApi) => {
+    const studentOptions = allStudents?.filter((student: StudentComplete) => {
         // 1. Verificar se o aluno está ativo
         if (!student?.active) {
             console.log(`${student.firstName} não está ativo`);
@@ -55,7 +55,7 @@ export default function Class__Students({ control, errors, tenancyId }: Props) {
         // Verificação mais explícita
         const hasVacancy = activeClassesCount < plan.frequency;
         return hasVacancy;
-    })?.map((s: StudentFromApi) => {
+    })?.map((s: StudentComplete) => {
         const activeCount = s.classes?.filter((cls: any) => cls.status === "ACTIVE").length || 0;
         const planFreq = s.subscriptions?.[0]?.plan?.frequency || 0;
         

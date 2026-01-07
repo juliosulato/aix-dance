@@ -7,7 +7,7 @@ import { z } from "zod";
 import useSWR from "swr";
 import { Tenancy } from "@/types/tenancy.types";
 import { Plan } from "@/types/plan.types";
-import { Student } from "@/types/student.types";
+import { Student, StudentComplete } from "@/types/student.types";
 import {
   FaSearch,
   FaUser,
@@ -34,7 +34,6 @@ import { fetcher } from "@/utils/fetcher";
 import { extractItemsFromResponse, PaginatedListResponse } from "@/utils/pagination";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import NewStudentContractModal from "./new";
-import { StudentFromApi } from "../StudentFromApi";
 import { useSession } from "@/lib/auth-client";
 
 import { FormsOfReceipt } from "@/types/receipt.types";
@@ -114,20 +113,17 @@ export default function PointOfSale({
     ? plansData
     : (plansData as any)?.products ?? (plansData as any)?.plans ?? undefined;
 
-  // --- Estados do Componente ---
   const [searchTerm, setSearchTerm] = useState("");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isContractModalOpen, setContractModalOpen] = useState(false);
   const [currentItemForContract, setCurrentItemForContract] =
     useState<CartItem | null>(null);
-  // filters: allow selecting multiple types to show in the product list
   const [selectedFilters, setSelectedFilters] = useState<string[]>([
     "products",
     "plans",
     "fee",
   ]);
 
-  // Paginated products fetch: start with page 1, limit 30 and accumulate as user scrolls
   const [productPage, setProductPage] = useState<number>(1);
   const PRODUCT_PAGE_LIMIT = 30;
   const productsUrl = `/api/v1/tenancies/${tenancyId}/inventory/products?page=${productPage}&limit=${PRODUCT_PAGE_LIMIT}${
@@ -172,12 +168,12 @@ export default function PointOfSale({
   const products = accProducts;
 
   const studentsUrl = tenancyId
-    ? `/api/v1/tenancies/${tenancyId}/students?limit=500`
+    ? `/api/v1/tenancies/${tenancyId}/students`
     : null;
-  const { data: studentsData } = useSWR<
-    Student[] | PaginatedListResponse<Student>
+  const { data: studentsResponse } = useSWR<
+    PaginatedListResponse<Student>
   >(studentsUrl, fetcher);
-  const students = extractItemsFromResponse(studentsData);
+  const students = extractItemsFromResponse(studentsResponse?.data);
 
   const { data: formsOfReceiptData } = useSWR<
     FormsOfReceipt[] | PaginatedResponseLocal<FormsOfReceipt>
@@ -215,7 +211,7 @@ export default function PointOfSale({
   const selectedStudentId = watch("studentId");
 
   // --- SWR para buscar as assinaturas do aluno selecionado ---
-  const { data: studentSubscriptions } = useSWR<StudentFromApi>(
+  const { data: studentSubscriptions } = useSWR<StudentComplete>(
     selectedStudentId
       ? `/api/v1/tenancies/${tenancyId}/students/${selectedStudentId}`
       : null,
@@ -440,7 +436,7 @@ export default function PointOfSale({
   // --- Hooks para verificar plano ativo e plano no carrinho ---
   const activeStudentSubscription = useMemo(() => {
     if (!studentSubscriptions) return null;
-    return studentSubscriptions.subscriptions.find(
+    return studentSubscriptions?.subscriptions?.find(
       (sub) => sub.status === "ACTIVE"
     );
   }, [studentSubscriptions]);
@@ -970,7 +966,7 @@ export default function PointOfSale({
                           {...field}
                           onChange={(e) => field.onChange(e || 0)}
                           suffix="%"
-                          className="w-fit! !max-w-fit"
+                          className="w-fit! max-w-fit!"
                           classNames={{ input: "w-fit! !max-w-fit" }}
                         />
                       )}

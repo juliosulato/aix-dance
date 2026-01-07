@@ -24,8 +24,7 @@ import { extractItemsFromResponse, PaginatedListResponse } from "@/utils/paginat
 import Image from "next/image";
 import notFound from "@/assets/images/not-found.png";
 import { FaSearch } from "react-icons/fa";
-import { StudentFromApi } from "../../(students)/StudentFromApi";
-import { Student, StudentClass } from "@/types/student.types";
+import { Student, StudentClass, StudentComplete } from "@/types/student.types";
 import { Class } from "@/types/class.types";
 
 // Interface para representar a matrícula com o aluno aninhado, como vem da API
@@ -75,7 +74,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
   };
 
   // 1. Busca todos os alunos da tenancy para popular o dropdown
-  const { data: studentsResponse } = useSWR<StudentFromApi[] | PaginatedListResponse<StudentFromApi>>(
+  const { data: studentsResponse } = useSWR<StudentComplete[] | PaginatedListResponse<StudentComplete>>(
     () =>
       sessionData?.user.tenancyId
         ? `/api/v1/tenancies/${sessionData.user.tenancyId}/students?limit=500`
@@ -178,7 +177,7 @@ credentials: "include",
       );
 
       studentsToEnroll.forEach(async (studentId) => {
-        const student: StudentFromApi = await fetch(
+        const student: StudentComplete = await fetch(
           `/api/v1/tenancies/${tenancyId}/students/${studentId}`
         ).then((res) => res.json());
 

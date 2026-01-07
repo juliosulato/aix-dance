@@ -64,7 +64,7 @@ export default function StudentsList() {
   return (
     <>
       <DataView<StudentComplete>
-        data={studentsData?.data || []} 
+        data={studentsData || []} 
         itemKey="items"
         openNewModal={{
           func: handleCreate,
@@ -73,7 +73,6 @@ export default function StudentsList() {
         baseUrl="/system/academic/students/"
         mutate={mutate}
         pageTitle="Alunos e Matrículas"
-        searchbarPlaceholder="Procure por nome, CPF ou e-mail..."
         onPageChange={(page, limit) => {
           setPage(page);
           setLimit(limit)

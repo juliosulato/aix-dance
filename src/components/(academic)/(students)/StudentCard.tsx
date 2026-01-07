@@ -10,7 +10,7 @@ type Props = {
 }
 export default function StudentCard({ item, handleDelete, handleUpdate }: Props) {
     return (
-         <div className="flex flex-col gap-3">
+         <div className="flex flex-col gap-3 p-4">
             <div className="flex flex-row justify-between items-start">
               <div className="flex items-center gap-4">
                 <Avatar

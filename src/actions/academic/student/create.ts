@@ -5,39 +5,11 @@ import { CreateStudentInput, createStudentSchema } from "@/schemas/academic/stud
 import { studentService } from "@/services/academic/student.service";
 import { ActionState } from "@/types/server-actions.types";
 import { handleServerActionError } from "@/utils/handlerApiErrors";
+import { parseStudentFormData, buildStudentPayload } from "@/utils/server-utils"; // Importe o utilitário
 import z from "zod";
 
 export const createStudent = protectedAction(async (user, formData: FormData): Promise<ActionState<CreateStudentInput>> => {
-    const rawData: Record<string, any> = {};
-    
-    for (const [key, value] of formData.entries()) {
-        if (!['address', 'guardian', 'file'].includes(key)) {
-            rawData[key] = value;
-        }
-    }
-
-    const file = formData.get('file');
-    if (file && file instanceof File && file.size > 0) {
-        rawData.file = file;
-    }
-
-    const addressString = formData.get('address') as string;
-    if (addressString) {
-        try {
-            rawData.address = JSON.parse(addressString);
-        } catch {
-            rawData.address = undefined;
-        }
-    }
-
-    const guardianString = formData.get('guardian') as string;
-    if (guardianString) {
-        try {
-            rawData.guardian = JSON.parse(guardianString);
-        } catch {
-            rawData.guardian = [];
-        }
-    }
+    const rawData = parseStudentFormData(formData);
 
     const validatedData = createStudentSchema.safeParse(rawData);
 
@@ -50,29 +22,10 @@ export const createStudent = protectedAction(async (user, formData: FormData): P
         };
     }
 
-    const payload = new FormData();
-
-    Object.entries(validatedData.data).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && key !== 'file' && key !== 'address' && key !== 'guardian') {
-            payload.append(key, String(value));
-        }
-    });
-
-    if (validatedData.data.file instanceof File) {
-        payload.append('file', validatedData.data.file);
-    }
-
-    if (validatedData.data.address) {
-        payload.append('address', JSON.stringify(validatedData.data.address));
-    }
-    
-    if (validatedData.data.guardian) {
-        payload.append('guardian', JSON.stringify(validatedData.data.guardian));
-    }
+    const payload = buildStudentPayload(validatedData.data);
 
     try {
         await studentService.create(user.tenancyId, payload);
-        
         return { success: true };
     } catch (error) {
         console.error("Erro ao criar estudante:", error);

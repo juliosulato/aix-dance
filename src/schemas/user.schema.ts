@@ -9,12 +9,6 @@ import { UserRole } from "@/types/user.types";
 
 dayjs.extend(customParseFormat);
 
-const MIN_BIRTH_DATE = dayjs("1900-01-01");
-const MAX_BIRTH_DATE = dayjs();
-
-const parseBirthDate = (value: string) => dayjs(value, ["DD/MM/YYYY", "DD-MM-YYYY", "YYYY-MM-DD"], true);
-
-
 const teacherSchema = z.object({
   cellPhoneNumber: z.string().optional(),
   phoneNumber: z.string().optional(),
@@ -26,7 +20,7 @@ const teacherSchema = z.object({
   instagramUser: z.string().optional(),
   professionalRegister: z.string().optional(),
   address: addressSchema.optional(),
-  dateOfBirth: z.coerce.date("Data de nascimento inválida"),
+  dateOfBirth: z.date("Data de nascimento inválida"),
   remunerationType: z.enum(RemunerationType, { error: "Tipo de remuneração é obrigatório" }),
   baseAmount: z.number({ error: "Valor base é obrigatório" }).min(1, "O valor base deve ser no mínimo 1"),
   paymentDay: z.number().int().min(1).max(31).default(5).optional(),

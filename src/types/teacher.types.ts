@@ -19,7 +19,7 @@ export type Teacher = {
     userId: string;
     cellPhoneNumber: string | null;
     phoneNumber: string | null;
-    dateOfBirth: string | null;
+    dateOfBirth: Date | null;
     document: string;
     gender: Gender;
     pronoun: string | null;

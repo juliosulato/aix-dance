@@ -7,6 +7,7 @@ export type Class = {
     updatedAt: Date;
     teacherId: string;
     modalityId: string;
+    modality: Modality;
     online: boolean;
     assistantId: string | null;
 }

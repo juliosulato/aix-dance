@@ -6,19 +6,18 @@ import { isValidCpf } from "@/utils/validateCpf";
 
 dayjs.extend(customParseFormat);
 
-const MIN_BIRTH_DATE = dayjs("1900-01-01");
-const MAX_BIRTH_DATE = dayjs();
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 const addressSchema = z.object({
-  postalCode: z.string().min(1, { message: "CEP é obrigatório" }),
+  zipCode: z.string().min(1, { message: "CEP é obrigatório" }),
   publicPlace: z.string().min(1, { message: "Logradouro é obrigatória" }),
   number: z.string().optional(),
   complement: z.string().optional(),
   neighborhood: z.string().min(1, { message: "Bairro é obrigatório" }),
   city: z.string().min(1, { message: "Cidade é obrigatória" }),
   state: z.string().min(1, { message: "Estado é obrigatório" }),
+  country: z.string().default("Brasil").optional()
 });
 
 const guardianSchema = z.object({
@@ -32,10 +31,8 @@ const guardianSchema = z.object({
 });
 
 const createStudentSchema = z.object({
-  // --- Upload de Arquivo (Adicionado) ---
   file: z
     .custom<File>((val) => {
-      // Validação permissiva para funcionar tanto no Client (File) quanto no Node (Blob/Object)
       if (!val) return true;
       return val instanceof File || (typeof val === "object" && "size" in val && "type" in val);
     }, "Imagem inválida")
@@ -66,7 +63,7 @@ const createStudentSchema = z.object({
       if (digits.length === 0) return true;
       return isValidCpf(digits);
     }, { message: "CPF inválido" }),
-  email: z.string().email({ message: "E-mail do aluno inválido" }).optional().or(z.literal('')),
+  email: z.email({ message: "E-mail do aluno inválido" }).optional().or(z.literal('')),
   howDidYouMeetUs: z.string().optional(),
   instagramUser: z.string().optional(),
   healthProblems: z.string().optional(),
@@ -80,7 +77,7 @@ const createStudentSchema = z.object({
 const updateStudentSchema = createStudentSchema.partial();
 
 export { createStudentSchema, updateStudentSchema };
-// Exportando como CreateStudentInput para manter consistência com o resto do sistema
+
 export type CreateStudentInput = z.infer<typeof createStudentSchema>;
 export type UpdateStudentInput = z.infer<typeof updateStudentSchema>;
 

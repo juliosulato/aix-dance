@@ -15,14 +15,14 @@ import Sales from "../(sales)";
 import { useSession } from "@/lib/auth-client";
 import { fetcher } from "@/utils/fetcher";
 import useSWR from "swr";
-import StudentForm from "../StudentForm";
+import StudentForm from "../StudentForm/StudentForm";
 import { StudentComplete } from "@/types/student.types";
 
 export default function StudentsView({ id }: { id: string }) {
   const session = useSession();
   const tenancyId = session?.data?.user.tenancyId as string;
 
-  const { data: student, error } = useSWR<StudentComplete>(
+  const { data: student, error } = useSWR<{ data: StudentComplete, success: boolean }>(
     `/api/v1/tenancies/${tenancyId}/students/${id}`,
     fetcher
   );
@@ -33,7 +33,7 @@ export default function StudentsView({ id }: { id: string }) {
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      await deleteStudents([student?.id || ""], tenancyId);
+      await deleteStudents([student?.data.id || ""], tenancyId);
       window.location.replace("/system/academic/students");
     } catch (error) {
       console.error("Falha ao excluir o aluno:", error);
@@ -60,7 +60,7 @@ export default function StudentsView({ id }: { id: string }) {
   return (
     <div className="p-4 md:p-6 bg-white rounded-3xl shadow-sm lg:p-8 flex flex-col gap-4 md:gap-6">
       <div className="flex flex-col items-center justify-center md:justify-between gap-4 md:flex-row md:flex-wrap mb-4">
-        <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{`${student.firstName} ${student.lastName}`}</h1>
+        <h1 className="text-xl text-center md:text-left md:text-2xl font-bold">{`${student.data.firstName} ${student.data.lastName}`}</h1>
         <div className="flex gap-4 md:gap-6">
           <button
             className="text-red-500 flex items-center gap-2 cursor-pointer hover:opacity-50 transition"
@@ -82,9 +82,9 @@ export default function StudentsView({ id }: { id: string }) {
       <Tabs
         value={tab}
         onChange={(value) => {
-          setTab(value || ""); // muda aba localmente
+          setTab(value || "");
           router.replace(
-            `/system/academic/students/${student.id}?tab=${value}`,
+            `/system/academic/students/${student.data.id}?tab=${value}`,
             { scroll: false }
           );
         }}
@@ -104,27 +104,27 @@ export default function StudentsView({ id }: { id: string }) {
           <Tabs.Tab value="history">Histórico</Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value="general">
-          <GeneralStudentsView student={student} />
+          <GeneralStudentsView student={student.data} />
         </Tabs.Panel>
         <Tabs.Panel value="payments">
-          <StudentBillsView student={student} />
+          <StudentBillsView student={student.data} />
         </Tabs.Panel>
         <Tabs.Panel value="sales">
-          <Sales student={student} />
+          <Sales student={student.data} />
         </Tabs.Panel>
         <Tabs.Panel value="classes">
-          <StudentClassView student={student} />
+          <StudentClassView student={student.data} />
         </Tabs.Panel>
         <Tabs.Panel value="contracts">
-          <StudentContractsView student={student} />
+          <StudentContractsView student={student.data} />
         </Tabs.Panel>
         <Tabs.Panel value="history">
-          <StudentHistoryView {...student} />
+          <StudentHistoryView {...student.data} />
         </Tabs.Panel>
       </Tabs>
 
       <StudentForm
-        isEditing={student}
+        isEditing={student.data}
         onClose={() => setOpenUpdate(false)}
         opened={openUpdate}
         mutate={() => window.location.reload() as any}
@@ -139,8 +139,8 @@ export default function StudentsView({ id }: { id: string }) {
         loading={isDeleting}
       >
         {`Tem certeza que deseja excluir o aluno ${
-          student?.firstName || ""
-        } ${student?.lastName || ""}?`}
+          student.data?.firstName || ""
+        } ${student.data?.lastName || ""}?`}
       </ConfirmationModal>
     </div>
   );

@@ -1,167 +1,199 @@
-import { Table, Checkbox, Group, Flex, UnstyledButton } from "@mantine/core";
-import { Column, SortConfig } from ".";
+import { Table, Checkbox, Group, Flex, ScrollArea } from "@mantine/core";
+import { Column, SortConfig } from "@/types/data-view.types";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { TbArrowDown, TbArrowUp, TbArrowsSort } from "react-icons/tb";
 
 interface DataViewTableProps<T> {
-    data: T[];
-    columns: Column<T>[];
-    selectedRows?: string[];
-    onSelectRow?: (id: string, selected: boolean) => void;
-    idKey?: keyof T;
-    RenderRowMenu?: (item: T) => React.ReactNode;
-    RenderAllRowsMenu?: (selectedRows: string[]) => React.ReactNode;
-    baseUrl?: string;
-    sortConfig: SortConfig<T> | null;
-    onSort: React.Dispatch<React.SetStateAction<SortConfig<T> | null>>;
+  data: T[];
+  columns: Column<T>[];
+  selectedRows: string[];
+  onSelectRow: (id: string, selected: boolean) => void;
+  onSelectAll: (selected: boolean) => void;
+  idKey?: keyof T;
+  RenderRowMenu?: (item: T) => React.ReactNode;
+  RenderAllRowsMenu?: (selectedRows: string[]) => React.ReactNode;
+  baseUrl?: string;
+  sortConfig: SortConfig<T> | null;
+  onSort: (config: SortConfig<T> | null) => void;
 }
 
 export default function DataViewTable<T>({
-    data,
-    columns,
-    selectedRows = [],
-    onSelectRow,
-    idKey = "id" as keyof T,
-    RenderAllRowsMenu,
-    RenderRowMenu,
-    baseUrl,
-    sortConfig,
-    onSort
+  data,
+  columns,
+  selectedRows,
+  onSelectRow,
+  onSelectAll,
+  idKey = "id" as keyof T,
+  RenderAllRowsMenu,
+  RenderRowMenu,
+  baseUrl,
+  sortConfig,
+  onSort,
 }: DataViewTableProps<T>) {
-    const handleSelect = (item: T, checked: boolean) => {
-        if (!onSelectRow) return;
-        const id = String(item[idKey]);
-        onSelectRow(id, checked);
-    };
+  const router = useRouter();
+  const [hoveredRow, setHoveredRow] = useState<string | null>(null);
 
-    const [rowHover, setRowHover] = useState<string | null>(null);
+  const handleRowClick = (item: T, event?: React.MouseEvent) => {
+    if (!baseUrl) return;
 
-    const router = useRouter();
+    const selection = window.getSelection();
+    if (selection && selection.toString().length > 0) return;
 
-    const handleRowClick = (item: T) => {
-        if (!baseUrl) return;
-        const selection = window.getSelection();
-        if (selection && selection.toString().length > 0) return;
+    const url = `${baseUrl}/${String(item[idKey])}`;
 
-        const id = String(item[idKey]);
-        router.push(`${baseUrl}/${id}`);
-    };
+    if (event?.button === 1) {
+      window.open(url, "_blank", "noopener,noreferrer");
+      return;
+    }
 
-    const handleSort = (key: keyof T) => {
-        onSort(prev => {
-            if (prev?.key === key && prev.direction === 'asc') {
-                return { key, direction: 'desc' };
-            }
-            return { key, direction: 'asc' };
-        });
-    };
+    router.push(url);
+  };
 
-    const SortIcon = ({ columnKey }: { columnKey: keyof T }) => {
-        if (sortConfig?.key !== columnKey) return <TbArrowsSort size={14} className="text-gray-400" />;
-        if (sortConfig.direction === 'asc') return <TbArrowUp size={14} className="text-violet-600" />;
-        return <TbArrowDown size={14} className="text-violet-600" />;
-    };
+  const handleHeaderSort = (key: keyof T) => {
+    const direction =
+      sortConfig?.key === key && sortConfig.direction === "asc"
+        ? "desc"
+        : "asc";
+    onSort({ key, direction });
+  };
 
-    return (
-        <div className="w-full overflow-hidden rounded-3xl">
-            <Table.ScrollContainer minWidth={500}>
-                <Table className="w-full" verticalSpacing="lg" horizontalSpacing="xl" withRowBorders={false} >
-                    <Table.Thead>
-                        <Table.Tr>
-                            <Table.Th className="max-w-fit! rounded-tl-3xl rounded-bl-3xl bg-white text-nowrap">
-                                <Group gap="xs">
-                                    <Checkbox
-                                        checked={data.length > 0 && data.every(item => selectedRows.includes(String(item[idKey])))}
-                                        indeterminate={selectedRows.length > 0 && selectedRows.length < data.length}
-                                        onChange={e => {
-                                            const checked = e.currentTarget.checked;
-                                            data.forEach(item => handleSelect(item, checked));
-                                        }}
-                                    />
-                                    {selectedRows.length > 1 && RenderAllRowsMenu && RenderAllRowsMenu(selectedRows)}
-                                </Group>
-                            </Table.Th>
+  const allSelected =
+    data.length > 0 &&
+    data.every((d) => selectedRows.includes(String(d[idKey])));
+  const indeterminate = selectedRows.length > 0 && !allSelected;
 
-                            {columns.map((col, idx) => {
-                                const isLastColumn = idx === columns.length - 1;
-                                return (
-                                    <Table.Th key={idx} className={`bg-white text-nowrap ${isLastColumn ? "rounded-tr-3xl rounded-br-3xl" : ""}`}>
-                                        {col.sortable ? (
-                                            <UnstyledButton onClick={() => handleSort(col.key)} className="w-full">
-                                                <Group justify="space-between" gap="xs" wrap="nowrap">
-                                                    {col.label}
-                                                    <SortIcon columnKey={col.key} />
-                                                </Group>
-                                            </UnstyledButton>
-                                        ) : (
-                                            col.label
-                                        )}
-                                    </Table.Th>
-                                );
-                            })}
-                        </Table.Tr>
-                    </Table.Thead>
-                    <Table.Tbody>
-                        <tr className="bg-neutral-100">
-                            <td></td><td></td><td className="py-2">&nbsp;</td>
-                        </tr>
-                        {data.map((item, rowIdx) => {
-                            const isSelected = selectedRows.includes(String(item[idKey]));
+  return (
+    <div className="w-full rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
+      <ScrollArea>
+        <Table verticalSpacing="sm" horizontalSpacing="md" highlightOnHover>
+          <Table.Thead className="bg-gray-50">
+            <Table.Tr>
+              <Table.Th w={50} className="rounded-tl-2xl">
+                <Group gap="xs">
+                  <Checkbox
+                    checked={allSelected}
+                    indeterminate={indeterminate}
+                    onChange={(e) => onSelectAll(e.currentTarget.checked)}
+                    color="violet"
+                  />
+                  {selectedRows.length > 0 &&
+                    RenderAllRowsMenu &&
+                    RenderAllRowsMenu(selectedRows)}
+                </Group>
+              </Table.Th>
 
-                            const bgColor = rowIdx % 2 === 0 ? "white" : "#fafafa";
+              {columns.map((col) => (
+                <Table.Th
+                  key={String(col.key)}
+                  style={{
+                    width: col.width,
+                    minWidth: col.minWidth ?? 150,
+                    textAlign: col.align || "left",
+                  }}
+                  className="whitespace-nowrap font-semibold text-gray-600 cursor-pointer hover:bg-gray-100 transition-colors"
+                  onClick={() => col.sortable && handleHeaderSort(col.key)}
+                >
+                  <Group
+                    justify={col.align === "right" ? "flex-end" : "flex-start"}
+                    gap={4}
+                  >
+                    {col.label}
+                    {col.sortable && (
+                      <span className="text-gray-400 flex items-center">
+                        {sortConfig?.key === col.key ? (
+                          sortConfig.direction === "asc" ? (
+                            <TbArrowUp size={14} className="text-violet-600" />
+                          ) : (
+                            <TbArrowDown
+                              size={14}
+                              className="text-violet-600"
+                            />
+                          )
+                        ) : (
+                          <TbArrowsSort size={14} />
+                        )}
+                      </span>
+                    )}
+                  </Group>
+                </Table.Th>
+              ))}
+            </Table.Tr>
+          </Table.Thead>
 
-                            const isFirstRow = rowIdx === 0;
-                            const isLastRow = rowIdx === data.length - 1;
+          <Table.Tbody>
+            {data.map((item, idx) => {
+              const id = String(item[idKey]);
+              const isSelected = selectedRows.includes(id);
 
-                            return (
-                                <Table.Tr
-                                    onClick={() => handleRowClick(item)}
-                                    key={rowIdx} style={{ backgroundColor: bgColor }}
-                                    onMouseEnter={() => setRowHover(String(rowIdx))}
-                                    onMouseLeave={() => setRowHover(null)}
-                                    className={`
-                                    transition-colors duration-200 
-                                    ${baseUrl ? 'cursor-pointer hover:bg-purple-50!' : 'hover:bg-[rgb(124,58,237,0.1)]'}
-                                `}
-                                >
-                                    <Table.Td
-                                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                                        className={`${isFirstRow ? "rounded-tl-3xl" : ""} ${isLastRow ? "rounded-bl-3xl" : ""}`}
-                                    >
-                                        <Flex gap="sm" align="center"
-                                            className={`transition opacity-0 ${(rowHover == String(rowIdx) || isSelected) && "opacity-100"}`}
-                                        >
-                                            <Checkbox
-                                                checked={isSelected}
-                                                onChange={e => handleSelect(item, e.currentTarget.checked)}
-                                            />
-                                            {RenderRowMenu && RenderRowMenu(item)}
-                                        </Flex>
-                                    </Table.Td>
-                                    {columns.map((col, colIdx) => {
-                                        const value = item[col.key];
-                                        const isLastColumn = colIdx === columns.length - 1;
+              return (
+                <Table.Tr
+                  key={id}
+                  onClick={(e) => handleRowClick(item, e)}
+                  onMouseDown={(e) => {
+                    if (e.button === 1) {
+                      e.preventDefault();
+                      handleRowClick(item, e);
+                    }
+                  }}
+                  onMouseEnter={() => setHoveredRow(id)}
+                  onMouseLeave={() => setHoveredRow(null)}
+                  className={`transition-colors duration-150 ${
+                    baseUrl ? "cursor-pointer" : ""
+                  }`}
+                  bg={isSelected ? "var(--mantine-color-violet-0)" : undefined}
+                >
+                  <Table.Td>
+                    <Flex align="center" gap="sm">
+                      <Checkbox
+                        checked={isSelected}
+                        onChange={(e) =>
+                          onSelectRow(id, e.currentTarget.checked)
+                        }
+                        onClick={(e) => e.stopPropagation()}
+                        color="violet"
+                      />
+                      {/* Mostra menu apenas no hover ou se selecionado para limpar UI */}
+                      <div
+                        className={`transition-opacity duration-200 ${
+                          hoveredRow === id || isSelected
+                            ? "opacity-100"
+                            : "opacity-0"
+                        }`}
+                      >
+                        {RenderRowMenu && RenderRowMenu(item)}
+                      </div>
+                    </Flex>
+                  </Table.Td>
 
-                                        return (
-                                            <Table.Td
-                                                key={colIdx}
-                                                className={`${isFirstRow && isLastColumn ? "rounded-tr-3xl" : ""} ${isLastRow && isLastColumn ? "rounded-br-3xl" : ""}`}
-                                            >
-                                                {col.render
-                                                    ? col.render(value, item)
-                                                    : typeof value === "string" || typeof value === "number" || typeof value === "boolean"
-                                                        ? value
-                                                        : value ? JSON.stringify(value ) : ""}
-                                            </Table.Td>
-                                        );
-                                    })}
-                                </Table.Tr>
-                            );
-                        })}
-                    </Table.Tbody>
-                </Table>
-            </Table.ScrollContainer>
-        </div>
-    );
+                  {columns.map((col) => (
+                    <Table.Td
+                      key={String(col.key)}
+                      style={{ textAlign: col.align || "left" }}
+                      c="dimmed"
+                      className="text-sm"
+                    >
+                      {col.render
+                        ? col.render(item[col.key], item)
+                        : String(item[col.key] ?? "")}
+                    </Table.Td>
+                  ))}
+                </Table.Tr>
+              );
+            })}
+            {/* Empty State na Tabela */}
+            {data.length === 0 && (
+              <Table.Tr>
+                <Table.Td colSpan={columns.length + 1} align="center" py="xl">
+                  <span className="text-gray-400 italic">
+                    Sem dados para exibir
+                  </span>
+                </Table.Td>
+              </Table.Tr>
+            )}
+          </Table.Tbody>
+        </Table>
+      </ScrollArea>
+    </div>
+  );
 }

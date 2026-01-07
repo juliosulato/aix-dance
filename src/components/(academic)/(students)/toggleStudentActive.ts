@@ -1,12 +1,12 @@
 import { KeyedMutator } from "swr";
 import { notifications } from "@mantine/notifications";
+import { StudentComplete } from "@/types/student.types";
 
-import { StudentFromApi } from "./StudentFromApi";
 
 async function toggleStudentActive(
-  item: StudentFromApi,
+  item: StudentComplete,
   tenancyId: string,
-  mutate?: KeyedMutator<StudentFromApi[]>
+  mutate?: KeyedMutator<StudentComplete[]>
 ) {
   if (!item) {
     notifications.show({
@@ -18,7 +18,6 @@ async function toggleStudentActive(
 
   const apiUrl = `/api/v1/tenancies/${tenancyId}/students/${item.id}`;
 
-  // Optimistic UI update
   mutate &&
     (await mutate(
       (currentData) =>
@@ -58,7 +57,6 @@ async function toggleStudentActive(
       message: "Erro interno ao atualizar o aluno.",
       color: "red",
     });
-    // Reverte em caso de erro
     mutate && mutate();
   }
 }

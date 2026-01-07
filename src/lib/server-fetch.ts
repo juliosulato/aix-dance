@@ -16,7 +16,6 @@ export async function serverFetch<TResponse = void>(
     headers: {
       ...init?.headers,
       Cookie: cookie,
-      "Content-Type": "application/json",
     },
   });
 

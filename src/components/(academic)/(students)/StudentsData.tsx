@@ -12,11 +12,11 @@ import "dayjs/locale/pt-br";
 import { StudentComplete } from "@/types/student.types";
 import StudentForm from "./StudentForm/StudentForm";
 import { useCrud } from "@/hooks/useCrud"; // Ajuste o caminho do seu hook
-import { deleteStudents } from "@/actions/academic/student/delete"; // Importe a server action criada acima
 import { RowActionMenu } from "./RowActionMenu";
 import { BulkActionMenu } from "./StudentsBulkActionMenu";
 import { studentsTableColumns } from "./studentsTableColumns";
 import StudentCard from "./StudentCard";
+import { deleteStudents } from "@/actions/student";
 
 export default function StudentsList() {
   const { data: sessionData } = useSession();

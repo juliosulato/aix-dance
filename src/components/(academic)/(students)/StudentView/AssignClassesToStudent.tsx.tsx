@@ -13,6 +13,7 @@ import notFound from "@/assets/images/not-found.png";
 import { FaSearch } from "react-icons/fa";
 import z from "zod";
 import { StudentComplete } from "@/types/student.types";
+import { Class } from "@/types/class.types";
 
 type Props = {
   opened: boolean;
@@ -36,13 +37,15 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
     defaultValues: { classIds: [] },
   });
 
-  const { data: allClasses } = useSWR<any[]>(
+  const { data: allClasses } = useSWR<PaginatedResponseLocal<Class>>(
     () =>
       sessionData?.user.tenancyId
         ? `/api/v1/tenancies/${sessionData.user.tenancyId}/classes`
         : null,
     fetcher
   );
+
+  const classes = allClasses?.data;
 
   const activeClassIds = useMemo(
     () =>
@@ -58,13 +61,13 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
 
   // 🔹 4. Opções para o MultiSelect
   const classOptions = useMemo(() => {
-    return (
-      allClasses?.map((c) => ({
+        return (
+      classes?.map((c) => ({
         label: `${c.name} (${c.modality?.name || "-"})`,
         value: c.id,
       })) || []
     );
-  }, [allClasses]);
+  }, [classes]);
 
   // 🔹 5. Assistir seleção
   const selectedClassIds = useWatch({ control, name: "classIds", defaultValue: [] });
@@ -94,7 +97,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
     if (toEnroll.length > 0) {
 
       toEnroll.forEach((classId) => {
-        const classInfo = allClasses?.find((c) => c.id === classId);
+        const classInfo = classes?.find((c) => c.id === classId);
         const className = classInfo?.name || "Turma desconhecida";
 
         promises.push(
@@ -127,7 +130,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
 
     if (toRemove.length > 0) {
       toRemove.forEach((classId) => {
-        const classInfo = allClasses?.find((c) => c.id === classId);
+        const classInfo = classes?.find((c) => c.id === classId);
         const className = classInfo?.name || "Turma desconhecida";
 
         // Arquivar matrícula
@@ -231,7 +234,8 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
               </div>
             ) : (
               selectedClassIds.map((classId) => {
-                const c = allClasses?.find((cl) => cl.id === classId);
+                const c = classes?.find((cl) => cl.id === classId);
+
                 return (
                   <div key={classId} className="flex items-center justify-between">
                     <Text>{c?.name}</Text>

@@ -40,8 +40,8 @@ export default function Address<T extends FieldValues>({ errors, register }: Pro
 
             <TextInput
                 label="CEP"
-                {...register("address.postalCode" as any)}
-                error={(errors.address as any)?.postalCode?.message}
+                {...register("address.zipCode" as any)}
+                error={(errors.address as any)?.zipCode?.message}
                 required
             />
 
@@ -56,6 +56,13 @@ export default function Address<T extends FieldValues>({ errors, register }: Pro
                 label="Estado"
                 {...register("address.state" as any)}
                 error={(errors.address as any)?.state?.message}
+                required
+            />
+
+            <TextInput
+                label="País"
+                {...register("address.country" as any)}
+                error={(errors.address as any)?.country?.message}
                 required
             />
         </div>

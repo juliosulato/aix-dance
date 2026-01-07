@@ -1,23 +1,31 @@
 import { BillComplete } from "@/types/bill.types";
-import { PaginatedResponseLocal } from "@/types/pagination.types";
 import { useMemo } from "react";
 
+type BillsSource =
+  | BillComplete[]
+  | {
+      products?: BillComplete[];
+      bills?: BillComplete[];
+    };
+
+
 export function useBillsData(
-  rawData?: BillComplete[],
+  rawData?: BillsSource,
   activeTab?: string | null
 ): BillComplete[] {
   const parentBills = useMemo(() => {
     if (!rawData) return [];
     if (Array.isArray(rawData)) return rawData;
-    return rawData.products ?? rawData.bills ?? [];
+
+    return rawData?.products ?? rawData.bills ?? [];
   }, [rawData]);
 
   const allBills = useMemo(() => {
-    const flat = parentBills.flatMap(parent => {
+    const flat = parentBills.flatMap((parent: BillComplete) => {
       const totalInstallments = (parent.children?.length || 0) + 1;
       return [
         { ...parent, totalInstallments },
-        ...(parent.children?.map((child: BillComplete) => ({
+        ...(parent.children?.map((child) => ({
           ...child,
           totalInstallments,
         })) || []),
@@ -32,7 +40,7 @@ export function useBillsData(
       CANCELLED: 4,
     };
 
-    return flat.sort((a, b) => {
+    return flat.sort((a: BillComplete, b: BillComplete) => {
       const aOrder = statusOrder[a.status ?? ""] ?? 99;
       const bOrder = statusOrder[b.status ?? ""] ?? 99;
       if (aOrder !== bOrder) return aOrder - bOrder;
@@ -43,7 +51,7 @@ export function useBillsData(
   const filteredBills = useMemo(() => {
     if (!activeTab) return allBills;
     return allBills.filter(
-      bill => bill.type?.toLowerCase() === activeTab
+      (bill: BillComplete) => bill.type?.toLowerCase() === activeTab
     );
   }, [allBills, activeTab]);
 

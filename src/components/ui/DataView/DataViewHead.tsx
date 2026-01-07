@@ -1,254 +1,140 @@
-import { ActionIcon, Button, Select, TextInput, Tooltip, Text, Popover } from "@mantine/core";
+import { TextInput, Button, Select, ActionIcon, Tooltip } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
-import React, { useState } from "react";
-import { IoAdd, IoReloadOutline } from "react-icons/io5";
-import { LuSearch } from "react-icons/lu";
-import { MdClose, MdOutlineTableChart, MdSpaceDashboard } from "react-icons/md";
-import { Filter, DateFilter, DateFilterOption } from ".";
-import { KeyedMutator } from "swr";
-import { FaFilter, FaPrint } from "react-icons/fa"; // Adicionado FaPrint
+import { LuSearch, LuPlus, LuPrinter } from "react-icons/lu";
+import { MdOutlineTableChart, MdSpaceDashboard } from "react-icons/md";
+import { IoReloadOutline } from "react-icons/io5";
+import { AdvancedFilter, ActiveFilters } from "@/types/data-view.types";
 import dayjs from "dayjs";
-import "dayjs/locale/pt-br";
 
-type PaginationInfo = {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
+interface DataViewHeadProps<T> {
+  title: string;
+  placeholder: string;
+  activeView: "table" | "grade";
+  onToggleView: (v: "table" | "grade") => void;
+  searchValue: string;
+  onSearchChange: (val: string) => void;
+  filters?: AdvancedFilter<T>[];
+  activeFilters: ActiveFilters;
+  onFilterChange: (key: string, val: any) => void;
+  onRefresh?: () => void;
+  onPrint?: () => void;
+  actionButton?: { label: string; onClick: () => void };
+  disableTable?: boolean;
 }
-
-type PaginatedResponse<T> = {
-    pagination: PaginationInfo;
-    [key: string]: PaginationInfo | T[] | undefined;
-}
-
-interface DataViewProps<T> {
-    pageTitle: string;
-    searchbarPlaceholder: string;
-    activeView: "table" | "grade";
-    setActiveView: React.Dispatch<React.SetStateAction<"table" | "grade">>
-    openNewModal?: {
-        label: string;
-        func: () => void;
-    };
-    setSearchValue: React.Dispatch<React.SetStateAction<string>>;
-    filters?: Filter<T>[];
-    activeFilters?: { [key: string]: string | null };
-    onFilterChange?: (filterKey: string, value: string | null) => void;
-    dateFilterOptions?: DateFilterOption<T>[];
-    dateFilter: DateFilter<T> | null;
-    onDateFilterChange: React.Dispatch<React.SetStateAction<DateFilter<T> | null>>;
-    mutate?: KeyedMutator<T[] | PaginatedResponse<T>>;
-    disableTable?: boolean;
-    renderHead?: () => React.ReactNode;
-    printable?: boolean; // ✨ NOVA PROPRIEDADE
-    onPrint?: () => void; // ✨ NOVA PROPRIEDADE
-};
 
 export default function DataViewHead<T>({
-    pageTitle,
-    searchbarPlaceholder,
-    activeView,
-    setActiveView,
-    openNewModal,
-    setSearchValue,
-    activeFilters,
-    filters,
-    onFilterChange,
-    dateFilterOptions,
-    dateFilter,
-    onDateFilterChange,
-    mutate,
-    disableTable,
-    renderHead,
-    printable, // ✨
-    onPrint,   // ✨
-}: DataViewProps<T>) {
-    const [isDatePopoverOpened, setDatePopoverOpened] = useState(false);
-    const [localDateFilter, setLocalDateFilter] = useState(dateFilter);
-
-    const handleApplyDateFilter = () => {
-        onDateFilterChange(localDateFilter);
-        setDatePopoverOpened(false);
-    };
-    const handleClearDateFilter = () => {
-        setLocalDateFilter(null);
-        onDateFilterChange(null);
-        setDatePopoverOpened(false);
-    };
-    React.useEffect(() => {
-        setLocalDateFilter(dateFilter);
-    }, [dateFilter]);
-
-    const isDateFilterActive = dateFilter && (dateFilter.from || dateFilter.to);
-
-    return (
-        <div className="flex flex-col gap-4 md:gap-6">
-            <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
-                <h1 className="text-2xl font-bold">{pageTitle}</h1>
-                <div className="flex flex-col gap-4 md:flex-row md:flex-wrap lg:flex-nowrap items-center justify-center">
-                    {renderHead && renderHead()}
-                    
-                    {/* ✨ BOTÃO DE IMPRIMIR ✨ */}
-                    {printable && (
-                        <Button
-                            variant="default"
-                            leftSection={<FaPrint size={14} />}
-                            onClick={onPrint}
-                            size="lg"
-                            radius="lg"
-                            className="text-sm! font-medium! tracking-wider w-full md:w-fit"
-                        >
-                            {"Imprimir"}
-                        </Button>
-                    )}
-
-                    {openNewModal && openNewModal.label && openNewModal.func && (
-                        <Button
-                            type="submit"
-                            color="#7439FA"
-                            radius="lg"
-                            size="lg"
-                            className="text-sm! font-medium! tracking-wider ml-auto min-w-full w-full md:min-w-fit md:w-fit"
-                            rightSection={<IoAdd />}
-                            onClick={openNewModal.func}
-                        >
-                            {openNewModal.label}
-                        </Button>
-                    )}
-                </div>
-            </div>
-
-            <div className="flex flex-col gap-4 md:gap-6 p-4 rounded-2xl bg-white md:flex-row justify-between">
-                <div className="flex flex-nowrap gap-2 items-center">
-                    <TextInput
-                        leftSection={<LuSearch />}
-                        placeholder={searchbarPlaceholder}
-                        onChange={(ev) => setSearchValue(ev.currentTarget.value)}
-                        className="w-full md:max-w-[400px] flex-grow"
-                        size="md"
-                        classNames={{ input: "!bg-neutral-100 placeholder:!text-neutral-400 !border-none !rounded-2xl" }}
-                    />
-
-                    {filters?.map(filter => (
-                        <Select
-                            key={String(filter.key)}
-                            label={filter.label}
-                            placeholder="Todos"
-                            data={filter.options}
-                            value={activeFilters?.[String(filter.key)] || null}
-                            onChange={(value) => onFilterChange?.(String(filter.key), value)}
-                            clearable
-                            className="w-full sm:w-auto sm:min-w-[180px]"
-                        />
-                    ))}
-
-                    {dateFilterOptions && dateFilterOptions.length > 0 && (
-                        <Popover
-                            width={300}
-                            position="bottom-end"
-                            withArrow
-                            shadow="md"
-                            opened={isDatePopoverOpened}
-                            onChange={setDatePopoverOpened}
-                            closeOnClickOutside={false}
-                        >
-                            <Popover.Target>
-                                <ActionIcon
-                                    variant="outline"
-                                    color={isDateFilterActive ? "#7439FA" : "gray"}
-                                    radius="md"
-                                    size="lg"
-                                    onClick={() => setDatePopoverOpened((o) => !o)}
-                                >
-                                    <FaFilter className="text-lg" />
-                                </ActionIcon>
-                            </Popover.Target>
-                            <Popover.Dropdown>
-                                <div className="flex flex-col gap-3">
-                                    <Text size="sm" fw={500}>{"Filtro por Data"}</Text>
-                                    <Select
-                                        label={"Campo de data"}
-                                        data={dateFilterOptions.map(opt => ({ label: opt.label, value: String(opt.key) }))}
-                                        value={String(localDateFilter?.key || dateFilterOptions[0].key)}
-                                        onChange={(key) => setLocalDateFilter(prev => ({ ...prev, key: key as any, from: prev?.from || null, to: prev?.to || null }))}
-                                    />
-                                    <DateInput
-                                        label={"Data inicial"}
-                                        value={localDateFilter?.from || null}
-                                        onChange={(date) => setLocalDateFilter((prev: any) => ({ ...prev, key: prev?.key ?? dateFilterOptions?.[0]?.key, from: date, to: prev?.to || null }))}
-                                        clearable
-                                        locale="pt-br"
-                                    />
-                                    <DateInput
-                                        label={"Data final"}
-                                        value={localDateFilter?.to || null}
-                                        onChange={(date) => setLocalDateFilter((prev: any) => ({ ...prev, key: prev?.key ?? dateFilterOptions?.[0]?.key, from: prev?.from || null, to: date }))}
-                                        clearable
-                                        locale="pt-br"
-                                        minDate={localDateFilter?.from || undefined}
-                                    />
-                                </div>
-                                <div className="flex justify-end gap-2 mt-4 pt-3 border-t border-neutral-200">
-                                    <Button variant="default" onClick={handleClearDateFilter} size="xs">
-                                        {"Limpar"}
-                                    </Button>
-                                    <Button onClick={handleApplyDateFilter} size="xs" color="#7439FA">
-                                        {"Aplicar"}
-                                    </Button>
-                                </div>
-                            </Popover.Dropdown>
-                        </Popover>
-                    )}
-
-                    {mutate && (
-                        <Tooltip label={"Atualizar"}>
-                            <ActionIcon
-                                variant="outline"
-                                color={"gray"}
-                                radius="md" aria-label={"Atualizar dados"}
-                                autoContrast
-                                size="lg"
-                                onClick={() => mutate()}
-                            >
-                                <IoReloadOutline className="text-xl" />
-                            </ActionIcon>
-                        </Tooltip>
-                    )}
-                    {dateFilter?.from && <button onClick={() => onDateFilterChange(prev => ({ ...prev!, from: null }))} className="text-nowrap flex flex-nowrap gap-2 items-center justify-center hover:opacity-50 transition cursor-pointer text-primary bg-violet-100 text-sm! px-4 py-2 border border-primary rounded-full">{"De"} {dayjs(dateFilter.from).format("DD/MM/YYYY")} <MdClose /></button>}
-                    {dateFilter?.to && <button onClick={() => onDateFilterChange(prev => ({ ...prev!, to: null }))} className="text-nowrap flex flex-nowrap gap-2 items-center justify-center hover:opacity-50 transition cursor-pointer text-primary bg-violet-100 text-sm! px-4 py-2 border border-primary rounded-full">{"Até"} {dayjs(dateFilter.to).format("DD/MM/YYYY")} <MdClose /></button>}
-                </div>
-
-                <div className="hidden md:flex flex-row flex-wrap gap-2 md:flex-nowrap justify-between items-center">
-                    {!disableTable && (
-                        <Tooltip color="rgba(116, 57, 250, 1)" label={"Visualizar como tabela"}>
-                            <ActionIcon
-                                variant="filled"
-                                color={activeView === "table" ? "rgba(116, 57, 250, 1)" : "#F5F5F5"}
-                                radius="md" aria-label={"Visualizar como tabela"}
-                                autoContrast
-                                size="xl"
-                                onClick={() => setActiveView("table")}
-                            >
-                                <MdOutlineTableChart className="text-2xl" />
-                            </ActionIcon>
-                        </Tooltip>
-                    )}
-                    <Tooltip color="rgba(116, 57, 250, 1)" label={"Visualizar como cards"}>
-                        <ActionIcon
-                            variant="filled"
-                            color={activeView !== "table" ? "rgba(116, 57, 250, 1)" : "#F5F5F5"}
-                            radius="md"
-                            size="xl"
-                            aria-label={"Visualizar como cards"}
-                            autoContrast
-                            onClick={() => setActiveView("grade")}
-                        >
-                            <MdSpaceDashboard className="text-2xl" />
-                        </ActionIcon>
-                    </Tooltip>
-                </div>
-            </div>
+  title,
+  placeholder,
+  activeView,
+  onToggleView,
+  searchValue,
+  onSearchChange,
+  filters = [],
+  activeFilters,
+  onFilterChange,
+  onRefresh,
+  onPrint,
+  actionButton,
+  disableTable
+}: DataViewHeadProps<T>) {
+  
+  return (
+    <div className="flex flex-col gap-5">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">{title}</h1>
         </div>
-    );
+        
+        <div className="flex gap-2 w-full md:w-auto">
+          {onPrint && (
+            <Button variant="default" leftSection={<LuPrinter />} onClick={onPrint}>
+              Imprimir
+            </Button>
+          )}
+          {actionButton && (
+            <Button color="violet" leftSection={<LuPlus />} onClick={actionButton.onClick} className="flex-1 md:flex-none">
+              {actionButton.label}
+            </Button>
+          )}
+        </div>
+      </div>
+
+      <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col lg:flex-row gap-4 justify-between items-center">
+        
+        <div className="flex flex-1 w-full gap-3 flex-wrap items-center">
+          <TextInput
+            placeholder={placeholder}
+            leftSection={<LuSearch className="text-gray-400" />}
+            value={searchValue}
+            onChange={(e) => onSearchChange(e.currentTarget.value)}
+            radius="md"
+            className="w-full md:max-w-xs"
+          />
+
+          {filters.map((filter) => {
+              if (filter.type === 'select') {
+                  return (
+                    <Select
+                        key={String(filter.key)}
+                        placeholder={filter.label}
+                        data={filter?.options ?? []}
+                        value={activeFilters[String(filter.key)] || null}
+                        onChange={(val) => onFilterChange(String(filter.key), val)}
+                        clearable
+                        radius="md"
+                        className="min-w-150px"
+                    />
+                  )
+              }
+              if (filter.type === 'date') {
+                  return (
+                      <DateInput
+                        key={String(filter.key)}
+                        placeholder={filter.label}
+                        value={activeFilters[String(filter.key)] ? new Date(activeFilters[String(filter.key)]) : null}
+                        onChange={(date) => onFilterChange(String(filter.key), date ? dayjs(date).toISOString() : null)}
+                        valueFormat="DD/MM/YYYY"
+                        clearable
+                        radius="md"
+                        popoverProps={{ withinPortal: true }}
+                      />
+                  )
+              }
+              return null;
+          })}
+
+          {onRefresh && (
+            <Tooltip label="Atualizar dados">
+                <ActionIcon variant="light" color="gray" size="lg" radius="md" onClick={onRefresh}>
+                    <IoReloadOutline size={18} />
+                </ActionIcon>
+            </Tooltip>
+          )}
+        </div>
+
+        <div className="flex gap-1 bg-gray-50 p-1 rounded-lg border border-gray-200">
+           {!disableTable && (
+               <ActionIcon 
+                variant={activeView === 'table' ? 'white' : 'transparent'} 
+                c={activeView === 'table' ? 'violet' : 'dimmed'}
+                className={activeView === 'table' ? 'shadow-sm' : ''}
+                onClick={() => onToggleView('table')}
+                size="lg"
+               >
+                   <MdOutlineTableChart size={20} />
+               </ActionIcon>
+           )}
+           <ActionIcon 
+                variant={activeView === 'grade' ? 'white' : 'transparent'} 
+                c={activeView === 'grade' ? 'violet' : 'dimmed'}
+                className={activeView === 'grade' ? 'shadow-sm' : ''}
+                onClick={() => onToggleView('grade')}
+                size="lg"
+               >
+                   <MdSpaceDashboard size={20} />
+               </ActionIcon>
+        </div>
+      </div>
+    </div>
+  );
 }

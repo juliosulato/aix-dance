@@ -34,8 +34,9 @@ export default function GeneralStudentsView({
         name={student.firstName}
         size={"xl"}
         radius="16px"
-        className="!h-fit !w-full aspect-square md:!w-32 md:!h-32 md:!w-inherit"
+        className="h-fit! w-full! aspect-square md:w-32! md:h-32! md:w-inherit!"
       />
+
 
       <div className="grid gap-4 md:gap-y-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-4 md:p-6 lg:p-8 border border-gray-300 rounded-2xl">
         <h2 className="font-semibold text-lg md:text-xl md:col-span-2 lg:col-span-3 xl:col-span-4  mb-4">
@@ -46,7 +47,7 @@ export default function GeneralStudentsView({
         </InfoTerm>
         <InfoTerm label={""}>
           <a
-            href={`https://wa.me/${student.cellPhoneNumber.replace(/\D/g, "")}`}
+            href={`https://wa.me/${student.cellPhoneNumber}`}
             target="_blank"
             rel="noreferrer"
             className="text-primary hover:underline"
@@ -75,14 +76,14 @@ export default function GeneralStudentsView({
           {"Endereço"}
         </h2>
         <InfoTerm label={"Logradouro"}>
-          {`${student.address.publicPlace}`}
+          {`${student?.address?.publicPlace}`}
         </InfoTerm>
-        <InfoTerm label={"Bairro"}>{student.address.neighborhood}</InfoTerm>
-        <InfoTerm label={"Complemento"}>{student.address.complement}</InfoTerm>
-        <InfoTerm label={"Número"}>{student.address.number}</InfoTerm>
-        <InfoTerm label={"Cidade"}>{student.address.city}</InfoTerm>
-        <InfoTerm label={"Estado"}>{student.address.state}</InfoTerm>
-        <InfoTerm label={"CEP"}>{student.address.zipCode}</InfoTerm>
+        <InfoTerm label={"Bairro"}>{student?.address?.neighborhood}</InfoTerm>
+        <InfoTerm label={"Complemento"}>{student?.address?.complement}</InfoTerm>
+        <InfoTerm label={"Número"}>{student?.address?.number}</InfoTerm>
+        <InfoTerm label={"Cidade"}>{student?.address?.city}</InfoTerm>
+        <InfoTerm label={"Estado"}>{student?.address?.state}</InfoTerm>
+        <InfoTerm label={"CEP"}>{student?.address?.zipCode}</InfoTerm>
       </div>
       <div className="flex flex-col gap-4  p-4 md:p-6 lg:p-8 border border-gray-300 rounded-2xl">
         <h2 className="font-semibold text-lg md:text-xl md:col-span-2 lg:col-span-3 xl:col-span-4  mb-4">
@@ -96,7 +97,7 @@ export default function GeneralStudentsView({
         </InfoTerm>
       </div>
 
-      {student.guardian.length > 0 &&
+      {student.guardian?.length > 0 &&
         student.guardian.map((guardian) => (
           <div
             key={guardian.id || guardian.cellPhoneNumber || `${guardian.firstName}-${guardian.lastName}`}
@@ -111,7 +112,7 @@ export default function GeneralStudentsView({
             <InfoTerm label={"Parentesco"}>{`${guardian.relationShip}`}</InfoTerm>
             <InfoTerm label={"Celular"}>
               <a
-                href={`https://wa.me/${guardian.cellPhoneNumber.replace(/\D/g, "")}`}
+                href={`https://wa.me/${guardian.cellPhoneNumber}`}
                 target="_blank"
                 rel="noreferrer"
                 className="text-primary hover:underline"

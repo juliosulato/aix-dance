@@ -11,7 +11,12 @@ const nextConfig = {
     turbopack: {
         // Resolve to the project directory to avoid Next.js inferring the wrong workspace root.
         root: path.resolve(__dirname)
-    }
+    },
+    experimental: {
+        serverActions: {
+            bodySizeLimit: '20mb', // Aumente para 10mb ou quanto precisar
+        },
+    },
 } as unknown as NextConfig;
 
 export default nextConfig;

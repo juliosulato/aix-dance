@@ -39,6 +39,7 @@ type Props = {
 
 const prepareTeacherForForm = (teacher: TeacherFromApi): UpdateUserInput => {
   const newTeacher = JSON.parse(JSON.stringify(teacher));
+
   const traverse = (obj: any) => {
     for (const key in obj) {
       if (obj[key] === null) {
@@ -48,6 +49,7 @@ const prepareTeacherForForm = (teacher: TeacherFromApi): UpdateUserInput => {
       }
     }
   };
+
   traverse(newTeacher);
   return newTeacher;
 };
@@ -69,7 +71,7 @@ function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
     useEffect(() => {
         if (user) {
             const preparedData = prepareTeacherForForm(user);
-            reset({ ...preparedData, teacher: { ...preparedData.teacher, dateOfBirth: dayjs(preparedData.teacher?.dateOfBirth).format("YYYY-MM-DD") }, password: undefined, confirmPassword: undefined });
+            reset({ ...preparedData, teacher: { ...preparedData.teacher, dateOfBirth: preparedData.teacher?.dateOfBirth }, password: undefined, confirmPassword: undefined });
             setVisible(false);
         }
     }, [user, reset])

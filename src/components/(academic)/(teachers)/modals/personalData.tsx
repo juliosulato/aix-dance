@@ -76,15 +76,10 @@ export default function Teacher__PersonalData({ control, errors, register }: Pro
                 name="teacher.dateOfBirth"
                 control={control}
                 render={({ field }) => (
-                    <InputBase
-                        component={IMaskInput}
-                        mask={"00/00/0000"}
-                        required
-                        value={field.value || ""}
+                    <DateInput
+                    {...field}
                         label={"Data de Nascimento"}
-                        placeholder={"dd/mm/aaaa"}
                         error={errors.teacher?.dateOfBirth?.message}
-                        onAccept={(val: string) => field.onChange(val)}
                     />
                 )}
             />

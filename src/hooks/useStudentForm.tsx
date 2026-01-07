@@ -16,6 +16,7 @@ import { updateStudent } from "@/actions/academic/student/update";
 import { StudentComplete } from "@/types/student.types";
 import { ZodType } from "zod";
 import { AppError } from "@/lib/AppError";
+import { IconX, IconCheck } from '@tabler/icons-react';
 
 interface UseStudentFormProps {
   isEditing?: StudentComplete | null;
@@ -52,7 +53,11 @@ export function useStudentForm({
       medicalAdvice: "",
       painOrDiscomfort: "",
       canLeaveAlone: true,
+      address: {
+        country: "Brasil"
+      }
     },
+    mode: "onChange"
   });
 
   const { reset, watch } = form;
@@ -88,13 +93,14 @@ export function useStudentForm({
         instagramUser: isEditing.instagramUser ?? "",
         address: isEditing.address
           ? {
-              postalCode: isEditing.address.zipCode ?? "",
+              zipCode: isEditing.address.zipCode ?? "",
               publicPlace: isEditing.address.publicPlace ?? "",
               number: isEditing.address.number ?? "",
               complement: isEditing.address.complement ?? "",
               neighborhood: isEditing.address.neighborhood ?? "",
               city: isEditing.address.city ?? "",
               state: isEditing.address.state ?? "",
+              country: isEditing.address.country ?? ""
             }
           : undefined,
         guardian:
@@ -179,6 +185,7 @@ export function useStudentForm({
         }
 
         notifications.show({
+          icon: <IconCheck  fill="#12B886"/>,
           message: `Aluno ${isUpdate ? "atualizado" : "criado"} com sucesso!`,
           color: "green",
         });
@@ -188,6 +195,7 @@ export function useStudentForm({
       } catch (error) {
         console.error(error);
         notifications.show({
+          icon: <IconX color="#FB8282"/>,
           title: "Erro",
           message:
             error instanceof Error
@@ -224,6 +232,7 @@ export function useStudentForm({
     const firstError = getFirstErrorMessage(errors);
 
     notifications.show({
+      icon: <IconX fill="#FB8282"/>,
       title: "Dados inválidos",
       message:
         firstError ||

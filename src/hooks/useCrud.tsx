@@ -2,6 +2,8 @@ import { BaseEntity, CrudHandlers, UseCrudOptions } from "@/types/useCrud.types"
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { useState, useCallback } from "react";
+import { GoCheckCircleFill } from "react-icons/go";
+import { IoCloseCircle } from "react-icons/io5";
 
 export function useCrud<T extends BaseEntity>({ mutate, redirectUrl, deleteAction }: UseCrudOptions<T> = {}): CrudHandlers<T> {
   const router = useRouter();
@@ -78,6 +80,7 @@ export function useCrud<T extends BaseEntity>({ mutate, redirectUrl, deleteActio
         router.replace(redirectUrl)
       }
       notifications.show({
+        icon: <GoCheckCircleFill color="#12B886"/>,
         title: "Sucesso",
         message: "Item(ns) excluído(s) com sucesso.",
         color: "green",
@@ -85,6 +88,7 @@ export function useCrud<T extends BaseEntity>({ mutate, redirectUrl, deleteActio
     } catch (error) {
       console.error("Erro ao excluir:", error);
       notifications.show({
+        icon: <IoCloseCircle color="#FB8282"/>,
         title: "Erro",
         message: "Não foi possível excluir o(s) item(ns).",
         color: "red",

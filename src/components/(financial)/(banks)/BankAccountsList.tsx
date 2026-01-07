@@ -1,6 +1,5 @@
 "use client";
 
-import { deleteBanks } from "@/actions/financial/banks/delete";
 import { ActionIcon, Menu, Text } from "@mantine/core";
 import { BiDotsVerticalRounded, BiTrash } from "react-icons/bi";
 import { GrUpdate } from "react-icons/gr";
@@ -10,6 +9,7 @@ import DataView from "@/components/ui/DataView";
 import BankFormModal from "./BankFormModal";
 import { Bank } from "@/types/bank.types";
 import { useCrud } from "@/hooks/useCrud";
+import { deleteBanks } from "@/actions/banks";
 
 interface BankAccountsListProps {
   banks: Bank[];

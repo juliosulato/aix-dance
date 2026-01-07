@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Button,
   LoadingOverlay,
@@ -8,14 +8,13 @@ import {
   NumberInput,
   TextInput,
 } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
-import { RiMoneyDollarCircleFill } from "react-icons/ri";
 
-import { createBank } from "@/actions/financial/banks/create";
-import { updateBank } from "@/actions/financial/banks/update";
+import { createBank } from "@/actions/banks";
+import { updateBank } from "@/actions/banks";
 import { Bank } from "@/types/bank.types";
 import { ActionState } from "@/types/server-actions.types";
 import { useFormAction } from "@/hooks/useFormAction";
+import { RiMoneyDollarCircleFill } from "react-icons/ri";
 type Props = {
   opened: boolean;
   onClose: () => void;

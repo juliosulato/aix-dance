@@ -7,7 +7,7 @@ import {
   UpdateBankInput,
   updateBankSchema,
 } from "@/schemas/financial/bank.schema";
-import { BanksService } from "@/services/financial/banks.service";
+import { BanksService } from "@/services/banks.service";
 import { ActionResult } from "@/types/action-result.types";
 import { ActionState } from "@/types/server-actions.types";
 import { handleServerActionError } from "@/utils/handlerApiErrors";

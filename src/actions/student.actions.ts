@@ -7,7 +7,7 @@ import {
   UpdateStudentInput,
   updateStudentSchema,
 } from "@/schemas/academic/student.schema";
-import { studentService } from "@/services/academic/student.service";
+import { studentService } from "@/services/student.service";
 import { ActionResult } from "@/types/action-result.types";
 import { ActionState } from "@/types/server-actions.types";
 import { handleServerActionError } from "@/utils/handlerApiErrors";

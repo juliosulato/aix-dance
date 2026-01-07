@@ -7,7 +7,7 @@ import {
   UpdateBillInput,
   updateBillSchema,
 } from "@/schemas/financial/bill.schema";
-import { BillsService } from "@/services/financial/bills.service";
+import { BillsService } from "@/services/bills.service";
 import { ActionResult } from "@/types/action-result.types";
 import { ActionState } from "@/types/server-actions.types";
 import { handleServerActionError } from "@/utils/handlerApiErrors";

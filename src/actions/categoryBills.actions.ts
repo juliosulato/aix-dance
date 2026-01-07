@@ -7,7 +7,7 @@ import {
   UpdateCategoryBillInput,
   updateCategoryBillSchema,
 } from "@/schemas/financial/category-bill.schema";
-import { CategoryBillsService } from "@/services/financial/categoryBills.service";
+import { CategoryBillsService } from "@/services/categoryBills.service";
 import { ActionState } from "@/types/server-actions.types";
 import { revalidatePath } from "next/cache";
 import z from "zod";

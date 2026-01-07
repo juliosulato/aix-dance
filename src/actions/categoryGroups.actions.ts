@@ -1,13 +1,13 @@
 "use server";
 
 import { protectedAction } from "@/lib/auth-guards";
+import { UpdateCategoryBillInput } from "@/schemas/financial/category-bill.schema";
 import {
-  CreateFormsOfReceiptInput,
-  createFormsOfReceiptSchema,
-  UpdateFormsOfReceiptInput,
-  updateFormsOfReceiptSchema,
-} from "@/schemas/financial/forms-receipt.schema";
-import { FormsOfReceiptService } from "@/services/financial/formsOfReceipt.service";
+  CreateCategoryGroupInput,
+  createCategoryGroupSchema,
+  updateCategoryGroupSchema,
+} from "@/schemas/financial/category-group.schema";
+import { CategoryGroupsService } from "@/services/categoryGroups.service";
 import { ActionResult } from "@/types/action-result.types";
 import { ActionState } from "@/types/server-actions.types";
 import { handleServerActionError } from "@/utils/handlerApiErrors";
@@ -15,68 +15,66 @@ import { handleValidationErrors } from "@/utils/handleValidationErrors";
 import { revalidatePath } from "next/cache";
 
 const PATHS = {
-    LIST: `/system/financial/forms-of-receipt`
-}
-export const createFormOfReceipt = protectedAction(
+  LIST: "/system/financial/category-groups",
+};
+
+export const createCategoryGroup = protectedAction(
   async (
     user,
-    _prevState: ActionState<CreateFormsOfReceiptInput>,
+    _prevState,
     formData: FormData
-  ): Promise<ActionState<CreateFormsOfReceiptInput>> => {
+  ): Promise<ActionState<CreateCategoryGroupInput>> => {
     const rawData = Object.fromEntries(formData.entries());
-
-    const validatedData = createFormsOfReceiptSchema.safeParse({
-      ...rawData,
-      fees: JSON.parse(rawData.fees as string),
-    });
+    const validatedData = createCategoryGroupSchema.safeParse(rawData);
 
     if (!validatedData.success) {
       return handleValidationErrors(validatedData.error);
     }
 
     try {
-      await FormsOfReceiptService.create(user.tenancyId, validatedData.data);
-
-      revalidatePath("/system/financial/forms-of-receipt");
-      return { success: true };
-    } catch (error: unknown) {
-      return handleServerActionError(error);
-    }
-  }
-);
-
-export const updateFormOfReceipt = protectedAction(
-  async (
-    user,
-    _prevState: ActionState<UpdateFormsOfReceiptInput>,
-    formData: FormData
-  ): Promise<ActionState<UpdateFormsOfReceiptInput>> => {
-    const rawData = Object.fromEntries(formData.entries());
-
-    const validatedData = updateFormsOfReceiptSchema.safeParse({
-      ...rawData,
-      fees: JSON.parse(rawData.fees as string),
-    });
-
-    if (!validatedData.success) {
-      return handleValidationErrors(validatedData.error);
-    }
-
-    try {
-      await FormsOfReceiptService.update(user.tenancyId, validatedData.data);
+      const response = await CategoryGroupsService.create(
+        user.tenancyId,
+        validatedData.data
+      );
+      console.log(response);
 
       revalidatePath(PATHS.LIST);
-      revalidatePath(PATHS.LIST + validatedData.data.id);
-
       return { success: true };
     } catch (error: unknown) {
-      console.error(error);
+      console.error("Error creating category groups.");
       return handleServerActionError(error);
     }
   }
 );
 
-export const deleteFormOfReceipt = protectedAction(
+export const updateCategoryGroup = protectedAction(
+  async (
+    user,
+    _prevState,
+    formData: FormData
+  ): Promise<ActionState<UpdateCategoryBillInput>> => {
+    const rawData = Object.fromEntries(formData.entries());
+    const validatedData = updateCategoryGroupSchema.safeParse(rawData);
+
+    if (!validatedData.success) {
+      return handleValidationErrors(validatedData.error);
+    }
+
+    try {
+      await CategoryGroupsService.update(user.tenancyId, validatedData.data);
+
+      revalidatePath(PATHS.LIST);
+      revalidatePath(PATHS.LIST + validatedData.data.id, "page");
+
+      return { success: true };
+    } catch (error: unknown) {
+      console.error("Error creating category groups.");
+      return handleServerActionError(error);
+    }
+  }
+);
+
+export const deleteCategoryGroups = protectedAction(
   async (user, ids: string[]): Promise<ActionResult> => {
     if (Array.isArray(ids) === false || ids.length === 0) {
       return {
@@ -86,15 +84,16 @@ export const deleteFormOfReceipt = protectedAction(
     }
 
     try {
-      await FormsOfReceiptService.deleteMany(user.tenancyId, ids);
+      await CategoryGroupsService.deleteMany(user.tenancyId, ids);
 
-      revalidatePath("/system/financial/forms-of-receipt");
+      revalidatePath(PATHS.LIST);
+
       return { success: true };
     } catch (error: unknown) {
       const result = handleServerActionError(error);
       return {
         success: false,
-        error: result.error ?? "Erro ao deletar forma de recebimento.",
+        error: result.error ?? "Erro ao deletar grupo.",
       };
     }
   }

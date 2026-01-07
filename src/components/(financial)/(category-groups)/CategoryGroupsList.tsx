@@ -8,7 +8,7 @@ import DataView from "@/components/ui/DataView";
 
 import { CategoryGroup } from "@/types/category.types";
 import { useCrud } from "@/hooks/useCrud";
-import { deleteCategoryGroups } from "@/actions/financial/categoryGroups/delete";
+import { deleteCategoryGroups } from "@/actions/categoryGroups";
 import CategoryGroupFormModal from "./CategoryGroupFormModal";
 
 type Props = {

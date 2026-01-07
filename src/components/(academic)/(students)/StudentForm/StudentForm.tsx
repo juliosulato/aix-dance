@@ -12,11 +12,11 @@ import { StudentComplete } from "@/types/student.types";
 import { useStudentForm } from "@/hooks/useStudentForm";
 
 // Sub-components
-import PersonalData from "./form/PersonalData";
-import Checkboxies from "./form/Checkboxies";
-import Guardians from "./form/Guardian";
-import StudentAvatarUpload from "./form/StudentAvatarUpload";
-import Address from "../../AddressForm";
+import PersonalData from "./PersonalData";
+import Checkboxies from "./Checkboxies";
+import Guardians from "./Guardian";
+import Address from "../../../AddressForm";
+import AvatarUpload from "@/components/ui/AvatarUpload/AvatarUpload";
 
 type Props = {
   opened: boolean;
@@ -30,7 +30,6 @@ export default function StudentForm({ opened, onClose, mutate, isEditing }: Prop
     form,
     isUpdate,
     isPending,
-    avatarPreview,
     handleClose,
     handleSubmit,
   } = useStudentForm({ isEditing, onClose, mutate, opened });
@@ -65,12 +64,10 @@ export default function StudentForm({ opened, onClose, mutate, isEditing }: Prop
           onSubmit={handleSubmit}
           className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[95vw] md:max-w-[80vw] lg:max-w-900px lg:p-6"
         >
-          {/* Componente isolado para Upload de Foto */}
-          <StudentAvatarUpload
+          <AvatarUpload
             control={control as any}
-            preview={avatarPreview}
             firstName={firstName}
-            isUpdate={isUpdate}
+            initialPreview={isEditing?.image}
           />
 
           <PersonalData
@@ -87,15 +84,6 @@ export default function StudentForm({ opened, onClose, mutate, isEditing }: Prop
             <Guardians control={control as any} errors={errors} />
           )}
 
-          <Group justify="flex-end" mt="md">
-            <Button
-              variant="subtle"
-              color="gray"
-              onClick={handleClose}
-              disabled={isPending}
-            >
-              Cancelar
-            </Button>
             <Button
               type="submit"
               color="#7439FA"
@@ -104,7 +92,6 @@ export default function StudentForm({ opened, onClose, mutate, isEditing }: Prop
             >
               {isUpdate ? "Salvar Alterações" : "Criar Aluno"}
             </Button>
-          </Group>
         </form>
       </Modal>
 

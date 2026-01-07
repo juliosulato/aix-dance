@@ -11,7 +11,6 @@ import {
   useWatch,
 } from "react-hook-form";
 import { CreateStudentFormData } from "@/schemas/academic/student.schema";
-import { IMaskInput } from "react-imask";
 import { UpdateStudentInput } from "@/schemas/academic/student.schema";
 import { FiAtSign } from "react-icons/fi";
 import { DateInput } from "@mantine/dates";
@@ -23,7 +22,6 @@ type Props = {
 };
 
 function NewStudent__PersonalData({ control, register, errors }: Props) {
-  // Refatorado: Removemos o useState duplicado e usamos o useWatch para reagir ao formulário
   const gender = useWatch({
     control,
     name: "gender",

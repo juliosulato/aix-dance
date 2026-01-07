@@ -1,3 +1,5 @@
+// Depreciado
+
 import { useRef, useState } from "react";
 import { ActionIcon, Avatar, Menu, Loader, Modal, Button } from "@mantine/core";
 import { notifications } from "@mantine/notifications";

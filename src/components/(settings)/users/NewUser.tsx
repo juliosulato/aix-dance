@@ -40,12 +40,11 @@ function NewUser({ opened, onClose, mutate }: Props) {
     register,
     reset,
   } = useForm<CreateUserInput>({
-    resolver: zodResolver(createUserSchema),
+    resolver: zodResolver(createUserSchema ),
     defaultValues: {
       teacher: undefined,
       role: "STAFF" as UserRole,
-    },
-    mode: "all",
+    }
   });
 
   const handleClose = () => {

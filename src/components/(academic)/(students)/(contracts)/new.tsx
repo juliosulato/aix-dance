@@ -119,7 +119,7 @@ export default function NewStudentContractModal({
 
         Object.entries(presets).forEach(([variable, presetValue]) => {
           const regex = new RegExp(`\\{\\{${variable}\\}\\}`, "g");
-          let replacement = "";
+          let replacement;
 
           switch (presetValue) {
             case "STUDENT_FULL_NAME":

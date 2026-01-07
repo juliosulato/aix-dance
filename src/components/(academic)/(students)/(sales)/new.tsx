@@ -67,7 +67,7 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
                 const planMonthlyAmount = planContext ? Number(planContext.amount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '';
                 
                 // Objeto com todas as variáveis e seus atalhos (aliases)
-                const replacements: { [key: string]: string | number | undefined | null } = {
+                const replacements: { [key: string]: string | number | Date | undefined | null } = {
                     // Variáveis do Aluno
                     'aluno-nome-completo': studentFullName,
                     'nome-completo': studentFullName, 

@@ -5,7 +5,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import { FormsOfReceipt } from "@/types/receipt.types";
 import { useCrud } from "@/hooks/useCrud";
-import { deleteFormOfReceipt } from "@/actions/formsOfReceipt";
+import { deleteFormOfReceipt } from "@/actions/formsOfReceipt.actions";
 import FormsOfReceiptModal from "./FormsOfReceiptModal";
 
 type Props = {

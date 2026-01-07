@@ -9,7 +9,7 @@ import DataView from "@/components/ui/DataView";
 import { CategoryBill, CategoryGroup } from "@/types/category.types";
 import { useCrud } from "@/hooks/useCrud";
 import CategoryBillFormModal from "./CategoryBillFormModal";
-import { deleteCategoryBills } from "@/actions/categoryBills";
+import { deleteCategoryBills } from "@/actions/categoryBills.actions";
 
 interface MenuItemProps {
   categoryGroup: CategoryBill;

@@ -13,7 +13,7 @@ import { IoAdd } from "react-icons/io5";
 import { BillComplete } from "@/types/bill.types";
 import { SessionData } from "@/lib/auth-server";
 import { useCrud } from "@/hooks/useCrud";
-import { deleteBills } from "@/actions/bills";
+import { deleteBills } from "@/actions/bills.actions";
 import { billListColumns } from "./billListColumns";
 import BillRowMenu from "./BillRowMenu";
 import BillCard from "./BillCard";

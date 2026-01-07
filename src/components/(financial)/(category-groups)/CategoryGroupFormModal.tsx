@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button, LoadingOverlay, Modal, TextInput } from "@mantine/core";
-import { createCategoryGroup, updateCategoryGroup } from "@/actions/categoryGroups";
+import { createCategoryGroup, updateCategoryGroup } from "@/actions/categoryGroups.actions";
 import { CategoryGroup } from "@/types/category.types";
 import { useFormAction } from "@/hooks/useFormAction"; // Importe o hook
 

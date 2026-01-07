@@ -5,7 +5,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import { CategoryGroup } from "@/types/category.types";
 import { useCrud } from "@/hooks/useCrud";
-import { deleteCategoryGroups } from "@/actions/categoryGroups";
+import { deleteCategoryGroups } from "@/actions/categoryGroups.actions";
 import CategoryGroupFormModal from "./CategoryGroupFormModal";
 
 type Props = {

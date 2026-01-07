@@ -17,7 +17,7 @@ import {
   UpdateFormsOfReceiptInput,
   updateFormsOfReceiptSchema,
 } from "@/schemas/financial/forms-receipt.schema";
-import { createFormOfReceipt, updateFormOfReceipt } from "@/actions/formsOfReceipt";
+import { createFormOfReceipt, updateFormOfReceipt } from "@/actions/formsOfReceipt.actions";
 
 import FormFormsOfReceipt from "./FormFormsOfReceipt";
 

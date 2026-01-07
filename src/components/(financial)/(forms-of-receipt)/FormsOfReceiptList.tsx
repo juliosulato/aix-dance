@@ -7,7 +7,7 @@ import { GrUpdate } from "react-icons/gr";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import { FormsOfReceipt } from "@/types/receipt.types";
 import { useCrud } from "@/hooks/useCrud";
-import { deleteFormOfReceipt } from "@/actions/formsOfReceipt";
+import { deleteFormOfReceipt } from "@/actions/formsOfReceipt.actions";
 import FormsOfReceiptModal from "./FormsOfReceiptModal";
 
 interface MenuItemProps {

@@ -11,7 +11,7 @@ import {
   UpdateStudentInput,
   updateStudentSchema,
 } from "@/schemas/academic/student.schema";
-import { createStudent, updateStudent } from "@/actions/student";
+import { createStudent, updateStudent } from "@/actions/student.actions";
 import { StudentComplete } from "@/types/student.types";
 import { ZodType } from "zod";
 import { AppError } from "@/lib/AppError";

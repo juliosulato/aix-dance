@@ -19,7 +19,7 @@ import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { notifications } from "@mantine/notifications";
 import { StudentComplete } from "@/types/student.types";
 import Decimal from "decimal.js";
-import { deleteBills } from "@/actions/bills";
+import { deleteBills } from "@/actions/bills.actions";
 
 
 interface MenuItemProps {

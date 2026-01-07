@@ -1,47 +1,66 @@
-import { SimpleGrid } from "@mantine/core";
-import { useRouter } from "next/navigation"; // NOVO
+import React from "react";
+import { SimpleGrid, Box } from "@mantine/core";
+import { useRouter } from "next/navigation";
 
 interface DataViewGridProps<T> {
-    data: T[];
-    renderCard: (item: T) => React.ReactNode;
-    baseUrl?: string; // NOVO
-    idKey?: keyof T; // NOVO: Para consistência com a tabela
+  data: T[];
+  renderCard: (item: T) => React.ReactNode;
+  baseUrl?: string;
+  idKey?: keyof T;
 }
 
-export default function DataViewGrid<T>({ 
-    data, 
-    renderCard, 
-    baseUrl, 
-    idKey = "id" as keyof T 
+export default function DataViewGrid<T>({
+  data,
+  renderCard,
+  baseUrl,
+  idKey = "id" as keyof T,
 }: DataViewGridProps<T>) {
-    const router = useRouter(); // NOVO
+  const router = useRouter();
 
-    return (
-        <SimpleGrid
-            className="gap-4"
-            cols={{ base: 1, sm: 2, lg: 4 }}
-        >
-            {data.map((item, index) => (
-                <div
-                    key={index}
-                    // ALTERADO: Adiciona classes de hover/cursor e o evento onClick
-                    className={`
-                        bg-white shadow-sm rounded-2xl p-4 md:p-6 flex flex-col gap-4 md:gap-6 justify-between
-                        transition-colors duration-200
-                        ${baseUrl ? 'cursor-pointer hover:bg-purple-50' : ''}
-                    `}
-                    onClick={() => {
-                        if (baseUrl) {
-                            const id = String(item[idKey]);
-                            router.push(`${baseUrl}/${id}`);
-                        }
-                    }}
-                >
-                    {/* Para evitar que clicar no menu do card redirecione, 
-                        o componente de menu dentro do renderCard deve ter e.stopPropagation() */}
-                    {renderCard ? renderCard(item) : null}
-                </div>
-            ))}
-        </SimpleGrid>
-    );
+  const handleItemClick = (item: T, event: React.MouseEvent) => {
+    if (!baseUrl) return;
+
+    const selection = window.getSelection();
+    if (selection && selection.toString().length > 0) return;
+
+    const url = `${baseUrl}/${String(item[idKey])}`;
+
+    if (event?.button === 1) {
+      window.open(url, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    const id = String((item as any)[idKey]);
+    router.push(`${baseUrl}/${id}`);
+  };
+
+  return (
+    <SimpleGrid
+      cols={{ base: 1, sm: 2, lg: 3, xl: 4 }} // Ajuste responsivo do Mantine
+      spacing="md"
+      verticalSpacing="md"
+    >
+      {data.map((item, index) => {
+        // Gera uma key única confiável
+        const keyValue = (item as any)[idKey] || index;
+
+        return (
+          <Box
+            key={keyValue}
+            onClick={(e) => handleItemClick(item, e)}
+            onAuxClick={(e) => handleItemClick(item, e)}
+            className={`
+              relative flex flex-col h-full
+              bg-white rounded-2xl shadow-sm border border-gray-100
+              transition-all duration-200 ease-in-out
+              hover:shadow-md hover:border-violet-100
+              ${baseUrl ? "cursor-pointer active:scale-[0.99]" : ""}
+            `}
+          >
+            {renderCard(item)}
+          </Box>
+        );
+      })}
+    </SimpleGrid>
+  );
 }

@@ -17,11 +17,9 @@ import {
   UpdateFormsOfReceiptInput,
   updateFormsOfReceiptSchema,
 } from "@/schemas/financial/forms-receipt.schema";
-import { createFormOfReceipt } from "@/actions/financial/formsOfReceipt/create";
-import { updateFormOfReceipt } from "@/actions/financial/formsOfReceipt/update";
+import { createFormOfReceipt, updateFormOfReceipt } from "@/actions/formsOfReceipt";
 
 import FormFormsOfReceipt from "./FormFormsOfReceipt";
-import { ZodType } from "zod";
 
 type Props = {
   opened: boolean;

@@ -24,6 +24,7 @@ import { CategoryBill } from "@/types/category.types";
 import { PaginatedListResponse } from "@/utils/pagination";
 import BillFormModal from "./BillFormModal/BillFormModal";
 import Breadcrumps from "@/components/ui/Breadcrumps";
+import { AppError } from "@/lib/AppError";
 
 type Props = {
   user: SessionData["user"];
@@ -75,12 +76,13 @@ export default function BillsList({
   });
 
   if (error) {
-    return <p>ERRO 503</p>;
+    throw new AppError(error, "500")
   }
 
   if (isLoading) {
     return <LoadingOverlay visible />;
   }
+  
   return (
     <main>
       <div className="flex gap-4 justify-between items-center">

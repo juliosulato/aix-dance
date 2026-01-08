@@ -15,7 +15,7 @@ type Props = {
 
 export default function BillCard({ item, crud, setOpenPayBill }: Props) {
  return (
-     <Box className="flex flex-col h-full">
+     <Box className="flex flex-col h-full p-4">
     <Flex justify="space-between" align="start">
       {renderBillStatus(item.status)}
       <BillRowMenu

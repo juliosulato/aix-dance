@@ -32,11 +32,9 @@ export const createBill = protectedAction(
       return handleValidationErrors(validatedData.error);
     }
 
-    console.log(validatedData);
 
     try {
-      const service = await BillsService.create(user.tenancyId, validatedData.data);
-      console.log(service);
+      await BillsService.create(user.tenancyId, validatedData.data);
 
       return { success: true };
     } catch (error) {

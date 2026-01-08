@@ -7,11 +7,12 @@ import {
   UpdateFormsOfReceiptInput,
   updateFormsOfReceiptSchema,
 } from "@/schemas/financial/forms-receipt.schema";
-import { FormsOfReceiptService } from "@/services/formsOfReceipt.service";
+import { FormsOfReceiptService } from "@/services/financial/formsOfReceipt.service";
 import { ActionResult } from "@/types/action-result.types";
 import { ActionState } from "@/types/server-actions.types";
 import { handleServerActionError } from "@/utils/handlerApiErrors";
 import { handleValidationErrors } from "@/utils/handleValidationErrors";
+import { parseFormData } from "@/utils/server-utils";
 import { revalidatePath } from "next/cache";
 
 const PATHS = {
@@ -23,7 +24,7 @@ export const createFormOfReceipt = protectedAction(
     _prevState: ActionState<CreateFormsOfReceiptInput>,
     formData: FormData
   ): Promise<ActionState<CreateFormsOfReceiptInput>> => {
-    const rawData = Object.fromEntries(formData.entries());
+    const rawData = parseFormData(formData);
 
     const validatedData = createFormsOfReceiptSchema.safeParse({
       ...rawData,
@@ -51,7 +52,7 @@ export const updateFormOfReceipt = protectedAction(
     _prevState: ActionState<UpdateFormsOfReceiptInput>,
     formData: FormData
   ): Promise<ActionState<UpdateFormsOfReceiptInput>> => {
-    const rawData = Object.fromEntries(formData.entries());
+    const rawData = parseFormData(formData);
 
     const validatedData = updateFormsOfReceiptSchema.safeParse({
       ...rawData,

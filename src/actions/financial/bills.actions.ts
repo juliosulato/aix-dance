@@ -7,11 +7,12 @@ import {
   UpdateBillInput,
   updateBillSchema,
 } from "@/schemas/financial/bill.schema";
-import { BillsService } from "@/services/bills.service";
+import { BillsService } from "@/services/financial/bills.service";
 import { ActionResult } from "@/types/action-result.types";
 import { ActionState } from "@/types/server-actions.types";
 import { handleServerActionError } from "@/utils/handlerApiErrors";
 import { handleValidationErrors } from "@/utils/handleValidationErrors";
+import { parseFormData } from "@/utils/server-utils";
 import { revalidatePath } from "next/cache";
 
 const PATHS = {
@@ -24,7 +25,7 @@ export const createBill = protectedAction(
     _prevState,
     formData: FormData
   ): Promise<ActionState<CreateBillInput>> => {
-    const rawData = Object.fromEntries(formData.entries());
+    const rawData = parseFormData(formData);
     const validatedData = createBillSchema.safeParse(rawData);
 
     if (!validatedData.success) {
@@ -48,7 +49,7 @@ export const updateBill = protectedAction(
     _prevState: ActionState<UpdateBillInput>,
     formData: FormData
   ): Promise<ActionState<UpdateBillInput>> => {
-    const rawData = Object.fromEntries(formData.entries());
+    const rawData = parseFormData(formData);
 
     const inputForValidation: any = { ...rawData };
     if (

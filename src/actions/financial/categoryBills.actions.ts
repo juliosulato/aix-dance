@@ -7,13 +7,13 @@ import {
   UpdateCategoryBillInput,
   updateCategoryBillSchema,
 } from "@/schemas/financial/category-bill.schema";
-import { CategoryBillsService } from "@/services/categoryBills.service";
+import { CategoryBillsService } from "@/services/financial/categoryBills.service";
 import { ActionState } from "@/types/server-actions.types";
 import { revalidatePath } from "next/cache";
-import z from "zod";
 import { handleServerActionError } from "@/utils/handlerApiErrors";
 import { ActionResult } from "@/types/action-result.types";
 import { handleValidationErrors } from "@/utils/handleValidationErrors";
+import { parseFormData } from "@/utils/server-utils";
 
 const PATHS = {
   LIST: "/system/financial/categories"
@@ -25,7 +25,7 @@ export const createCategoryBill = protectedAction(
     _prevState: ActionState<CreateCategoryBillInput>,
     formData: FormData
   ): Promise<ActionState<CreateCategoryBillInput>> => {
-    const rawData = Object.fromEntries(formData.entries());
+    const rawData = parseFormData(formData);
 
     const validatedData = createCategoryBillSchema.safeParse(rawData);
   
@@ -51,7 +51,7 @@ export const updateCategoryBill = protectedAction(
     _prevState: ActionState<UpdateCategoryBillInput>,
     formData: FormData
   ): Promise<ActionState<UpdateCategoryBillInput>> => {
-    const rawData = Object.fromEntries(formData.entries());
+    const rawData = parseFormData(formData);
 
     const validatedData = updateCategoryBillSchema.safeParse(rawData);
     console.log(rawData, validatedData);

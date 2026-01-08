@@ -7,12 +7,12 @@ import {
   UpdateBankInput,
   updateBankSchema,
 } from "@/schemas/financial/bank.schema";
-import { BanksService } from "@/services/banks.service";
+import { BanksService } from "@/services/financial/banks.service";
 import { ActionResult } from "@/types/action-result.types";
 import { ActionState } from "@/types/server-actions.types";
 import { handleServerActionError } from "@/utils/handlerApiErrors";
 import { handleValidationErrors } from "@/utils/handleValidationErrors";
-import { parseFormData } from "@/utils/parserFormData";
+import { parseFormData } from "@/utils/server-utils";
 import { revalidatePath } from "next/cache";
 
 const PATHS = {

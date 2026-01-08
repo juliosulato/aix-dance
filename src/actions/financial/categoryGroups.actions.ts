@@ -7,11 +7,12 @@ import {
   createCategoryGroupSchema,
   updateCategoryGroupSchema,
 } from "@/schemas/financial/category-group.schema";
-import { CategoryGroupsService } from "@/services/categoryGroups.service";
+import { CategoryGroupsService } from "@/services/financial/categoryGroups.service";
 import { ActionResult } from "@/types/action-result.types";
 import { ActionState } from "@/types/server-actions.types";
 import { handleServerActionError } from "@/utils/handlerApiErrors";
 import { handleValidationErrors } from "@/utils/handleValidationErrors";
+import { parseFormData } from "@/utils/server-utils";
 import { revalidatePath } from "next/cache";
 
 const PATHS = {
@@ -24,7 +25,7 @@ export const createCategoryGroup = protectedAction(
     _prevState,
     formData: FormData
   ): Promise<ActionState<CreateCategoryGroupInput>> => {
-    const rawData = Object.fromEntries(formData.entries());
+    const rawData = parseFormData(formData);
     const validatedData = createCategoryGroupSchema.safeParse(rawData);
 
     if (!validatedData.success) {
@@ -53,7 +54,7 @@ export const updateCategoryGroup = protectedAction(
     _prevState,
     formData: FormData
   ): Promise<ActionState<UpdateCategoryBillInput>> => {
-    const rawData = Object.fromEntries(formData.entries());
+    const rawData = parseFormData(formData);
     const validatedData = updateCategoryGroupSchema.safeParse(rawData);
 
     if (!validatedData.success) {

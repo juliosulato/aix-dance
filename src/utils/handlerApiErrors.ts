@@ -52,7 +52,7 @@ export function handleServerActionError<T>(
   }
   
   if (isApiErrorResponse(error)) {
-    const { statusCode, message, validationErrors } = error.error;
+    const { message, validationErrors } = error.error;
 
     console.error(error)
 

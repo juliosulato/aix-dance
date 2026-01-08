@@ -16,8 +16,8 @@ import { parseFormData } from "@/utils/server-utils";
 import { revalidatePath } from "next/cache";
 
 const PATHS = {
-    LIST: "/system/financial/manager/"
-}
+  LIST: "/system/financial/manager/",
+};
 
 export const createBill = protectedAction(
   async (
@@ -32,8 +32,11 @@ export const createBill = protectedAction(
       return handleValidationErrors(validatedData.error);
     }
 
+    console.log(validatedData);
+
     try {
-      await BillsService.create(user.tenancyId, validatedData.data);
+      const service = await BillsService.create(user.tenancyId, validatedData.data);
+      console.log(service);
 
       return { success: true };
     } catch (error) {
@@ -85,11 +88,9 @@ export const updateBill = protectedAction(
         : undefined,
     };
 
-    revalidatePath(PATHS.LIST + payload.id);
-
     try {
       const response = await BillsService.update(user.tenancyId, payload);
-      console.log(response, validatedData.data);
+      revalidatePath(PATHS.LIST + payload.id);
 
       return { success: true };
     } catch (error) {

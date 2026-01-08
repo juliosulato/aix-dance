@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Button, LoadingOverlay, Modal, Select, TextInput } from "@mantine/core";
-import { createCategoryBill, updateCategoryBill } from "@/actions/categoryBills.actions";
+import { createCategoryBill, updateCategoryBill } from "@/actions/financial/categoryBills.actions";
 import { BillCategoryType, BillNature, CategoryBill, CategoryGroup } from "@/types/category.types";
 import { useFormAction } from "@/hooks/useFormAction";
 

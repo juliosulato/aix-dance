@@ -13,7 +13,7 @@ import { ActionState } from "@/types/server-actions.types";
 import { Bank } from "@/types/bank.types";
 import { notifications } from "@mantine/notifications";
 import Decimal from "decimal.js";
-import { updateBill } from "@/actions/bills.actions";
+import { updateBill } from "@/actions/financial/bills.actions";
 
 type Props = {
   opened: boolean;

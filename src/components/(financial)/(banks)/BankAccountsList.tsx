@@ -9,7 +9,7 @@ import DataView from "@/components/ui/DataView";
 import BankFormModal from "./BankFormModal";
 import { Bank } from "@/types/bank.types";
 import { useCrud } from "@/hooks/useCrud";
-import { deleteBanks } from "@/actions/banks.actions";
+import { deleteBanks } from "@/actions/financial/banks.actions";
 
 interface BankAccountsListProps {
   banks: Bank[];

@@ -9,8 +9,8 @@ import {
   TextInput,
 } from "@mantine/core";
 
-import { createBank } from "@/actions/banks.actions";
-import { updateBank } from "@/actions/banks.actions";
+import { createBank } from "@/actions/financial/banks.actions";
+import { updateBank } from "@/actions/financial/banks.actions";
 import { Bank } from "@/types/bank.types";
 import { ActionState } from "@/types/server-actions.types";
 import { useFormAction } from "@/hooks/useFormAction";

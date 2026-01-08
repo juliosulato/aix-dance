@@ -15,7 +15,7 @@ import { ZodType } from "zod";
 import { Bank } from "@/types/bank.types";
 import { Supplier } from "@/types/supplier.types";
 import { CategoryBill } from "@/types/category.types";
-import { createBill, updateBill } from "@/actions/bills.actions";
+import { createBill, updateBill } from "@/actions/financial/bills.actions";
 import { useFormAction } from "@/hooks/useFormAction";
 import { ActionState } from "@/types/server-actions.types";
 import { SessionData } from "@/lib/auth-server";

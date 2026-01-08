@@ -3,8 +3,8 @@ import { CreateBankInput, UpdateBankInput } from "@/schemas/financial/bank.schem
 
 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-export const BanksService = {
-  create(tenancyId: string, data: CreateBankInput) {
+export class BanksService {
+  static create(tenancyId: string, data: CreateBankInput) {
     return serverFetch(
       `${baseUrl}/api/v1/tenancies/${tenancyId}/banks`,
       {
@@ -12,9 +12,9 @@ export const BanksService = {
         body: JSON.stringify(data),
       }
     );
-  },
+  }
 
-  update(tenancyId: string, data: UpdateBankInput) {
+  static update(tenancyId: string, data: UpdateBankInput) {
     return serverFetch(
       `${baseUrl}/api/v1/tenancies/${tenancyId}/banks/${data.id}`,
       {
@@ -22,9 +22,9 @@ export const BanksService = {
         body: JSON.stringify(data),
       }
     );
-  },
+  }
 
-  deleteMany(tenancyId: string, ids: string[]) {
+  static deleteMany(tenancyId: string, ids: string[]) {
     return serverFetch(
       `${baseUrl}/api/v1/tenancies/${tenancyId}/banks`,
       {
@@ -32,5 +32,5 @@ export const BanksService = {
         body: JSON.stringify({ ids }),
       }
     );
-  },
+  }
 };

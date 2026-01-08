@@ -3,8 +3,8 @@ import { CreateCategoryGroupInput, UpdateCategoryGroupInput } from "@/schemas/fi
 
 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-export const CategoryGroupsService = {
-  create(tenancyId: string, data: CreateCategoryGroupInput) {
+export class CategoryGroupsService {
+  static create(tenancyId: string, data: CreateCategoryGroupInput) {
     return serverFetch(
       `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/groups`,
       {
@@ -12,9 +12,9 @@ export const CategoryGroupsService = {
         body: JSON.stringify(data),
       }
     );
-  },
+  }
 
-  update(tenancyId: string, data: UpdateCategoryGroupInput) {
+  static update(tenancyId: string, data: UpdateCategoryGroupInput) {
     return serverFetch(
       `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/groups/${data.id}`,
       {
@@ -22,9 +22,9 @@ export const CategoryGroupsService = {
         body: JSON.stringify(data),
       }
     );
-  },
+  }
 
-  deleteMany(tenancyId: string, ids: string[]) {
+  static deleteMany(tenancyId: string, ids: string[]) {
     return serverFetch(
       `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/groups`,
       {
@@ -32,5 +32,5 @@ export const CategoryGroupsService = {
         body: JSON.stringify({ ids }),
       }
     );
-  },
+  }
 };

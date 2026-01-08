@@ -3,8 +3,8 @@ import { CreateCategoryBillInput, UpdateCategoryBillInput } from "@/schemas/fina
 
 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-export const CategoryBillsService = {
-  create(tenancyId: string, data: CreateCategoryBillInput) {
+export class CategoryBillsService {
+  static create(tenancyId: string, data: CreateCategoryBillInput) {
     return serverFetch(
       `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/bills`,
       {
@@ -12,9 +12,9 @@ export const CategoryBillsService = {
         body: JSON.stringify(data),
       }
     );
-  },
+  }
 
-  update(tenancyId: string, data: UpdateCategoryBillInput) {
+  static update(tenancyId: string, data: UpdateCategoryBillInput) {
     return serverFetch(
       `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/bills/${data.id}`,
       {
@@ -22,9 +22,9 @@ export const CategoryBillsService = {
         body: JSON.stringify(data),
       }
     );
-  },
+  }
 
-  deleteMany(tenancyId: string, ids: string[]) {
+  static deleteMany(tenancyId: string, ids: string[]) {
     return serverFetch(
       `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/bills`,
       {
@@ -32,5 +32,5 @@ export const CategoryBillsService = {
         body: JSON.stringify({ ids }),
       }
     );
-  },
+  }
 };

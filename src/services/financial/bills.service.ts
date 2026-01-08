@@ -3,8 +3,8 @@ import { CreateBillInput, UpdateBillInput } from "@/schemas/financial/bill.schem
 
 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-export const BillsService = {
-  create(tenancyId: string, data: CreateBillInput) {
+export class BillsService {
+  static create(tenancyId: string, data: CreateBillInput) {
     return serverFetch(
       `${baseUrl}/api/v1/tenancies/${tenancyId}/bills`,
       {
@@ -12,9 +12,9 @@ export const BillsService = {
         body: JSON.stringify(data),
       }
     );
-  },
+  }
 
-  update(tenancyId: string, data: UpdateBillInput) {
+  static update(tenancyId: string, data: UpdateBillInput) {
     return serverFetch(
       `${baseUrl}/api/v1/tenancies/${tenancyId}/bills/${data.id}`,
       {
@@ -22,9 +22,9 @@ export const BillsService = {
         body: JSON.stringify(data),
       }
     );
-  },
+  }
 
-  deleteMany(tenancyId: string, ids: string[]) {
+  static deleteMany(tenancyId: string, ids: string[]) {
     return serverFetch(
       `${baseUrl}/api/v1/tenancies/${tenancyId}/bills`,
       {
@@ -32,14 +32,14 @@ export const BillsService = {
         body: JSON.stringify({ ids }),
       }
     );
-  },
+  }
 
-  deleteOne(tenancyId: string, id: string, scope: string) {
+  static deleteOne(tenancyId: string, id: string, scope: string) {
     return serverFetch(
       `${baseUrl}/api/v1/tenancies/${tenancyId}/bills/${id}?scope=${scope}`,
       {
         method: "DELETE",
       }
     );
-  },
+  }
 };

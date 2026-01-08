@@ -3,8 +3,8 @@ import { CreateFormsOfReceiptInput, UpdateFormsOfReceiptInput } from "@/schemas/
 
 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-export const FormsOfReceiptService = {
-  create(tenancyId: string, data: CreateFormsOfReceiptInput) {
+export class FormsOfReceiptService {
+  static create(tenancyId: string, data: CreateFormsOfReceiptInput) {
     return serverFetch(
       `${baseUrl}/api/v1/tenancies/${tenancyId}/forms-of-receipt`,
       {
@@ -12,9 +12,9 @@ export const FormsOfReceiptService = {
         body: JSON.stringify(data),
       }
     );
-  },
+  }
 
-  update(tenancyId: string, data: UpdateFormsOfReceiptInput) {
+  static update(tenancyId: string, data: UpdateFormsOfReceiptInput) {
     return serverFetch(
       `${baseUrl}/api/v1/tenancies/${tenancyId}/forms-of-receipt/${data.id}`,
       {
@@ -22,9 +22,9 @@ export const FormsOfReceiptService = {
         body: JSON.stringify(data),
       }
     );
-  },
+  }
 
-  deleteMany(tenancyId: string, ids: string[]) {
+  static deleteMany(tenancyId: string, ids: string[]) {
     return serverFetch(
       `${baseUrl}/api/v1/tenancies/${tenancyId}/forms-of-receipt`,
       {
@@ -32,5 +32,5 @@ export const FormsOfReceiptService = {
         body: JSON.stringify({ ids }),
       }
     );
-  },
+  }
 };

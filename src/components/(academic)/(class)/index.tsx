@@ -187,8 +187,7 @@ export default function AllClassesData() {
     </Menu>
   );
 
-  if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-  if (!sessionData) return <div>Sessão inválida</div>; return <div>{"Não autenticado"}</div>;
+  if (isLoading) return <LoadingOverlay visible />;
   if (error) return <p>{"Erro"}</p>;
 
   return (
@@ -202,7 +201,7 @@ export default function AllClassesData() {
         baseUrl="/system/academic/classes/"
   mutate={mutate}
         pageTitle={"Turmas"}
-        searchbarPlaceholder={
+        searchPlaceholder={
           "Busque por nome da turma, professor, modalidade..."
         }
         columns={[

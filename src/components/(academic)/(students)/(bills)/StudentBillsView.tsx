@@ -259,11 +259,7 @@ export default function StudentBillsView({
           data={bills}
           baseUrl="/system/financial/manager/"
           pageTitle={`${"Gerenciador Financeiro"}`}
-          searchbarPlaceholder={"Buscar fatura por descrição, valor, status..."}
-          dateFilterOptions={[
-            { key: "dueDate", label: "Data de Vencimento" },
-            { key: "createdAt", label: "Data de Criação" },
-          ]}
+          searchPlaceholder={"Buscar fatura por descrição, valor, status..."}
           columns={[
             {
               key: "complement",

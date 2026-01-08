@@ -44,7 +44,7 @@ export default function StudentClassView({
           func: () => setOpenAssign(true),
         }}
         mutate={() => window.location.reload() as any}
-        searchbarPlaceholder={"Buscar turmas..."}
+        searchPlaceholder={"Buscar turmas..."}
         columns={[
           {
             key: "class.name" as any,

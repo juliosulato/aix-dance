@@ -211,7 +211,7 @@ export default function AllProductsData() {
           }
         }}
         pageTitle={"Produtos"}
-        searchbarPlaceholder={"Pesquise pelo SKU, nome ou descrição..."}
+        searchPlaceholder={"Pesquise pelo SKU, nome ou descrição..."}
         columns={[
           {
             key: "image",

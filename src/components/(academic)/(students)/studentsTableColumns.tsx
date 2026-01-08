@@ -1,5 +1,5 @@
-import { Column } from "@/components/ui/DataView";
 import { Class } from "@/types/class.types";
+import { Column } from "@/types/data-view.types";
 import { StudentComplete } from "@/types/student.types";
 import { Avatar, Badge } from "@mantine/core";
 

@@ -210,7 +210,7 @@ export default function AllModalityData() {
           }
         }}
         pageTitle={"Modalidades"}
-        searchbarPlaceholder={"Pesquisar modalidades..."}
+        searchPlaceholder={"Pesquisar modalidades..."}
         columns={[{ key: "name", label: "Nome" }]}
         RenderRowMenu={(item) => (
           <MenuItem

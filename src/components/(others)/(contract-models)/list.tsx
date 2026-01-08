@@ -144,7 +144,7 @@ export default function AllContractModelsPage() {
                 }}
                 mutate={mutate as any}
                 pageTitle="Modelos de Contrato"
-                searchbarPlaceholder="Buscar por título do modelo..."
+                searchPlaceholder="Buscar por título do modelo..."
                 columns={[
                     { key: "title", label: "Título", sortable: true },
                     {

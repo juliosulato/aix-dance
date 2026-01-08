@@ -110,7 +110,7 @@ export default function StudentContractsView({ student }: { student: StudentComp
         data={student.contracts || []}
         baseUrl="/pt-BR/contracts/views/"
         openNewModal={{ label: "Gerar Novo Contrato", func: () => setOpenNew(true) }}
-        searchbarPlaceholder={"Pesquisar por título do contrato..."}
+        searchPlaceholder={"Pesquisar por título do contrato..."}
         columns={[
           { key: "title" as any, label: "Título do Contrato", render: (value, item) => item?.title || 'Contrato Personalizado' },
           { key: "createdAt", label: "Criado Em", render: (value) => dayjs(value).format("DD/MM/YYYY") },

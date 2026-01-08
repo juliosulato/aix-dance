@@ -56,7 +56,7 @@ export default function StudentSalesHistory({ tenancyId, studentId }: Props) {
                 data={sales ?? []}
                 pageTitle="Histórico de Vendas"
                 baseUrl="/system/sales"
-                searchbarPlaceholder="Buscar vendas..."
+                searchPlaceholder="Buscar vendas..."
                 columns={[
                     {
                         key: "createdAt",

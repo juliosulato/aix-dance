@@ -159,7 +159,7 @@ export default function AllTeachersData() {
                 baseUrl="/system/academic/teachers/"
                 mutate={mutate}
                 pageTitle={"Professores"}
-                searchbarPlaceholder={"Pesquisar professores..."}
+                searchPlaceholder={"Pesquisar professores..."}
                 columns={[
                     {
                         key: "image", label: "", sortable: false,

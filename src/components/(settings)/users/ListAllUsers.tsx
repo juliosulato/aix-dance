@@ -173,7 +173,7 @@ export default function AllUsersData() {
         baseUrl=""
           mutate={mutate as any}
         pageTitle={"Usuários"}
-        searchbarPlaceholder={"Pesquisar usuários por nome, e-mail..."}
+        searchPlaceholder={"Pesquisar usuários por nome, e-mail..."}
         columns={[
           {
             key: "image",

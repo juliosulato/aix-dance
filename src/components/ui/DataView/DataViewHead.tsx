@@ -18,6 +18,7 @@ interface DataViewHeadProps<T> {
   onFilterChange: (key: string, val: any) => void;
   onRefresh?: () => void;
   onPrint?: () => void;
+  renderHead?: React.ReactNode;
   actionButton?: { label: string; onClick: () => void };
   disableTable?: boolean;
 }

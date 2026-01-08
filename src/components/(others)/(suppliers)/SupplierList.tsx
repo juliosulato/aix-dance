@@ -141,7 +141,7 @@ export default function AllSuppliersData() {
                 baseUrl="/system/others/suppliers/"
                 mutate={mutate as any}
                 pageTitle={"Fornecedores"}
-                searchbarPlaceholder={"Pesquisar fornecedores..."}
+                searchPlaceholder={"Pesquisar fornecedores..."}
                 columns={[
                     { key: "name", label: "Nome" },
                     { key: "corporateReason", label: "Razão Social" },

@@ -197,7 +197,7 @@ export default function AllPlansData() {
         baseUrl="/system/academic/plans/"
         mutate={mutate}
         pageTitle={"Planos"}
-        searchbarPlaceholder={"Pesquisar planos..."}
+        searchPlaceholder={"Pesquisar planos..."}
         columns={[
           { key: "name", label: "Nome", sortable: true },
           {

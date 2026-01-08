@@ -1,5 +1,5 @@
 import Breadcrumps from "@/components/ui/Breadcrumps";
-import CategoryBillView from "@/components/(financial)/(categories)/CategoryBillView";
+import CategoryBillView from "@/modules/financial/categories/CategoryBillView";
 import { requireAuth } from "@/lib/auth-guards";
 import { serverFetch } from "@/lib/server-fetch";
 import { CategoryBill, CategoryGroup } from "@/types/category.types";

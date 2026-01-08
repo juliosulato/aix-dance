@@ -90,7 +90,7 @@ export default function FormsOfReceiptList({ formsOfReceipt }: Props) {
         }}
         baseUrl="/system/financial/forms-of-receipt/"
         pageTitle={"Formas de Recebimento"}
-        searchbarPlaceholder={"Pesquisar meios de recebimento..."}
+        searchPlaceholder={"Pesquisar meios de recebimento..."}
         columns={[
           { key: "name", label: "Nome" },
           { key: "operator", label: "Operador" },

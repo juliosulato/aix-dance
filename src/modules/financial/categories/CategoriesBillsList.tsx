@@ -93,7 +93,7 @@ export default function CategoriesBillsList({ categoryGroups, categoryBills }: P
         }}
         baseUrl="/system/financial/categories/"
         pageTitle={"Categorias"}
-        searchbarPlaceholder={"Procurar categorias..."}
+        searchPlaceholder={"Procurar categorias..."}
         columns={[{ key: "name", label: "Nome" }]}
         RenderRowMenu={(item) => (
           <MenuItem

@@ -9,7 +9,6 @@ import DataView from "@/components/ui/DataView";
 
 import dayjs from "dayjs";
 import PayBill from "./PayBill";
-import { IoAdd } from "react-icons/io5";
 import { BillComplete } from "@/types/bill.types";
 import { SessionData } from "@/lib/auth-server";
 import { useCrud } from "@/hooks/useCrud";
@@ -24,6 +23,7 @@ import { Supplier } from "@/types/supplier.types";
 import { CategoryBill } from "@/types/category.types";
 import { PaginatedListResponse } from "@/utils/pagination";
 import BillFormModal from "./BillFormModal/BillFormModal";
+import Breadcrumps from "@/components/ui/Breadcrumps";
 
 type Props = {
   user: SessionData["user"];
@@ -50,21 +50,23 @@ export default function BillsList({
   const [activeTab, setActiveTab] = useState<string | null>("payable");
   const [deleteScope, setDeleteScope] = useState<"ONE" | "ALL_FUTURE">("ONE");
 
-
   const handleDeleteAction = async (ids: string[]) => {
     if (ids.length === 1) {
-       return deleteBills({ 
-           id: ids[0], 
-           scope: deleteScope 
-       });
+      return deleteBills({
+        id: ids[0],
+        scope: deleteScope,
+      });
     }
-    
+
     return deleteBills(ids);
   };
 
-  const handlePrepareDelete = (bill: BillComplete, scope: "ONE" | "ALL_FUTURE" = "ONE") => {
-    setDeleteScope(scope); 
-    crud.handleDelete(bill); 
+  const handlePrepareDelete = (
+    bill: BillComplete,
+    scope: "ONE" | "ALL_FUTURE" = "ONE"
+  ) => {
+    setDeleteScope(scope);
+    crud.handleDelete(bill);
   };
 
   const crud = useCrud<BillComplete>({
@@ -80,49 +82,57 @@ export default function BillsList({
     return <LoadingOverlay visible />;
   }
   return (
-    <>
+    <main>
+      <div className="flex gap-4 justify-between items-center">
+      <Breadcrumps
+        items={["Início", "Financeiro"]}
+        menu={[
+          { label: "Resumo", href: "/system/summary" },
+          { label: "Gerenciador", href: "/system/financial/manager" },
+          {
+            label: "Formas de Recebimento",
+            href: "/system/financial/forms-of-receipt",
+          },
+          { label: "Categorias", href: "/system/financial/categories" },
+          { label: "Grupos", href: "/system/financial/category-groups" },
+          {
+            label: "Contas Bancárias",
+            href: "/system/financial/banks",
+          },
+          { label: "Relatórios", href: "/system/financial/reports" },
+        ]}
+      />
+        <Tabs
+        variant="pills"
+        classNames={{
+          tab: "!px-6 !py-4 font-medium! !rounded-2xl",
+          root: "p-1! !bg-white !rounded-2xl shadow-sm",
+        }}
+        value={activeTab}
+        keepMounted={false}
+        onChange={setActiveTab}
+      >
+        <Tabs.List>
+          <Tabs.Tab value="payable">{"A Pagar"}</Tabs.Tab>
+          <Tabs.Tab value="receivable">{"A Receber"}</Tabs.Tab>
+        </Tabs.List>
+      </Tabs>
+      </div>
+      <br />
+      
+
       <DataView<BillComplete>
         data={billsData}
+        openNewModal={activeTab === "payable" ? {
+          label: "Nova Cobrança",
+          func: crud.handleCreate,
+        } : undefined}
+        key={"items"}
         baseUrl="/system/financial/manager/"
         mutate={mutate}
         pageTitle={`${"Contas"}`}
-        searchbarPlaceholder={"Pesquisar contas..."}
-        dateFilterOptions={[
-          { key: "dueDate", label: "Data de Vencimento" },
-          { key: "createdAt", label: "Data de Criação" },
-        ]}
+        searchPlaceholder={"Pesquisar contas..."}
         columns={billListColumns}
-        renderHead={() => (
-          <>
-            <Tabs
-              variant="pills"
-              classNames={{
-                tab: "!px-6 !py-4 font-medium! !rounded-2xl",
-                root: "p-1! !bg-white !rounded-2xl shadow-sm",
-              }}
-              value={activeTab}
-              onChange={setActiveTab}
-            >
-              <Tabs.List>
-                <Tabs.Tab value="payable">{"A Pagar"}</Tabs.Tab>
-                <Tabs.Tab value="receivable">{"A Receber"}</Tabs.Tab>
-              </Tabs.List>
-            </Tabs>
-            {activeTab == "payable" && (
-              <Button
-                type="button"
-                color="#7439FA"
-                radius="lg"
-                size="lg"
-                className="text-sm! font-medium! tracking-wider ml-auto min-w-full w-full md:min-w-fit md:w-fit"
-                rightSection={<IoAdd />}
-                onClick={() => crud.setModals.setCreate(true)}
-              >
-                {"Nova Conta"}
-              </Button>
-            )}
-          </>
-        )}
         RenderRowMenu={(item) => (
           <BillRowMenu
             bill={item}
@@ -136,8 +146,8 @@ export default function BillsList({
           <BillBulkMenu
             selectedIds={selectedIds}
             onBulkDeleteClick={(ids) => {
-                setDeleteScope("ONE");
-                crud.handleBulkDelete(ids);
+              setDeleteScope("ONE");
+              crud.handleBulkDelete(ids);
             }}
           />
         )}
@@ -193,19 +203,21 @@ export default function BillsList({
         cancelLabel={"Cancelar"}
         loading={crud.isDeleting}
       >
-         {crud.idsToDelete.length > 0 ? (
-           "Tem certeza que deseja excluir as contas selecionadas?"
-        ) : deleteScope === 'ALL_FUTURE' ? (
-           `Tem certeza que deseja excluir ESTA conta (${dayjs(crud.selectedItem?.dueDate).format("DD/MM/YYYY")}) e TODAS as futuras desta série?`
-        ) : (
-           `Tem certeza que deseja excluir a conta com vencimento em ${dayjs(crud.selectedItem?.dueDate).format("DD/MM/YYYY") || ""}?`
-        )}
+        {crud.idsToDelete.length > 0
+          ? "Tem certeza que deseja excluir as contas selecionadas?"
+          : deleteScope === "ALL_FUTURE"
+          ? `Tem certeza que deseja excluir ESTA conta (${dayjs(
+              crud.selectedItem?.dueDate
+            ).format("DD/MM/YYYY")}) e TODAS as futuras desta série?`
+          : `Tem certeza que deseja excluir a conta com vencimento em ${
+              dayjs(crud.selectedItem?.dueDate).format("DD/MM/YYYY") || ""
+            }?`}
 
         <br />
         <Text component="span" c="red" size="sm" fw={500} mt="md">
           Aviso: ação irreversível.
         </Text>
       </ConfirmationModal>
-    </>
+    </main>
   );
 }

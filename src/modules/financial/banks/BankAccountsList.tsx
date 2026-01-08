@@ -90,7 +90,7 @@ export default function BankAccountsList({ banks }: BankAccountsListProps) {
         }}
         baseUrl="/system/financial/banks/"
         pageTitle={"Bancos"}
-        searchbarPlaceholder={"Procurar bancos..."}
+        searchPlaceholder={"Procurar bancos..."}
         columns={[{ key: "name", label: "Nome"}, { key: "code", label: "Código" }, { key: "agency", label: "Agência" }, { key: "account", label: "Conta" }]}
         RenderRowMenu={(item) => (
           <MenuItem

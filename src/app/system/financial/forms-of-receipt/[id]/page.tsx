@@ -1,4 +1,4 @@
-import FormOfReceiptView from "@/components/(financial)/(forms-of-receipt)/FormOfReceiptView";
+import FormOfReceiptView from "@/modules/financial/forms-of-receipt/FormOfReceiptView";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 import { requireAuth } from "@/lib/auth-guards";
 import { serverFetch } from "@/lib/server-fetch";

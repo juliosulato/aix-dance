@@ -1,5 +1,5 @@
 import Breadcrumps from "@/components/ui/Breadcrumps";
-import BankAccountView from "@/components/(financial)/(banks)/BankAccountView";
+import BankAccountView from "@/modules/financial/banks/BankAccountView";
 import { requireAuth } from "@/lib/auth-guards";
 import { serverFetch } from "@/lib/server-fetch";
 import { Bank } from "@/types/bank.types";

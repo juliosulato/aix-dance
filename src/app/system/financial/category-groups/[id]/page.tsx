@@ -1,5 +1,5 @@
 import Breadcrumps from "@/components/ui/Breadcrumps";
-import CategoryGroupView from "@/components/(financial)/(category-groups)/CategoryGroupView";
+import CategoryGroupView from "@/modules/financial/category-groups/CategoryGroupView";
 import { requireAuth } from "@/lib/auth-guards";
 import { serverFetch } from "@/lib/server-fetch";
 import { CategoryGroup } from "@/types/category.types";

@@ -1,5 +1,5 @@
 import Breadcrumps from "@/components/ui/Breadcrumps";
-import BillView from "@/components/(financial)/(manager)/BillView";
+import BillView from "@/modules/financial/manager/BillView";
 import { requireAuth } from "@/lib/auth-guards";
 import { serverFetch } from "@/lib/server-fetch";
 import { BillComplete } from "@/types/bill.types";

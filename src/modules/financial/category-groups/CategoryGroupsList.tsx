@@ -92,7 +92,7 @@ export default function CategoryGroupsList({ categoryGroups }: Props) {
         }}
         baseUrl="/system/financial/category-groups/"
         pageTitle={"Grupos de Categorias"}
-        searchbarPlaceholder={"Pesquisar grupos..."}
+        searchPlaceholder={"Pesquisar grupos..."}
         columns={[{ key: "name", label: "Nome" }]}
         RenderRowMenu={(item) => (
           <MenuItem

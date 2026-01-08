@@ -1,4 +1,4 @@
-import CategoriesBillsList from "@/components/(financial)/(categories)/CategoriesBillsList";
+import CategoriesBillsList from "@/modules/financial/categories/CategoriesBillsList";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 import { requireAuth } from "@/lib/auth-guards";
 import { serverFetch } from "@/lib/server-fetch";

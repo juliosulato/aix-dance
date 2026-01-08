@@ -1,7 +1,7 @@
-import { Column } from "@/components/ui/DataView";
 import { BillComplete, RecurrenceType } from "@/types/bill.types";
 import dayjs from "dayjs";
 import renderBillStatus from "./renderBillStatus";
+import { Column } from "@/types/data-view.types";
 
 export const billListColumns: Column<BillComplete>[] = [
   {

@@ -1,4 +1,4 @@
-import BankAccountsList from "@/components/(financial)/(banks)/BankAccountsList";
+import BankAccountsList from "@/modules/financial/banks/BankAccountsList";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 import { requireAuth } from "@/lib/auth-guards";
 import { serverFetch } from "@/lib/server-fetch";

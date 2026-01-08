@@ -9,7 +9,7 @@ import {
 import { KeyedMutator } from "swr";
 import { StudentComplete } from "@/types/student.types";
 
-import { useStudentForm } from "@/hooks/useStudentForm";
+import { useStudentForm } from "@/hooks/academic/useStudentForm";
 
 // Sub-components
 import PersonalData from "./PersonalData";

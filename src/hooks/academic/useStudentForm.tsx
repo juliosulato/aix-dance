@@ -11,7 +11,7 @@ import {
   UpdateStudentInput,
   updateStudentSchema,
 } from "@/schemas/academic/student.schema";
-import { createStudent, updateStudent } from "@/actions/student.actions";
+import { saveStudent } from "@/actions/academic/students.actions";
 import { StudentComplete } from "@/types/student.types";
 import { ZodType } from "zod";
 import { AppError } from "@/lib/AppError";
@@ -170,9 +170,9 @@ export function useStudentForm({
         let result;
 
         if (isUpdate && isEditing?.id) {
-          result = await updateStudent(formData, isEditing.id);
+          result = await saveStudent(formData, isEditing.id);
         } else {
-          result = await createStudent(formData);
+          result = await saveStudent(formData);
         }
 
         if (!result.success) {

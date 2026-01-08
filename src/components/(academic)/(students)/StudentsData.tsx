@@ -16,7 +16,7 @@ import { RowActionMenu } from "./RowActionMenu";
 import { BulkActionMenu } from "./StudentsBulkActionMenu";
 import { studentsTableColumns } from "./studentsTableColumns";
 import StudentCard from "./StudentCard";
-import { deleteStudents } from "@/actions/student.actions";
+import { deleteStudents } from "@/actions/academic/students.actions";
 
 export default function StudentsList() {
   const { data: sessionData } = useSession();

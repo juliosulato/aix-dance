@@ -40,14 +40,14 @@ export default function BillsList({
   suppliers,
   categories,
 }: Props) {
+  
+  const [activeTab, setActiveTab] = useState<string | null>("payable");
   const { data, error, isLoading, mutate } = useSWR<
     PaginatedListResponse<BillComplete>
-  >(`/api/v1/tenancies/${user.tenancyId}/bills`, fetcher);
-
+  >(`/api/v1/tenancies/${user.tenancyId}/bills?type=${activeTab?.toUpperCase()}`, fetcher);
   const billsData = useBillsData(data?.data || []);
 
   const [openPayBill, setOpenPayBill] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<string | null>("payable");
   const [deleteScope, setDeleteScope] = useState<"ONE" | "ALL_FUTURE">("ONE");
 
   const handleDeleteAction = async (ids: string[]) => {

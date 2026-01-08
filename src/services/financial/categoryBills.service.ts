@@ -1,5 +1,8 @@
 import { serverFetch } from "@/lib/server-fetch";
-import { CreateCategoryBillInput, UpdateCategoryBillInput } from "@/schemas/financial/category-bill.schema";
+import {
+  CreateCategoryBillInput,
+  UpdateCategoryBillInput,
+} from "@/schemas/financial/category-bill.schema";
 
 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -10,6 +13,9 @@ export class CategoryBillsService {
       {
         method: "POST",
         body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
   }
@@ -20,6 +26,9 @@ export class CategoryBillsService {
       {
         method: "PUT",
         body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
   }
@@ -30,7 +39,10 @@ export class CategoryBillsService {
       {
         method: "DELETE",
         body: JSON.stringify({ ids }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
   }
-};
+}

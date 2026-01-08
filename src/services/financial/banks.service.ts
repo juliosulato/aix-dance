@@ -10,6 +10,9 @@ export class BanksService {
       {
         method: "POST",
         body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
       }
     );
   }
@@ -20,6 +23,9 @@ export class BanksService {
       {
         method: "PUT",
         body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
       }
     );
   }
@@ -30,6 +36,9 @@ export class BanksService {
       {
         method: "DELETE",
         body: JSON.stringify({ ids }),
+        headers: {
+          "Content-Type": "application/json"
+        }
       }
     );
   }

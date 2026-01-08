@@ -10,6 +10,9 @@ export class BillsService {
       {
         method: "POST",
         body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
       }
     );
   }
@@ -20,6 +23,9 @@ export class BillsService {
       {
         method: "PUT",
         body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
       }
     );
   }
@@ -30,6 +36,9 @@ export class BillsService {
       {
         method: "DELETE",
         body: JSON.stringify({ ids }),
+        headers: {
+          "Content-Type": "application/json"
+        }
       }
     );
   }
@@ -39,6 +48,9 @@ export class BillsService {
       `${baseUrl}/api/v1/tenancies/${tenancyId}/bills/${id}?scope=${scope}`,
       {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        }
       }
     );
   }

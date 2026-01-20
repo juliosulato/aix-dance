@@ -1,101 +1,29 @@
-import { fetcher } from "@/utils/fetcher";
 import {
   ActionIcon,
   Button,
   Group,
-  LoadingOverlay,
   Table,
   Tooltip,
 } from "@mantine/core";
-import { useSession } from "@/lib/auth-client";
-import useSWR from "swr";
 import CreateStockMovement from "./CreateStockMovement";
-import { useState } from "react";
 import dayjs from "dayjs";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { notifications } from "@mantine/notifications";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
-import { StockMovementWithCreator } from "@/types/inventory.types";
+import { StockMovement } from "@/types/inventory.types";
+import { useCrud } from "@/hooks/useCrud";
+import { ProductWithStockMovement } from "@/types/product.types";
+import { SessionData } from "@/lib/auth-server";
 
 export default function ViewStockMovements({
-  productId,
-  productMutate
+  product,
+  user
 }: {
-  productId: string;
-  productMutate: () => void;
+  product: ProductWithStockMovement;
+  user: SessionData["user"];
 }) {
-  const { data: sessionData, isPending } = useSession();
-  const { data, error, mutate } = useSWR<any>(
-    `/api/v1/tenancies/${sessionData?.user.tenancyId}/inventory/stock-movements?productId=${productId}`,
-    fetcher
-  );
+  const crud = useCrud<StockMovement>({});
 
-  const [createModalOpened, setCreateModalOpened] = useState(false);
-  const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
-  const [movementIdToDelete, setMovementIdToDelete] = useState<string | null>(
-    null
-  );
-  const [isDeleting, setIsDeleting] = useState<boolean>(false);
-
-  if (error) return <div>Falha ao carregar os movimentos de estoque.</div>;
-
-  if (!data || status === "loading") {
-    return (
-      <LoadingOverlay
-        visible={true}
-        zIndex={9999}
-        overlayProps={{ radius: "sm", blur: 2 }}
-        loaderProps={{ color: "violet", type: "dots" }}
-        pos="fixed"
-        h="100vh"
-        w="100vw"
-      />
-    );
-  }
-
-  
-
-  // Normalize API shape: it may return an array or an object { movements, pagination }
-  const movements: StockMovementWithCreator[] = Array.isArray(data)
-    ? (data as StockMovementWithCreator[])
-    : (data?.movements as StockMovementWithCreator[]) || [];
-
-  const handleDelete = async (movementId: string) => {
-    try {
-      const res = await fetch(
-        `/api/v1/tenancies/${sessionData?.user.tenancyId}/inventory/stock-movements/${movementId}`,
-        { method: "DELETE" }
-      );
-      if (!res.ok) {
-        const errText = await res.text();
-        throw new Error(errText || "Falha ao excluir movimento");
-      }
-      notifications.show({
-        color: "green",
-        message: "Movimento excluído com sucesso.",
-      });
-      mutate();
-    } catch (err) {
-      notifications.show({
-        color: "red",
-        message: `Erro ao excluir: ${(err as Error).message}`,
-      });
-    } finally{
-      productMutate();
-    }
-  };
-
-  const handleDeleteConfirm = async () => {
-    if (!movementIdToDelete) {
-      setConfirmModalOpen(false);
-      return;
-    }
-    setIsDeleting(true);
-    await handleDelete(movementIdToDelete);
-    setIsDeleting(false);
-    setConfirmModalOpen(false);
-    setMovementIdToDelete(null);
-  };
+  const movements = product.stockMovements;
 
   return (
     <>
@@ -103,7 +31,7 @@ export default function ViewStockMovements({
         <Group justify="space-between" align="center" mb="md">
           <h2  className="text-2xl font-bold">Movimentos de Estoque</h2>
           <Button
-            onClick={() => setCreateModalOpened(true)}
+            onClick={crud.handleCreate}
             color="#7439FA"
             radius="lg"
             size="lg"
@@ -158,10 +86,7 @@ export default function ViewStockMovements({
                             icon: "hover:!text-red-600 transition",
                           }}
                           title="Excluir movimento"
-                          onClick={() => {
-                            setMovementIdToDelete(movement.id);
-                            setConfirmModalOpen(true);
-                          }}
+                          onClick={() => crud.handleDelete(movement)}
                         >
                           <FaRegTrashAlt />
                         </ActionIcon>
@@ -173,13 +98,13 @@ export default function ViewStockMovements({
         </Table>
       </div>
       <ConfirmationModal
-        opened={isConfirmModalOpen}
-        onClose={() => setConfirmModalOpen(false)}
-        onConfirm={handleDeleteConfirm}
+        opened={crud.modals.delete}
+        onClose={crud.closeModals.delete}
+        onConfirm={crud.confirmDelete}
         title={"Confirmar Exclusão"}
         confirmLabel={"Excluir"}
         cancelLabel={"Cancelar"}
-        loading={isDeleting}
+        loading={crud.isDeleting}
       >
         {"Tem certeza que deseja excluir este movimento de estoque?"}
         <br />
@@ -187,14 +112,11 @@ export default function ViewStockMovements({
           {"Essa ação não pode ser desfeita."}
         </span>
       </ConfirmationModal>
+      
       <CreateStockMovement
-        opened={createModalOpened}
-        onClose={() => setCreateModalOpened(false)}
-        productId={productId}
-        mutates={() => {
-          mutate();
-          productMutate();
-        }}
+        opened={crud.modals.create}
+        onClose={crud.closeModals.create}
+        productId={product.id}
       />
     </>
   );

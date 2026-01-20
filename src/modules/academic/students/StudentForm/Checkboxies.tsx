@@ -132,7 +132,7 @@ function Checkboxies({ control, errors }: Props) {
         cellPhoneNumber: "", 
         phoneNumber: "", 
         email: "", 
-        documentOfIdentity: "" 
+        nationalId: "" 
       }]);
     } else {
       onChange([]);

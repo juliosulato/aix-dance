@@ -80,7 +80,7 @@ export function useStudentForm({
         gender: isEditing.gender,
         cellPhoneNumber: isEditing.cellPhoneNumber,
         dateOfBirth: isEditing.dateOfBirth,
-        documentOfIdentity: isEditing.documentOfIdentity ?? "",
+        nationalId: isEditing.nationalId ?? "",
         email: isEditing.email ?? "",
         phoneNumber: isEditing.phoneNumber ?? "",
         pronoun: isEditing.pronoun ?? "",

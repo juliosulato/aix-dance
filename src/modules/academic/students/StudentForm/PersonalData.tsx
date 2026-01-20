@@ -101,7 +101,7 @@ function NewStudent__PersonalData({ control, register, errors }: Props) {
       />
 
       <Controller
-        name="documentOfIdentity"
+        name="nationalId"
         control={control}
         render={({ field }) => (
           <DocumentInput

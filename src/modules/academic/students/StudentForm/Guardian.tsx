@@ -32,7 +32,7 @@ function NewStudent__Guardians({ control, errors }: Props) {
             cellPhoneNumber: "",
             phoneNumber: "",
             email: "",
-            documentOfIdentity: "",
+            nationalId: "",
           })
         }
         type="button"
@@ -101,7 +101,7 @@ function NewStudent__Guardians({ control, errors }: Props) {
           />
 
           <Controller
-            name={`guardian.${index}.documentOfIdentity`}
+            name={`guardian.${index}.nationalId`}
             control={control}
             render={({ field }) => <DocumentInput {...field} />}
           />

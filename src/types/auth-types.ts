@@ -1,3 +1,4 @@
+import { SessionData } from "@/lib/auth-server";
 import type { User as BetterAuthUser, Session as BetterAuthSession } from "better-auth/types";
 
 interface CustomFields {
@@ -22,3 +23,8 @@ export interface GetSession {
     user: User;
   }
 }
+
+export type AuthenticatedAction<T, A extends any[]> = (
+  user: SessionData['user'], 
+  ...args: A
+) => Promise<T>;

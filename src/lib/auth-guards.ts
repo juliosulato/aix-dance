@@ -1,4 +1,5 @@
 import { getServerSession, SessionData } from "@/lib/auth-server";
+import { AuthenticatedAction } from "@/types/auth-types";
 import { redirect } from "next/navigation";
 
 
@@ -12,10 +13,6 @@ export async function requireAuth(redirectPath: string = "/auth/signin"): Promis
   return data;
 }
 
-type AuthenticatedAction<T, A extends any[]> = (
-  user: SessionData['user'], 
-  ...args: A
-) => Promise<T>;
 
 export function protectedAction<T, A extends any[]>(action: AuthenticatedAction<T, A>) {
   return async (...args: A): Promise<T> => {

@@ -3,11 +3,9 @@ import { Gender } from "@/types/student.types";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { isValidCpf } from "@/utils/validateCpf";
+import { fileSchema } from "../file.schema";
 
 dayjs.extend(customParseFormat);
-
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 const addressSchema = z.object({
   zipCode: z.string().min(1, { message: "CEP é obrigatório" }),
@@ -23,7 +21,7 @@ const addressSchema = z.object({
 const guardianSchema = z.object({
   firstName: z.string().min(1, { message: "O nome do responsável é obrigatório" }),
   lastName: z.string().min(1, { message: "O sobrenome do responsável é obrigatório" }),
-  email: z.string().email({ message: "E-mail do responsável inválido" }).optional().or(z.literal('')),
+  email: z.email({ message: "E-mail do responsável inválido" }).optional().or(z.literal('')),
   cellPhoneNumber: z.string().min(1, { message: "Celular do responsável é obrigatório" }),
   relationship: z.string().optional(),
   phoneNumber: z.string().optional(),
@@ -31,21 +29,7 @@ const guardianSchema = z.object({
 });
 
 const createStudentSchema = z.object({
-  file: z
-    .custom<File>((val) => {
-      if (!val) return true;
-      return val instanceof File || (typeof val === "object" && "size" in val && "type" in val);
-    }, "Imagem inválida")
-    .refine((file) => {
-      if (!file || file.size === 0) return true;
-      return file.size <= MAX_FILE_SIZE;
-    }, "O tamanho máximo da imagem é de 5MB.")
-    .refine((file) => {
-      if (!file || file.size === 0) return true;
-      return ACCEPTED_IMAGE_TYPES.includes(file.type);
-    }, "Formato inválido. Use .jpg, .jpeg, .png ou .webp")
-    .optional()
-    .nullable(),
+  file: fileSchema,
 
   firstName: z.string().min(1, { message: "O nome do aluno é obrigatório" }),
   lastName: z.string().min(1, { message: "O sobrenome do aluno é obrigatório" }),

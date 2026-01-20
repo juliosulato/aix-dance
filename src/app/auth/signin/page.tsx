@@ -2,7 +2,8 @@ import Image from "next/image";
 import illustration from "@/assets/images/login.png";
 import Login from "@/components/Login";
 import { Metadata } from "next";
-import { requireAuth } from "@/lib/auth-guards";
+import { getServerSession } from "@/lib/auth-server";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +12,11 @@ export const metadata: Metadata = {
 };
 
 export default async function LoginPage() {
-  const { user } = await requireAuth("/system");
+  const data = await getServerSession();
+
+  if (data?.session) {
+    redirect("/system");
+  }
 
   
   return (

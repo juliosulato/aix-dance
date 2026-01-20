@@ -138,7 +138,7 @@ export default function NewStudentContractModal({
               replacement = student.cellPhoneNumber || "";
               break;
             case "STUDENT_DOCUMENT":
-              replacement = student.documentOfIdentity || "";
+              replacement = student.nationalId || "";
               break;
             case "STUDENT_BIRTH_DATE":
               replacement = student.dateOfBirth || "";

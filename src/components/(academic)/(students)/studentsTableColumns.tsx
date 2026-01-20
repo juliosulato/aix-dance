@@ -42,7 +42,7 @@ export const studentsTableColumns: Column<StudentComplete>[] = [
       return "-";
     },
   },
-  { key: "documentOfIdentity", label: "Documento" },
+  { key: "nationalId", label: "Documento" },
   {
     key: "canLeaveAlone",
     label: "Pode sair sozinho?",

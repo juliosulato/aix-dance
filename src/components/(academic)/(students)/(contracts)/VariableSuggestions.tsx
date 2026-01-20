@@ -7,13 +7,13 @@ const variableGroups = [
         groupKey: 'student', 
         variables: [
                 '#aluno-nome-completo', '#aluno-primeiro-nome', '#aluno-sobrenome', '#aluno-email',
-                '#aluno-celular', '#aluno-data-nascimento', '#aluno-rg'
+                '#aluno-celular', '#aluno-data-nascimento', '#aluno-documento'
         ]
     },
     { 
         groupKey: 'guardian', 
         variables: [
-                '#responsavel-nome-completo', '#responsavel-rg', '#responsavel-email', '#responsavel-celular'
+                '#responsavel-nome-completo', '#responsavel-documento', '#responsavel-email', '#responsavel-celular'
         ]
     },
     { 

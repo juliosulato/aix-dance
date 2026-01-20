@@ -61,7 +61,7 @@ export default function GeneralStudentsView({
           {dayjs(student.dateOfBirth).format("DD/MM/YYYY")}
         </InfoTerm>
         <InfoTerm label={"Documento de Identidade"}>
-          {student.documentOfIdentity}
+          {student.nationalId}
         </InfoTerm>
         <InfoTerm label={"Gênero"}>{gender}</InfoTerm>
         {student.pronoun && <InfoTerm label={"Pronome"}>{student.pronoun}</InfoTerm>}

@@ -79,8 +79,8 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
                     'email': student.email, 
                     'aluno-celular': student.cellPhoneNumber,
                     'celular': student.cellPhoneNumber, 
-                    'aluno-rg': student.documentOfIdentity,
-                    'rg': student.documentOfIdentity, 
+                    'aluno-documento': student.nationalId,
+                    'documento': student.nationalId, 
                     'aluno-data-nascimento': student.dateOfBirth,
                     'data-nascimento': student.dateOfBirth, 
 

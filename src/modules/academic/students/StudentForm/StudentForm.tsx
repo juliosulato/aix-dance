@@ -15,7 +15,7 @@ import { useStudentForm } from "@/hooks/academic/useStudentForm";
 import PersonalData from "./PersonalData";
 import Checkboxies from "./Checkboxies";
 import Guardians from "./Guardian";
-import Address from "../../../AddressForm";
+import Address from "../../../../components/AddressForm";
 import AvatarUpload from "@/components/ui/AvatarUpload/AvatarUpload";
 
 type Props = {

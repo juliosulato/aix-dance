@@ -15,7 +15,7 @@ import Sales from "../(sales)";
 import { useSession } from "@/lib/auth-client";
 import { fetcher } from "@/utils/fetcher";
 import useSWR from "swr";
-import StudentForm from "../StudentForm/StudentForm";
+import StudentForm from "../../../../modules/academic/students/StudentForm/StudentForm";
 import { StudentComplete } from "@/types/student.types";
 
 export default function StudentsView({ id }: { id: string }) {

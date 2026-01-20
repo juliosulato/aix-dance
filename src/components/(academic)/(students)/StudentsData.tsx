@@ -10,7 +10,7 @@ import DataView from "@/components/ui/DataView"; // Assumindo que DataView é ge
 
 import "dayjs/locale/pt-br";
 import { StudentComplete } from "@/types/student.types";
-import StudentForm from "./StudentForm/StudentForm";
+import StudentForm from "../../../modules/academic/students/StudentForm/StudentForm";
 import { useCrud } from "@/hooks/useCrud"; // Ajuste o caminho do seu hook
 import { RowActionMenu } from "./RowActionMenu";
 import { BulkActionMenu } from "./StudentsBulkActionMenu";

@@ -2,7 +2,6 @@ import Image from "next/image";
 import illustration from "@/assets/images/login.png";
 import Login from "@/components/Login";
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { requireAuth } from "@/lib/auth-guards";
 
 export const dynamic = "force-dynamic";
@@ -12,11 +11,8 @@ export const metadata: Metadata = {
 };
 
 export default async function LoginPage() {
-  const { user } = await requireAuth();
+  const { user } = await requireAuth("/system");
 
-  if (user) {
-    redirect(`/system`)
-  }
   
   return (
     <main className="relative flex flex-col gap-4 md:h-screen xl:overflow-hidden">

@@ -25,7 +25,7 @@ const guardianSchema = z.object({
   cellPhoneNumber: z.string().min(1, { message: "Celular do responsável é obrigatório" }),
   relationship: z.string().optional(),
   phoneNumber: z.string().optional(),
-  documentOfIdentity: z.string().optional(),
+  nationalId: z.string().optional(),
 });
 
 const createStudentSchema = z.object({
@@ -38,7 +38,7 @@ const createStudentSchema = z.object({
   pronoun: z.string().optional(),
   dateOfBirth: z.coerce.date(),
   phoneNumber: z.string().optional(),
-  documentOfIdentity: z
+  nationalId: z
     .string()
     .optional()
     .refine((value) => {

@@ -1,12 +1,25 @@
-import ProductView from "@/components/inventory/products/View";
 import Breadcrumps from "@/components/ui/Breadcrumps";
+import { requireAuth } from "@/lib/auth-guards";
+import { serverFetch } from "@/lib/server-fetch";
+import ProductView from "@/modules/inventory/products/View";
+import { ProductWithStockMovement } from "@/types/product.types";
 
 export default async function PlanPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const { user } = await requireAuth();
   const { id } = await params;
+  
+  const product = await serverFetch<ProductWithStockMovement>(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user.tenancyId}/inventory/products/${id}`,
+    {
+      next: {
+        tags: ["products"],
+      },
+    }
+  );
 
   return (
     <main>
@@ -20,7 +33,7 @@ export default async function PlanPage({
         ]}
       />
       <br />
-      <ProductView id={id} />
+      <ProductView product={product.data} user={user} />
     </main>
   );
 }

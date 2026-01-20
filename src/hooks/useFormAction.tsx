@@ -1,27 +1,17 @@
 import { useActionState, useEffect, useRef } from "react";
 import { notifications } from "@mantine/notifications";
-import { ActionState } from "@/types/server-actions.types";
 import { GoCheckCircleFill } from "react-icons/go";
 import { IoCloseCircle } from "react-icons/io5";
+import { UseFormActionProps } from "@/types/useFormAction.types";
 
-type ActionFunction<T> = (
-  state: ActionState<T>,
-  payload: FormData
-) => Promise<ActionState<T>>;
 
-interface UseFormActionProps<T> {
-  action: ActionFunction<T>;
-  initialState: ActionState<T>;
-  onClose: () => void;
-  successMessage: string;
-}
 
-export function useFormAction<T>({
+export function useFormAction<TState, TPayload = FormData>({
   action,
   initialState,
   onClose,
   successMessage,
-}: UseFormActionProps<T>) {
+}: UseFormActionProps<TState, TPayload>) {
   const [state, formAction, pending] = useActionState(action, initialState);
 
   const lastNotificationState = useRef(initialState);

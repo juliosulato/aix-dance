@@ -51,28 +51,35 @@ export function parseFormData(formData: FormData, options: ParseOptions = {}) {
 /**
  * Reconstrói um FormData limpo a partir dos dados validados para enviar ao Service/Backend
  */
-export function buildPayload(
-  validatedData: Record<string, any>,
-  jsonKeys?: string[]
-): FormData {
+
+export function buildPayload(validatedData: Record<string, any>): FormData {
   const payload = new FormData();
 
   Object.entries(validatedData).forEach(([key, value]) => {
+    // 1. Ignora undefined/null
     if (value === undefined || value === null) return;
 
-    if (jsonKeys?.includes(key)) {
-      payload.append(key, JSON.stringify(value));
-    }
-
-    else if (value instanceof File) {
+    // 2. Se for File, anexa diretamente (binário)
+    if (value instanceof File) {
       payload.append(key, value);
+      return;
     }
 
-    else {
-      payload.append(key, String(value));
+    // 3. Se for Date, converte para ISO String (padrão de API)
+    if (value instanceof Date) {
+      payload.append(key, value.toISOString());
+      return;
     }
+
+    // 4. Se for Objeto ou Array (e não for File/Date), converte para JSON string
+    if (typeof value === "object") {
+      payload.append(key, JSON.stringify(value));
+      return;
+    }
+
+    // 5. Primitivos (string, number, boolean)
+    payload.append(key, String(value));
   });
 
   return payload;
 }
-

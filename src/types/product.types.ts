@@ -39,3 +39,7 @@ export type ProductCategory = {
     createdAt: Date;
     updatedAt: Date;
 };
+
+export interface ProductWithStockMovement extends Product {
+    stockMovements: StockMovement[];
+}

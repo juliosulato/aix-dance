@@ -18,6 +18,12 @@ export function useCrud<T extends BaseEntity>({ mutate, redirectUrl, deleteActio
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
+  const [sortKey, setSortKey] = useState<string | null>(null);
+  const [sortDir, setSortDir] = useState<"asc" | "desc" | null>(null);
+
+
   const handleCreate = useCallback(() => {
     setSelectedItem(null);
     setCreateOpen(true);
@@ -127,5 +133,14 @@ return {
     handleDelete,
     handleBulkDelete,
     confirmDelete,
+
+    pages: {
+      page,
+      setPage,
+      limit,
+      setLimit,
+      setSortDir,
+      setSortKey
+    }
   };
 }

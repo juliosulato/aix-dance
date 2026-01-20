@@ -1,3 +1,4 @@
+import { Dispatch } from "react";
 import { KeyedMutator } from "swr";
 
 export interface BaseEntity {
@@ -44,5 +45,16 @@ export type CrudHandlers<T> = {
     create: () => void;
     update: () => void;
     delete: () => void;
+  }
+
+  pages: {
+    page: number;
+    setPage: Dispatch<number>;
+
+    limit: number;
+    setLimit: Dispatch<number>;
+
+    setSortKey: Dispatch<string>;
+    setSortDir: Dispatch<"asc" | "desc" | null>;
   }
 };

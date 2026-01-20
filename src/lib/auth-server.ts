@@ -51,13 +51,21 @@ export async function getServerSession(): Promise<SessionData | null> {
     if (!response.ok) {
       console.error(
         `Erro Auth Backend [${response.status}]:`,
-        await response.text()
+        await response.text(),
       );
       return null;
     }
+    const { user, ...rest } = await response.json();
 
-    const data = await response.json();
-    return data as SessionData;
+    const data: SessionData = {
+      ...rest,
+      user: {
+        ...user,
+        firstName: user.name,
+      },
+    };
+
+    return data;
   } catch (error) {
     console.error("Erro ao buscar sessão no servidor:", error);
     return null;

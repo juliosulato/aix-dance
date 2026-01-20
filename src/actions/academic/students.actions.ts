@@ -33,7 +33,7 @@ export const saveStudent = protectedAction(
       return handleValidationErrors(validatedData.error);
     }
 
-    const payload = buildPayload(validatedData.data, ["address", "guardian"]);
+    const payload = buildPayload(validatedData.data);
 
     try {
       if (!isEditingId) {

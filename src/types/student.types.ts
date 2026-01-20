@@ -20,7 +20,7 @@ export type Student = {
     email: string | null;
     phoneNumber: string | null;
     dateOfBirth: Date;
-    documentOfIdentity: string;
+    nationalId: string;
     gender: Gender;
     pronoun: string | null;
     howDidYouMeetUs: string | null;
@@ -45,7 +45,7 @@ export type StudentGuardian = {
     phoneNumber: string | null;
     email: string | null;
     relationShip: string;
-    documentOfIdentity: string | null;
+    nationalId: string | null;
     studentId: string;
 }
 

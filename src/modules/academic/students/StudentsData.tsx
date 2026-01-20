@@ -6,12 +6,10 @@ import { useState } from "react";
 import useSWR, { KeyedMutator } from "swr";
 import { LoadingOverlay, Text } from "@mantine/core";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
-import DataView from "@/components/ui/DataView"; // Assumindo que DataView é genérico o suficiente
-
-import "dayjs/locale/pt-br";
+import DataView from "@/components/ui/DataView"; 
 import { StudentComplete } from "@/types/student.types";
-import StudentForm from "../../../modules/academic/students/StudentForm/StudentForm";
-import { useCrud } from "@/hooks/useCrud"; // Ajuste o caminho do seu hook
+import StudentForm from "./StudentForm/StudentForm";
+import { useCrud } from "@/hooks/useCrud";
 import { RowActionMenu } from "./RowActionMenu";
 import { BulkActionMenu } from "./StudentsBulkActionMenu";
 import { studentsTableColumns } from "./studentsTableColumns";
@@ -26,7 +24,7 @@ export default function StudentsList() {
 
 
   const {
-    data: studentsData,
+    data,
     error,
     isLoading,
     mutate,
@@ -64,7 +62,7 @@ export default function StudentsList() {
   return (
     <>
       <DataView<StudentComplete>
-        data={studentsData || []} 
+        data={data?.data || []} 
         itemKey="items"
         openNewModal={{
           func: handleCreate,

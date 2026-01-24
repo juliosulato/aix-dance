@@ -83,7 +83,7 @@ export default function UpdateClassAttendance({
     };
 
     await fetch(
-      `/api/v1/tenancies/${studentsClass.tenancyId}/class-attendances`,
+      `/api/v1/tenants/${studentsClass.tenantId}/class-attendances`,
       {
         method: "PUT",
                 credentials: "include",

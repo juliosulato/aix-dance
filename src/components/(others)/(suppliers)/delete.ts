@@ -5,7 +5,7 @@ import { Supplier } from "@/types/supplier.types";
 
 async function deleteSuppliers(
     items: Supplier | string[],
-    tenancyId: string,
+    tenantId: string,
     mutate?: KeyedMutator<Supplier[]>,
 ) {
     const isArray = Array.isArray(items);
@@ -16,7 +16,7 @@ async function deleteSuppliers(
         return;
     }
 
-    const apiUrl = `/api/v1/tenancies/${tenancyId}/suppliers`;
+    const apiUrl = `/api/v1/tenants/${tenantId}/suppliers`;
 
     if (mutate) {
         mutate();

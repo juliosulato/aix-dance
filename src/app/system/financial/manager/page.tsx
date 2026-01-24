@@ -8,13 +8,13 @@ import { Supplier } from "@/types/supplier.types";
 export default async function PayablePage() {
   const { user } = await requireAuth();
   const banks = await serverFetch<Bank[]>(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user?.tenancyId}/banks`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user?.tenantId}/banks`
   );
   const suppliers = await serverFetch<Supplier[]>(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user?.tenancyId}/suppliers`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user?.tenantId}/suppliers`
   );
   const categories = await serverFetch<CategoryBill[]>(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user?.tenancyId}/categories/bills`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user?.tenantId}/categories/bills`
   );
 
   return (

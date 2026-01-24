@@ -13,7 +13,7 @@ export default async function PlanPage({
   const { id } = await params;
   
   const product = await serverFetch<ProductWithStockMovement>(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user.tenancyId}/inventory/products/${id}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/inventory/products/${id}`,
     {
       next: {
         tags: ["products"],

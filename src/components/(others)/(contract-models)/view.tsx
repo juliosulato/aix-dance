@@ -13,10 +13,10 @@ import { fetcher } from "@/utils/fetcher";
 import { useSession } from "@/lib/auth-client";
 export default function ContractModelView({ id }: { id: string }) {
         const session = useSession().data;
-        const tenancyId = session?.user.tenancyId as string;
+        const tenantId = session?.user.tenantId as string;
 
         const { data: contractModel, error } = useSWR<ContractModel>(
-            `/api/v1/tenancies/${tenancyId}/contract-models/${id}`,
+            `/api/v1/tenants/${tenantId}/contract-models/${id}`,
             fetcher
         );
 
@@ -29,7 +29,7 @@ export default function ContractModelView({ id }: { id: string }) {
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            await deleteContractModels([contractModel?.id ?? "-"], tenancyId, () => {});
+            await deleteContractModels([contractModel?.id ?? "-"], tenantId, () => {});
             window.location.replace("/system/academic/contract-models");
         } catch (error) {
             console.error("Falha ao excluir o modelo de contrato:", error);

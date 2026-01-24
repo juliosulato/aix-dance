@@ -89,14 +89,14 @@ function NewTeacher({ opened, onClose }: Props) {
     if (!sessionData) return <div>Você precisa estar logado para criar professores.</div>;
 
     async function createTeacher(data: CreateUserInput) {
-        if (!sessionData?.user.tenancyId) {
+        if (!sessionData?.user.tenantId) {
             notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
 
         setVisible(true);
         try {
-            const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/users`, {
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${sessionData.user.tenantId}/users`, {
                 method: "POST",
                 credentials: "include",
                 body: JSON.stringify({...data, image: avatar, role: "TEACHER" }),

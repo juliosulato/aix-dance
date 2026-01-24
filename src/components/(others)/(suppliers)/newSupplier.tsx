@@ -35,14 +35,14 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
     const { data: sessionData, isPending } = useSession();
 
     async function handleCreateSupplier(data: CreateSupplierInput) {
-        if (!sessionData?.user.tenancyId) {
+        if (!sessionData?.user.tenantId) {
             notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
 
         setIsLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/suppliers`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${sessionData.user.tenantId}/suppliers`, {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },

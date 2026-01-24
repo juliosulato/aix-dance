@@ -8,7 +8,7 @@ type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
 
 async function deleteUsers(
   items: string[] | { id?: string },
-  tenancyId: string,
+  tenantId: string,
   mutate?: KeyedMutator<UserFromApi[] | PaginatedResponseLocal<UserFromApi>>
 ) {
   const isArray = Array.isArray(items);
@@ -22,7 +22,7 @@ async function deleteUsers(
     return;
   }
 
-  const apiUrl = `/api/v1/tenancies/${tenancyId}/users`;
+  const apiUrl = `/api/v1/tenants/${tenantId}/users`;
 
   // Atualização otimista da UI (simples: revalidate)
   if (mutate) {

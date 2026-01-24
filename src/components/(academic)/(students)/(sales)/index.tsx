@@ -26,7 +26,7 @@ export default function Sales({ student }: { student: StudentComplete }) {
                     <PointOfSale studentId={student.id} />
                 </Tabs.Panel>
                 <Tabs.Panel value="history">
-                    <StudentSalesHistory studentId={student.id} tenancyId={student.tenancyId}/>
+                    <StudentSalesHistory studentId={student.id} tenantId={student.tenantId}/>
                 </Tabs.Panel>
             </Tabs>
         </div>

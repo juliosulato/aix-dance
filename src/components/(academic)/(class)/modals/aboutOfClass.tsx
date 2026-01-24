@@ -12,18 +12,18 @@ import { User } from "@/types/user.types";
 type Props = {
     control: Control<CreateClassInput | UpdateClassInput>;
     errors: FieldErrors<CreateClassInput | UpdateClassInput>;
-    tenancyId: string;
+    tenantId: string;
 };
 
-export default function NewClass__AboutOfClass({ control, errors, tenancyId }: Props) {
+export default function NewClass__AboutOfClass({ control, errors, tenantId }: Props) {
     type Paginated<T> = { [k: string]: T[] } & { pagination?: { page: number; limit: number; total: number; totalPages: number } };
 
     const { data: modalities } = useSWR<Modality[] | Paginated<Modality>>(
-        () => tenancyId ? `/api/v1/tenancies/${tenancyId}/modalities` : null,
+        () => tenantId ? `/api/v1/tenants/${tenantId}/modalities` : null,
         fetcher
     );
     const { data: teachers } = useSWR<User[] | Paginated<User>>(
-        () => tenancyId ? `/api/v1/tenancies/${tenancyId}/users?role=TEACHER` : null,
+        () => tenantId ? `/api/v1/tenants/${tenantId}/users?role=TEACHER` : null,
         fetcher
     );
 

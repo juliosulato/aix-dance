@@ -19,10 +19,10 @@ import { Gender } from "@/types/student.types";
 export default function TeacherView({ id }: { id: string }) {
         const session = useSession();
         
-        const tenancyId = session?.data?.user.tenancyId as string;
+        const tenantId = session?.data?.user.tenantId as string;
 
         const { data: teacher, error } = useSWR<TeacherFromApi>(
-            `/api/v1/tenancies/${tenancyId}/users/${id}`,
+            `/api/v1/tenants/${tenantId}/users/${id}`,
             fetcher
         );
         
@@ -35,7 +35,7 @@ export default function TeacherView({ id }: { id: string }) {
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            await deactivateUsers([teacher?.id || "-"], tenancyId);
+            await deactivateUsers([teacher?.id || "-"], tenantId);
             router.push("/system/academic/teachers");
             router.refresh();
         } catch (error) {

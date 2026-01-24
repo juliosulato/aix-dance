@@ -12,7 +12,7 @@ export default async function FormsOfReceiptPage({
   const { user } = await requireAuth();
   const { id } = await params;
 
-  const bank = await serverFetch<Bank>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user?.tenancyId}/banks/${id}`)
+  const bank = await serverFetch<Bank>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user?.tenantId}/banks/${id}`)
 
   return (
     <main>

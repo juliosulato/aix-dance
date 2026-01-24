@@ -14,12 +14,12 @@ import { StudentComplete } from "@/types/student.types";
 type Props = {
     control: Control<CreateClassInput | UpdateClassInput>;
     errors: FieldErrors<CreateClassInput | UpdateClassInput>;
-    tenancyId: string;
+    tenantId: string;
 };
 
-export default function Class__Students({ control, errors, tenancyId }: Props) {
+export default function Class__Students({ control, errors, tenantId }: Props) {
     const { data: studentsResponse } = useSWR<StudentComplete[] | PaginatedListResponse<StudentComplete>>(
-        () => tenancyId ? `/api/v1/tenancies/${tenancyId}/students?limit=500` : null,
+        () => tenantId ? `/api/v1/tenants/${tenantId}/students?limit=500` : null,
         fetcher
     );
 

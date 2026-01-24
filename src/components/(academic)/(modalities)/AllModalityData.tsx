@@ -60,9 +60,9 @@ export default function AllModalityData() {
       }
   >(
     () =>
-      sessionData?.user?.tenancyId
-        ? `/api/v1/tenancies/${
-            sessionData.user.tenancyId
+      sessionData?.user?.tenantId
+        ? `/api/v1/tenants/${
+            sessionData.user.tenantId
           }/modalities?page=${page}&limit=${limit}${
             sortKey ? `&sortKey=${encodeURIComponent(sortKey)}` : ""
           }${sortDir ? `&sortDir=${encodeURIComponent(sortDir)}` : ""}`
@@ -100,8 +100,8 @@ export default function AllModalityData() {
 
   const handleDeleteConfirm = async () => {
     setIsDeleting(true);
-    const tenancyId = sessionData?.user?.tenancyId;
-    if (!tenancyId) return;
+    const tenantId = sessionData?.user?.tenantId;
+    if (!tenantId) return;
 
     const finalIdsToDelete =
       idsToDelete.length > 0
@@ -117,7 +117,7 @@ export default function AllModalityData() {
     }
 
     try {
-      await deleteModality(finalIdsToDelete, tenancyId, mutate as any);
+      await deleteModality(finalIdsToDelete, tenantId, mutate as any);
       mutate();
     } catch (error) {
       console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);

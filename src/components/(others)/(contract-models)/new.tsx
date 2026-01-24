@@ -105,7 +105,7 @@ export default function NewContractModelModal({
   };
 
   async function handleCreateContractModel(data: ContractModelInput) {
-    if (!sessionData?.user.tenancyId) {
+    if (!sessionData?.user.tenantId) {
       notifications.show({ color: "red", message: "Sessão inválida" });
       return;
     }
@@ -113,7 +113,7 @@ export default function NewContractModelModal({
     setIsLoading(true);
     try {
       const response = await fetch(
-        `/api/v1/tenancies/${sessionData.user.tenancyId}/contract-models`,
+        `/api/v1/tenants/${sessionData.user.tenantId}/contract-models`,
         {
           method: "POST",
                 credentials: "include",

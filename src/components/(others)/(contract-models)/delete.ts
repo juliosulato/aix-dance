@@ -4,11 +4,11 @@ import { MutatorCallback } from "swr";
 
 export default async function deleteContractModels(
     ids: string[],
-    tenancyId: string,
+    tenantId: string,
     mutate: MutatorCallback
 ) {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/contract-models`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${tenantId}/contract-models`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ids }),

@@ -7,7 +7,7 @@ type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
 
 async function arquivarTurmas(
   idsParaArquivar: string[],
-  tenancyId: string,
+  tenantId: string,
   mutate?: KeyedMutator<Class[] | PaginatedResponseLocal<Class>>
 ) {
   if (idsParaArquivar.length === 0) {
@@ -18,7 +18,7 @@ async function arquivarTurmas(
     return;
   }
 
-  const apiUrl = `/api/v1/tenancies/${tenancyId}/classes`;
+  const apiUrl = `/api/v1/tenants/${tenantId}/classes`;
 
   // Atualização otimista da UI: remove as turmas da lista visível
   if (mutate) {

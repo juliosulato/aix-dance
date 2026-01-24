@@ -34,10 +34,10 @@ export const saveProductAction = protectedAction(
 
     try {
       if (!rawData.id) {
-        await ProductsService.create(user.tenancyId, payload);
+        await ProductsService.create(user.tenantId, payload);
       } else if ((validatedData.data as UpdateProductInput).id) {
         const id = (validatedData.data as UpdateProductInput).id;
-        await ProductsService.update(user.tenancyId, id, payload);
+        await ProductsService.update(user.tenantId, id, payload);
       }
 
       updateTag("products");
@@ -68,7 +68,7 @@ export const bulkUpdateProductsStatusAction = protectedAction(
     }
 
     try {
-      await ProductsService.bulkUpdateStatus(user.tenancyId, { ids, isActive });
+      await ProductsService.bulkUpdateStatus(user.tenantId, { ids, isActive });
 
       updateTag("products");
 
@@ -96,7 +96,7 @@ export const deleteProductsAction = protectedAction(
     }
 
     try {
-      await ProductsService.bulkDelete(user.tenancyId, ids);
+      await ProductsService.bulkDelete(user.tenantId, ids);
       updateTag("products");
 
       return {

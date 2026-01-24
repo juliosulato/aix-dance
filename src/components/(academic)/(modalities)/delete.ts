@@ -9,7 +9,7 @@ type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
 
 async function deleteModalities(
     items: string[] | string,
-    tenancyId: string,
+    tenantId: string,
     mutate?: KeyedMutator<Item[] | PaginatedResponseLocal<Item>>,
 ) {
     const isArray = Array.isArray(items);
@@ -20,7 +20,7 @@ async function deleteModalities(
         return;
     }
 
-    const apiUrl = `/api/v1/tenancies/${tenancyId}/modalities`;
+    const apiUrl = `/api/v1/tenants/${tenantId}/modalities`;
 
     if (mutate) {
         await mutate(

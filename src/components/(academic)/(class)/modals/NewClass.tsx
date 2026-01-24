@@ -77,7 +77,7 @@ function NewClass({ opened, onClose, mutate }: Props) {
   if (isPending) return <LoadingOverlay visible />;
 
   async function createClass(data: CreateClassInput) {
-    if (!sessionData?.user.tenancyId) {
+    if (!sessionData?.user.tenantId) {
       notifications.show({ color: "red", message: "Sessão inválida" });
       return;
     }
@@ -103,7 +103,7 @@ function NewClass({ opened, onClose, mutate }: Props) {
 
     try {
       const resp = await fetch(
-        `/api/v1/tenancies/${sessionData.user.tenancyId}/classes`,
+        `/api/v1/tenants/${sessionData.user.tenantId}/classes`,
         {
           method: "POST",
             credentials: "include",
@@ -153,7 +153,7 @@ function NewClass({ opened, onClose, mutate }: Props) {
                 <AboutOfClass
                   control={control as any}
                   errors={errors}
-                  tenancyId={sessionData.user.tenancyId}
+                  tenantId={sessionData.user.tenantId}
                 />
                 <DayOfClassesAndHours
                   watch={watch}
@@ -178,7 +178,7 @@ function NewClass({ opened, onClose, mutate }: Props) {
                 <NewClass__Students
                   control={control as any}
                   errors={errors}
-                  tenancyId={sessionData.user.tenancyId}
+                  tenantId={sessionData.user.tenantId}
                 />
                 <div className="flex justify-between">
                   <Button
@@ -206,7 +206,7 @@ function NewClass({ opened, onClose, mutate }: Props) {
               <div className="flex flex-col gap-4">
                 <NewClass__Resume
                   control={control as any}
-                  tenancyId={sessionData.user.tenancyId}
+                  tenantId={sessionData.user.tenantId}
                 />
                 <div className="flex justify-between">
                   <Button

@@ -31,7 +31,7 @@ export default function StudentContractsView({ student }: { student: StudentComp
   const { data: sessionData } = useSession();
 
   
-  const tenancyId = sessionData?.user.tenancyId || "";
+  const tenantId = sessionData?.user.tenantId || "";
 
   const handleCopyLink = (contractId: string) => {
     const link = `https://aixdance.mazzaux.com.br/pt-BR/contracts/sign/${contractId}`;
@@ -61,9 +61,9 @@ export default function StudentContractsView({ student }: { student: StudentComp
     setIsActing(true);
     try {
       if (actionType === 'delete') {
-        await deleteStudentContracts([contractToAction.id], tenancyId);
+        await deleteStudentContracts([contractToAction.id], tenantId);
       } else if (actionType === 'archive') {
-        await archiveStudentContracts([contractToAction.id], tenancyId);
+        await archiveStudentContracts([contractToAction.id], tenantId);
       }
       window.location.reload(); // Recarrega para ver as alterações
     } catch (error) {

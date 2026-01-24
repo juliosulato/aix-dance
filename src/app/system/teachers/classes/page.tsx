@@ -9,7 +9,7 @@ import useSWR from "swr";
 export default function TeachersClassesPage() {
     const session = useSession().data;
 
-    const { data, error } = useSWR<ClassFromApi[]>(session?.user?.tenancyId && session?.user.id ? `/api/teachers/${session.user.id}/classes?tenancyId=${session.user.tenancyId}` : null, fetcher);
+    const { data, error } = useSWR<ClassFromApi[]>(session?.user?.tenantId && session?.user.id ? `/api/teachers/${session.user.id}/classes?tenantId=${session.user.tenantId}` : null, fetcher);
 
     if (error) {
         return <div className="text-center text-red-500">Erro ao carregar os dados das turmas</div>;

@@ -26,10 +26,10 @@ type Props = {
   onClose: () => void;
   mutate: KeyedMutator<UserFromApi[]>;
   user: UserFromApi;
-  tenancyId: string;
+  tenantId: string;
 };
 
-function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
+function UpdateUser({ opened, onClose, mutate, user, tenantId }: Props) {
   const [visible, setVisible] = useState(false);
   const [avatar, setAvatar] = useState<string | null>(user?.image || null);
 
@@ -98,7 +98,7 @@ function UpdateUser({ opened, onClose, mutate, user, tenancyId }: Props) {
 
     try {
       const resp = await fetch(
-        `/api/v1/tenancies/${tenancyId}/users/${user.id}`,
+        `/api/v1/tenants/${tenantId}/users/${user.id}`,
         {
           method: "PUT",
                 credentials: "include",

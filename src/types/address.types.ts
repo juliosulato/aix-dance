@@ -4,7 +4,7 @@ export type Address = {
     complement: string | null;
     studentId: string | null;
     supplierId: string | null;
-    tenancyId: string;
+    tenantId: string;
     zipCode: string | null;
     publicPlace: string | null;
     neighborhood: string | null;

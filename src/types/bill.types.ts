@@ -78,7 +78,7 @@ export type Bill = {
     paymentMethod: PaymentMethod;
     bankId: string | null;
     attachments?: BillAttachment[];
-    tenancyId: string;
+    tenantId: string;
     createdAt: Date;
     updatedAt: Date;
     notifications?: Notification[];

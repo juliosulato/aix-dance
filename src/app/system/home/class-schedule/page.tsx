@@ -45,7 +45,7 @@ export default function ClassSchedulePage() {
   useEffect(() => {
     setLoading(true);
     // Não precisamos mais de from/to, pois vamos buscar todas as turmas ativas
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session?.user.tenancyId}/class-schedule`)
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${session?.user.tenantId}/class-schedule`)
       .then(res => res.json())
       .then(data => {
         // Converter dados para formato do FullCalendar com eventos recorrentes
@@ -68,7 +68,7 @@ export default function ClassSchedulePage() {
         setEvents(formattedEvents);
       })
       .finally(() => setLoading(false));
-  }, [session?.user?.tenancyId]);
+  }, [session?.user?.tenantId]);
 
   // Função para lidar com clique em evento (redirecionar para página da turma)
   const handleEventClick = (clickInfo: EventClickArg) => {

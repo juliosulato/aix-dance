@@ -57,7 +57,7 @@ function NewUser({ opened, onClose, mutate }: Props) {
   
 
   async function createUser(data: CreateUserInput) {
-    if (!sessionData?.user.tenancyId) {
+    if (!sessionData?.user.tenantId) {
       notifications.show({
         color: "red",
         message: "Sessão inválida. Tente novamente.",
@@ -69,7 +69,7 @@ function NewUser({ opened, onClose, mutate }: Props) {
 
     try {
       const resp = await fetch(
-        `/api/v1/tenancies/${sessionData.user.tenancyId}/users`,
+        `/api/v1/tenants/${sessionData.user.tenantId}/users`,
         {
           method: "POST",
                 credentials: "include",

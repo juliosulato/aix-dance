@@ -31,7 +31,7 @@ export type Order = {
     deliveryNotes: string | null;
     items?: OrderItem[];
     sale?: Sale | null;
-    tenancyId: string;
+    tenantId: string;
     tenancy?: Tenancy;
     createdAt: Date;
     updatedAt: Date;
@@ -57,7 +57,7 @@ export type StockMovement = {
     reason: string;
     saleItemId: string | null;
     saleItem?: SaleItem | null;
-    tenancyId: string;
+    tenantId: string;
     tenancy?: Tenancy;
     createdAt: Date;
     createdBy: {

@@ -33,7 +33,7 @@ export type Student = {
     active: boolean;
     createdAt: Date;
     updatedAt: Date;
-    tenancyId: string;
+    tenantId: string;
 }
 
 export type StudentGuardian = {

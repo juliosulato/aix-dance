@@ -25,7 +25,7 @@ export type Product = {
     stockMovements?: StockMovement[];
     createdAt: Date;
     updatedAt: Date;
-    tenancyId: string;
+    tenantId: string;
     tenancy?: Tenancy;
 };
 
@@ -34,7 +34,7 @@ export type ProductCategory = {
     id: string;
     name: string;
     products?: Product[];
-    tenancyId: string;
+    tenantId: string;
     tenancy?: Tenancy;
     createdAt: Date;
     updatedAt: Date;

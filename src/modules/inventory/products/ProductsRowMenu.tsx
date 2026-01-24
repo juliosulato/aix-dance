@@ -9,14 +9,14 @@ interface MenuItemProps {
   product: Product;
   onUpdateClick: (b: Product) => void;
   onDeleteClick: (b: Product) => void;
-  tenancyId: string;
+  tenantId: string;
 }
 
 export const MenuItem = ({
     product,
     onUpdateClick,
     onDeleteClick,
-    tenancyId
+    tenantId
   }: MenuItemProps) => (
     <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
       <Menu shadow="md" width={200} withinPortal>
@@ -42,7 +42,7 @@ export const MenuItem = ({
               )
             }
             onClick={async () => {
-              if (!tenancyId) return;
+              if (!tenantId) return;
               await bulkUpdateProductsStatusAction([product.id], !product.isActive);
             }}
           >

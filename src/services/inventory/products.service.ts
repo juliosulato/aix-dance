@@ -7,9 +7,9 @@ export class ProductsService {
    * Cria um produto.
    * Aceita FormData para permitir upload de arquivos.
    */
-  static create(tenancyId: string, formData: FormData) {
+  static create(tenantId: string, formData: FormData) {
     return serverFetch(
-      `${BASE_URL}/api/v1/tenancies/${tenancyId}/inventory/products`,
+      `${BASE_URL}/api/v1/tenants/${tenantId}/inventory/products`,
       {
         method: "POST",
         body: formData,
@@ -19,13 +19,13 @@ export class ProductsService {
 
   /**
    * Atualiza um produto.
-   * @param tenancyId - O ID da Academia
+   * @param tenantId - O ID da Academia
    * @param id - O ID do produto a ser atualizado
    * @param formData - Dados do formulário
    */
-  static update(tenancyId: string, id: string, formData: FormData) {
+  static update(tenantId: string, id: string, formData: FormData) {
     return serverFetch(
-      `${BASE_URL}/api/v1/tenancies/${tenancyId}/inventory/products/${id}`,
+      `${BASE_URL}/api/v1/tenants/${tenantId}/inventory/products/${id}`,
       {
         method: "PUT",
         body: formData,
@@ -35,12 +35,12 @@ export class ProductsService {
 
   /**
    * Exclui um ou mais produtos
-   * @param tenancyId ID da Academia
+   * @param tenantId ID da Academia
    * @param ids Array de IDs para exclusão
    */
-  static bulkDelete(tenancyId: string, ids: string[]) {
+  static bulkDelete(tenantId: string, ids: string[]) {
     return serverFetch(
-      `${BASE_URL}/api/v1/tenancies/${tenancyId}/inventory/products`,
+      `${BASE_URL}/api/v1/tenants/${tenantId}/inventory/products`,
       {
         method: "DELETE",
         body: JSON.stringify({ ids }),
@@ -54,17 +54,17 @@ export class ProductsService {
   /**
    * Atualiza o status de um ou mais produtos.
    *
-   * @param tenancyId - ID da academia
+   * @param tenantId - ID da academia
    * @param payload - Objeto contendo:
    *   - ids: array de IDs dos produtos a serem atualizados
    *   - isActive: novo status a ser aplicado
    */ 
   static bulkUpdateStatus(
-    tenancyId: string,
+    tenantId: string,
     payload: { ids: string[]; isActive: boolean }
   ) {
     return serverFetch(
-      `${BASE_URL}/api/v1/tenancies/${tenancyId}/inventory/products`,
+      `${BASE_URL}/api/v1/tenants/${tenantId}/inventory/products`,
       {
         method: "PATCH",
         body: JSON.stringify(payload),

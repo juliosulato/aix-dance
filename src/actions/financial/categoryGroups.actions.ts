@@ -34,7 +34,7 @@ export const createCategoryGroup = protectedAction(
 
     try {
       const response = await CategoryGroupsService.create(
-        user.tenancyId,
+        user.tenantId,
         validatedData.data
       );
       console.log(response);
@@ -62,7 +62,7 @@ export const updateCategoryGroup = protectedAction(
     }
 
     try {
-      await CategoryGroupsService.update(user.tenancyId, validatedData.data);
+      await CategoryGroupsService.update(user.tenantId, validatedData.data);
 
       revalidatePath(PATHS.LIST);
       revalidatePath(PATHS.LIST + validatedData.data.id, "page");
@@ -85,7 +85,7 @@ export const deleteCategoryGroups = protectedAction(
     }
 
     try {
-      await CategoryGroupsService.deleteMany(user.tenancyId, ids);
+      await CategoryGroupsService.deleteMany(user.tenantId, ids);
 
       revalidatePath(PATHS.LIST);
 

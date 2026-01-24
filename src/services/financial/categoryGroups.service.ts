@@ -4,22 +4,22 @@ import { CreateCategoryGroupInput, UpdateCategoryGroupInput } from "@/schemas/fi
 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export class CategoryGroupsService {
-  static create(tenancyId: string, data: CreateCategoryGroupInput) {
+  static create(tenantId: string, data: CreateCategoryGroupInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/groups`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/categories-groups`,
       {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
       }
     );
   }
 
-  static update(tenancyId: string, data: UpdateCategoryGroupInput) {
+  static update(tenantId: string, data: UpdateCategoryGroupInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/groups/${data.id}`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/categories-groups/${data.id}`,
       {
         method: "PUT",
         body: JSON.stringify(data),
@@ -30,9 +30,9 @@ export class CategoryGroupsService {
     );
   }
 
-  static deleteMany(tenancyId: string, ids: string[]) {
+  static deleteMany(tenantId: string, ids: string[]) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/groups`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/categories-groups`,
       {
         method: "DELETE",
         body: JSON.stringify({ ids }),

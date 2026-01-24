@@ -11,7 +11,7 @@ import { Student } from "@/types/student.types";
 import { User } from "@/types/user.types";
 type Props = {
     control: Control<CreateClassInput>;
-    tenancyId: string;
+    tenantId: string;
 };
 
 // Componente para exibir os horários de forma limpa
@@ -48,15 +48,15 @@ const ScheduleSummary = ({ schedules }: { schedules: CreateClassInput['schedules
 };
 
 
-export default function NewClass__Resume({ control, tenancyId }: Props) {
+export default function NewClass__Resume({ control, tenantId }: Props) {
 
     // useWatch para observar todos os valores do formulário em tempo real
     const watchedValues = useWatch({ control });
 
     // Busca de dados para "traduzir" IDs em nomes
-    const { data: modalities } = useSWR<Modality[]>(`/api/v1/tenancies/${tenancyId}/modalities`, fetcher);
-    const { data: teachers } = useSWR<User[]>(`/api/v1/tenancies/${tenancyId}/users?role=TEACHER`, fetcher);
-    const { data: studentsResponse } = useSWR<Student[] | PaginatedListResponse<Student>>(`/api/v1/tenancies/${tenancyId}/students?limit=500`, fetcher);
+    const { data: modalities } = useSWR<Modality[]>(`/api/v1/tenants/${tenantId}/modalities`, fetcher);
+    const { data: teachers } = useSWR<User[]>(`/api/v1/tenants/${tenantId}/users?role=TEACHER`, fetcher);
+    const { data: studentsResponse } = useSWR<Student[] | PaginatedListResponse<Student>>(`/api/v1/tenants/${tenantId}/students?limit=500`, fetcher);
     const students = extractItemsFromResponse(studentsResponse);
 
     const modalityName = modalities?.find(m => m.id === watchedValues.modalityId)?.name || '...';

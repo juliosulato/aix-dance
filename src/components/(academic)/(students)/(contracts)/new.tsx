@@ -50,21 +50,21 @@ export default function NewStudentContractModal({
   const [manualVariables, setManualVariables] = useState<string[]>([]);
   const [richTextKey, setRichTextKey] = useState(Date.now()); // NOVO ESTADO: Chave para forçar a recriação
   const { data: sessionData, isPending } = useSession();
-  const tenancyId = sessionData?.user.tenancyId;
+  const tenantId = sessionData?.user.tenantId;
 
   const { data: studentsResponse } = useSWR<
     Student[] | PaginatedListResponse<Student>
   >(
-    tenancyId ? `/api/v1/tenancies/${tenancyId}/students?limit=500` : null,
+    tenantId ? `/api/v1/tenants/${tenantId}/students?limit=500` : null,
     fetcher
   );
   const students = extractItemsFromResponse(studentsResponse);
   const { data: contractModels } = useSWR<ContractModel[]>(
-    tenancyId ? `/api/v1/tenancies/${tenancyId}/contract-models` : null,
+    tenantId ? `/api/v1/tenants/${tenantId}/contract-models` : null,
     fetcher
   );
   const { data: tenancy } = useSWR<Tenancy>(
-    tenancyId ? `/api/v1/tenancies/${tenancyId}` : null,
+    tenantId ? `/api/v1/tenants/${tenantId}` : null,
     fetcher
   );
 
@@ -190,7 +190,7 @@ export default function NewStudentContractModal({
   async function handleCreateContract(
     data: Omit<CreateStudentContractInput, "htmlContent">
   ) {
-    if (!tenancyId) {
+    if (!tenantId) {
       notifications.show({
         color: "red",
         message: "Sessão inválida. Por favor, faça login novamente.",
@@ -202,7 +202,7 @@ export default function NewStudentContractModal({
 
     try {
       const response = await fetch(
-        `/api/v1/tenancies/${tenancyId}/students/${studentId}/contracts`,
+        `/api/v1/tenants/${tenantId}/students/${studentId}/contracts`,
         {
           method: "POST",
                 credentials: "include",
@@ -214,7 +214,7 @@ export default function NewStudentContractModal({
         }
       );
 
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${tenancyId}/students/${studentId}/history`, {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${tenantId}/students/${studentId}/history`, {
         method: "POST",
                 credentials: "include",
         body: JSON.stringify({

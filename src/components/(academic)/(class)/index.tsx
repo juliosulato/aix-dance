@@ -63,8 +63,8 @@ export default function AllClassesData() {
     mutate,
   } = useSWR<Item[] | PaginatedResponseLocal<Item>>(
     () =>
-      sessionData?.user?.tenancyId
-        ? `/api/v1/tenancies/${sessionData.user.tenancyId}/classes`
+      sessionData?.user?.tenantId
+        ? `/api/v1/tenants/${sessionData.user.tenantId}/classes`
         : null,
     async (url: string) => {
       const res = await fetcher<any>(url);
@@ -98,8 +98,8 @@ export default function AllClassesData() {
   // ATUALIZADO: Confirmação e chamada da função de arquivamento
   const handleArchiveConfirm = async () => {
     setIsArchiving(true);
-    const tenancyId = sessionData?.user?.tenancyId;
-    if (!tenancyId) return;
+    const tenantId = sessionData?.user?.tenantId;
+    if (!tenantId) return;
 
     const finalIdsToArchive =
       idsToArchive.length > 0
@@ -115,7 +115,7 @@ export default function AllClassesData() {
     }
 
     try {
-      await archiveClasses(finalIdsToArchive, tenancyId, mutate as any);
+      await archiveClasses(finalIdsToArchive, tenantId, mutate as any);
       // O mutate já é chamado dentro da função de arquivamento
     } catch (error) {
       console.error("Falha ao arquivar a(s) turma(s):", error);

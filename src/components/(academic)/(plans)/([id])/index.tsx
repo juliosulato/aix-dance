@@ -26,10 +26,10 @@ const formatPlanType = (type: PlanType) => {
 
 export default function PlanView({ id }: { id: string }) {
     const session = useSession();
-    const tenancyId = session?.data?.user.tenancyId as string;
+    const tenantId = session?.data?.user.tenantId as string;
 
     const { data: plan, error } = useSWR<Plan>(
-        `/api/v1/tenancies/${tenancyId}/plans/${id}`,
+        `/api/v1/tenants/${tenantId}/plans/${id}`,
         fetcher
     );
 
@@ -43,7 +43,7 @@ export default function PlanView({ id }: { id: string }) {
         setIsDeleting(true);
         try {
             // Chamando a função para desativar o plano
-            await deletePlans([plan?.id || "-"], tenancyId);
+            await deletePlans([plan?.id || "-"], tenantId);
             // Redireciona para a lista de planos após a desativação
             router.push("/system/academic/plans");
             router.refresh(); // Força a atualização dos dados na página de listagem

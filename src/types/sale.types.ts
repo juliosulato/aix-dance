@@ -19,7 +19,7 @@ export enum SaleItemType {
 export type Sale = {
     id: number;
     saleNumber: string;
-    tenancyId: string;
+    tenantId: string;
     studentId: string;
     totalAmount: Decimal;
     discountPercentage: number;

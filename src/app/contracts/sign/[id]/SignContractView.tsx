@@ -44,7 +44,7 @@ export default function SignContractView({ contract, ipAddress, location }: Prop
     async function handleSignContract(data: SignatureInput) {
         setIsLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${contract.student.tenancy.id}/contracts/sign/${contract.id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${contract.student.tenancy.id}/contracts/sign/${contract.id}`, {
                 method: "POST",
 credentials: "include",
                 headers: { 'Content-Type': 'application/json' },
@@ -60,7 +60,7 @@ credentials: "include",
                 throw new Error(errorData.error || 'Falha ao assinar o contrato.');
             }
 
-            await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${contract.student.tenancy.id}/students/${contract.student.id}/history`, {
+            await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${contract.student.tenancy.id}/students/${contract.student.id}/history`, {
                 method: "POST",
                 credentials: "include",
                 headers: { 'Content-Type': 'application/json' },

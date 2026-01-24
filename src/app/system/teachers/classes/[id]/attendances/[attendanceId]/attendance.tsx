@@ -6,10 +6,10 @@ import { fetcher } from "@/utils/fetcher";
 
 export default function AttendanceView({ attendanceId }: { attendanceId: string }) {
     const authSession = useSession().data;
-    const tenancyId = authSession?.user.tenancyId;
+    const tenantId = authSession?.user.tenantId;
 
     const { data: attendance, error } = useSWR<any>(
-        tenancyId ? `/api/v1/tenancies/${tenancyId}/class-attendances/${attendanceId}` : null,
+        tenantId ? `/api/v1/tenants/${tenantId}/class-attendances/${attendanceId}` : null,
         fetcher
     );
 

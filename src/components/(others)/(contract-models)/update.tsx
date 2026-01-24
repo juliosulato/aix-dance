@@ -83,14 +83,14 @@ export default function UpdateContractModelModal({ opened, onClose, contractMode
     };
 
     async function handleUpdateContractModel(data: ContractModelInput) {
-        if (!sessionData?.user.tenancyId) {
+        if (!sessionData?.user.tenantId) {
             notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
 
         setIsLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/contract-models/${contractModel.id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${sessionData.user.tenantId}/contract-models/${contractModel.id}`, {
                 method: "PUT",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },

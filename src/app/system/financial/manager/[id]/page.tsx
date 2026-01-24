@@ -12,15 +12,15 @@ export default async function BillPage({ params }: { params: Promise<{ id: strin
     
     const { id } = await params;
 
-    const bill = await serverFetch<BillComplete>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user.tenancyId}/bills/${id}`);
+    const bill = await serverFetch<BillComplete>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/bills/${id}`);
   const banks = await serverFetch<Bank[]>(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user?.tenancyId}/banks`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user?.tenantId}/banks`
   );
     const suppliers = await serverFetch<Supplier[]>(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user?.tenancyId}/suppliers`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user?.tenantId}/suppliers`
   );
     const categories = await serverFetch<CategoryBill[]>(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user?.tenancyId}/categories/bills`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user?.tenantId}/categories/bills`
   );
 
     return (

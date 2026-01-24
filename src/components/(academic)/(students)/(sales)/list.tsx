@@ -14,11 +14,11 @@ type SaleFromApi = Sale & {
 
 
 type Props = {
-    tenancyId: string;
+    tenantId: string;
     studentId: string;
 };
 
-export default function StudentSalesHistory({ tenancyId, studentId }: Props) {
+export default function StudentSalesHistory({ tenantId, studentId }: Props) {
     const { isPending, data: sessionData } = useSession();
 
     type Item = SaleFromApi;
@@ -26,8 +26,8 @@ export default function StudentSalesHistory({ tenancyId, studentId }: Props) {
     type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
 
     const { data: sales, error, isLoading } = useSWR<Item[] | PaginatedResponseLocal<Item>>(
-        () => (tenancyId && studentId)
-            ? `/api/v1/tenancies/${tenancyId}/sales?studentId=${studentId}`
+        () => (tenantId && studentId)
+            ? `/api/v1/tenants/${tenantId}/sales?studentId=${studentId}`
             : null,
         async (url: string) => {
             const res = await fetcher<any>(url);

@@ -5,7 +5,7 @@ import ProductsList from "@/modules/inventory/products/ProductList";
 
 export default async function ProductsPage() {
   const { user } = await requireAuth();
-  const products = await serverFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user.tenancyId}/inventory/products`, {
+  const products = await serverFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/inventory/products`, {
     next: {
       tags: ["products"]
     }

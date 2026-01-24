@@ -47,7 +47,7 @@ export default function ProductsList({ user, products }: Props) {
             product={item}
             onUpdateClick={crud.handleUpdate}
             onDeleteClick={crud.handleDelete}
-            tenancyId={user.tenancyId ?? ""}
+            tenantId={user.tenantId ?? ""}
           />
         )}
         RenderAllRowsMenu={(selectedIds) => (
@@ -56,7 +56,7 @@ export default function ProductsList({ user, products }: Props) {
             onBulkDeleteClick={crud.handleBulkDelete}
           />
         )}
-        renderCard={(item) => <ProductsCard handleDelete={crud.handleDelete}  handleUpdate={crud.handleUpdate} item={item} tenancyId={user.tenancyId}/>}
+        renderCard={(item) => <ProductsCard handleDelete={crud.handleDelete}  handleUpdate={crud.handleUpdate} item={item} tenantId={user.tenantId}/>}
       />
 
       <ProductFormModal

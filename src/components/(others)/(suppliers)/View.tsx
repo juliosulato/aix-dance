@@ -14,10 +14,10 @@ import useSWR from "swr";
 
 export default function SupplierView({ id }: { id: string }) {
     const session = useSession().data;
-    const tenancyId = session?.user.tenancyId as string;
+    const tenantId = session?.user.tenantId as string;
 
     const { data: supplier, error } = useSWR<SupplierFromApi>(
-        `/api/v1/tenancies/${tenancyId}/suppliers/${id}`,
+        `/api/v1/tenants/${tenantId}/suppliers/${id}`,
         fetcher
     );
     
@@ -30,7 +30,7 @@ export default function SupplierView({ id }: { id: string }) {
     const handleDelete = async () => {
         setIsDeleting(true);
         try {
-            await deleteSuppliers([supplier?.id ?? "-"], tenancyId);
+            await deleteSuppliers([supplier?.id ?? "-"], tenantId);
             window.location.replace("/system/suppliers");
         } catch (error) {
             console.error("Falha ao excluir o fornecedor:", error);

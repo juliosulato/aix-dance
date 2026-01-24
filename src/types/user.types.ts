@@ -1,6 +1,6 @@
 export type User = {
     id: string;
-    tenancyId: string;
+    tenantId: string;
     firstName: string;
     lastName: string;
     email: string;

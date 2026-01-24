@@ -4,9 +4,9 @@ import { CreateFormsOfReceiptInput, UpdateFormsOfReceiptInput } from "@/schemas/
 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export class FormsOfReceiptService {
-  static create(tenancyId: string, data: CreateFormsOfReceiptInput) {
+  static create(tenantId: string, data: CreateFormsOfReceiptInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/forms-of-receipt`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/forms-of-receipt`,
       {
         method: "POST",
         body: JSON.stringify(data),
@@ -17,9 +17,9 @@ export class FormsOfReceiptService {
     );
   }
 
-  static update(tenancyId: string, data: UpdateFormsOfReceiptInput) {
+  static update(tenantId: string, data: UpdateFormsOfReceiptInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/forms-of-receipt/${data.id}`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/forms-of-receipt/${data.id}`,
       {
         method: "PUT",
         body: JSON.stringify(data),
@@ -30,9 +30,9 @@ export class FormsOfReceiptService {
     );
   }
 
-  static deleteMany(tenancyId: string, ids: string[]) {
+  static deleteMany(tenantId: string, ids: string[]) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/forms-of-receipt`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/forms-of-receipt`,
       {
         method: "DELETE",
         body: JSON.stringify({ ids }),

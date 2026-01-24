@@ -86,11 +86,11 @@ export default function PointOfSale({
   studentId?: string;
 }) {
   const session = useSession();
-  const tenancyId = session.data?.user.tenancyId || "";
+  const tenantId = session.data?.user.tenantId || "";
 
   // --- Hooks de data fetching ---
   const { data: tenancy } = useSWR<Tenancy>(
-    `/api/v1/tenancies/${tenancyId}`,
+    `/api/v1/tenants/${tenantId}`,
     fetcher
   );
 
@@ -106,7 +106,7 @@ export default function PointOfSale({
   };
 
   const { data: plansData } = useSWR<Plan[] | PaginatedResponseLocal<Plan>>(
-    `/api/v1/tenancies/${tenancyId}/plans`,
+    `/api/v1/tenants/${tenantId}/plans`,
     fetcher
   );
   const plans = Array.isArray(plansData)
@@ -126,7 +126,7 @@ export default function PointOfSale({
 
   const [productPage, setProductPage] = useState<number>(1);
   const PRODUCT_PAGE_LIMIT = 30;
-  const productsUrl = `/api/v1/tenancies/${tenancyId}/inventory/products?page=${productPage}&limit=${PRODUCT_PAGE_LIMIT}${
+  const productsUrl = `/api/v1/tenants/${tenantId}/inventory/products?page=${productPage}&limit=${PRODUCT_PAGE_LIMIT}${
     searchTerm ? `&q=${encodeURIComponent(searchTerm)}` : ""
   }`;
 
@@ -138,16 +138,16 @@ export default function PointOfSale({
       total: number;
       totalPages: number;
     };
-  } | null>(tenancyId ? productsUrl : null, fetcher);
+  } | null>(tenantId ? productsUrl : null, fetcher);
 
   const [accProducts, setAccProducts] = useState<Product[]>([]);
   const [totalProductPages, setTotalProductPages] = useState<number>(1);
 
-  // accumulate pages; when searchTerm or tenancyId changes, reset
+  // accumulate pages; when searchTerm or tenantId changes, reset
   useEffect(() => {
     setProductPage(1);
     setAccProducts([]);
-  }, [searchTerm, tenancyId]);
+  }, [searchTerm, tenantId]);
 
   useEffect(() => {
     if (!productsData) return;
@@ -167,8 +167,8 @@ export default function PointOfSale({
 
   const products = accProducts;
 
-  const studentsUrl = tenancyId
-    ? `/api/v1/tenancies/${tenancyId}/students`
+  const studentsUrl = tenantId
+    ? `/api/v1/tenants/${tenantId}/students`
     : null;
   const { data: studentsResponse } = useSWR<
     PaginatedListResponse<Student>
@@ -178,7 +178,7 @@ export default function PointOfSale({
   const { data: formsOfReceiptData } = useSWR<
     FormsOfReceipt[] | PaginatedResponseLocal<FormsOfReceipt>
   >(
-    `/api/v1/tenancies/${tenancyId}/forms-of-receipt`,
+    `/api/v1/tenants/${tenantId}/forms-of-receipt`,
     fetcher
   );
   const formsOfReceipt = Array.isArray(formsOfReceiptData)
@@ -213,7 +213,7 @@ export default function PointOfSale({
   // --- SWR para buscar as assinaturas do aluno selecionado ---
   const { data: studentSubscriptions } = useSWR<StudentComplete>(
     selectedStudentId
-      ? `/api/v1/tenancies/${tenancyId}/students/${selectedStudentId}`
+      ? `/api/v1/tenants/${tenantId}/students/${selectedStudentId}`
       : null,
     fetcher
   );
@@ -673,7 +673,7 @@ export default function PointOfSale({
 
     try {
       const response = await fetch(
-        `/api/v1/tenancies/${tenancyId}/sales`,
+        `/api/v1/tenants/${tenantId}/sales`,
         {
           method: "POST",
                 credentials: "include",
@@ -708,7 +708,7 @@ export default function PointOfSale({
       }
 
       await fetch(
-        `/api/v1/tenancies/${tenancyId}/students/${data.studentId}/history`,
+        `/api/v1/tenants/${tenantId}/students/${data.studentId}/history`,
         {
           method: "POST",
                 credentials: "include",

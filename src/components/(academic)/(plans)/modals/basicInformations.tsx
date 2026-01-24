@@ -16,17 +16,17 @@ type Props = {
   control: Control<CreatePlanInput | UpdatePlanInput>;
   errors: FieldErrors<CreatePlanInput | UpdatePlanInput>;
   register: UseFormRegister<CreatePlanInput | UpdatePlanInput>;
-  tenancyId: string;
+  tenantId: string;
 };
 
 export default function Plan__BasicInformations({
   control,
   errors,
   register,
-  tenancyId,
+  tenantId,
 }: Props) {
   const { error, isLoading } = useSWR<ContractModel[]>(
-    `/api/v1/tenancies/${tenancyId}/contract-models`,
+    `/api/v1/tenants/${tenantId}/contract-models`,
     fetcher
   );
 

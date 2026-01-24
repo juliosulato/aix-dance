@@ -84,10 +84,10 @@ const ScheduleSummary = ({ days }: { days: ClassViewData["days"] }) => {
 export default function ClassView({ id }: { id: string }) {
   const session = useSession();
 
-  const tenancyId = session?.data?.user.tenancyId as string;
+  const tenantId = session?.data?.user.tenantId as string;
 
   const { data, error } = useSWR<ClassFromApi>(
-    `/api/v1/tenancies/${tenancyId}/classes/${id}`,
+    `/api/v1/tenants/${tenantId}/classes/${id}`,
     fetcher
   );
 
@@ -103,7 +103,7 @@ export default function ClassView({ id }: { id: string }) {
   const handleArchive = async () => {
     setIsArchiving(true);
     try {
-      await archiveClasses([classData.id], tenancyId);
+      await archiveClasses([classData.id], tenantId);
       router.push("/system/academic/classes");
       router.refresh();
     } catch (error) {

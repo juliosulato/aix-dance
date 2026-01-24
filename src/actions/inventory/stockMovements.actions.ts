@@ -24,7 +24,7 @@ export const createStockMovementAction = protectedAction(
     const validatedData = validatedResult.data;
 
     try {
-      await StockMovementsService.create(user.tenancyId, validatedData);
+      await StockMovementsService.create(user.tenantId, validatedData);
 
       updateTag("products");
 
@@ -47,7 +47,7 @@ export const deletetockMovementAction = protectedAction(
     }
 
     try {
-      await StockMovementsService.delete(user.tenancyId, id);
+      await StockMovementsService.delete(user.tenantId, id);
 
       updateTag("products");
 

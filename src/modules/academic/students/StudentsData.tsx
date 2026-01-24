@@ -30,8 +30,8 @@ export default function StudentsList() {
     mutate,
   } = useSWR<PaginatedResponseLocal<StudentComplete>>(
     () =>
-      sessionData?.user?.tenancyId
-        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/students?page=${page}&limit=${limit}`
+      sessionData?.user?.tenantId
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${sessionData.user.tenantId}/students?page=${page}&limit=${limit}`
         : null,
     fetcher
   );
@@ -50,7 +50,7 @@ export default function StudentsList() {
   } = useCrud<StudentComplete>({
     mutate: mutate as unknown as KeyedMutator<StudentComplete[]>,
     deleteAction: async (ids) => {
-      if (sessionData?.user?.tenancyId) {
+      if (sessionData?.user?.tenantId) {
         await deleteStudents(ids);
       }
     },

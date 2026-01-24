@@ -27,11 +27,11 @@ type SaleResponse = Sale & {
 export default function SaleView({ saleId }: { saleId: string }) {
 
     const session = useSession().data;
-    const tenancyId = session?.user.tenancyId as string;
+    const tenantId = session?.user.tenantId as string;
 
     // --- Busca os dados da Venda ---
     const { data: sale, error, isLoading } = useSWR<SaleResponse>(
-        `/api/v1/tenancies/${tenancyId}/sales/${saleId}`,
+        `/api/v1/tenants/${tenantId}/sales/${saleId}`,
         fetcher
     );
 

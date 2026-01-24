@@ -41,8 +41,8 @@ export default function AllContractModelsPage() {
 
     // Busca de dados com SWR
     const { data: contractModels, error, isLoading, mutate } = useSWR<ContractModel[]>(
-        () => sessionData?.user?.tenancyId
-            ? `/api/v1/tenancies/${sessionData.user.tenancyId}/contract-models`
+        () => sessionData?.user?.tenantId
+            ? `/api/v1/tenants/${sessionData.user.tenantId}/contract-models`
             : null,
         fetcher
     );
@@ -67,8 +67,8 @@ export default function AllContractModelsPage() {
 
     const handleDeleteConfirm = async () => {
         setIsDeleting(true);
-        const tenancyId = sessionData?.user?.tenancyId;
-        if (!tenancyId) return;
+        const tenantId = sessionData?.user?.tenantId;
+        if (!tenantId) return;
 
         const finalIdsToDelete = idsToDelete.length > 0 ? idsToDelete : (selectedModel ? [selectedModel.id] : []);
 
@@ -79,7 +79,7 @@ export default function AllContractModelsPage() {
         }
 
         try {
-            await deleteContractModels(finalIdsToDelete, tenancyId, mutate as MutatorCallback);
+            await deleteContractModels(finalIdsToDelete, tenantId, mutate as MutatorCallback);
             mutate(); // Revalida os dados para atualizar a UI
         } catch (error) {
             console.error("Falha ao excluir o(s) modelo(s):", error);

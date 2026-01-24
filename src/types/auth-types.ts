@@ -2,7 +2,7 @@ import { SessionData } from "@/lib/auth-server";
 import type { User as BetterAuthUser, Session as BetterAuthSession } from "better-auth/types";
 
 interface CustomFields {
-  tenancyId: string;
+  tenantId: string;
   role: string;
   firstName: string;
   lastName: string;

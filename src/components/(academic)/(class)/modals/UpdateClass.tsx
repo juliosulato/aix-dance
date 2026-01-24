@@ -88,7 +88,7 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
     if (isPending) return <LoadingOverlay visible />;
 
     async function updateClass(data: UpdateClassInput) {
-        if (!sessionData?.user.tenancyId || !classData?.id) {
+        if (!sessionData?.user.tenantId || !classData?.id) {
             notifications.show({ color: "red", message: "Sessão ou dados da turma inválidos." });
             return;
         }
@@ -107,7 +107,7 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
         const finalData = { ...data, days: daysPayload };
 
         try {
-            const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/classes/${classData.id}`, {
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${sessionData.user.tenantId}/classes/${classData.id}`, {
                 method: "PUT",
                 credentials: "include",
                 body: JSON.stringify(finalData),
@@ -133,14 +133,14 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
                     <Stepper active={active} onStepClick={setActive}>
                         <Stepper.Step label={"Sobre a Turma"} >
                            <div className="flex flex-col gap-4">
-                                <AboutOfClass control={control} errors={errors} tenancyId={sessionData.user.tenancyId} />
+                                <AboutOfClass control={control} errors={errors} tenantId={sessionData.user.tenantId} />
                                 <DayOfClassesAndHours setValue={setValue} watch={watch}  errors={errors} />
                                 <div className="flex justify-end"><Button type="button" color="#7439FA" radius={"lg"} size="lg" onClick={handleNextStep}>{"Próximo"}</Button></div>
                             </div>
                         </Stepper.Step>
                         <Stepper.Step label={"Alunos"} >
                             <div className="flex flex-col gap-4">
-                                <NewClass__Students control={control} errors={errors} tenancyId={sessionData.user.tenancyId} />
+                                <NewClass__Students control={control} errors={errors} tenantId={sessionData.user.tenantId} />
                                 <div className="flex justify-between">
                                     <Button type="button" color="#7439FA" radius={"lg"} size="lg" onClick={prevStep}>{"Voltar"}</Button>
                                     <Button type="button" color="#7439FA" radius={"lg"} size="lg" onClick={handleNextStep}>{"Próximo"}</Button>
@@ -149,7 +149,7 @@ function UpdateClass({ opened, onClose, mutate, classData }: Props) {
                         </Stepper.Step>
                         <Stepper.Step label={"Resumo"}>
                             <div className="flex flex-col gap-4">
-                                <NewClass__Resume control={control as any} tenancyId={sessionData.user.tenancyId} />
+                                <NewClass__Resume control={control as any} tenantId={sessionData.user.tenantId} />
                                 <div className="flex justify-between">
                                     <Button type="button" color="#7439FA" radius={"lg"} size="lg" onClick={prevStep}>{"Voltar"}</Button>
                                     <Button type="submit" color="#7439FA" radius={"lg"} size="lg">{"Salvar"}</Button>

@@ -47,8 +47,8 @@ export default function AllPlansData() {
     mutate,
   } = useSWR<Item[] | PaginatedResponseLocal<Item>>(
     () =>
-      sessionData?.user?.tenancyId
-        ? `/api/v1/tenancies/${sessionData.user.tenancyId}/plans`
+      sessionData?.user?.tenantId
+        ? `/api/v1/tenants/${sessionData.user.tenantId}/plans`
         : null,
     async (url: string) => {
       const res = await fetcher<any>(url);
@@ -80,8 +80,8 @@ export default function AllPlansData() {
 
   const handleDeleteConfirm = async () => {
     setIsDeleting(true);
-    const tenancyId = sessionData?.user?.tenancyId;
-    if (!tenancyId) return;
+    const tenantId = sessionData?.user?.tenantId;
+    if (!tenantId) return;
 
     const finalIdsToDelete =
       idsToDelete.length > 0
@@ -97,7 +97,7 @@ export default function AllPlansData() {
     }
 
     try {
-  await deletePlans(finalIdsToDelete, tenancyId, mutate);
+  await deletePlans(finalIdsToDelete, tenantId, mutate);
     } catch (error) {
       console.error("Falha ao excluir a(s) forma(s) de pagamento:", error);
     } finally {

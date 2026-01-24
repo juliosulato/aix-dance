@@ -29,7 +29,7 @@ function AvatarUpload({ defaultUrl, onUploadComplete, folder = "avatars" }: Prop
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (!session?.user?.tenancyId) {
+    if (!session?.user?.tenantId) {
       notifications.show({ color: "red", message: "Sessão inválida para upload." });
       return;
     }

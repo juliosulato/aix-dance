@@ -34,7 +34,7 @@ export const createCategoryBill = protectedAction(
       }
 
     try {
-      await CategoryBillsService.create(user.tenancyId, validatedData.data);
+      await CategoryBillsService.create(user.tenantId, validatedData.data);
 
       revalidatePath(PATHS.LIST);
 
@@ -61,7 +61,7 @@ export const updateCategoryBill = protectedAction(
       }
 
     try {
-      await CategoryBillsService.update(user.tenancyId, validatedData.data);
+      await CategoryBillsService.update(user.tenantId, validatedData.data);
 
       revalidatePath(PATHS.LIST);
 
@@ -83,7 +83,7 @@ export const deleteCategoryBills = protectedAction(
     }
 
     try {
-      await CategoryBillsService.deleteMany(user.tenancyId, ids);
+      await CategoryBillsService.deleteMany(user.tenantId, ids);
 
       revalidatePath(PATHS.LIST);
       ids.forEach((id) =>

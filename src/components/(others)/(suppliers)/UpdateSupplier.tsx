@@ -53,14 +53,14 @@ export default function UpdateSupplier({ opened, onClose, mutate, supplier }: Pr
     const { data: sessionData, isPending } = useSession();
 
     async function handleUpdateSupplier(data: UpdateSupplierInput) {
-        if (!sessionData?.user.tenancyId) {
+        if (!sessionData?.user.tenantId) {
             notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
 
         setIsLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/suppliers/${supplier.id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${sessionData.user.tenantId}/suppliers/${supplier.id}`, {
                 method: "PUT",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },

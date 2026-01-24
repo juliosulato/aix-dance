@@ -33,7 +33,7 @@ export function adaptStudentClasses(apiStudent: any): StudentClassFromApi[] {
       createdAt: sc.class.createdAt,
       updatedAt: sc.class.updatedAt,
       active: sc.class.active,
-      tenancyId: sc.class.tenancyId,
+      tenantId: sc.class.tenantId,
     },
     // --- compute attendance for this student in this class ---
     // If the backend already attached an attendanceSummary on the class (from student.findById), use it

@@ -1,7 +1,7 @@
 export type Class = {
     name: string;
     id: string;
-    tenancyId: string;
+    tenantId: string;
     active: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -23,7 +23,7 @@ export type ClassAttendance = {
 export type Modality = {
     name: string;
     id: string;
-    tenancyId: string;
+    tenantId: string;
 }
 
 export enum DayOfWeek {

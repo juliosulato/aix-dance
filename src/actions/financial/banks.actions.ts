@@ -34,7 +34,7 @@ export const createBank = protectedAction(
     }
 
     try {
-      await BanksService.create(user.tenancyId, validatedData.data);
+      await BanksService.create(user.tenantId, validatedData.data);
 
       revalidatePath(PATHS.FINANCIAL_MANAGER);
       revalidatePath(PATHS.BANKS_LIST);
@@ -60,7 +60,7 @@ export const updateBank = protectedAction(
     }
 
     try {
-      await BanksService.update(user.tenancyId, validatedData.data);
+      await BanksService.update(user.tenantId, validatedData.data);
 
       revalidatePath(PATHS.BANKS_LIST);
       revalidatePath(PATHS.FINANCIAL_MANAGER);
@@ -82,7 +82,7 @@ export const deleteBanks = protectedAction(
     }
   
     try {
-      await BanksService.deleteMany(user.tenancyId, ids);
+      await BanksService.deleteMany(user.tenantId, ids);
 
       revalidatePath(PATHS.BANKS_LIST);
       revalidatePath(PATHS.FINANCIAL_MANAGER);

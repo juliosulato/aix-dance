@@ -52,7 +52,7 @@ export default function UpdateModalities({
   const { data: sessionData, isPending } = useSession();
 
   async function createModality(data: UpdateModalityInput) {
-    if (!sessionData?.user.tenancyId) {
+    if (!sessionData?.user.tenantId) {
       notifications.show({ color: "red", message: "Sessão Inválida" });
       return;
     }
@@ -60,7 +60,7 @@ export default function UpdateModalities({
     setIsLoading(true);
     try {
       const response = await fetch(
-        `/api/v1/tenancies/${sessionData.user.tenancyId}/modalities/${modality.id}`,
+        `/api/v1/tenants/${sessionData.user.tenantId}/modalities/${modality.id}`,
         {
           method: "PUT",
                 credentials: "include",

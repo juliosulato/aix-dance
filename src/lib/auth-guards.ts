@@ -18,7 +18,7 @@ export function protectedAction<T, A extends any[]>(action: AuthenticatedAction<
   return async (...args: A): Promise<T> => {
     const data = await getServerSession();
 
-    if (!data || !data.user || !data.user.tenancyId) {
+    if (!data || !data.user || !data.user.tenantId) {
       throw new Error("Ação não autorizada. Por favor, faça login novamente.");
     }
 

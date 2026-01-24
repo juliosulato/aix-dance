@@ -27,7 +27,7 @@ export default function ClassDetails({ classId }: { classId: string }) {
 
     const session = useSession().data;
 
-    const { data: classData, isLoading, mutate } = useSWR<ClassFromApi>(`/api/v1/tenancies/${session?.user.tenancyId}/classes/${classId}`, fetcher);
+    const { data: classData, isLoading, mutate } = useSWR<ClassFromApi>(`/api/v1/tenants/${session?.user.tenantId}/classes/${classId}`, fetcher);
 
     if (isLoading || !classData) {
         return <p>Carregando... </p>;
@@ -68,7 +68,7 @@ export default function ClassDetails({ classId }: { classId: string }) {
         if (!deleteModal.id) return;
         setDeleteLoading(true);
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${session?.user.tenancyId}/class-attendances/${deleteModal.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${session?.user.tenantId}/class-attendances/${deleteModal.id}`, {
                 method: "DELETE",
                 credentials: "include",
             });

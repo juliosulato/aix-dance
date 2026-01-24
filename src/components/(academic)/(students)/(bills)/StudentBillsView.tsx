@@ -74,8 +74,8 @@ export default function StudentBillsView({
 
   const handleDeleteConfirm = async () => {
     setIsDeleting(true);
-    const tenancyId = student.tenancyId;
-    if (!tenancyId) return;
+    const tenantId = student.tenantId;
+    if (!tenantId) return;
 
     const finalIdsToDelete =
       idsToDelete.length > 0
@@ -105,15 +105,15 @@ export default function StudentBillsView({
 
   const exemptPenalty = async (ids: string[]) => {
     setIsExempting(true);
-    const tenancyId = student.tenancyId;
-    if (!tenancyId) {
+    const tenantId = student.tenantId;
+    if (!tenantId) {
       setIsExempting(false);
       alert("Tenancy ID ausente.");
       return;
     }
 
     try {
-      const apiUrl = `/api/v1/tenancies/${tenancyId}/bills/exempt-penalty`;
+      const apiUrl = `/api/v1/tenants/${tenantId}/bills/exempt-penalty`;
       const res = await fetch(apiUrl, {
         method: "POST",
                 credentials: "include",

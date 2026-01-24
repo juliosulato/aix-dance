@@ -6,10 +6,10 @@ type Props = {
     item: Product;
     handleUpdate: (item: Product) => void;
     handleDelete: (item: Product) => void;
-    tenancyId: string;
+    tenantId: string;
 }
 
-export default function ProductsCard({ item, handleUpdate, handleDelete, tenancyId }: Props) {
+export default function ProductsCard({ item, handleUpdate, handleDelete, tenantId }: Props) {
   return (
     <>
       <div className="flex flex-row justify-between items-start gap-3 p-4">
@@ -38,7 +38,7 @@ export default function ProductsCard({ item, handleUpdate, handleDelete, tenancy
           product={item}
           onUpdateClick={handleUpdate}
           onDeleteClick={handleDelete}
-          tenancyId={tenancyId ?? ""}
+          tenantId={tenantId ?? ""}
         />
       </div>
       <div className="flex flex-row justify-between items-start p-4">

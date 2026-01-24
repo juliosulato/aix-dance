@@ -36,7 +36,7 @@ export const createFormOfReceipt = protectedAction(
     }
 
     try {
-      await FormsOfReceiptService.create(user.tenancyId, validatedData.data);
+      await FormsOfReceiptService.create(user.tenantId, validatedData.data);
 
       revalidatePath("/system/financial/forms-of-receipt");
       return { success: true };
@@ -64,7 +64,7 @@ export const updateFormOfReceipt = protectedAction(
     }
 
     try {
-      await FormsOfReceiptService.update(user.tenancyId, validatedData.data);
+      await FormsOfReceiptService.update(user.tenantId, validatedData.data);
 
       revalidatePath(PATHS.LIST);
       revalidatePath(PATHS.LIST + validatedData.data.id);
@@ -87,7 +87,7 @@ export const deleteFormOfReceipt = protectedAction(
     }
 
     try {
-      await FormsOfReceiptService.deleteMany(user.tenancyId, ids);
+      await FormsOfReceiptService.deleteMany(user.tenantId, ids);
 
       revalidatePath("/system/financial/forms-of-receipt");
       return { success: true };

@@ -11,7 +11,7 @@ export type Bank = {
     maintenanceFeeAmount: Decimal | null;
     maintenanceFeeDue: number | null;
     bills?: Bill[];
-    tenancyId: string;
+    tenantId: string;
     createdAt: Date;
     updatedAt: Date;
 };

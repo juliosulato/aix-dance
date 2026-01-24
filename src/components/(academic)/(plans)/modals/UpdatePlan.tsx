@@ -58,7 +58,7 @@ export default function UpdatePlan({ opened, onClose, mutate, plan }: Props) {
     if (!sessionData) return <div>Sessão inválida</div>;
 
     async function createPlan(data: UpdatePlanInput) {
-        if (!sessionData?.user.tenancyId) {
+        if (!sessionData?.user.tenantId) {
             notifications.show({ color: "red", message: "Sessão inválida" });
             return;
         }
@@ -71,7 +71,7 @@ export default function UpdatePlan({ opened, onClose, mutate, plan }: Props) {
         }
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/plans/${plan?.id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${sessionData.user.tenantId}/plans/${plan?.id}`, {
                 method: "PUT",
                 credentials: "include",
                 body: JSON.stringify(data),
@@ -115,7 +115,7 @@ export default function UpdatePlan({ opened, onClose, mutate, plan }: Props) {
                 classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}
             >
                 <form onSubmit={handleSubmit(createPlan, onError)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw]">
-                    <BasicInformations control={control as any} errors={errors} register={register as any} tenancyId={sessionData.user.tenancyId} />
+                    <BasicInformations control={control as any} errors={errors} register={register as any} tenantId={sessionData.user.tenantId} />
                     <NewPlan__Fees amount={Number(amount)} control={control as any} errors={errors} register={register as any} />
                     <Button
                         type="submit"

@@ -6,7 +6,7 @@ export type FormsOfReceipt = {
     operator: string | null;
     fees?: PaymentFee[];
     bills?: Bill[];
-    tenancyId: string;
+    tenantId: string;
     createdAt: Date;
     updatedAt: Date;
 };

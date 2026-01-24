@@ -37,9 +37,9 @@ export const saveStudent = protectedAction(
 
     try {
       if (!isEditingId) {
-        await StudentsService.create(user.tenancyId, payload);
+        await StudentsService.create(user.tenantId, payload);
       } else {
-        await StudentsService.update(user.tenancyId, payload, isEditingId);
+        await StudentsService.update(user.tenantId, payload, isEditingId);
       }
       return { success: true };
     } catch (error) {
@@ -59,7 +59,7 @@ export const deleteStudents = protectedAction(
     }
 
     try {
-      await StudentsService.deleteMany(user.tenancyId, { ids: ids });
+      await StudentsService.deleteMany(user.tenantId, { ids: ids });
       return { success: true };
     } catch (error) {
       const result = handleServerActionError(error);

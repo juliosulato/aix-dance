@@ -48,8 +48,8 @@ export default function AllTeachersData() {
     type PaginatedResponseLocal<T> = { products: T[]; pagination: PaginationInfo };
 
     const { data: teachers, error, isLoading, mutate } = useSWR<Item[] | PaginatedResponseLocal<Item>>(
-        () => sessionData?.user?.tenancyId
-            ? `/api/v1/tenancies/${sessionData.user.tenancyId}/users?role=TEACHER`
+        () => sessionData?.user?.tenantId
+            ? `/api/v1/tenants/${sessionData.user.tenantId}/users?role=TEACHER`
             : null,
         async (url: string) => {
             const res = await fetcher<any>(url);
@@ -80,8 +80,8 @@ export default function AllTeachersData() {
 
     const handleDeleteConfirm = async () => {
         setIsDeleting(true);
-        const tenancyId = sessionData?.user?.tenancyId;
-        if (!tenancyId) return;
+        const tenantId = sessionData?.user?.tenantId;
+        if (!tenantId) return;
 
         const finalIdsToDelete = idsToDelete.length > 0 ? idsToDelete : (selectedTeacher ? [selectedTeacher.id] : []);
 
@@ -92,7 +92,7 @@ export default function AllTeachersData() {
         }
 
         try {
-            await deleteUsers(finalIdsToDelete, tenancyId, mutate as any);
+            await deleteUsers(finalIdsToDelete, tenantId, mutate as any);
             mutate();
         } catch (error) {
             console.error("Falha ao desativar professores:", error);

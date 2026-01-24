@@ -27,7 +27,7 @@ type ContractSignatureLog = {
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
 
 type ContractModel = {
-    tenancyId: string;
+    tenantId: string;
     id: string;
     title: string;
     htmlContent: string;

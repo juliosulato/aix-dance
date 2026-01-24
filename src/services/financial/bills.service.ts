@@ -4,9 +4,9 @@ import { CreateBillInput, UpdateBillInput } from "@/schemas/financial/bill.schem
 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export class BillsService {
-  static create(tenancyId: string, data: CreateBillInput) {
+  static create(tenantId: string, data: CreateBillInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/bills`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/bills`,
       {
         method: "POST",
         body: JSON.stringify(data),
@@ -17,9 +17,9 @@ export class BillsService {
     );
   }
 
-  static update(tenancyId: string, data: UpdateBillInput) {
+  static update(tenantId: string, data: UpdateBillInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/bills/${data.id}`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/bills/${data.id}`,
       {
         method: "PUT",
         body: JSON.stringify(data),
@@ -30,9 +30,9 @@ export class BillsService {
     );
   }
 
-  static deleteMany(tenancyId: string, ids: string[]) {
+  static deleteMany(tenantId: string, ids: string[]) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/bills`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/bills`,
       {
         method: "DELETE",
         body: JSON.stringify({ ids }),
@@ -43,9 +43,9 @@ export class BillsService {
     );
   }
 
-  static deleteOne(tenancyId: string, id: string, scope: string) {
+  static deleteOne(tenantId: string, id: string, scope: string) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/bills/${id}?scope=${scope}`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/bills/${id}?scope=${scope}`,
       {
         method: "DELETE",
         headers: {

@@ -45,7 +45,7 @@ export default function BillsList({
   const [activeTab, setActiveTab] = useState<string | null>("payable");
   const { data, error, isLoading, mutate } = useSWR<
     PaginatedListResponse<BillComplete>
-  >(`/api/v1/tenancies/${user.tenancyId}/bills?type=${activeTab?.toUpperCase()}`, fetcher);
+  >(`/api/v1/tenants/${user.tenantId}/bills?type=${activeTab?.toUpperCase()}`, fetcher);
   const billsData = useBillsData(data?.data || []);
 
   const [openPayBill, setOpenPayBill] = useState<boolean>(false);

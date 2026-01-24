@@ -34,7 +34,7 @@ export const createBill = protectedAction(
 
 
     try {
-      await BillsService.create(user.tenancyId, validatedData.data);
+      await BillsService.create(user.tenantId, validatedData.data);
 
       return { success: true };
     } catch (error) {
@@ -87,7 +87,7 @@ export const updateBill = protectedAction(
     };
 
     try {
-      const response = await BillsService.update(user.tenancyId, payload);
+      const response = await BillsService.update(user.tenantId, payload);
       revalidatePath(PATHS.LIST + payload.id);
 
       return { success: true };
@@ -107,13 +107,13 @@ export const deleteBills = protectedAction(
         if (data.length === 0) {
           return { success: false, error: "Nenhum ID fornecido." };
         }
-        await BillsService.deleteMany(user.tenancyId, data);
+        await BillsService.deleteMany(user.tenantId, data);
 
         data.forEach((id) => {
           revalidatePath(PATHS.LIST + id);
         });
       } else {
-        await BillsService.deleteOne(user.tenancyId, data.id, data.scope);
+        await BillsService.deleteOne(user.tenantId, data.id, data.scope);
         revalidatePath(PATHS.LIST + data.id);
       }
       return { success: true };

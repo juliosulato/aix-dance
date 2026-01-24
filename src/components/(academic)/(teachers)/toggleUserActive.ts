@@ -5,7 +5,7 @@ import { TeacherFromApi } from "./modals/UpdateTeacher";
 
 async function toggleUserActive(
   item: TeacherFromApi,
-  tenancyId: string,
+  tenantId: string,
   mutate?: KeyedMutator<TeacherFromApi[]>
 ) {
   if (!item) {
@@ -16,7 +16,7 @@ async function toggleUserActive(
     return;
   }
 
-  const apiUrl = `/api/v1/tenancies/${tenancyId}/users/${item.id}`;
+  const apiUrl = `/api/v1/tenants/${tenantId}/users/${item.id}`;
 
   // Optimistic UI update
   mutate &&

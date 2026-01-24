@@ -20,10 +20,10 @@ import { StudentComplete } from "@/types/student.types";
 
 export default function StudentsView({ id }: { id: string }) {
   const session = useSession();
-  const tenancyId = session?.data?.user.tenancyId as string;
+  const tenantId = session?.data?.user.tenantId as string;
 
   const { data: student, error } = useSWR<{ data: StudentComplete, success: boolean }>(
-    `/api/v1/tenancies/${tenancyId}/students/${id}`,
+    `/api/v1/tenants/${tenantId}/students/${id}`,
     fetcher
   );
 
@@ -33,7 +33,7 @@ export default function StudentsView({ id }: { id: string }) {
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      await deleteStudents([student?.data.id || ""], tenancyId);
+      await deleteStudents([student?.data.id || ""], tenantId);
       window.location.replace("/system/academic/students");
     } catch (error) {
       console.error("Falha ao excluir o aluno:", error);

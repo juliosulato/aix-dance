@@ -4,8 +4,8 @@ import { CreateStockMovementInput } from "@/schemas/inventory/stock-movement";
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export class StockMovementsService {
-    static create(tenancyId: string, payload: CreateStockMovementInput) {
-        return serverFetch(`${BASE_URL}/api/v1/tenancies/${tenancyId}/inventory/stock-movements`, {
+    static create(tenantId: string, payload: CreateStockMovementInput) {
+        return serverFetch(`${BASE_URL}/api/v1/tenants/${tenantId}/inventory/stock-movements`, {
             method: "POST",
             body: JSON.stringify(payload),
             headers: {
@@ -14,8 +14,8 @@ export class StockMovementsService {
         });
     }
 
-    static delete(tenancyId: string, id: string) {
-        return serverFetch(`${BASE_URL}/api/v1/tenancies/${tenancyId}/inventory/stock-movements/${id}`, {
+    static delete(tenantId: string, id: string) {
+        return serverFetch(`${BASE_URL}/api/v1/tenants/${tenantId}/inventory/stock-movements/${id}`, {
             method: "DELETE"
         })
     }

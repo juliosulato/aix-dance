@@ -39,8 +39,8 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
 
   const { data: allClasses } = useSWR<PaginatedResponseLocal<Class>>(
     () =>
-      sessionData?.user.tenancyId
-        ? `/api/v1/tenancies/${sessionData.user.tenancyId}/classes`
+      sessionData?.user.tenantId
+        ? `/api/v1/tenants/${sessionData.user.tenantId}/classes`
         : null,
     fetcher
   );
@@ -92,7 +92,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
     const toRemove = initialIds.filter((id) => !finalIds.includes(id));
 
     const promises: Promise<Response>[] = [];
-    const tenancyId = sessionData!.user.tenancyId;
+    const tenantId = sessionData!.user.tenantId;
 
     if (toEnroll.length > 0) {
 
@@ -102,7 +102,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
 
         promises.push(
           fetch(
-            `/api/v1/tenancies/${tenancyId}/classes/${classId}/enrollments`,
+            `/api/v1/tenants/${tenantId}/classes/${classId}/enrollments`,
             {
               method: "POST",
                 credentials: "include",
@@ -114,7 +114,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
 
         promises.push(
           fetch(
-            `/api/v1/tenancies/${tenancyId}/students/${student.id}/history`,
+            `/api/v1/tenants/${tenantId}/students/${student.id}/history`,
             {
               method: "POST",
                 credentials: "include",
@@ -136,7 +136,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
         // Arquivar matrícula
         promises.push(
           fetch(
-            `/api/v1/tenancies/${tenancyId}/classes/${classId}/enrollments/archive`,
+            `/api/v1/tenants/${tenantId}/classes/${classId}/enrollments/archive`,
             {
               method: "PATCH",
               body: JSON.stringify({ studentIds: [student.id] }),
@@ -147,7 +147,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
 
         promises.push(
           fetch(
-            `/api/v1/tenancies/${tenancyId}/students/${student.id}/history`,
+            `/api/v1/tenants/${tenantId}/students/${student.id}/history`,
             {
               method: "POST",
                 credentials: "include",

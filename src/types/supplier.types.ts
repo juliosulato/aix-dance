@@ -5,7 +5,7 @@ import { Product } from './product.types';
 
 export type Supplier = {
     id: string;
-    tenancyId: string;
+    tenantId: string;
     tenancy?: Tenancy;
     name: string;
     corporateReason: string | null;

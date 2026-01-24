@@ -274,7 +274,7 @@ export default function BillView({
                         onClick={async () => {
                           try {
                             const res = await fetch(
-                              `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user.tenancyId}/bill-attachments/${att.id}/url`
+                              `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/bill-attachments/${att.id}/url`
                             );
                             if (!res.ok)
                               throw new Error("Failed to fetch attachment URL");

@@ -21,7 +21,7 @@ export type CategoryBill = {
     groupId: string | null;
     group?: CategoryGroup | null;
     bills?: Bill[];
-    tenancyId: string;
+    tenantId: string;
     createdAt: Date;
     updatedAt: Date;
 };
@@ -30,5 +30,5 @@ export type CategoryGroup = {
     id: string;
     name: string;
     categories?: CategoryBill[];
-    tenancyId: string;
+    tenantId: string;
 };

@@ -12,7 +12,7 @@ export type Plan = {
     type: PlanType;
     name: string;
     id: string;
-    tenancyId: string;
+    tenantId: string;
     frequency: number;
     amount: number;
     isActive: boolean;
@@ -32,7 +32,7 @@ export enum SubscriptionStatus {
 
 export type Subscription = {
     id: string;
-    tenancyId: string;
+    tenantId: string;
     studentId: string;
     planId: string;
     status: SubscriptionStatus;

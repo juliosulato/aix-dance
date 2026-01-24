@@ -3,9 +3,9 @@ import { serverFetch } from "@/lib/server-fetch";
 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export class StudentsService {
-  static create(tenancyId: string, formData: FormData) {
+  static create(tenantId: string, formData: FormData) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/students`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/academic/students`,
       {
         method: "POST",
         body: formData,
@@ -13,9 +13,9 @@ export class StudentsService {
     );
   }
 
-  static update(tenancyId: string, formData: FormData, id: string) {
+  static update(tenantId: string, formData: FormData, id: string) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/students/${id}`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/academic/students/${id}`,
       {
         method: "PUT",
         body: formData,
@@ -24,11 +24,11 @@ export class StudentsService {
   }
 
   static deleteMany(
-    tenancyId: string,
+    tenantId: string,
     payload: { ids: string[] }
   ) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/students`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/academic/students`,
       {
         method: "DELETE",
         headers: {

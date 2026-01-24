@@ -15,7 +15,7 @@ export interface SessionData {
     emailVerified: boolean;
     image?: string | null;
     role: string;
-    tenancyId: string;
+    tenantId: string;
     firstName: string;
     lastName: string;
     createdAt: string;

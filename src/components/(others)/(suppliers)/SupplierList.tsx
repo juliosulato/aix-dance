@@ -39,8 +39,8 @@ export default function AllSuppliersData() {
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
     const { data: categoryGroups, error, isLoading, mutate } = useSWR<SupplierFromApi[]>(
-        () => sessionData?.user?.tenancyId
-            ? `/api/v1/tenancies/${sessionData.user.tenancyId}/suppliers`
+        () => sessionData?.user?.tenantId
+            ? `/api/v1/tenants/${sessionData.user.tenantId}/suppliers`
             : null,
         fetcher
     );
@@ -64,8 +64,8 @@ export default function AllSuppliersData() {
 
     const handleDeleteConfirm = async () => {
         setIsDeleting(true);
-        const tenancyId = sessionData?.user?.tenancyId;
-        if (!tenancyId) return;
+        const tenantId = sessionData?.user?.tenantId;
+        if (!tenantId) return;
 
         const finalIdsToDelete = idsToDelete.length > 0 ? idsToDelete : (selectedSupplier ? [selectedSupplier.id] : []);
 
@@ -76,7 +76,7 @@ export default function AllSuppliersData() {
         }
 
         try {
-            await deleteSuppliers(finalIdsToDelete, tenancyId, mutate as any);
+            await deleteSuppliers(finalIdsToDelete, tenantId, mutate as any);
             mutate();
         } catch (error) {
             console.error("Falha ao excluir o(s) fornecedores:", error);

@@ -53,8 +53,8 @@ export default function AllUsersData() {
     mutate,
   } = useSWR<UserFromApi[] | PaginatedResponseLocal<UserFromApi>>(
     () =>
-      sessionData?.user?.tenancyId
-        ? `/api/v1/tenancies/${sessionData.user.tenancyId}/users`
+      sessionData?.user?.tenantId
+        ? `/api/v1/tenants/${sessionData.user.tenantId}/users`
         : null,
     fetcher
   );
@@ -84,8 +84,8 @@ export default function AllUsersData() {
 
   const handleDeleteConfirm = async () => {
     setIsDeleting(true);
-    const tenancyId = sessionData?.user?.tenancyId;
-    if (!tenancyId) return;
+    const tenantId = sessionData?.user?.tenantId;
+    if (!tenantId) return;
 
     const finalIdsToDelete =
       idsToDelete.length > 0
@@ -108,7 +108,7 @@ export default function AllUsersData() {
         });
       }
 
-      await deleteUsers(finalIdsToDelete, tenancyId, mutate as any);
+      await deleteUsers(finalIdsToDelete, tenantId, mutate as any);
       mutate();
     } catch (error) {
       console.error("Falha ao desativar professores:", error);
@@ -281,7 +281,7 @@ export default function AllUsersData() {
             setSelectedUser(null);
           }}
           user={selectedUser}
-          tenancyId={sessionData.user.tenancyId}
+          tenantId={sessionData.user.tenantId}
           mutate={mutate as any}
         />
       )}

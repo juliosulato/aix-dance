@@ -7,9 +7,9 @@ import {
 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export class CategoryBillsService {
-  static create(tenancyId: string, data: CreateCategoryBillInput) {
+  static create(tenantId: string, data: CreateCategoryBillInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/bills`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/categories-bills`,
       {
         method: "POST",
         body: JSON.stringify(data),
@@ -20,9 +20,9 @@ export class CategoryBillsService {
     );
   }
 
-  static update(tenancyId: string, data: UpdateCategoryBillInput) {
+  static update(tenantId: string, data: UpdateCategoryBillInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/bills/${data.id}`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/categories-bills/${data.id}`,
       {
         method: "PUT",
         body: JSON.stringify(data),
@@ -33,9 +33,9 @@ export class CategoryBillsService {
     );
   }
 
-  static deleteMany(tenancyId: string, ids: string[]) {
+  static deleteMany(tenantId: string, ids: string[]) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenancies/${tenancyId}/categories/bills`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/categories-bills`,
       {
         method: "DELETE",
         body: JSON.stringify({ ids }),

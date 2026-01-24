@@ -8,7 +8,7 @@ export default async function CategoryGroupsPage({ params }: { params: Promise<{
     const { id } = await params;
     const { user } = await requireAuth();
     
-    const categoryGroup = await serverFetch<CategoryGroup>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${user.tenancyId}/categories/groups/${id}`);
+    const categoryGroup = await serverFetch<CategoryGroup>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/categories/groups/${id}`);
 
     return (
         <main>

@@ -98,14 +98,14 @@ function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
     if (!sessionData) return <div>Sessão inválida</div>; return <div>Você precisa estar logado para editar professores.</div>;
 
     async function updateTeacher(data: UpdateUserInput) {
-        if (!sessionData?.user.tenancyId || !user?.id) {
+        if (!sessionData?.user.tenantId || !user?.id) {
             notifications.show({ color: "red", message: "Sessão ou dados do professor inválidos." });
             return;
         }
 
         setVisible(true);
         try {
-            const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenancies/${sessionData.user.tenancyId}/users/${user.id}`, {
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${sessionData.user.tenantId}/users/${user.id}`, {
                 method: "PUT",
                 credentials: "include",
                 body: JSON.stringify({...data, image: avatar || user.image}),

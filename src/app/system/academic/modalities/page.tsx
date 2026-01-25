@@ -3,11 +3,10 @@ import { requireAuth } from "@/lib/auth-guards";
 import { serverFetch } from "@/lib/server-fetch";
 import ModalitiesData from "@/modules/academic/modalities/ModalitiesData";
 import { Modality } from "@/types/class.types";
-import { PaginatedResponseLocal } from "@/types/pagination.types";
 
 export default async function ModalitiesPage() {
     const { user } = await requireAuth();
-    const modalities = await serverFetch<Modality>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/academic/modalities`)
+    const modalities = await serverFetch<{ items: Modality[] }>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/academic/modalities`)
     return (
         <main>
             <Breadcrumps

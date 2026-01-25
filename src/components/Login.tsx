@@ -40,7 +40,6 @@ export default function Login() {
       {
         onSuccess: () => {
           router.push("/system/");
-          router.refresh();
         },
         onError: (ctx) => {
           setIsGlobalLoading(false);

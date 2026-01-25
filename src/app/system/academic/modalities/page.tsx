@@ -3,12 +3,11 @@ import { requireAuth } from "@/lib/auth-guards";
 import { serverFetch } from "@/lib/server-fetch";
 import ModalitiesData from "@/modules/academic/modalities/ModalitiesData";
 import { Modality } from "@/types/class.types";
-import { PaginatedResponse } from "@/types/data-view.types";
+import { PaginatedResponseLocal } from "@/types/pagination.types";
 
 export default async function ModalitiesPage() {
     const { user } = await requireAuth();
-    const { data } = await serverFetch<PaginatedResponse<Modality>>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/academic/modalities`)
-
+    const modalities = await serverFetch<Modality>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/academic/modalities`)
     return (
         <main>
             <Breadcrumps
@@ -23,7 +22,7 @@ export default async function ModalitiesPage() {
                 ]}
             />
             <br />
-            <ModalitiesData data={data} />
+            <ModalitiesData data={modalities.data} />
         </main>
     );
 }

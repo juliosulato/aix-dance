@@ -9,6 +9,7 @@ import { Modality } from "@/types/class.types";
 import { User } from "@/types/user.types";
 import { CreateClassInput, UpdateClassInput } from "@/schemas/academic/class.schema";
 import ModalityForm from "@/modules/academic/modalities/ModalityForm";
+import { PaginatedResponseLocal } from "@/types/pagination.types";
 
 type Props = {
   control: Control<CreateClassInput | UpdateClassInput>;
@@ -32,7 +33,7 @@ export default function AboutClass({ control, errors, tenantId, setValue }: Prop
 
   const modalitiesArray: Modality[] = Array.isArray(modalities)
     ? modalities
-    : (modalities?.data.items ?? []);
+    : (modalities?.data?.items ?? []);
 
   const teachersArray: User[] = Array.isArray(teachers)
     ? teachers

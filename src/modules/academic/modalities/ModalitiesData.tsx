@@ -11,10 +11,10 @@ import { RowActionMenu } from "./RowActionMenu";
 import { BulkActionMenu } from "./ModalitiesBulkActionMenu";
 import { modalitiesTableColumns } from "./modalitiesTableColumns";
 import ModalityCard from "./ModalityCard";
-import { PaginatedResponse } from "@/types/data-view.types";
+import { PaginatedResponseLocal } from "@/types/pagination.types";
 
 type Props = {
-  data: PaginatedResponse<Modality>;
+  data: PaginatedResponseLocal<Modality>["data"];
 };
 
 export default function ModalitiesData({ data }: Props) {
@@ -36,8 +36,7 @@ export default function ModalitiesData({ data }: Props) {
   return (
     <>
       <DataView<Modality>
-        data={data || []}
-        itemKey="items"
+        data={data.items || []}
         openNewModal={{
           func: handleCreate,
           label: "Nova Modalidade",

@@ -36,7 +36,30 @@ export const createClassSchema = z.object({
   }),
 });
 
-export const updateClassSchema = createClassSchema.partial();
+export const updateClassSchema = z.object({
+  name: z.string().min(1, { message: "O nome da turma é obrigatório" }).optional(),
+  modality: z.string().min(1, { message: "A modalidade é obrigatória" }).optional(),
+  teacherId: z.string().min(1, { message: "O professor é obrigatório" }).optional(),
+  assistantId: z.string().optional(),
+  online: z.boolean().optional(),
+  days: z.array(
+    z.object({
+      dayOfWeek: z.enum(DayOfWeek, { message: "Dia da semana inválido" }),
+      initialHour: z.string().min(1, { message: "Hora inicial é obrigatória" }),
+      endHour: z.string().min(1, { message: "Hora final é obrigatória" }),
+    })
+  ).optional(),
+  students: z.array(z.string()).optional(),
+  schedules: z.object({
+    sunday: dayScheduleSchema.optional(),
+    monday: dayScheduleSchema.optional(),
+    tuesday: dayScheduleSchema.optional(),
+    wednesday: dayScheduleSchema.optional(),
+    thursday: dayScheduleSchema.optional(),
+    friday: dayScheduleSchema.optional(),
+    saturday: dayScheduleSchema.optional(),
+  }).optional(),
+});
 
 export type CreateClassInput = z.infer<typeof createClassSchema>;
 export type UpdateClassInput = z.infer<typeof updateClassSchema>;

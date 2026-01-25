@@ -58,7 +58,35 @@ const createStudentSchema = z.object({
   guardian: z.array(guardianSchema).optional(),
 });
 
-const updateStudentSchema = createStudentSchema.partial();
+const updateStudentSchema = z.object({
+  file: fileSchema.optional(),
+
+  firstName: z.string().min(1, { message: "O nome do aluno é obrigatório" }).optional(),
+  lastName: z.string().min(1, { message: "O sobrenome do aluno é obrigatório" }).optional(),
+  gender: z.enum(Gender, { error: "Gênero inválido" }).optional(),
+  cellPhoneNumber: z.string().min(1, { message: "Celular do aluno é obrigatório" }).optional(),
+  pronoun: z.string().optional(),
+  dateOfBirth: z.coerce.date().optional(),
+  phoneNumber: z.string().optional(),
+  nationalId: z
+    .string()
+    .optional()
+    .refine((value) => {
+      if (!value) return true;
+      const digits = value.replace(/\D/g, "");
+      if (digits.length === 0) return true;
+      return isValidCpf(digits);
+    }, { message: "CPF inválido" }),
+  email: z.email({ message: "E-mail do aluno inválido" }).optional().or(z.literal('')),
+  howDidYouMeetUs: z.string().optional(),
+  instagramUser: z.string().optional(),
+  healthProblems: z.string().optional(),
+  medicalAdvice: z.string().optional(),
+  painOrDiscomfort: z.string().optional(),
+  canLeaveAlone: z.boolean().default(true).optional(),
+  address: addressSchema.optional(),
+  guardian: z.array(guardianSchema).optional(),
+});
 
 export { createStudentSchema, updateStudentSchema };
 

@@ -182,8 +182,7 @@ export default function AllPlansData() {
     }
   };
 
-  if (status === "loading" || isLoading) return <LoadingOverlay visible />;
-  if (!sessionData) return <div>Sessão inválida</div>; return <div>{"Acesso não autorizado"}</div>;
+  if (isPending || isLoading) return <LoadingOverlay visible />;
   if (error) return <p>{"Erro ao carregar os planos."}</p>;
 
   return (

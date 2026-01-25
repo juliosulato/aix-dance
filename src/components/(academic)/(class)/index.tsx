@@ -4,9 +4,9 @@ import { fetcher } from "@/utils/fetcher";
 import { useSession } from "@/lib/auth-client";
 import { useState } from "react";
 import useSWR from "swr";
-import archiveClasses from "./archive"; // ATUALIZADO: Importa a nova função
+import archiveClasses from "./archive";
 import { ActionIcon, LoadingOverlay, Menu, Text } from "@mantine/core";
-import { BiDotsVerticalRounded, BiArchiveIn } from "react-icons/bi"; // ATUALIZADO: Ícone de arquivar
+import { BiDotsVerticalRounded, BiArchiveIn } from "react-icons/bi";
 import { GrUpdate } from "react-icons/gr";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
 import DataView from "@/components/ui/DataView";
@@ -32,12 +32,12 @@ export interface ClassFromApi extends Class {
 interface MenuItemProps {
   classItem: ClassFromApi;
   onUpdateClick: (c: ClassFromApi) => void;
-  onArchiveClick: (c: ClassFromApi) => void; // ATUALIZADO: Ação de arquivar
+  onArchiveClick: (c: ClassFromApi) => void;
 }
 
 interface MenuItemsProps {
   selectedIds: string[];
-  onBulkArchiveClick: (ids: string[]) => void; // ATUALIZADO: Ação de arquivar em massa
+  onBulkArchiveClick: (ids: string[]) => void;
 }
 
 export default function AllClassesData() {
@@ -49,8 +49,8 @@ export default function AllClassesData() {
     useState<boolean>(false);
   const [isConfirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
   const [selectedClass, setSelectedClass] = useState<ClassFromApi | null>(null);
-  const [idsToArchive, setIdsToArchive] = useState<string[]>([]); // ATUALIZADO: Nomenclatura
-  const [isArchiving, setIsArchiving] = useState<boolean>(false); // ATUALIZADO: Nomenclatura
+  const [idsToArchive, setIdsToArchive] = useState<string[]>([]);
+  const [isArchiving, setIsArchiving] = useState<boolean>(false);
 
   type Item = ClassFromApi;
   type PaginationInfo = { page: number; limit: number; total: number; totalPages: number };
@@ -81,21 +81,18 @@ export default function AllClassesData() {
     setOpenUpdate(true);
   };
 
-  // ATUALIZADO: Lógica para o clique em "Arquivar"
   const handleArchiveClick = (classItem: ClassFromApi) => {
     setSelectedClass(classItem);
     setIdsToArchive([]);
     setConfirmModalOpen(true);
   };
 
-  // ATUALIZADO: Lógica para o clique em "Arquivar em Massa"
   const handleBulkArchiveClick = (ids: string[]) => {
     setIdsToArchive(ids);
     setSelectedClass(null);
     setConfirmModalOpen(true);
   };
 
-  // ATUALIZADO: Confirmação e chamada da função de arquivamento
   const handleArchiveConfirm = async () => {
     setIsArchiving(true);
     const tenantId = sessionData?.user?.tenantId;
@@ -116,7 +113,7 @@ export default function AllClassesData() {
 
     try {
       await archiveClasses(finalIdsToArchive, tenantId, mutate as any);
-      // O mutate já é chamado dentro da função de arquivamento
+      // O mutate já é chamado dentro  função de arquivamento
     } catch (error) {
       console.error("Falha ao arquivar a(s) turma(s):", error);
     } finally {
@@ -127,7 +124,6 @@ export default function AllClassesData() {
     }
   };
 
-  // ATUALIZADO: Componente do Menu com a ação de "Arquivar"
   const MenuItem = ({
     classItem,
     onUpdateClick,

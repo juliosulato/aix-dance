@@ -29,7 +29,6 @@ function NewClass({ opened, onClose, mutate }: Props) {
   const [active, setActive] = useState(0);
   const [visible, setVisible] = useState(false);
 
-  const classSchema = createClassSchema;
 
   const {
     control,
@@ -40,7 +39,7 @@ function NewClass({ opened, onClose, mutate }: Props) {
     setValue,
     trigger,
   } = useForm<CreateClassInput>({
-    resolver: zodResolver(classSchema),
+    resolver: zodResolver(createClassSchema),
     defaultValues: {
       online: false,
       students: [],

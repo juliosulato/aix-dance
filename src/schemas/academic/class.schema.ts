@@ -75,7 +75,30 @@ export const createClassSchema = z.object({
     path: ["schedules"], 
 });
 
-export const updateClassSchema = createClassSchema.partial();
+export const updateClassSchema = z.object({
+    name: z.string().min(1, { message: "Nome da turma é obrigatório" }).optional(),
+    modalityId: z.string().min(1, { message: "Modalidade é obrigatória" }).optional(),
+    teacherId: z.string().min(1, { message: "Professor é obrigatório" }).optional(),
+    assistantId: z.string().optional(),
+    online: z.boolean().optional(),
+    days: z.array(
+        z.object({
+            dayOfWeek: z.enum(Object.values(DayOfWeek) as [DayOfWeek, ...DayOfWeek[]]),
+            initialHour: z.string().min(1),
+            endHour: z.string().min(1),
+        })
+    ).optional(),
+    students: z.array(z.string()).optional(),
+    schedules: z.object({
+        sunday: dayScheduleSchema.optional(),
+        monday: dayScheduleSchema.optional(),
+        tuesday: dayScheduleSchema.optional(),
+        wednesday: dayScheduleSchema.optional(),
+        thursday: dayScheduleSchema.optional(),
+        friday: dayScheduleSchema.optional(),
+        saturday: dayScheduleSchema.optional(),
+    }).optional(),
+});
 
 // Schema para matricular/desmatricular alunos
 export const enrollStudentsSchema = z.object({

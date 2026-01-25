@@ -141,11 +141,10 @@ export default function AllTeachersData() {
         </Menu>
     );
 
-    if (status === "loading" || isLoading) return <LoadingOverlay visible />;
+    if (isPending || isLoading) return <LoadingOverlay visible />;
     
     if (error) return <p>{"Erro inesperado"}</p>;
 
-    // `teachers` is already normalized by the fetcher to either Item[] or PaginatedResponseLocal<Item>
     const dataForDataView = teachers ?? [];
 
     return (

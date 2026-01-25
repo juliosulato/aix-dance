@@ -57,67 +57,76 @@ export const createUserSchema = z.object({
   path: ["confirmPassword"]
 });
 
-export const updateUserSchema = createUserSchema
-  .partial()
-  .extend({
-    prevPassword: z.string().optional(),
-    password: z.string().optional(),
-    confirmPassword: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
-    if (data.password || data.confirmPassword) {
-      if (!data.password || !data.confirmPassword) {
-        ctx.addIssue({
-          path: ["confirmPassword"],
-          code: "custom",
-          message: "As senhas não coincidem",
-        });
-        return;
-      }
-      if (data.password.length < 6) {
-        ctx.addIssue({
-          path: ["password"],
-          code: "custom",
-          message: "A senha deve ter no mínimo 6 caracteres",
-        });
-      }
-      if (!/[A-Z]/.test(data.password)) {
-        ctx.addIssue({
-          path: ["password"],
-          code: "custom",
-          message: "A senha deve conter pelo menos uma letra maiúscula",
-        });
-      }
-      if (!/[a-z]/.test(data.password)) {
-        ctx.addIssue({
-          path: ["password"],
-          code: "custom",
-          message: "A senha deve conter pelo menos uma letra minúscula",
-        });
-      }
-      if (!/[0-9]/.test(data.password)) {
-        ctx.addIssue({
-          path: ["password"],
-          code: "custom",
-          message: "A senha deve conter pelo menos um número",
-        });
-      }
-      if (data.password !== data.confirmPassword) {
-        ctx.addIssue({
-          path: ["confirmPassword"],
-          code: "custom",
-          message: "As senhas não coincidem",
-        });
-      }
-      if (!data.prevPassword) {
-        ctx.addIssue({
-          path: ["prevPassword"],
-          code: "custom",
-          message: "A senha anterior é obrigatória",
-        });
-      }
+export const updateUserSchema = z.object({
+  firstName: z.string().min(1, "Nome é obrigatório").optional(),
+  lastName: z.string().min(1, "Sobrenome é obrigatório").optional(),
+  email: z.email("E-mail inválido").optional(),
+  role: z.enum(UserRole, { error: "Papel do usuário é obrigatório" }).optional(),
+  image: z.string().optional(),
+  teacher: teacherSchema.optional(),
+  prevPassword: z.string().optional(),
+  password: z
+    .string()
+    .min(6, "A senha deve ter no mínimo 6 caracteres")
+    .regex(/[A-Z]/, "A senha deve conter pelo menos uma letra maiúscula")
+    .regex(/[a-z]/, "A senha deve conter pelo menos uma letra minúscula")
+    .regex(/[0-9]/, "A senha deve conter pelo menos um número")
+    .optional(),
+  confirmPassword: z.string().optional(),
+}).superRefine((data, ctx) => {
+  if (data.password || data.confirmPassword) {
+    if (!data.password || !data.confirmPassword) {
+      ctx.addIssue({
+        path: ["confirmPassword"],
+        code: "custom",
+        message: "As senhas não coincidem",
+      });
+      return;
     }
-  });
+    if (data.password.length < 6) {
+      ctx.addIssue({
+        path: ["password"],
+        code: "custom",
+        message: "A senha deve ter no mínimo 6 caracteres",
+      });
+    }
+    if (!/[A-Z]/.test(data.password)) {
+      ctx.addIssue({
+        path: ["password"],
+        code: "custom",
+        message: "A senha deve conter pelo menos uma letra maiúscula",
+      });
+    }
+    if (!/[a-z]/.test(data.password)) {
+      ctx.addIssue({
+        path: ["password"],
+        code: "custom",
+        message: "A senha deve conter pelo menos uma letra minúscula",
+      });
+    }
+    if (!/[0-9]/.test(data.password)) {
+      ctx.addIssue({
+        path: ["password"],
+        code: "custom",
+        message: "A senha deve conter pelo menos um número",
+      });
+    }
+    if (data.password !== data.confirmPassword) {
+      ctx.addIssue({
+        path: ["confirmPassword"],
+        code: "custom",
+        message: "As senhas não coincidem",
+      });
+    }
+    if (!data.prevPassword) {
+      ctx.addIssue({
+        path: ["prevPassword"],
+        code: "custom",
+        message: "A senha anterior é obrigatória",
+      });
+    }
+  }
+});
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;

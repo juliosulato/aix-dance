@@ -7,8 +7,8 @@ import { CategoryBill, CategoryGroup } from "@/types/category.types";
 export default async function CategoryPage() {
   const { user } = await requireAuth();
 
-  const categoryGroups = await serverFetch<CategoryGroup[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/categories/groups`);
-  const categoryBills = await serverFetch<CategoryBill[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/categories/bills`);
+  const categoryGroups = await serverFetch<CategoryGroup[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/financial/category-groups`);
+  const categoryBills = await serverFetch<CategoryBill[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/financial/category-bills`);
 
   return (
     <main>

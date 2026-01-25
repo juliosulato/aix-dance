@@ -7,7 +7,7 @@ import { Bank } from "@/types/bank.types";
 export default async function BankAccountsPage() {
   const { user } = await requireAuth();
 
-  const banks = await serverFetch<Bank[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user?.tenantId}/banks`)
+  const banks = await serverFetch<Bank[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user?.tenantId}/financial/banks`)
 
   return (
     <main>

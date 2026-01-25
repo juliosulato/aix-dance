@@ -13,9 +13,9 @@ export default async function CategoryPage({
 
   const { user } = await requireAuth();
 
-  const categoryGroups = await serverFetch<CategoryGroup[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/categories/groups`);
-  const categoryBills = await serverFetch<CategoryBill[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/categories/bills`);
-  const categoryBill = await serverFetch<CategoryBill>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/categories/bills/${id}`);
+  const categoryGroups = await serverFetch<CategoryGroup[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/financial/category-groups`);
+  const categoryBills = await serverFetch<CategoryBill[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/financial/category-bills`);
+  const categoryBill = await serverFetch<CategoryBill>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/financial/category-bills/${id}`);
 
   return (
     <main>

@@ -7,7 +7,7 @@ import { FormsOfReceipt } from "@/types/receipt.types";
 export default async function FormsOfReceiptsPage() {
     const { user } = await requireAuth();
     
-    const formsOfReceipt = await serverFetch<FormsOfReceipt[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/forms-of-receipt`)
+    const formsOfReceipt = await serverFetch<FormsOfReceipt[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${user.tenantId}/financial/forms-of-receipt`)
     
 
     return (

@@ -65,7 +65,7 @@ const theme = createTheme({
         },
         Button: {
             defaultProps: {
-                className: "text-sm! font-medium! tracking-wider w-full md:w-fit! ml-auto",
+                className: "text-sm! font-medium! tracking-wider w-full md:w-fit!",
                 color: "#7439FA",
                 radius: "lg",
                 size: "md"

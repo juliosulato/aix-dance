@@ -64,7 +64,7 @@ export default function ModalityForm({
           )}
         />
 
-        <div className="flex justify-end gap-3 mt-4">
+        <div className="flex justify-end gap-1 mt-4">
           <Button
             type="button"
             variant="subtle"

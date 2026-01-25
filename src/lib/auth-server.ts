@@ -37,13 +37,13 @@ export async function getServerSession(): Promise<SessionData | null> {
     }
 
     const backendUrl =
-        process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
+      process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
 
     const fetchUrl = `${backendUrl}/api/auth/get-session`;
 
     const requestOrigin = origin || (process.env.NODE_ENV === "production"
-        ? `https://${host}`
-        : `http://${host}`);
+      ? `https://${host}`
+      : `http://${host}`);
 
     console.log("[getServerSession] Request details:", {
       fetchUrl,
@@ -63,13 +63,20 @@ export async function getServerSession(): Promise<SessionData | null> {
       cache: "no-store",
     });
 
+    // Checa o status ANTES de fazer o parse
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(
+        `[getServerSession] Erro Auth Backend [${response.status}]:`,
+        errorText,
+      );
+      return null;
+    }
+
     const responseData = await response.json();
 
-    if (!response.ok) {
-      console.error(
-        `Erro Auth Backend [${response.status}]:`,
-        await response.text(),
-      );
+    if (!responseData.user) {
+      console.log("[getServerSession] No user in response");
       return null;
     }
 
@@ -83,7 +90,7 @@ export async function getServerSession(): Promise<SessionData | null> {
       },
     };
   } catch (error) {
-    console.error("Erro ao buscar sessão no servidor:", error);
+    console.error("[getServerSession] Erro ao buscar sessão:", error);
     return null;
   }
 }

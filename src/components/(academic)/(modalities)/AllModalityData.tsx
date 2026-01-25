@@ -61,9 +61,7 @@ export default function AllModalityData() {
   >(
     () =>
       sessionData?.user?.tenantId
-        ? `/api/v1/tenants/${
-            sessionData.user.tenantId
-          }/academic/modalities?page=${page}&limit=${limit}${
+        ? `/api/v1/tenants/${sessionData.user.tenantId}/academic/modalities?page=${page}&limit=${limit}${
             sortKey ? `&sortKey=${encodeURIComponent(sortKey)}` : ""
           }${sortDir ? `&sortDir=${encodeURIComponent(sortDir)}` : ""}`
         : null,
@@ -181,7 +179,7 @@ export default function AllModalityData() {
     </Menu>
   );
 
-  if (status === "loading" || isLoading) return <LoadingOverlay visible />;
+  if (isPending || isLoading) return <LoadingOverlay visible />;
   
   if (error) return <p>{"Erro inesperado"}</p>;
 

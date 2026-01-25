@@ -6,7 +6,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 export class CategoryGroupsService {
   static create(tenantId: string, data: CreateCategoryGroupInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenants/${tenantId}/financial/categories-groups`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/category-groups`,
       {
         method: "POST",
         body: JSON.stringify(data),
@@ -19,7 +19,7 @@ export class CategoryGroupsService {
 
   static update(tenantId: string, data: UpdateCategoryGroupInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenants/${tenantId}/financial/categories-groups/${data.id}`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/category-groups/${data.id}`,
       {
         method: "PUT",
         body: JSON.stringify(data),
@@ -32,7 +32,7 @@ export class CategoryGroupsService {
 
   static deleteMany(tenantId: string, ids: string[]) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenants/${tenantId}/financial/categories-groups`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/category-groups`,
       {
         method: "DELETE",
         body: JSON.stringify({ ids }),

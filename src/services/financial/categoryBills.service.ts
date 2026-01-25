@@ -9,7 +9,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 export class CategoryBillsService {
   static create(tenantId: string, data: CreateCategoryBillInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenants/${tenantId}/financial/categories-bills`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/category-bills`,
       {
         method: "POST",
         body: JSON.stringify(data),
@@ -22,9 +22,9 @@ export class CategoryBillsService {
 
   static update(tenantId: string, data: UpdateCategoryBillInput) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenants/${tenantId}/financial/categories-bills/${data.id}`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/category-bills/${data.id}`,
       {
-        method: "PUT",
+        method: "PATCH",
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +35,7 @@ export class CategoryBillsService {
 
   static deleteMany(tenantId: string, ids: string[]) {
     return serverFetch(
-      `${baseUrl}/api/v1/tenants/${tenantId}/financial/categories-bills`,
+      `${baseUrl}/api/v1/tenants/${tenantId}/financial/category-bills`,
       {
         method: "DELETE",
         body: JSON.stringify({ ids }),

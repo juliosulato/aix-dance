@@ -21,8 +21,6 @@ type Props = {
 export default function NewModalities({ opened, onClose, mutate }: Props) {
     const [isLoading, setIsLoading] = useState(false);
 
-    // Usamos o schema estático
-
     const { handleSubmit, formState: { errors }, register, reset } = useForm<CreateModalityInput>({
         resolver: zodResolver(createModalitySchema) as any,
     });
@@ -36,8 +34,9 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
         }
 
         setIsLoading(true);
+
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${sessionData.user.tenantId}/modalities`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${sessionData.user.tenantId}/academic/modalities`, {
                 method: "POST",
                 credentials: "include",
                 headers: {

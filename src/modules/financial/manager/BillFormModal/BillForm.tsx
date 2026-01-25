@@ -232,10 +232,10 @@ export default function BillForm({
           {...register("complement")}
           className="md:col-span-2 lg:col-span-3"
         />
-        <FileUpload
-          onComplete={() => null}
-          accept="image/png, image/jpeg, application/pdf"
-        />
+        {/*<FileUpload*/}
+        {/*  onComplete={() => null}*/}
+        {/*  accept="image/png, image/jpeg, application/pdf"*/}
+        {/*/>*/}
       </div>
       <div>
         <Tabs

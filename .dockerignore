@@ -1,14 +1,61 @@
+# ==============================================================================
+# Docker Ignore - Optimize build context and reduce image size
+# ==============================================================================
+
+# Dependencies (will be installed in container)
 node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Next.js build output
 .next
 !.next/standalone
 !.next/static
 out
+build
 dist
+
+# Git
 .git
 .gitignore
-npm-debug.log
-yarn-debug.log
-yarn-error.log
+.gitattributes
+
+# IDE & Editor
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS files
 .DS_Store
-.env*
+Thumbs.db
+
+# Environment files (use docker-compose env_file or build args)
 .env
+.env*.local
+.env.development
+.env.test
+.env.production
+.env.example
+
+# Docker files
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Documentation
+README.md
+LICENSE
+*.md
+
+# Testing
+coverage
+.nyc_output
+jest.config.js
+
+# Misc
+.editorconfig
+.eslintcache

@@ -54,7 +54,7 @@ export async function getServerSession(): Promise<SessionData | null> {
         Origin: origin || process.env.NODE_ENV === "production" ? `https://${host}` : `http://${host}`,
         Host: host || "localhost:3000",
       },
-      credentials: "include"
+      credentials: "include",
       cache: "no-store",
     });
 

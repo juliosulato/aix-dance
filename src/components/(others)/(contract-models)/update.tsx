@@ -90,8 +90,8 @@ export default function UpdateContractModelModal({ opened, onClose, contractMode
 
         setIsLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${sessionData.user.tenantId}/contract-models/${contractModel.id}`, {
-                method: "PUT",
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${sessionData.user.tenantId}/contract-templates/${contractModel.id}`, {
+                method: "PATCH",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),

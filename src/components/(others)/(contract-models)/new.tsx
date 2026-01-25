@@ -113,7 +113,7 @@ export default function NewContractModelModal({
     setIsLoading(true);
     try {
       const response = await fetch(
-        `/api/v1/tenants/${sessionData.user.tenantId}/contract-models`,
+        `/api/v1/tenants/${sessionData.user.tenantId}/contract-templates`,
         {
           method: "POST",
                 credentials: "include",

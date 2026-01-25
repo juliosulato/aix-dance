@@ -36,12 +36,10 @@ export async function getServerSession(): Promise<SessionData | null> {
     const backendUrl =
       process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
 
-    console.log("Cookie", cookie); // debug line to check host value
-    console.log("userAgent", userAgent); // debug line to check host value
-    console.log("Host", host); // debug line to check host value
-    console.log("Origin", origin); // debug line to check host value
+    const fetchUrl = `${backendUrl}/api/auth/get-session`;
+    console.log("Fetch URL:", fetchUrl); // debug line to check fetch URL
 
-    const response = await fetch(`${backendUrl}/api/auth/get-session`, {
+    const response = await fetch(fetchUrl, {
       method: "GET",
       headers: {
         Cookie: cookie,
@@ -53,21 +51,17 @@ export async function getServerSession(): Promise<SessionData | null> {
       cache: "no-store",
     });
 
-    const responseText = await response.text();
-    console.log("Response Text from backend:", responseText); // debug line to check raw response
-
     const responseData = await response.json();
 
-    if (!response.ok || !responseData.session) {
+    if (!response.ok || !responseData.user) {
       console.error(
         `Erro Auth Backend [${response.status}]:`,
         await response.text(),
       );
       return null;
     }
-    const { user, ...rest } = responseData;
 
-    console.log("Sessão obtida do backend:", { user, ...rest }); // debug line to check session data
+    const { user, ...rest } = responseData;
 
     return {
       ...rest,

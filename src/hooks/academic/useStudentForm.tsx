@@ -110,7 +110,7 @@ export function useStudentForm({
             email: g.email ?? "",
             phoneNumber: g.phoneNumber ?? "",
             relationship: g.relationShip || "",
-            documentOfIdentity: g.documentOfIdentity ?? "",
+            nationalId: g.nationalId ?? "",
           })) ?? [],
       });
     } else {

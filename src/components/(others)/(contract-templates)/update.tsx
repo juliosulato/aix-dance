@@ -9,7 +9,7 @@ import { notifications } from '@mantine/notifications';
 
 import { ContractModel } from '@/types/contracts.types';
 import { MutatorCallback } from 'swr';
-import { contractModelSchema, ContractModelInput, presetOptions } from '@/schemas/others/contract-models.schema'; 
+import { contractModelSchema, ContractModelInput, presetOptions } from '@/schemas/others/contract-templates.schema'; 
 import RichText from './rich-text';
 import { BsInfoCircle } from 'react-icons/bs';
 

@@ -60,7 +60,7 @@ export default function NewStudentContractModal({
   );
   const students = extractItemsFromResponse(studentsResponse);
   const { data: contractModels } = useSWR<ContractModel[]>(
-    tenantId ? `/api/v1/tenants/${tenantId}/contract-models` : null,
+    tenantId ? `/api/v1/tenants/${tenantId}/contract-templates` : null,
     fetcher
   );
   const { data: tenancy } = useSWR<Tenancy>(

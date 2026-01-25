@@ -1,4 +1,4 @@
-import AllContractModelsPage from "@/components/(others)/(contract-models)/list";
+import AllContractModelsPage from "@/components/(others)/(contract-templates)/list";
 import AllSuppliersData from "@/components/(others)/(suppliers)/SupplierList";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 

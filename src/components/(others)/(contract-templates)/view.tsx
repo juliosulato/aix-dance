@@ -16,7 +16,7 @@ export default function ContractModelView({ id }: { id: string }) {
         const tenantId = session?.user.tenantId as string;
 
         const { data: contractModel, error } = useSWR<ContractModel>(
-            `/api/v1/tenants/${tenantId}/contract-models/${id}`,
+            `/api/v1/tenants/${tenantId}/contract-templates/${id}`,
             fetcher
         );
 
@@ -30,7 +30,7 @@ export default function ContractModelView({ id }: { id: string }) {
         setIsDeleting(true);
         try {
             await deleteContractModels([contractModel?.id ?? "-"], tenantId, () => {});
-            window.location.replace("/system/academic/contract-models");
+            window.location.replace("/system/others/contract-templates");
         } catch (error) {
             console.error("Falha ao excluir o modelo de contrato:", error);
             setIsDeleting(false);
@@ -64,7 +64,7 @@ export default function ContractModelView({ id }: { id: string }) {
             </div>
 
             <Divider label="Conteúdo do Contrato" labelPosition="center" />
-            <div className="border rounded-lg !bg-neutral-50 cursor-not-allowed border-neutral-200 overflow-hidden">
+            <div className="border rounded-lg bg-neutral-50! cursor-not-allowed border-neutral-200 overflow-hidden">
                 <div
                     ref={contractContentRef}
                     className="prose max-w-none p-8 "
@@ -90,7 +90,7 @@ export default function ContractModelView({ id }: { id: string }) {
                 contractModel={contractModel}
                 onClose={() => setOpenUpdate(false)}
                 opened={openUpdate}
-                mutate={() => window.location.reload() as any}
+                mutate={() => window.location.reload() as unknown}
             />
             <ConfirmationModal
                 opened={isConfirmModalOpen}

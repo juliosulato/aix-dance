@@ -21,8 +21,8 @@ import {
   contractModelSchema,
   ContractModelInput,
   presetOptions,
-} from "@/schemas/others/contract-models.schema";
-import RichText from "@/components/(others)/(contract-models)/rich-text";
+} from "@/schemas/others/contract-templates.schema";
+import RichText from "@/components/(others)/(contract-templates)/rich-text";
 import { MutatorCallback } from "swr";
 import { BsInfoCircle } from "react-icons/bs";
 

@@ -26,7 +26,7 @@ export default function Plan__BasicInformations({
   tenantId,
 }: Props) {
   const { error, isLoading } = useSWR<ContractModel[]>(
-    `/api/v1/tenants/${tenantId}/contract-models`,
+    `/api/v1/tenants/${tenantId}/contract-templates`,
     fetcher
   );
 

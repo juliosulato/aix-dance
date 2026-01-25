@@ -137,7 +137,7 @@ export default function AllContractModelsPage() {
         <>
             <DataView<ContractModel>
                 data={contractModels|| []} // Filtra os arquivados se o campo ainda existir no retorno da API
-                baseUrl="/system/others/contract-models"
+                baseUrl="/system/others/contract-templates"
                 openNewModal={{
                     func: () => setOpenNew(true),
                     label: "Novo Modelo de Contrato"

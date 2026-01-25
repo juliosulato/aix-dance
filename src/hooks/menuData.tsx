@@ -101,7 +101,7 @@ const useMenuData = () => {
       icon: <IoExtensionPuzzleOutline />,
       label: "Outros",
       subitems: [
-        { icon: <TbContract />, label: "Modelos de Contratos", href: "/system/others/contract-models" },
+        { icon: <TbContract />, label: "Modelos de Contratos", href: "/system/others/contract-templates" },
         { icon: <MdOutlineBusinessCenter />, label: "Fornecedores", href: "/system/others/suppliers" },
       ]
     }

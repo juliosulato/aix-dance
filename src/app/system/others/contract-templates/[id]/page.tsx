@@ -1,4 +1,4 @@
-import ContractModelView from "@/components/(others)/(contract-models)/view";
+import ContractModelView from "@/components/(others)/(contract-templates)/view";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 
 export default async function ContractModelPage({ params }: { params: Promise<{ id: string }> }) {

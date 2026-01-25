@@ -39,7 +39,7 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
 
     // Buscar status do aluno selecionado
     const selectedStudent = students?.find(s => s.id === studentId);
-    const { data: contractModels } = useSWR<ContractModel[]>(tenantId ? `/api/v1/tenants/${tenantId}/contract-models` : null, fetcher);
+    const { data: contractModels } = useSWR<ContractModel[]>(tenantId ? `/api/v1/tenants/${tenantId}/contract-templates` : null, fetcher);
     const { data: tenancy } = useSWR<Tenancy>(tenantId ? `/api/v1/tenants/${tenantId}` : null, fetcher);
 
     const { handleSubmit, formState: { errors }, control, reset, watch, setValue } = useForm<CreateStudentContractInput>({

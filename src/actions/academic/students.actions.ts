@@ -35,8 +35,6 @@ export const saveStudent = protectedAction(
 
     const payload = buildPayload(validatedData.data);
 
-    console.log("Payload do estudante:", payload);
-
     try {
       if (!isEditingId) {
         await StudentsService.create(user.tenantId, payload);

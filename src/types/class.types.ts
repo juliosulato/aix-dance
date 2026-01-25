@@ -23,7 +23,9 @@ export type ClassAttendance = {
 export type Modality = {
     name: string;
     id: string;
-    tenantId: string;
+    tenantId: string;       
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export enum DayOfWeek {

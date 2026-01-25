@@ -5,4 +5,6 @@
     totalPages: number;
   };
 
-  type PaginatedResponseLocal<T> = { data: T[]; pagination: PaginationInfo };
+  type PaginatedResponseLocal<T> = { data: {
+    items: T[] | []
+  }; pagination: PaginationInfo };

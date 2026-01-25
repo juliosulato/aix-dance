@@ -23,7 +23,7 @@ async function deletePlans(
     return;
   }
 
-  const apiUrl = `/api/v1/tenants/${tenantId}/plans`;
+  const apiUrl = `/api/v1/tenants/${tenantId}/academic/plans`;
 
   // Atualização otimista da UI (suporta array ou paginated response)
   if (mutate) {

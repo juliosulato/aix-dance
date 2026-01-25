@@ -19,11 +19,11 @@ export default function NewClass__AboutOfClass({ control, errors, tenantId }: Pr
     type Paginated<T> = { [k: string]: T[] } & { pagination?: { page: number; limit: number; total: number; totalPages: number } };
 
     const { data: modalities } = useSWR<Modality[] | Paginated<Modality>>(
-        () => tenantId ? `/api/v1/tenants/${tenantId}/modalities` : null,
+        () => tenantId ? `/api/v1/tenants/${tenantId}/academic/modalities` : null,
         fetcher
     );
     const { data: teachers } = useSWR<User[] | Paginated<User>>(
-        () => tenantId ? `/api/v1/tenants/${tenantId}/users?role=TEACHER` : null,
+        () => tenantId ? `/api/v1/tenants/${tenantId}/users` : null,
         fetcher
     );
 

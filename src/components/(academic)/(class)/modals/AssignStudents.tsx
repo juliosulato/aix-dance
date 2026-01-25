@@ -77,7 +77,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
   const { data: studentsResponse } = useSWR<StudentComplete[] | PaginatedListResponse<StudentComplete>>(
     () =>
       sessionData?.user.tenantId
-        ? `/api/v1/tenants/${sessionData.user.tenantId}/students?limit=500`
+        ? `/api/v1/tenants/${sessionData.user.tenantId}/academic/students?limit=500`
         : null,
     fetcher
   );
@@ -163,7 +163,7 @@ function AssignStudents({ opened, onClose, mutate, classData }: Props) {
 
     const promises: Promise<Response>[] = [];
     const tenantId = sessionData!.user.tenantId;
-    const baseUrl = `/api/v1/tenants/${tenantId}/classes/${classData.id}/enrollments`;
+    const baseUrl = `/api/v1/tenants/${tenantId}/academic/classes/${classData.id}/enrollments`;
     const className = classData?.name || "Turma desconhecida";
 
     if (studentsToEnroll.length > 0) {
@@ -178,7 +178,7 @@ credentials: "include",
 
       studentsToEnroll.forEach(async (studentId) => {
         const student: StudentComplete = await fetch(
-          `/api/v1/tenants/${tenantId}/students/${studentId}`
+          `/api/v1/tenants/${tenantId}/academic/students/${studentId}`
         ).then((res) => res.json());
 
         if (student.subscriptions.length === 0) {
@@ -253,7 +253,7 @@ credentials: "include",
 
         promises.push(
           fetch(
-            `/api/v1/tenants/${tenantId}/students/${studentId}/history`,
+            `/api/v1/tenants/${tenantId}/academic/students/${studentId}/history`,
             {
               method: "POST",
 credentials: "include",
@@ -281,7 +281,7 @@ credentials: "include",
       studentsToArchive.forEach((studentId) => {
         promises.push(
           fetch(
-            `/api/v1/tenants/${tenantId}/students/${studentId}/history`,
+            `/api/v1/tenants/${tenantId}/academic/students/${studentId}/history`,
             {
               method: "POST",
 credentials: "include",
@@ -334,7 +334,7 @@ credentials: "include",
 
     const newId = addedIds[0];
     const student = await fetch(
-      `/api/v1/tenants/${sessionData?.user.tenantId}/students/${newId}`
+      `/api/v1/tenants/${sessionData?.user.tenantId}/academic/students/${newId}`
     ).then((res) => res.json());
 
     let error = "";

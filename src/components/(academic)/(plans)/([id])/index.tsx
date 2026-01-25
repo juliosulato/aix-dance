@@ -29,7 +29,7 @@ export default function PlanView({ id }: { id: string }) {
     const tenantId = session?.data?.user.tenantId as string;
 
     const { data: plan, error } = useSWR<Plan>(
-        `/api/v1/tenants/${tenantId}/plans/${id}`,
+        `/api/v1/tenants/${tenantId}/academic/plans/${id}`,
         fetcher
     );
 

@@ -3,7 +3,6 @@
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import ConfirmationModal from "@/components/ui/ConfirmationModal";
-import deleteStudents from "../delete";
 import { Tabs } from "@mantine/core";
 import GeneralStudentsView from "./general";
 import StudentHistoryView from "./history";
@@ -23,7 +22,7 @@ export default function StudentsView({ id }: { id: string }) {
   const tenantId = session?.data?.user.tenantId as string;
 
   const { data: student, error } = useSWR<{ data: StudentComplete, success: boolean }>(
-    `/api/v1/tenants/${tenantId}/students/${id}`,
+    `/api/v1/tenants/${tenantId}/academic/students/${id}`,
     fetcher
   );
 
@@ -33,7 +32,7 @@ export default function StudentsView({ id }: { id: string }) {
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      await deleteStudents([student?.data.id || ""], tenantId);
+      // await deleteStudents([student?.data.id || ""], tenantId);
       window.location.replace("/system/academic/students");
     } catch (error) {
       console.error("Falha ao excluir o aluno:", error);

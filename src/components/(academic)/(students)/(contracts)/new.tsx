@@ -55,7 +55,7 @@ export default function NewStudentContractModal({
   const { data: studentsResponse } = useSWR<
     Student[] | PaginatedListResponse<Student>
   >(
-    tenantId ? `/api/v1/tenants/${tenantId}/students?limit=500` : null,
+    tenantId ? `/api/v1/tenants/${tenantId}/academic/students?limit=500` : null,
     fetcher
   );
   const students = extractItemsFromResponse(studentsResponse);

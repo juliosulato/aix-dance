@@ -103,7 +103,7 @@ function NewClass({ opened, onClose, mutate }: Props) {
 
     try {
       const resp = await fetch(
-        `/api/v1/tenants/${sessionData.user.tenantId}/classes`,
+        `/api/v1/tenants/${sessionData.user.tenantId}/academic/classes`,
         {
           method: "POST",
             credentials: "include",

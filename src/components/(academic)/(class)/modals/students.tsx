@@ -19,7 +19,7 @@ type Props = {
 
 export default function Class__Students({ control, errors, tenantId }: Props) {
     const { data: studentsResponse } = useSWR<StudentComplete[] | PaginatedListResponse<StudentComplete>>(
-        () => tenantId ? `/api/v1/tenants/${tenantId}/students?limit=500` : null,
+        () => tenantId ? `/api/v1/tenants/${tenantId}/academic/students?limit=500` : null,
         fetcher
     );
 

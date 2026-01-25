@@ -113,7 +113,7 @@ export default function StudentBillsView({
     }
 
     try {
-      const apiUrl = `/api/v1/tenants/${tenantId}/bills/exempt-penalty`;
+      const apiUrl = `/api/v1/tenants/${tenantId}/financial/bills/exempt-penalty`;
       const res = await fetch(apiUrl, {
         method: "POST",
                 credentials: "include",

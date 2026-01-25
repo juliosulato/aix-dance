@@ -54,9 +54,9 @@ export default function NewClass__Resume({ control, tenantId }: Props) {
     const watchedValues = useWatch({ control });
 
     // Busca de dados para "traduzir" IDs em nomes
-    const { data: modalities } = useSWR<Modality[]>(`/api/v1/tenants/${tenantId}/modalities`, fetcher);
+    const { data: modalities } = useSWR<Modality[]>(`/api/v1/tenants/${tenantId}/academic/modalities`, fetcher);
     const { data: teachers } = useSWR<User[]>(`/api/v1/tenants/${tenantId}/users?role=TEACHER`, fetcher);
-    const { data: studentsResponse } = useSWR<Student[] | PaginatedListResponse<Student>>(`/api/v1/tenants/${tenantId}/students?limit=500`, fetcher);
+    const { data: studentsResponse } = useSWR<Student[] | PaginatedListResponse<Student>>(`/api/v1/tenants/${tenantId}/academic/students?limit=500`, fetcher);
     const students = extractItemsFromResponse(studentsResponse);
 
     const modalityName = modalities?.find(m => m.id === watchedValues.modalityId)?.name || '...';

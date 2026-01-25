@@ -40,7 +40,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
   const { data: allClasses } = useSWR<PaginatedResponseLocal<Class>>(
     () =>
       sessionData?.user.tenantId
-        ? `/api/v1/tenants/${sessionData.user.tenantId}/classes`
+        ? `/api/v1/tenants/${sessionData.user.tenantId}/academic/classes`
         : null,
     fetcher
   );

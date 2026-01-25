@@ -60,7 +60,7 @@ export default function UpdateModalities({
     setIsLoading(true);
     try {
       const response = await fetch(
-        `/api/v1/tenants/${sessionData.user.tenantId}/modalities/${modality.id}`,
+        `/api/v1/tenants/${sessionData.user.tenantId}/academic/modalities/${modality.id}`,
         {
           method: "PUT",
                 credentials: "include",

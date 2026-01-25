@@ -31,7 +31,7 @@ export default function StudentsList() {
   } = useSWR<PaginatedResponseLocal<StudentComplete>>(
     () =>
       sessionData?.user?.tenantId
-        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${sessionData.user.tenantId}/students?page=${page}&limit=${limit}`
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${sessionData.user.tenantId}/academic/students?page=${page}&limit=${limit}`
         : null,
     fetcher
   );

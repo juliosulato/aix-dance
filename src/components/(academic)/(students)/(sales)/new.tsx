@@ -34,7 +34,7 @@ export default function NewStudentContractModal({ opened, onClose, mutate, stude
     const { data: sessionData, isPending } = useSession();
     const tenantId = sessionData?.user.tenantId;
 
-    const { data: studentsResponse } = useSWR<Student[] | PaginatedListResponse<Student>>(tenantId ? `/api/v1/tenants/${tenantId}/students?limit=500` : null, fetcher);
+    const { data: studentsResponse } = useSWR<Student[] | PaginatedListResponse<Student>>(tenantId ? `/api/v1/tenants/${tenantId}/academic/students?limit=500` : null, fetcher);
     const students = extractItemsFromResponse(studentsResponse);
 
     // Buscar status do aluno selecionado

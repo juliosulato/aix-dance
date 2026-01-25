@@ -20,7 +20,7 @@ async function deleteModalities(
         return;
     }
 
-    const apiUrl = `/api/v1/tenants/${tenantId}/modalities`;
+    const apiUrl = `/api/v1/tenants/${tenantId}/academic/modalities`;
 
     if (mutate) {
         await mutate(

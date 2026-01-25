@@ -106,7 +106,7 @@ export default function PointOfSale({
   };
 
   const { data: plansData } = useSWR<Plan[] | PaginatedResponseLocal<Plan>>(
-    `/api/v1/tenants/${tenantId}/plans`,
+    `/api/v1/tenants/${tenantId}/academic/plans`,
     fetcher
   );
   const plans = Array.isArray(plansData)
@@ -168,7 +168,7 @@ export default function PointOfSale({
   const products = accProducts;
 
   const studentsUrl = tenantId
-    ? `/api/v1/tenants/${tenantId}/students`
+    ? `/api/v1/tenants/${tenantId}/academic/students`
     : null;
   const { data: studentsResponse } = useSWR<
     PaginatedListResponse<Student>
@@ -178,7 +178,7 @@ export default function PointOfSale({
   const { data: formsOfReceiptData } = useSWR<
     FormsOfReceipt[] | PaginatedResponseLocal<FormsOfReceipt>
   >(
-    `/api/v1/tenants/${tenantId}/forms-of-receipt`,
+    `/api/v1/tenants/${tenantId}/financial/forms-of-receipt`,
     fetcher
   );
   const formsOfReceipt = Array.isArray(formsOfReceiptData)
@@ -213,7 +213,7 @@ export default function PointOfSale({
   // --- SWR para buscar as assinaturas do aluno selecionado ---
   const { data: studentSubscriptions } = useSWR<StudentComplete>(
     selectedStudentId
-      ? `/api/v1/tenants/${tenantId}/students/${selectedStudentId}`
+      ? `/api/v1/tenants/${tenantId}/academic/students/${selectedStudentId}`
       : null,
     fetcher
   );

@@ -48,7 +48,7 @@ export default function AllPlansData() {
   } = useSWR<Item[] | PaginatedResponseLocal<Item>>(
     () =>
       sessionData?.user?.tenantId
-        ? `/api/v1/tenants/${sessionData.user.tenantId}/plans`
+        ? `/api/v1/tenants/${sessionData.user.tenantId}/academic/plans`
         : null,
     async (url: string) => {
       const res = await fetcher<any>(url);

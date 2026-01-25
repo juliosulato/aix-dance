@@ -63,7 +63,7 @@ export default function AllModalityData() {
       sessionData?.user?.tenantId
         ? `/api/v1/tenants/${
             sessionData.user.tenantId
-          }/modalities?page=${page}&limit=${limit}${
+          }/academic/modalities?page=${page}&limit=${limit}${
             sortKey ? `&sortKey=${encodeURIComponent(sortKey)}` : ""
           }${sortDir ? `&sortDir=${encodeURIComponent(sortDir)}` : ""}`
         : null,

@@ -43,7 +43,7 @@ export const saveStudent = protectedAction(
       }
       return { success: true };
     } catch (error) {
-      console.error("Erro ao criar estudante:", error);
+      !isEditingId ? console.error(`Erro ao criar estudante na tenant ${user.tenantId}`, error) :  console.error(`Erro ao atualizar estudante ${isEditingId} na tenant ${user.tenantId}`, error);
       return handleServerActionError(error);
     }
   }
@@ -51,7 +51,7 @@ export const saveStudent = protectedAction(
 
 export const deleteStudents = protectedAction(
   async (user, ids: string[]): Promise<ActionResult> => {
-    if (Array.isArray(ids) === false || ids.length === 0) {
+    if (!Array.isArray(ids) || ids.length === 0) {
       return {
         success: false,
         error: "Nenhum ID fornecido para exclusão.",
@@ -65,7 +65,7 @@ export const deleteStudents = protectedAction(
       const result = handleServerActionError(error);
       return {
         success: false,
-        error: result.error ?? "Erro ao deletar conta bancária.",
+        error: result.error ?? "Erro ao deletar estudantes.",
       };
     }
   }

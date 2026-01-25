@@ -10,7 +10,7 @@ import { ContractModel } from "@/types/contracts.types";
 import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 import { notifications } from "@mantine/notifications";
-import { UpdatePlanInput, CreatePlanInput } from "@/schemas/academic/plan";
+import { UpdatePlanInput, CreatePlanInput } from "@/schemas/academic/plan.schema";
 
 type Props = {
   control: Control<CreatePlanInput | UpdatePlanInput>;

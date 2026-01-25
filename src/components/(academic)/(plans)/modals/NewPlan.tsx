@@ -10,7 +10,7 @@ import BasicInformations from "./basicInformations";
 import NewPlan__Fees from "./fees";
 import { KeyedMutator } from "swr";
 import { Plan, PlanType } from "@/types/plan.types";
-import { createPlanSchema, CreatePlanInput } from "@/schemas/academic/plan";
+import { createPlanSchema, CreatePlanInput } from "@/schemas/academic/plan.schema";
 
 
 type Props = {
@@ -67,8 +67,13 @@ export default function NewPlan({ opened, onClose, mutate }: Props) {
                 headers: { "Content-Type": "application/json" },
             });
 
-            if (!response.ok) throw new Error("Failed to update plan.");
-
+            if (!response.ok) {
+                notifications.show({
+                    message: "Erro ao criar o plano.",
+                    color: "red"
+                });
+                return;
+            }
             notifications.show({
                 message: "Plano criado com sucesso!",
                 color: "green"

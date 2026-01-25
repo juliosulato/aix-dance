@@ -12,8 +12,7 @@ import { Modality } from "@/types/class.types";
 import {
   UpdateModalityInput,
   updateModalitySchema,
-} from "@/schemas/academic/modality";
-import { getErrorMessage } from "@/utils/getErrorMessage";
+} from "@/schemas/academic/modality.schema";
 
 type Props = {
   opened: boolean;
@@ -49,9 +48,9 @@ export default function UpdateModalities({
     }
   }, [modality, reset]);
 
-  const { data: sessionData, isPending } = useSession();
+  const { data: sessionData } = useSession();
 
-  async function createModality(data: UpdateModalityInput) {
+  async function updateModality(data: UpdateModalityInput) {
     if (!sessionData?.user.tenantId) {
       notifications.show({ color: "red", message: "Sessão Inválida" });
       return;
@@ -73,36 +72,33 @@ export default function UpdateModalities({
 
       const responseData = await response.json();
 
-      if (responseData.code) {
-        notifications.show({
-          message: "Ocorreu um problema ao atualizar a modalidade.",
-          color: "yellow",
-        });
-      }
 
-      if (!response.ok) throw new Error("Failed to update modality");
+      if (!response.ok) {
+        if (responseData.code === "MODALITY_ALREADY_EXISTS") {
+          notifications.show({
+            message: "Já existe uma modalidade com esse nome.",
+            color: "yellow"
+          });
+          return;
+        }
+
+        notifications.show({
+          message: responseData.message || "Erro ao criar modalidade.",
+          color: "red"
+        });
+        return;
+      }
 
       notifications.show({
         message: "Modalidade atualizada com sucesso.",
         color: "green",
       });
+
       reset();
-      mutate();
+      await mutate();
       onClose();
     } catch (error: unknown) {
       console.error(error);
-
-      if ((error as any)?.code == "MODALITY_ALREADY_EXISTS") {
-        notifications.show({
-          message: "Já existe uma modalidade com esse nome.",
-          color: "yellow",
-        });
-      } else if (error instanceof Error) {
-        notifications.show({
-          message: getErrorMessage(error, "Erro ao atualizar modalidade."),
-          color: "red",
-        });
-      }
     } finally {
       setIsLoading(false);
     }
@@ -129,7 +125,7 @@ export default function UpdateModalities({
       }}
     >
       <form
-        onSubmit={handleSubmit(createModality, handleFormErrors)}
+        onSubmit={handleSubmit(updateModality, handleFormErrors)}
         className="flex flex-col gap-4"
       >
         <LoadingOverlay visible={isLoading} />

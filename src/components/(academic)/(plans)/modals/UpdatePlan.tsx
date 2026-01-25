@@ -1,6 +1,6 @@
 "use client";
 
-import { updatePlanSchema, UpdatePlanInput } from "@/schemas/academic/plan";
+import { updatePlanSchema, UpdatePlanInput } from "@/schemas/academic/plan.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, LoadingOverlay, Modal } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
@@ -57,7 +57,7 @@ export default function UpdatePlan({ opened, onClose, mutate, plan }: Props) {
     if (isPending) return <LoadingOverlay visible />;
     if (!sessionData) return <div>Sessão inválida</div>;
 
-    async function createPlan(data: UpdatePlanInput) {
+    async function updatePlan(data: UpdatePlanInput) {
         if (!sessionData?.user.tenantId) {
             notifications.show({ color: "red", message: "Sessão inválida" });
             return;
@@ -79,8 +79,13 @@ export default function UpdatePlan({ opened, onClose, mutate, plan }: Props) {
             });
 
 
-            if (!response.ok) throw new Error("Failed to update plan.");
-
+            if (!response.ok) {
+                notifications.show({
+                    message: "Erro ao atualizar o plano.",
+                    color: "red"
+                });
+                return;
+            }
             notifications.show({
                 message: "Plano atualizado com sucesso.",
                 color: "green"
@@ -114,7 +119,7 @@ export default function UpdatePlan({ opened, onClose, mutate, plan }: Props) {
                 centered
                 classNames={{ title: "!font-semibold", header: "!pb-2 !pt-4 !px-6 4 !mb-4 border-b border-b-neutral-300" }}
             >
-                <form onSubmit={handleSubmit(createPlan, onError)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw]">
+                <form onSubmit={handleSubmit(updatePlan, onError)} className="flex flex-col gap-4 md:gap-6 lg:gap-8 max-w-[60vw]">
                     <BasicInformations control={control as any} errors={errors} register={register as any} tenantId={sessionData.user.tenantId} />
                     <NewPlan__Fees amount={Number(amount)} control={control as any} errors={errors} register={register as any} />
                     <Button

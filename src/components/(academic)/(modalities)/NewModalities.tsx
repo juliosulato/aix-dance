@@ -9,8 +9,7 @@ import { notifications } from "@mantine/notifications";
 import { Button, LoadingOverlay, Modal, TextInput } from "@mantine/core";
 import { KeyedMutator } from "swr";
 import { Modality } from "@/types/class.types";
-import { CreateModalityInput, createModalitySchema } from "@/schemas/academic/modality";
-import { getErrorMessage } from "@/utils/getErrorMessage";
+import { CreateModalityInput, createModalitySchema } from "@/schemas/academic/modality.schema";
 
 type Props = {
     opened: boolean;
@@ -25,7 +24,7 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
         resolver: zodResolver(createModalitySchema) as any,
     });
 
-    const { data: sessionData, isPending } = useSession();
+    const { data: sessionData } = useSession();
 
     async function createModality(data: CreateModalityInput) {
         if (!sessionData?.user.tenantId) {
@@ -47,36 +46,35 @@ export default function NewModalities({ opened, onClose, mutate }: Props) {
 
             const responseData = await response.json();
 
-            if (responseData.code) {
-                notifications.show({
-                    message: "Ocorreu um problema ao criar a modalidade.",
-                    color: "yellow"
-                });
-            }
+            if (!response.ok) {
+                if (responseData.code === "MODALITY_ALREADY_EXISTS") {
+                    notifications.show({
+                        message: "Já existe uma modalidade com esse nome.",
+                        color: "yellow"
+                    });
+                    return;
+                }
 
-            if (!response.ok) throw new Error("Failed to create modality");
+                notifications.show({
+                    message: responseData.message || "Erro ao criar modalidade.",
+                    color: "red"
+                });
+                return;
+            }
 
             notifications.show({
                 message: "Modalidade criada com sucesso.",
                 color: "green"
             });
             reset();
-            mutate();
+            await mutate();
             onClose();
-        } catch (error: unknown) {
+        } catch (error) {
             console.error(error);
-
-            if ((error as any)?.code == "MODALITY_ALREADY_EXISTS") {
-                notifications.show({
-                    message: "Já existe uma modalidade com esse nome.",
-                    color: "yellow"
-                });
-            } else {
-                notifications.show({
-                    message: getErrorMessage(error, "Erro ao criar modalidade."),
-                    color: "red"
-                });
-            }
+            notifications.show({
+                message: "Erro de conexão com servidor.",
+                color: "red"
+            });
         } finally {
             setIsLoading(false);
         }

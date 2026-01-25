@@ -1,4 +1,4 @@
-import {headers} from "next/headers";
+import { headers } from "next/headers";
 
 export interface SessionData {
   session: {
@@ -31,52 +31,37 @@ export async function getServerSession(): Promise<SessionData | null> {
     const host = headersList.get("host");
     const origin = headersList.get("origin");
 
-    if (!cookie) {
-      console.log("[getServerSession] No cookie found");
-      return null;
-    }
+    console.log("Cookie:", cookie);
+    console.log("User-Agent:", userAgent);
+    console.log("Host:", host);
+    console.log("Origin:", origin);
+
+
+    if (!cookie) return null;
 
     const backendUrl =
       process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
 
-    const fetchUrl = `${backendUrl}/api/auth/get-session`;
 
-    const requestOrigin = origin || (process.env.NODE_ENV === "production"
-      ? `https://${host}`
-      : `http://${host}`);
-
-    console.log("[getServerSession] Request details:", {
-      fetchUrl,
-      origin: requestOrigin,
-      hasCookie: !!cookie,
-    });
-
-    const response = await fetch(fetchUrl, {
+    const response = await fetch(`${backendUrl}/api/auth/get-session`, {
       method: "GET",
       headers: {
         Cookie: cookie,
         "Content-Type": "application/json",
-        "User-Agent": userAgent,
-        Origin: requestOrigin,
+        "user-agent": userAgent,
+        Origin: origin || process.env.NODE_ENV === "production" ? `https://${host}` : `http://${host}`,
+        Host: host || "localhost:3000",
       },
-      credentials: "include",
       cache: "no-store",
     });
 
-    // Checa o status ANTES de fazer o parse
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(
-        `[getServerSession] Erro Auth Backend [${response.status}]:`,
-        errorText,
-      );
-      return null;
-    }
-
     const responseData = await response.json();
 
-    if (!responseData.user) {
-      console.log("[getServerSession] No user in response");
+    if (!response.ok) {
+      console.error(
+        `Erro Auth Backend [${response.status}]:`,
+        await response.text(),
+      );
       return null;
     }
 
@@ -89,8 +74,9 @@ export async function getServerSession(): Promise<SessionData | null> {
         firstName: user.name,
       },
     };
+
   } catch (error) {
-    console.error("[getServerSession] Erro ao buscar sessão:", error);
+    console.error("Erro ao buscar sessão no servidor:", error);
     return null;
   }
 }

@@ -40,7 +40,8 @@ export function useModalityForm({
     defaultValues: {
       name: "",
     },
-    mode: "onTouched",
+    mode: "onSubmit",
+    reValidateMode: "onChange",
   });
 
   const { reset } = form;

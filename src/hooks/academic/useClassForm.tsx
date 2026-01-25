@@ -56,7 +56,8 @@ export function useClassForm({
       students: [],
       days: [],
     },
-    mode: "onTouched",
+    mode: "onSubmit",
+    reValidateMode: "onChange",
   });
 
   const { reset, trigger } = form;

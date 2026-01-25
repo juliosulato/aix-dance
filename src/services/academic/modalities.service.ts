@@ -8,7 +8,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export class ModalitiesService {
   static create(tenantId: string, data: CreateModalityInput) {
-    console.log("CRIANDO MODALIDADE COM DADOS:", data);
     return serverFetch(
       `${BASE_URL}/api/v1/tenants/${tenantId}/academic/modalities`,
       {

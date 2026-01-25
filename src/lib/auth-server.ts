@@ -31,13 +31,6 @@ export async function getServerSession(): Promise<SessionData | null> {
     const host = headersList.get("host");
     const origin = headersList.get("origin");
 
-    console.log("Cookie:", cookie);
-    console.log("User-Agent:", userAgent);
-    console.log("Host:", host);
-    console.log("Origin:", origin);
-
-
-
     if (!cookie) return null;
 
     const backendUrl =

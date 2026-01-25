@@ -36,7 +36,6 @@ export async function getServerSession(): Promise<SessionData | null> {
     console.log("Host:", host);
     console.log("Origin:", origin);
 
-    console.log("HEADERS LIST:", headersList);
 
 
     if (!cookie) return null;

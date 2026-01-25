@@ -36,6 +36,8 @@ export async function getServerSession(): Promise<SessionData | null> {
     const backendUrl =
       process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
 
+    console.log(host); // debug line to check host value
+
     const response = await fetch(`${backendUrl}/api/auth/get-session`, {
       method: "GET",
       headers: {

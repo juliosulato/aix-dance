@@ -1,7 +1,7 @@
 "use client";
 
 export const fetcher = async <T = any>(url: string): Promise<T> => {
-  const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE_URL || "http://localhost:3001";
+  const backendBase = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
   const isRelative = url.startsWith("/");
   
   // Se for relativa, junta com a base. Se for absoluta, usa como está.

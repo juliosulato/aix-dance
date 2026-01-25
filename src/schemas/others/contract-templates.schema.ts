@@ -1,7 +1,5 @@
 import { z } from 'zod';
 
-// Define as opções de preenchimento automático para as variáveis.
-// Agora com a propriedade 'group' para organizar o Select.
 export const presetOptions = [
     { group: 'Informações do Aluno', value: 'STUDENT_FULL_NAME', label: 'Nome Completo do Aluno' },
     { group: 'Informações do Aluno', value: 'STUDENT_FIRST_NAME', label: 'Primeiro Nome do Aluno' },
@@ -18,7 +16,6 @@ export const presetOptions = [
     { group: 'Outros', value: 'CURRENT_DATE', label: 'Data Atual' },
 ];
 
-// Schema de validação padronizado para o modelo de contrato
 export const contractModelSchema = z.object({
     title: z.string({
         error: 'O título do modelo é obrigatório.',
@@ -29,6 +26,5 @@ export const contractModelSchema = z.object({
     variablePresets: z.record(z.string(), z.string()).optional(),
 });
 
-// Tipagem padronizada inferida do schema
 export type ContractModelInput = z.infer<typeof contractModelSchema>;
 

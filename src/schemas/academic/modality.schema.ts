@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const createModalitySchema = z.object({
-  name: z.string().min(1, { message: 'O nome é obrigatório' }),
+  name: z.string().min(1, "O nome é obrigatório"),
 });
 
 export const updateModalitySchema = createModalitySchema.partial();

@@ -12,12 +12,12 @@ export enum DAYS_OF_WEEK {
 
 const classSchema = z.object({
     name: z.string().min(1, "Nome da turma é obrigatório"),
-    modalityId: z.string().min(1, "ID da modalidade é obrigatório"),
-    teacherId: z.string().min(1, "ID do professor é obrigatório"),
+    modalityId: z.string().min(1, "Modalidade é obrigatória"),
+    teacherId: z.string().min(1, "Professor é obrigatório"),
     assistantId: z.string().optional(),
     online: z.boolean().optional().default(false),
     days: z.array(z.object({
-        dayOfWeek: z.enum(DAYS_OF_WEEK, "Dia da semana é obrigatório"),
+        dayOfWeek: z.nativeEnum(DAYS_OF_WEEK),
         initialHour: z.string().min(1, "Horário inicial é obrigatório"),
         endHour: z.string().min(1, "Horário final é obrigatório"),
     })).min(1, "É necessário fornecer pelo menos um dia de aula"),

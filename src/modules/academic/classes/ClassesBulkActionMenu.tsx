@@ -1,5 +1,5 @@
-import { Button, Group } from "@mantine/core";
-import { MdDelete } from "react-icons/md";
+import { ActionIcon, Menu } from "@mantine/core";
+import { BiDotsVerticalRounded, BiTrash } from "react-icons/bi";
 
 type BulkActionMenuProps = {
   selectedIds: string[];
@@ -11,16 +11,22 @@ export function BulkActionMenu({
   onBulkDelete,
 }: BulkActionMenuProps) {
   return (
-    <Group gap="sm">
-      <Button
-        leftSection={<MdDelete size={16} />}
-        color="red"
-        variant="light"
-        onClick={() => onBulkDelete(selectedIds)}
-        disabled={selectedIds.length === 0}
-      >
-        Excluir Selecionadas ({selectedIds.length})
-      </Button>
-    </Group>
+     <Menu shadow="md" width={200} withinPortal>
+      <Menu.Target>
+        <ActionIcon variant="light" color="gray" radius={"md"}>
+          <BiDotsVerticalRounded />
+        </ActionIcon>
+      </Menu.Target>
+      <Menu.Dropdown>
+        <Menu.Label>{"Ações em Massa"}</Menu.Label>
+        <Menu.Item
+          color="red"
+          leftSection={<BiTrash size={14} />}
+          onClick={() => onBulkDelete(selectedIds)}
+        >
+          {"Excluir selecionados"}
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
   );
 }

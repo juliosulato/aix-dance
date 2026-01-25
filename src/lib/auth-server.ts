@@ -36,6 +36,8 @@ export async function getServerSession(): Promise<SessionData | null> {
     console.log("Host:", host);
     console.log("Origin:", origin);
 
+    console.log("HEADERS LIST:", headersList);
+
 
     if (!cookie) return null;
 
@@ -52,6 +54,7 @@ export async function getServerSession(): Promise<SessionData | null> {
         Origin: origin || process.env.NODE_ENV === "production" ? `https://${host}` : `http://${host}`,
         Host: host || "localhost:3000",
       },
+      credentials: "include"
       cache: "no-store",
     });
 

@@ -21,6 +21,8 @@ export function handleServerActionError<T>(
     | { message: string; statusCode: string; validationErrors: unknown }
     | unknown
 ): ActionState<T> {
+    console.error(error);
+
   if (isErrorWithMessage(error)) {
     if (error.message && error.message === "CATEGORY_ALREADY_EXISTS") {
       return {

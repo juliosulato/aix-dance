@@ -1,7 +1,7 @@
 // Início
 import { GrHomeRounded } from "react-icons/gr";
-import { MdBookmarkBorder, MdOutlineBusinessCenter, MdPayment } from "react-icons/md";
-import { FiCalendar, FiInbox } from "react-icons/fi";
+import { MdOutlineBusinessCenter, MdPayment } from "react-icons/md";
+import { FiCalendar } from "react-icons/fi";
 import { IoExtensionPuzzleOutline } from "react-icons/io5";
 
 // CRM
@@ -18,7 +18,7 @@ import { TbReportMoney, TbBuildingBank, TbContract } from "react-icons/tb";
 import { MdOutlineCategory } from "react-icons/md";
 import { PiMoneyWavy } from "react-icons/pi";
 
-// Estoque
+// Financeiro e Estoque
 import { BsBox } from "react-icons/bs";
 
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
@@ -88,15 +88,15 @@ const useMenuData = () => {
         // { icon: <LuChartSpline />, label: "Relatórios", href: "/system/financial/reports" },
       ],
     },
-   {
-     icon: <BsBox />,
-     label: "Estoque",
-     subitems: [
-       { icon: <MdBookmarkBorder />, label: "Produtos", href: "/system/inventory/products" },
-       { icon: <FiInbox />, label: "Encomendas", href: "/system/inventory/orders" },
-      //  { icon: <LuChartSpline />, label: "Relatórios", href: "/system/inventory/reports" },
-     ],
-   },
+  //  {
+  //    icon: <BsBox />,
+  //    label: "Estoque",
+  //    subitems: [
+  //      { icon: <MdBookmarkBorder />, label: "Produtos", href: "/system/inventory/products" },
+  //      { icon: <FiInbox />, label: "Encomendas", href: "/system/inventory/orders" },
+  //     //  { icon: <LuChartSpline />, label: "Relatórios", href: "/system/inventory/reports" },
+  //    ],
+  //  },
     {
       icon: <IoExtensionPuzzleOutline />,
       label: "Outros",

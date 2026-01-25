@@ -14,7 +14,7 @@ import { useDisclosure } from "@mantine/hooks";
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import useMenuData from "@/utils/menuData";
+import useMenuData from "@/hooks/menuData";
 import { TbSettings, TbUser } from "react-icons/tb";
 import { BiSupport } from "react-icons/bi";
 import LogoSVG from "../Logo";

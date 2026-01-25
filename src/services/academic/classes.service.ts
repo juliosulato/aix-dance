@@ -18,6 +18,12 @@ export class ClassesService {
         });
     }
 
+    static archive(tenantId: string, id: string) {
+        return serverFetch(`${BASE_URL}/api/v1/tenants/${tenantId}/academic/classes/${id}/archive`, {
+            method: "PATCH",
+        });
+    }
+
     static deleteMany(tenantId: string, payload: { ids: string[] }) {
         return serverFetch(`${BASE_URL}/api/v1/tenants/${tenantId}/academic/classes`, {
             method: "DELETE",

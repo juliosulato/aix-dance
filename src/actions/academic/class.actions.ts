@@ -1,3 +1,5 @@
+"use server";
+
 import { ActionState } from "@/types/server-actions.types";
 import { protectedAction } from "@/lib/auth-guards";
 import {
@@ -6,7 +8,7 @@ import {
   UpdateClassInput,
   updateClassSchema,
 } from "@/schemas/academic/class.schema";
-import { buildPayload, parseFormData } from "@/utils/server-utils";
+import { parseFormData } from "@/utils/server-utils";
 import { handleValidationErrors } from "@/utils/handleValidationErrors";
 import { handleServerActionError } from "@/utils/handlerApiErrors";
 import { updateTag } from "next/cache";
@@ -60,7 +62,24 @@ const saveClass = protectedAction(
   },
 );
 
-const deleteMany = protectedAction(
+const archiveClass = protectedAction(
+  async (user, classId: string): Promise<ActionState<null>> => {
+    try {
+      await ClassesService.archive(user.tenantId, classId);
+      updateTag("classes");
+      return { success: true };
+    }
+    catch (error) {
+      console.error(
+        `Erro ao arquivar turma ${classId} na tenant ${user.tenantId}:`,
+        error,
+      );
+      return handleServerActionError(error);
+    }
+  }
+);
+
+const deleteManyClasses = protectedAction(
   async (user, classIds: string[]): Promise<ActionState<null>> => {
     if (!Array.isArray(classIds) || classIds.length === 0) {
       return {
@@ -84,4 +103,4 @@ const deleteMany = protectedAction(
   },
 );
 
-export { saveClass, deleteMany };
+export { saveClass, deleteManyClasses, archiveClass };

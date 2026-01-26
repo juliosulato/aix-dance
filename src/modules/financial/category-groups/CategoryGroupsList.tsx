@@ -109,7 +109,7 @@ export default function CategoryGroupsList({ categoryGroups }: Props) {
         )}
         renderCard={(item) => (
           <>
-            <div className="flex flex-row justify-between items-start">
+            <div className="flex flex-row justify-between items-start p-4">
               <Text fw={500} size="lg">
                 {item.name}
               </Text>

@@ -1,9 +1,9 @@
 import { NumberInput, Select, TextInput, Tooltip } from "@mantine/core";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { Control, Controller, FieldErrors } from "react-hook-form";
-import { CreatePlanInput } from "@/schemas/academic/plans.schema";
 import { FaPercentage } from "react-icons/fa";
 import { useState } from "react";
+import { CreatePlanInput } from "@/schemas/academic/plan.schema";
 
 type Props = {
     control: Control<CreatePlanInput>;

@@ -26,7 +26,13 @@ import { LuLogOut } from "react-icons/lu";
 import { BsBox } from "react-icons/bs";
 import { signOut } from "@/lib/auth-client";
 import { SessionData } from "@/lib/auth-server";
-export default function AppShell({ children, session }: { children: React.ReactNode; session?: SessionData }) {
+export default function AppShell({
+  children,
+  session,
+}: {
+  children: React.ReactNode;
+  session?: SessionData;
+}) {
   const [activeMain, setActiveMain] = useState<number | string | null>(null);
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure(true);
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(false);
@@ -34,33 +40,38 @@ export default function AppShell({ children, session }: { children: React.ReactN
   const menuData = useMenuData();
   const router = useRouter();
 
-
   return (
     <AppShellMantine
       padding="md"
+      layout="alt"
       header={{ height: 80 }}
       navbar={{
         width: 300,
-        breakpoint: "xl",
+        breakpoint: "sm",
         collapsed: { mobile: mobileOpened, desktop: desktopOpened },
       }}
     >
-      <AppShellMantine.Header className="flex items-center justify-between h-full print:hidden">
-        <div className="flex items-center justify-between gap-2  py-2 px-4 xl:px-6 xl:py-3 xl:min-w-300px! h-80px! xl:border-r xl:border-neutral-300">
-          <LogoSVG className={`h-full`} />
+      <AppShellMantine.Header className="flex items-center justify-between h-full print:hidden px-4 md:px-6 ">
+        <ActionIcon
+          color="#eeeeee"
+          aria-label="close"
+          size={"lg"}
+          radius={"12px"}
+          className={`${desktopOpened ? "translate-x-0" : "translate-x-[-100vw]"} transition duration-300`}
+        >
           <Burger
             opened={!desktopOpened}
             onClick={toggleDesktop}
             size="sm"
-            className="hidden xl:block"
+            color="#6e6e6e"
+            className="hidden sm:block"
           />
-        </div>
-
-        <div className="flex items-center justify-end gap-2 h-full px-4 md:px-6 w-full">
+        </ActionIcon>
+        <div className="flex items-center justify-end gap-2 h-full w-full">
           <Burger
             opened={!mobileOpened}
             onClick={toggleMobile}
-            hiddenFrom="xl"
+            hiddenFrom="sm"
             size="sm"
           />
 
@@ -139,119 +150,140 @@ export default function AppShell({ children, session }: { children: React.ReactN
       </AppShellMantine.Header>
 
       {session?.user.role !== "TEACHER" && (
-        <AppShellMantine.Navbar className="py-4 md:py-6 px-4 md:px-6 flex flex-col gap-4 justify-between print:hidden">
-          <div className="flex flex-col gap-4 relative">
-            <div className="flex flex-col gap-2">
-              {menuData.map((item, index) => (
-                <div key={index} className="flex flex-col gap-1">
-                  {item.subitems?.length ? (
-                    <NavLink
-                      color="violet"
-                      leftSection={item.icon}
-                      label={item.label}
-                      active={activeMain === index}
-                      onClick={() => {
-                        setActiveMain(activeMain === index ? null : index);
-                      }}
-                      opened={activeMain === index}
-                      rightSection={
-                        item.subitems && (
-                          <HiOutlineChevronRight
-                            size={12}
-                            className="mantine-rotate-rtl"
-                          />
-                        )
-                      }
-                      classNames={{ section: "text-xl m-auto" }}
-                      className={`rounded-full py-3! transition-all duration-300 ease-in px-5 justify-start!`}
-                    >
-                      {activeMain === index ? (
-                        <div className="transition-all duration-300 ease-in">
-                          {item.subitems.map((subitem, subindex) =>
-                            subitem.href ? (
-                              <NavLink
-                                color="violet"
-                                variant="subtle"
-                                key={subindex}
-                                leftSection={subitem.icon}
-                                label={subitem.label}
-                                component={Link}
-                                href={subitem.href}
-                                className="rounded-full px-5! py-3! transition-all duration-300 ease-in"
-                                classNames={{ section: "text-xl" }}
-                                active={pathname === subitem.href}
-                              />
-                            ) : null
-                          )}
-                        </div>
-                      ) : null}
-                    </NavLink>
-                  ) : item.href ? (
-                    <NavLink
-                      color="violet"
-                      leftSection={item.icon}
-                      label={item.label}
-                      component={Link}
-                      href={item.href}
-                      classNames={{ section: "text-xl m-auto" }}
-                      className={`rounded-full py-3! transition-all duration-300 ease-in px-5 justify-start!`}
-                      active={pathname === item.href}
-                    />
-                  ) : (
-                    <NavLink
-                      color="violet"
-                      leftSection={item.icon}
-                      label={item.label}
-                      classNames={{ section: "text-xl m-auto" }}
-                      className={`rounded-full py-3! transition-all duration-300 ease-in px-5 justify-start!`}
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
+        <AppShellMantine.Navbar className=" print:hidden">
+          <div className="flex items-center justify-between h-20 border-b border-b-neutral-300 px-4 py-4">
+            <LogoSVG className={`h-full`} />
+            <ActionIcon
+              color="#eeeeee"
+              aria-label="close"
+              size={"lg"}
+              radius={"12px"}
+            >
+              <Burger
+                opened={!desktopOpened}
+                onClick={toggleDesktop}
+                size="sm"
+                color="#6e6e6e"
+                className="hidden sm:block"
+              />
+            </ActionIcon>
           </div>
 
-          <div className="flex flex-col gap-2">
-            <NavLink
-              color="violet"
-              leftSection={<TbSettings />}
-              label={"Configurações"}
-              active={pathname === "/settings"}
-              onClick={() =>
-                setActiveMain(activeMain === "/settings" ? null : "/settings")
-              }
-              opened={activeMain === "/settings"}
-              className={`rounded-full py-3! transition-all duration-300 ease-in px-5 justify-start!`}
-              rightSection={
-                <HiOutlineChevronRight
-                  size={12}
-                  className="mantine-rotate-rtl"
-                />
-              }
-            >
+          <div className="py-4 md:py-6 px-4 md:px-6 flex flex-col justify-between h-full gap-4">
+            <div className="flex flex-col gap-4 relative">
+              <div className="flex flex-col gap-2">
+                {menuData.map((item, index) => (
+                  <div key={index} className="flex flex-col gap-1">
+                    {item.subitems?.length ? (
+                      <NavLink
+                        color="violet"
+                        leftSection={item.icon}
+                        label={item.label}
+                        tabIndex={index}
+                        active={activeMain === index}
+                        onClick={() => {
+                          setActiveMain(activeMain === index ? null : index);
+                        }}
+                        opened={activeMain === index}
+                        rightSection={
+                          item.subitems && (
+                            <HiOutlineChevronRight
+                              size={12}
+                              className="mantine-rotate-rtl"
+                            />
+                          )
+                        }
+                        classNames={{ section: "text-xl m-auto" }}
+                        className={`rounded-full py-3! transition-all duration-300 ease-in px-5 justify-start!`}
+                      >
+                        {activeMain === index ? (
+                          <div className="transition-all duration-300 ease-in">
+                            {item.subitems.map((subitem, subindex) =>
+                              subitem.href ? (
+                                <NavLink
+                                  color="violet"
+                                  variant="subtle"
+                                  key={subindex}
+                                  leftSection={subitem.icon}
+                                  label={subitem.label}
+                                  component={Link}
+                                  href={subitem.href}
+                                  className="rounded-full px-5! py-3! transition-all duration-300 ease-in"
+                                  classNames={{ section: "text-xl" }}
+                                  active={pathname === subitem.href}
+                                />
+                              ) : null,
+                            )}
+                          </div>
+                        ) : null}
+                      </NavLink>
+                    ) : item.href ? (
+                      <NavLink
+                        color="violet"
+                        leftSection={item.icon}
+                        label={item.label}
+                        component={Link}
+                        href={item.href}
+                        classNames={{ section: "text-xl m-auto" }}
+                        className={`rounded-full py-3! transition-all duration-300 ease-in px-5 justify-start!`}
+                        active={pathname === item.href}
+                      />
+                    ) : (
+                      <NavLink
+                        color="violet"
+                        leftSection={item.icon}
+                        label={item.label}
+                        classNames={{ section: "text-xl m-auto" }}
+                        className={`rounded-full py-3! transition-all duration-300 ease-in px-5 justify-start!`}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
               <NavLink
                 color="violet"
-                variant="subtle"
-                leftSection={<TbUser />}
-                label={"Usuários"}
-                component={Link}
-                href={"/system/settings/users"}
-                className="rounded-full px-5! py-3! transition-all duration-300 ease-in"
-                classNames={{ section: "text-xl" }}
-                active={pathname === "/system/settings/users"}
-              />
+                leftSection={<TbSettings />}
+                label={"Configurações"}
+                active={pathname === "/settings"}
+                onClick={() =>
+                  setActiveMain(activeMain === "/settings" ? null : "/settings")
+                }
+                opened={activeMain === "/settings"}
+                className={`rounded-full py-3! transition-all duration-300 ease-in px-5 justify-start!`}
+                rightSection={
+                  <HiOutlineChevronRight
+                    size={12}
+                    className="mantine-rotate-rtl"
+                  />
+                }
+              >
+                <NavLink
+                  color="violet"
+                  variant="subtle"
+                  leftSection={<TbUser />}
+                  label={"Usuários"}
+                  component={Link}
+                  href={"/system/settings/users"}
+                  className="rounded-full px-5! py-3! transition-all duration-300 ease-in"
+                  classNames={{ section: "text-xl" }}
+                  active={pathname === "/system/settings/users"}
+                />
 
-              {/* <LanguagePicker /> */}
-            </NavLink>
-            <NavLink
-              color="violet"
-              leftSection={<BiSupport />}
-              label={"Suporte"}
-              href="https://wa.me/5514981834361?text=Ol%C3%A1!%20Gostaria%20de%20ajuda%20com%20o%20AIX%20Dance."
-              target="_blank"
-              active={pathname === "/support"}
-              className={`rounded-full py-3! transition-all duration-300 ease-in px-5 justify-start!`}
-            />
+                {/* <LanguagePicker /> */}
+              </NavLink>
+              <NavLink
+                color="violet"
+                leftSection={<BiSupport />}
+                label={"Suporte"}
+                href="https://wa.me/5514981834361?text=Ol%C3%A1!%20Gostaria%20de%20ajuda%20com%20o%20AIX%20Dance."
+                target="_blank"
+                active={pathname === "/support"}
+                className={`rounded-full py-3! transition-all duration-300 ease-in px-5 justify-start!`}
+              />
+            </div>
           </div>
         </AppShellMantine.Navbar>
       )}

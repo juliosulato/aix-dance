@@ -2,7 +2,7 @@
 
 import { protectedAction } from "@/lib/auth-guards";
 import { CreatePlanInput, createPlanSchema, UpdatePlanInput, updatePlanSchema } from "@/schemas/academic/plan.schema";
-import { PlanService } from "@/services/academic/plan.service";
+import { PlanService } from "@/services/academic/plans.service";
 import { ActionState } from "@/types/server-actions.types";
 import { handleServerActionError } from "@/utils/handlerApiErrors";
 import { handleValidationErrors } from "@/utils/handleValidationErrors";

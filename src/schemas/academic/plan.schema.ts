@@ -16,7 +16,9 @@ const planSchema = z.object({
 });
 
 export const createPlanSchema = planSchema;
-export const updatePlanSchema = planSchema.partial();
+export const updatePlanSchema = planSchema.partial().extend({ id: z.string() }).refine((data) => Object.keys(data).length > 1, {
+  message: "Pelo menos um campo além do ID deve ser fornecido para atualização.",
+});
 
 export type CreatePlanInput = z.infer<typeof createPlanSchema>;
 export type UpdatePlanInput = z.infer<typeof updatePlanSchema>;

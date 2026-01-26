@@ -1,3 +1,6 @@
+import { Teacher } from "./teacher.types";
+import { User } from "./user.types";
+
 export type Class = {
     name: string;
     id: string;
@@ -10,6 +13,15 @@ export type Class = {
     modality: Modality;
     online: boolean;
     assistantId: string | null;
+}
+
+export interface ClassWithTeacher extends Class {
+    teacher: User & {
+        teacher: Teacher
+    };
+    assistant?: User & {
+        teacher: Teacher
+    };
 }
 
 export type ClassAttendance = {

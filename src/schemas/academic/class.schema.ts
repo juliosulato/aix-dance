@@ -17,7 +17,7 @@ const classSchema = z.object({
     assistantId: z.string().optional(),
     online: z.boolean().optional().default(false),
     days: z.array(z.object({
-        dayOfWeek: z.nativeEnum(DAYS_OF_WEEK),
+        dayOfWeek: z.enum(DAYS_OF_WEEK, "O dia da semana deve ser válido"),
         initialHour: z.string().min(1, "Horário inicial é obrigatório"),
         endHour: z.string().min(1, "Horário final é obrigatório"),
     })).min(1, "É necessário fornecer pelo menos um dia de aula"),
@@ -32,5 +32,16 @@ export const updateClassSchema = classSchema.partial().extend({
     message: "Pelo menos um campo além do ID deve ser fornecido para atualização.",
 });
 
+export const enrollStudentsSchema = z.object({
+    studentIds: z.array(z.string().min(1, "ID do estudante é obrigatório"))
+        .min(1, "É necessário fornecer pelo menos um estudante"),
+});
+
+export const archiveStudentClassSchema = z.object({
+    studentClassId: z.string().min(1, "ID da matrícula é obrigatório"),
+});
+
 export type CreateClassInput = z.infer<typeof createClassSchema>;
 export type UpdateClassInput = z.infer<typeof updateClassSchema>;
+export type EnrollStudentsInput = z.infer<typeof enrollStudentsSchema>;
+export type ArchiveStudentClassInput = z.infer<typeof archiveStudentClassSchema>;

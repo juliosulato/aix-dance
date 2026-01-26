@@ -1,5 +1,5 @@
 import {serverFetch} from "@/lib/server-fetch";
-import {CreateClassInput, UpdateClassInput} from "@/schemas/academic/class.schema";
+import {CreateClassInput, UpdateClassInput, EnrollStudentsInput} from "@/schemas/academic/class.schema";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -33,4 +33,5 @@ export class ClassesService {
             body: JSON.stringify(payload),
         });
     }
+
 }

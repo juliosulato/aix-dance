@@ -1,7 +1,7 @@
 import { Alert, FileButton, Menu } from "@mantine/core";
 import { BiInfoCircle, BiUpload } from "react-icons/bi";
 import { AvatarPreview } from "./AvatarPreview";
-import { useAvatarUpload } from "@/hooks/useAvatarUpload";
+import { useAvatarUpload } from "@/hooks/varchar";
 import { useCameraCapture } from "@/hooks/useCameraCapture";
 import CameraModal from "./CameraModal";
 import { Control, FieldValues, useController, Path } from "react-hook-form";

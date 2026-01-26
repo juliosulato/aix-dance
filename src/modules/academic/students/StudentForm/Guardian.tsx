@@ -13,7 +13,7 @@ type Props = {
     errors: FieldErrors<CreateStudentFormData | UpdateStudentInput>;
 };
 
-function NewStudent__Guardians({ control, errors }: Props) {
+function NewStudent__Guardians({ control }: Props) {
 
   const { fields, append, remove } = useFieldArray({
     control,

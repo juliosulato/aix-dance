@@ -1,8 +1,7 @@
 import { memo } from "react";
-import { PhoneInput } from "@/components/ui/CellPhoneInput";
-import { InputBase, Select, TextInput } from "@mantine/core";
-import "dayjs/locale/pt-br";
+import { Select, TextInput } from "@mantine/core";
 import DocumentInput from "@/components/ui/documentInput";
+import { PhoneInput } from "@/components/ui/CellPhoneInput";
 import {
   Control,
   Controller,

@@ -58,7 +58,7 @@ function AvatarUpload({ defaultUrl, onUploadComplete, folder = "avatars" }: Prop
       const { uploadUrl, fileUrl } = await presignedUrlResponse.json();
 
       const uploadToS3Response = await fetch(uploadUrl, {
-        method: 'PUT',
+        method: 'PATCH',
         mode: 'cors',
         headers: {
           // Envia Content-Disposition conforme a assinatura do S3

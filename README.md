@@ -36,7 +36,7 @@ Tech Stack
 
 Principais características
 - Arquitetura refatorada com foco em SoC (Separation of Concerns).
-- Server Actions para mutações (POST/PUT/DELETE) com validação Zod e wrappers de ação para tratamento de erros.
+- Server Actions para mutações (POST/PATCH/DELETE) com validação Zod e wrappers de ação para tratamento de erros.
 - `src/services` contém a lógica de domínio e contratos de API — UI não possui lógica de negócio.
 - `serverFetch` centralizado para chamadas HTTP e uniformização de headers, timeouts e tratamento de erros.
 

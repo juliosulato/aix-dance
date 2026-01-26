@@ -36,7 +36,7 @@ async function toggleUserActive(
 
   try {
     const response = await fetch(apiUrl, {
-      method: "PUT",
+      method: "PATCH",
                 credentials: "include",
       headers: {
         "Content-Type": "application/json",

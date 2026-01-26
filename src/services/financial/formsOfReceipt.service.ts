@@ -21,7 +21,7 @@ export class FormsOfReceiptService {
     return serverFetch(
       `${baseUrl}/api/v1/tenants/${tenantId}/financial/forms-of-receipt/${data.id}`,
       {
-        method: "PUT",
+        method: "PATCH",
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",

@@ -131,7 +131,7 @@ export default function NewClassAttendance({
     const url = attendanceToEdit
       ? `/api/v1/tenants/${studentsClass.tenantId}/class-attendances/${attendanceToEdit.id}`
       : `/api/v1/tenants/${studentsClass.tenantId}/class-attendances`;
-    const method = attendanceToEdit ? "PUT" : "POST";
+    const method = attendanceToEdit ? "PATCH" : "POST";
 
     await fetch(url, {
       method,

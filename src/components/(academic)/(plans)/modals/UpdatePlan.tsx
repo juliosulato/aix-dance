@@ -72,7 +72,7 @@ export default function UpdatePlan({ opened, onClose, mutate, plan }: Props) {
 
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${sessionData.user.tenantId}/plans/${plan?.id}`, {
-                method: "PUT",
+                method: "PATCH",
                 credentials: "include",
                 body: JSON.stringify(data),
                 headers: { "Content-Type": "application/json" },

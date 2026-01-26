@@ -17,7 +17,7 @@ export class StudentsService {
     return serverFetch(
       `${baseUrl}/api/v1/tenants/${tenantId}/academic/students/${id}`,
       {
-        method: "PUT",
+        method: "PATCH",
         body: formData,
       }
     );

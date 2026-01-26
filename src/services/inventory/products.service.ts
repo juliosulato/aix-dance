@@ -27,7 +27,7 @@ export class ProductsService {
     return serverFetch(
       `${BASE_URL}/api/v1/tenants/${tenantId}/inventory/products/${id}`,
       {
-        method: "PUT",
+        method: "PATCH",
         body: formData,
       }
     );

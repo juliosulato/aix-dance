@@ -85,7 +85,7 @@ export default function UpdateClassAttendance({
     await fetch(
       `/api/v1/tenants/${studentsClass.tenantId}/class-attendances`,
       {
-        method: "PUT",
+        method: "PATCH",
                 credentials: "include",
         headers: {
           "Content-Type": "application/json",

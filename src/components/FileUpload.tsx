@@ -103,7 +103,7 @@ export default function FileUpload({
   const uploadWithProgress = (uploadUrl: string, file: File, onProgress: (pct: number) => void) =>
     new Promise<void>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      xhr.open("PUT", uploadUrl);
+      xhr.open("PATCH", uploadUrl);
       xhr.setRequestHeader("Content-Type", file.type);
       xhr.upload.onprogress = (ev) => {
         if (ev.lengthComputable) {

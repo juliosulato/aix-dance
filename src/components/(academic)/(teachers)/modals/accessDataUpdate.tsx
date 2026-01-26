@@ -83,7 +83,7 @@ function UpdateTeacherAccessData({ opened, onClose, user, mutate }: Props) {
       const resp = await fetch(
         `/api/v1/tenants/${sessionData.user.tenantId}/users/${user.id}`,
         {
-          method: "PUT",
+          method: "PATCH",
                 credentials: "include",
           body: JSON.stringify({ ...data }),
           headers: { "Content-Type": "application/json" },

@@ -21,7 +21,7 @@ export class CategoryGroupsService {
     return serverFetch(
       `${baseUrl}/api/v1/tenants/${tenantId}/financial/category-groups/${data.id}`,
       {
-        method: "PUT",
+        method: "PATCH",
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",

@@ -106,7 +106,7 @@ function UpdateTeacher({ opened, onClose, user, mutate }: Props) {
         setVisible(true);
         try {
             const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tenants/${sessionData.user.tenantId}/users/${user.id}`, {
-                method: "PUT",
+                method: "PATCH",
                 credentials: "include",
                 body: JSON.stringify({...data, image: avatar || user.image}),
                 headers: { "Content-Type": "application/json" },

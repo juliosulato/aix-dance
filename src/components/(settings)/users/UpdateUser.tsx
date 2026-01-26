@@ -100,7 +100,7 @@ function UpdateUser({ opened, onClose, mutate, user, tenantId }: Props) {
       const resp = await fetch(
         `/api/v1/tenants/${tenantId}/users/${user.id}`,
         {
-          method: "PUT",
+          method: "PATCH",
                 credentials: "include",
           body: JSON.stringify({
             ...data,

@@ -1,15 +1,15 @@
 "use client";
-import { ClassFromApi } from "@/components/(academic)/(class)";
 import Breadcrumps from "@/components/ui/Breadcrumps";
 import { fetcher } from "@/utils/fetcher";
 import { Button } from "@mantine/core";
 import { useSession } from "@/lib/auth-client";
 import useSWR from "swr";
+import { ClassWithTeacher } from "@/types/class.types";
 
 export default function TeachersClassesPage() {
     const session = useSession().data;
 
-    const { data, error } = useSWR<ClassFromApi[]>(session?.user?.tenantId && session?.user.id ? `/api/teachers/${session.user.id}/classes?tenantId=${session.user.tenantId}` : null, fetcher);
+    const { data, error } = useSWR<ClassWithTeacher[]>(session?.user?.tenantId && session?.user.id ? `/api/teachers/${session.user.id}/classes?tenantId=${session.user.tenantId}` : null, fetcher);
 
     if (error) {
         return <div className="text-center text-red-500">Erro ao carregar os dados das turmas</div>;

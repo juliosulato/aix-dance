@@ -14,6 +14,7 @@ import { FaSearch } from "react-icons/fa";
 import z from "zod";
 import { StudentComplete } from "@/types/student.types";
 import { Class } from "@/types/class.types";
+import { PaginatedResponseLocal } from "@/types/pagination.types";
 
 type Props = {
   opened: boolean;
@@ -45,7 +46,7 @@ function AssignClassesToStudent({ opened, onClose, mutate, student }: Props) {
     fetcher
   );
 
-  const classes = allClasses?.data;
+  const classes = allClasses?.data as unknown as Class[] ?? [];
 
   const activeClassIds = useMemo(
     () =>

@@ -29,7 +29,7 @@ function NewStudent__Guardians({ control }: Props) {
             firstName: "",
             lastName: "",
             relationship: "",
-            cellPhoneNumber: "",
+            phoneNumber: "",
             phoneNumber: "",
             email: "",
             nationalId: "",
@@ -83,7 +83,7 @@ function NewStudent__Guardians({ control }: Props) {
           />
 
           <Controller
-            name={`guardian.${index}.cellPhoneNumber`}
+            name={`guardian.${index}.phoneNumber`}
             control={control}
             render={({ field }) => <PhoneInput label={"Celular"} {...field} required/>}
           />

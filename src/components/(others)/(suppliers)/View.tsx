@@ -66,7 +66,7 @@ export default function SupplierView({ id }: { id: string }) {
                 <InfoTerm label={"Documento"}>{supplier.document}</InfoTerm>
                 <InfoTerm label={"Tipo de Documento"}>{supplier.documentType}</InfoTerm>
                 <InfoTerm label={"Telefone"}>{supplier.phoneNumber}</InfoTerm>
-                <InfoTerm label={"Celular"}>{supplier.cellPhoneNumber}</InfoTerm>
+                <InfoTerm label={"Celular"}>{supplier.phoneNumber}</InfoTerm>
                 <InfoTerm label={"E-mail"}>{supplier.email}</InfoTerm>
                 <Divider className="md:col-span-2 lg:col-span-3" label={"Endereço"} labelPosition="center" />
                 <InfoTerm label={"Logradouro"}>{`${supplier.address.publicPlace}`}</InfoTerm>

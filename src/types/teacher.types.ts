@@ -17,7 +17,7 @@ export type Teacher = {
     createdAt: Date;
     updatedAt: Date;
     userId: string;
-    cellPhoneNumber: string | null;
+    phoneNumber: string | null;
     phoneNumber: string | null;
     dateOfBirth: Date | null;
     document: string;

@@ -127,9 +127,9 @@ export default function NewSupplier({ opened, onClose, mutate }: Props) {
                     />
 
                     <TextInput
-                        {...register("cellPhoneNumber")}
+                        {...register("phoneNumber")}
                         label={"Celular"}
-                        error={errors?.cellPhoneNumber?.message}
+                        error={errors?.phoneNumber?.message}
                     />
                     <TextInput
                         {...register("phoneNumber")}

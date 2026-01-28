@@ -65,7 +65,7 @@ export const studentsTableColumns: Column<StudentComplete>[] = [
     },
   },
   {
-    key: "cellPhoneNumber",
+    key: "phoneNumber",
     label: "Telefone",
     render: (value) => (
       <a href={`https://wa.me/${value.replace(/\D/g, "")}`}>{value}</a>

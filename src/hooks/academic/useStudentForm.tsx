@@ -78,7 +78,7 @@ export function useStudentForm({
         firstName: isEditing.firstName,
         lastName: isEditing.lastName,
         gender: isEditing.gender,
-        cellPhoneNumber: isEditing.cellPhoneNumber,
+        phoneNumber: isEditing.phoneNumber,
         dateOfBirth: isEditing.dateOfBirth,
         nationalId: isEditing.nationalId ?? "",
         email: isEditing.email ?? "",
@@ -106,7 +106,7 @@ export function useStudentForm({
           isEditing.guardian?.map((g) => ({
             firstName: g.firstName,
             lastName: g.lastName,
-            cellPhoneNumber: g.cellPhoneNumber,
+            phoneNumber: g.phoneNumber,
             email: g.email ?? "",
             phoneNumber: g.phoneNumber ?? "",
             relationship: g.relationShip || "",

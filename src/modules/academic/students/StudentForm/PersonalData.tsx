@@ -48,13 +48,13 @@ function NewStudent__PersonalData({ control, register, errors }: Props) {
       />
 
       <Controller
-        name="cellPhoneNumber"
+        name="phoneNumber"
         control={control}
         render={({ field }) => (
           <PhoneInput
             label="Celular"
             required
-            error={errors.cellPhoneNumber?.message}
+            error={errors.phoneNumber?.message}
             value={field.value}
             onChange={field.onChange}
             initialCountryCode="BR"

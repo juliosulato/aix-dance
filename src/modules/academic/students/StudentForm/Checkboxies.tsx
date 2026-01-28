@@ -129,7 +129,7 @@ function Checkboxies({ control, errors }: Props) {
         firstName: "", 
         lastName: "", 
         relationship: "", 
-        cellPhoneNumber: "", 
+        phoneNumber: "", 
         phoneNumber: "", 
         email: "", 
         nationalId: "" 

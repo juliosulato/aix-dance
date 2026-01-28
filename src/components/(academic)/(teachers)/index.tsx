@@ -196,7 +196,7 @@ export default function AllTeachersData() {
                         key: "teacher",
                         label: "Celular",
                         sortable: false,
-                        render: (teacher) => teacher?.cellPhoneNumber ? <a href={`https://wa.me/${String(teacher.cellPhoneNumber).replace(/\D/g, "")}`}>{String(teacher.cellPhoneNumber)}</a> : "-"
+                        render: (teacher) => teacher?.phoneNumber ? <a href={`https://wa.me/${String(teacher.phoneNumber).replace(/\D/g, "")}`}>{String(teacher.phoneNumber)}</a> : "-"
                     },
                     {
                         key: "active",
@@ -250,17 +250,17 @@ export default function AllTeachersData() {
                                     {item.teacher?.remunerationType || "-"}
                                 </Text>
                             </div>
-                            {item.teacher?.cellPhoneNumber && (
+                            {item.teacher?.phoneNumber && (
                                 <div className="flex items-center gap-2 mt-2">
                                     <Text size="sm" fw={500} className="w-28">WhatsApp:</Text>
                                     <a
-                                        href={`https://wa.me/${String(item.teacher?.cellPhoneNumber).replace(/\D/g, "")}`}
+                                        href={`https://wa.me/${String(item.teacher?.phoneNumber).replace(/\D/g, "")}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         onClick={(e) => e.stopPropagation()}
                                         className="text-blue-500 hover:underline text-sm"
                                     >
-                                        {item.teacher?.cellPhoneNumber}
+                                        {item.teacher?.phoneNumber}
                                     </a>
                                 </div>
                             )}

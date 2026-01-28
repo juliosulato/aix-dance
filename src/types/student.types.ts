@@ -16,7 +16,7 @@ export type Student = {
     firstName: string;
     lastName: string;
     image: string | null;
-    cellPhoneNumber: string;
+    phoneNumber: string;
     email: string | null;
     phoneNumber: string | null;
     dateOfBirth: Date;
@@ -41,7 +41,7 @@ export type StudentGuardian = {
     id: string;
     firstName: string;
     lastName: string;
-    cellPhoneNumber: string;
+    phoneNumber: string;
     phoneNumber: string | null;
     email: string | null;
     relationShip: string;

@@ -26,7 +26,7 @@ export interface TeacherFromApi extends User {
         comissionTiers: CommissionTier[];
         address: Address | null;
         document: string | null;
-        cellPhoneNumber: string;
+        phoneNumber: string;
       })
     | null;
 }

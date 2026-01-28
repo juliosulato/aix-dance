@@ -41,14 +41,14 @@ export default function Teacher__PersonalData({ control, errors, register }: Pro
             
             {/* Campos de professor agora com o prefixo 'teacher.' */}
             <Controller
-                name="teacher.cellPhoneNumber"
+                name="teacher.phoneNumber"
                 control={control}
                 render={({ field }) => (
                     <PhoneInput
                         label={"Celular"}
                         onChange={field.onChange}
                         value={field.value || ''}
-                        error={errors.teacher?.cellPhoneNumber?.message}
+                        error={errors.teacher?.phoneNumber?.message}
                     />
                 )}
             />

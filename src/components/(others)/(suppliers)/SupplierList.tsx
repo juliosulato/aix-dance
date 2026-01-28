@@ -146,7 +146,7 @@ export default function AllSuppliersData() {
                     { key: "name", label: "Nome" },
                     { key: "corporateReason", label: "Razão Social" },
                     { key: "email", label: "E-mail" },
-                    { key: "cellPhoneNumber", label: "Celular" },
+                    { key: "phoneNumber", label: "Celular" },
                     { key: "phoneNumber", label: "Telefone" },
                     { key: "document", label: "Documento" }
                 ]}

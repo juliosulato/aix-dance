@@ -27,7 +27,7 @@ export default function UpdateSupplier({ opened, onClose, mutate, supplier }: Pr
         resolver: zodResolver(updateSupplierSchema),
         defaultValues: {
             name: supplier.name,
-            cellPhoneNumber: supplier.cellPhoneNumber ?? undefined,
+            phoneNumber: supplier.phoneNumber ?? undefined,
             phoneNumber: supplier.phoneNumber ?? undefined,
             corporateReason: supplier.corporateReason ?? undefined,
             document: supplier.document ?? undefined,
@@ -143,9 +143,9 @@ export default function UpdateSupplier({ opened, onClose, mutate, supplier }: Pr
                     />
 
                     <TextInput
-                        {...register("cellPhoneNumber")}
+                        {...register("phoneNumber")}
                         label={"Celular"}
-                        error={errors?.cellPhoneNumber?.message}
+                        error={errors?.phoneNumber?.message}
                     />
                     <TextInput
                         {...register("phoneNumber")}

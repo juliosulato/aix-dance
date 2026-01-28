@@ -55,7 +55,7 @@ function NewTeacher({ opened, onClose }: Props) {
                 "firstName",
                 "lastName",
                 "email",
-                "teacher.cellPhoneNumber",
+                "teacher.phoneNumber",
                 "teacher.phoneNumber",
                 "teacher.dateOfBirth",
                 "teacher.document",

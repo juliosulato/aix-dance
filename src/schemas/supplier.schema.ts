@@ -9,7 +9,7 @@ const createSupplierSchema = z.object({
   document: z.string().optional(),
   email: z.email({ message: "E-mail inválido" }).optional(),
   phoneNumber: z.string().optional(),
-  cellPhoneNumber: z.string().optional(),
+  phoneNumber: z.string().optional(),
   address: addressSchema.optional(),
 });
 

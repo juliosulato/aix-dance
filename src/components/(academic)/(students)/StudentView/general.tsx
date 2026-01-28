@@ -47,12 +47,12 @@ export default function GeneralStudentsView({
         </InfoTerm>
         <InfoTerm label={""}>
           <a
-            href={`https://wa.me/${student.cellPhoneNumber}`}
+            href={`https://wa.me/${student.phoneNumber}`}
             target="_blank"
             rel="noreferrer"
             className="text-primary hover:underline"
           >
-            {student.cellPhoneNumber}
+            {student.phoneNumber}
           </a>
         </InfoTerm>
         <InfoTerm label={"Telefone"}>{student.phoneNumber}</InfoTerm>
@@ -100,7 +100,7 @@ export default function GeneralStudentsView({
       {student.guardian?.length > 0 &&
         student.guardian.map((guardian) => (
           <div
-            key={guardian.id || guardian.cellPhoneNumber || `${guardian.firstName}-${guardian.lastName}`}
+            key={guardian.id || guardian.phoneNumber || `${guardian.firstName}-${guardian.lastName}`}
             className="grid gap-4 md:gap-y-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-4 md:p-6 lg:p-8 border border-gray-300 rounded-2xl"
           >
             <h2 className="font-semibold text-lg md:text-xl md:col-span-2 lg:col-span-3 xl:col-span-4  mb-4">
@@ -112,12 +112,12 @@ export default function GeneralStudentsView({
             <InfoTerm label={"Parentesco"}>{`${guardian.relationShip}`}</InfoTerm>
             <InfoTerm label={"Celular"}>
               <a
-                href={`https://wa.me/${guardian.cellPhoneNumber}`}
+                href={`https://wa.me/${guardian.phoneNumber}`}
                 target="_blank"
                 rel="noreferrer"
                 className="text-primary hover:underline"
               >
-                {guardian.cellPhoneNumber}
+                {guardian.phoneNumber}
               </a>
             </InfoTerm>
             <InfoTerm label={"Email"}>{`${student.email}`}</InfoTerm>

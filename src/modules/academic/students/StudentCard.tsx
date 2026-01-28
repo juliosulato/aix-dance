@@ -80,13 +80,13 @@ export default function StudentCard({ item, handleDelete, handleUpdate }: Props)
                   WhatsApp:
                 </Text>
                 <a
-                  href={`https://wa.me/${item.cellPhoneNumber}`}
+                  href={`https://wa.me/${item.phoneNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
                   className="text-blue-500 hover:underline text-sm"
                 >
-                  {item.cellPhoneNumber}
+                  {item.phoneNumber}
                 </a>
               </div>
               <div className="flex items-center gap-2 mt-2">

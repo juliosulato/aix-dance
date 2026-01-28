@@ -10,7 +10,7 @@ import { UserRole } from "@/types/user.types";
 dayjs.extend(customParseFormat);
 
 const teacherSchema = z.object({
-  cellPhoneNumber: z.string().optional(),
+  phoneNumber: z.string().optional(),
   phoneNumber: z.string().optional(),
   document: z.string()
     .min(1, "Documento é obrigatório")

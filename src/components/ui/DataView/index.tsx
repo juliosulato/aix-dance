@@ -127,7 +127,7 @@ export default function DataView<T>({
         )}
       </div>
 
-      {logic.totalItems > 10 && (
+      {logic.totalItems > logic.limit && (
         <div className="bg-white p-4 rounded-2xl border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
             <Text size="sm" c="dimmed">
                 Total de <b>{logic.totalItems}</b> registros

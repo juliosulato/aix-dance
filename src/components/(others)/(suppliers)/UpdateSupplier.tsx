@@ -28,7 +28,6 @@ export default function UpdateSupplier({ opened, onClose, mutate, supplier }: Pr
         defaultValues: {
             name: supplier.name,
             phoneNumber: supplier.phoneNumber ?? undefined,
-            phoneNumber: supplier.phoneNumber ?? undefined,
             corporateReason: supplier.corporateReason ?? undefined,
             document: supplier.document ?? undefined,
             documentType: supplier.documentType ?? undefined,

@@ -24,7 +24,7 @@ const guardianSchema = z.object({
   email: z.email({ message: "E-mail do responsável inválido" }).optional().or(z.literal('')),
   phoneNumber: z.string().min(1, { message: "Celular do responsável é obrigatório" }),
   relationship: z.string().optional(),
-  phoneNumber: z.string().optional(),
+  phoneNumber2: z.string().optional(),
   nationalId: z.string().optional(),
 });
 
@@ -37,7 +37,7 @@ const createStudentSchema = z.object({
   phoneNumber: z.string().min(1, { message: "Celular do aluno é obrigatório" }),
   pronoun: z.string().optional(),
   dateOfBirth: z.coerce.date(),
-  phoneNumber: z.string().optional(),
+  phoneNumber2: z.string().optional(),
   nationalId: z
     .string()
     .optional()
@@ -67,7 +67,7 @@ const updateStudentSchema = z.object({
   phoneNumber: z.string().min(1, { message: "Celular do aluno é obrigatório" }).optional(),
   pronoun: z.string().optional(),
   dateOfBirth: z.coerce.date().optional(),
-  phoneNumber: z.string().optional(),
+  phoneNumber2: z.string().optional(),
   nationalId: z
     .string()
     .optional()

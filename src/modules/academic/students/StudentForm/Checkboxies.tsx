@@ -130,7 +130,7 @@ function Checkboxies({ control, errors }: Props) {
         lastName: "", 
         relationship: "", 
         phoneNumber: "", 
-        phoneNumber: "", 
+        phoneNumber2: "", 
         email: "", 
         nationalId: "" 
       }]);

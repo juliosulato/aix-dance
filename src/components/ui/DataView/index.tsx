@@ -18,7 +18,7 @@ interface DataViewProps<T> {
   
   pageTitle: string;
   itemKey?: string;
-  baseUrl: string;
+  baseUrl?: string;
   searchPlaceholder?: string;
   disableTable?: boolean;
   

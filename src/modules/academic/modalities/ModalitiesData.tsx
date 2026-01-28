@@ -41,7 +41,6 @@ export default function ModalitiesData({ data }: Props) {
           func: handleCreate,
           label: "Nova Modalidade",
         }}
-        baseUrl="/system/academic/modalities/"
         pageTitle="Modalidades"
         RenderRowMenu={(item) => (
           <RowActionMenu

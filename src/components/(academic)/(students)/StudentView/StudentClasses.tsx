@@ -11,7 +11,7 @@ import {
   adaptStudentClasses,
   StudentClassFromApi,
 } from "./adapteStudentClasses";
-import AssignClassesToStudent from "./AssignClassesToStudent.tsx";
+import AssignClassesToStudent from "./AssignClassesToStudent";
 import { Class, Modality } from "@/types/class.types";
 import { User } from "@/types/user.types";
 import { StudentClass, StudentComplete } from "@/types/student.types";

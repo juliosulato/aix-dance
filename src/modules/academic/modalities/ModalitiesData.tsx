@@ -12,9 +12,11 @@ import { BulkActionMenu } from "./ModalitiesBulkActionMenu";
 import { modalitiesTableColumns } from "./modalitiesTableColumns";
 import ModalityCard from "./ModalityCard";
 import { PaginatedResponseLocal } from "@/types/pagination.types";
+import { useRouter } from "next/navigation";
+import { PaginatedResponse } from "@/types/data-view.types";
 
 type Props = {
-  data: PaginatedResponseLocal<Modality>["data"];
+  data: PaginatedResponse<Modality>;
 };
 
 export default function ModalitiesData({ data }: Props) {
@@ -32,11 +34,14 @@ export default function ModalitiesData({ data }: Props) {
   } = useCrud<Modality>({
     deleteAction: deleteManyModalities,
   });
+  const router = useRouter();
 
   return (
     <>
       <DataView<Modality>
-        data={data.items || []}
+        data={data || []}
+        onPageChange={(page, limit) => router.replace(`/system/academic/modalities?page=${page}&limit=${limit}`)}
+        itemKey="items"
         openNewModal={{
           func: handleCreate,
           label: "Nova Modalidade",

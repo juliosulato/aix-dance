@@ -43,10 +43,6 @@ export default function ModalityCard({
           </Menu.Dropdown>
         </Menu>
       </Group>
-
-      <Text size="xs" c="dimmed" mt="md">
-        Criada em: {new Date(item.createdAt || "").toLocaleDateString("pt-BR")}
-      </Text>
     </Card>
   );
 }

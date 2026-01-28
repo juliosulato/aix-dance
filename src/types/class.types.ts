@@ -1,3 +1,4 @@
+import { Student, StudentClass } from "./student.types";
 import { Teacher } from "./teacher.types";
 import { User } from "./user.types";
 
@@ -13,6 +14,10 @@ export type Class = {
     modality: Modality;
     online: boolean;
     assistantId: string | null;
+    classAttendances?: ClassAttendance[];
+    studentClasses: (StudentClass & {
+        student: Student;
+    })[];
 }
 
 export interface ClassWithTeacher extends Class {

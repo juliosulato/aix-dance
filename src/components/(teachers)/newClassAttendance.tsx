@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button, Modal, Table, Textarea } from "@mantine/core";
-import { ClassFromApi } from "../(academic)/(class)";
+import { ClassWithTeacher } from "@/types/class.types";
 import z from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,7 +31,7 @@ export default function NewClassAttendance({
   teacherId,
   attendanceToEdit,
 }: {
-  studentsClass: ClassFromApi;
+  studentsClass: ClassWithTeacher;
   opened: boolean;
   onClose: () => void;
   teacherId: string;
@@ -234,7 +234,7 @@ export default function NewClassAttendance({
               return (
                 <Table.Tr key={student.id}>
                   <Table.Td>
-                    <div className="bg-primary text-white flex items-center justify-center w-full min-h-12 !font-bold rounded-xl">
+                    <div className="bg-primary text-white flex items-center justify-center w-full min-h-12 font-bold! rounded-xl">
                       {index + 1}
                     </div>
                   </Table.Td>
@@ -243,7 +243,7 @@ export default function NewClassAttendance({
                   </Table.Td>
                   <Table.Td>
                     <button
-                      className={`w-8 h-8 lg:w-12 lg:h-12 text-xl !font-bold flex items-center justify-center rounded-full ${
+                      className={`w-8 h-8 lg:w-12 lg:h-12 text-xl font-bold! flex items-center justify-center rounded-full ${
                         isPresent ? "bg-green-500" : "bg-red-500"
                       } text-white`}
                       type="button"

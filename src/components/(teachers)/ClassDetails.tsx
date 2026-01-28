@@ -1,5 +1,4 @@
 "use client";
-import { ClassFromApi } from "../(academic)/(class)";
 import { Button, ActionIcon } from "@mantine/core";
 import { FaTrash, FaPencilAlt, FaEye } from "react-icons/fa";
 import ConfirmationModal from "../ui/ConfirmationModal";
@@ -14,6 +13,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import Breadcrumps from "../ui/Breadcrumps";
 import { useSession } from "@/lib/auth-client";
+import { ClassWithTeacher } from "@/types/class.types";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -27,7 +27,7 @@ export default function ClassDetails({ classId }: { classId: string }) {
 
     const session = useSession().data;
 
-    const { data: classData, isLoading, mutate } = useSWR<ClassFromApi>(`/api/v1/tenants/${session?.user.tenantId}/classes/${classId}`, fetcher);
+    const { data: classData, isLoading, mutate } = useSWR<ClassWithTeacher>(`/api/v1/tenants/${session?.user.tenantId}/classes/${classId}`, fetcher);
 
     if (isLoading || !classData) {
         return <p>Carregando... </p>;

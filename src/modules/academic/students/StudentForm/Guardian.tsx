@@ -1,6 +1,6 @@
 import { useFieldArray, Controller } from "react-hook-form";
 import { ActionIcon, Button, TextInput } from "@mantine/core";
-import { PhoneInput } from "@/components/ui/CellPhoneInput";
+import { PhoneInput } from "@/components/CellPhoneInput";
 import { Control, FieldErrors } from "react-hook-form";
 import { CreateStudentFormData } from "@/schemas/academic/student.schema";
 import DocumentInput from "@/components/ui/documentInput";

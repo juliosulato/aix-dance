@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Select, TextInput } from "@mantine/core";
 import DocumentInput from "@/components/ui/documentInput";
-import { PhoneInput } from "@/components/ui/CellPhoneInput";
+import { PhoneInput } from "@/components/CellPhoneInput";
 import {
   Control,
   Controller,

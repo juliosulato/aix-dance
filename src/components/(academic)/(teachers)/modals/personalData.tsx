@@ -1,6 +1,6 @@
 import { Gender } from "@/types/student.types";
 import { useState } from "react";
-import { PhoneInput } from "@/components/ui/CellPhoneInput";
+import { PhoneInput } from "@/components/CellPhoneInput";
 import { InputBase, Select, TextInput } from "@mantine/core";
 import { DateInput } from "@mantine/dates"
 import DocumentInput from "@/components/ui/documentInput";

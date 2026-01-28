@@ -15,6 +15,7 @@ import { BulkActionMenu } from "./StudentsBulkActionMenu";
 import { studentsTableColumns } from "./studentsTableColumns";
 import StudentCard from "./StudentCard";
 import { deleteStudents } from "@/actions/academic/students.actions";
+import { PaginatedResponseLocal } from "@/types/pagination.types";
 
 export default function StudentsList() {
   const { data: sessionData } = useSession();
@@ -62,8 +63,7 @@ export default function StudentsList() {
   return (
     <>
       <DataView<StudentComplete>
-        data={data?.data || []} 
-        itemKey="items"
+        data={data?.data.items || []} 
         openNewModal={{
           func: handleCreate,
           label: "Novo Aluno",

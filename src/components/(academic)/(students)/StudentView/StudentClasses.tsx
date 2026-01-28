@@ -14,14 +14,12 @@ import {
 import AssignClassesToStudent from "./AssignClassesToStudent";
 import { Class, Modality } from "@/types/class.types";
 import { User } from "@/types/user.types";
-import { StudentClass, StudentComplete } from "@/types/student.types";
+import {  StudentComplete } from "@/types/student.types";
 
 export interface ClassFromApi extends Class {
   modality: Modality;
   teacher: User;
   assistant: User | null;
-  studentClasses: StudentClass[];
-  classAttendances?: any[];
 }
 
 export default function StudentClassView({

@@ -11,7 +11,7 @@ dayjs.extend(customParseFormat);
 
 const teacherSchema = z.object({
   phoneNumber: z.string().optional(),
-  phoneNumber: z.string().optional(),
+  phoneNumber2: z.string().optional(),
   document: z.string()
     .min(1, "Documento é obrigatório")
     .refine((value) => isValidCpf(value), { message: "CPF inválido" }),

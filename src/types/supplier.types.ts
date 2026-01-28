@@ -13,7 +13,7 @@ export type Supplier = {
     document: string | null;
     email: string | null;
     phoneNumber: string | null;
-    phoneNumber: string | null;
+    phoneNumber2: string | null;
     address?: Address | null;
     bills?: Bill[];
     products?: Product[];
